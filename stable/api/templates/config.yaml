@@ -11,6 +11,10 @@ data:
   PG_NAME: "{{ .Values.db.name }}"
   PG_USER: "{{ .Values.db.user }}"
   PG_PORT: "{{ .Values.db.port }}"
+  PG_SSLMODE: "{{ .Values.db.sslMode }}"
+{{- if .Values.db.ca }}
+  PG_CA_B64: "{{ .Values.db.ca | b64enc }}"
+{{- end }}
   SAML_MEATADATA: "{{ .Values.conf.saml.metadata }}"
   SAML_ISSUER: "{{ .Values.conf.saml.issuer }}"
   SAML_CALLBACK: "{{ .Values.conf.saml.callback }}"

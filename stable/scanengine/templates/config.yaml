@@ -10,6 +10,10 @@ data:
   PG_NAME: "{{ .Values.db.name }}"
   PG_USER: "{{ .Values.db.user }}"
   PG_PORT: "{{ .Values.db.port }}"
+  PG_SSLMODE: "{{ .Values.db.sslMode }}"
+{{- if .Values.db.ca }}
+  PG_CA_B64: "{{ .Values.db.ca | b64enc }}"
+{{- end }}
   LOG_LEVEL: "{{ .Values.conf.logLevel }}"
   PERSISTENCE_HOST: "{{ .Values.conf.persistenceHost | default  (include "persistenceHost" .) }}"
   SQS_QUEUE_ARN: "{{ .Values.conf.queueArn }}"

@@ -55,6 +55,8 @@ db:
   user: TBD
   password: TBD
   port: 5432
+  sslMode: prefer
+  ca:
 
 serviceAccount:
   # Specifies whether a service account should be created

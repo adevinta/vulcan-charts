@@ -9,6 +9,10 @@ data:
   POSTGRES_HOST: "{{ .Values.db.host }}"
   POSTGRES_PORT: "{{ .Values.db.port }}"
   POSTGRES_USER: "{{ .Values.db.user }}"
+  POSTGRES_SSLMODE: "{{ .Values.db.sslMode }}"
+{{- if .Values.db.ca }}
+  POSTGRES_CA_B64: "{{ .Values.db.ca | b64enc }}"
+{{- end }}
   STREAM_CHANNEL: "{{ .Values.conf.channel }}"
   REGION: "{{ .Values.conf.region }}"
   SCANS_BUCKET: "{{ .Values.conf.s3Scans }}"

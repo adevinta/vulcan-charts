@@ -35,5 +35,7 @@ script:
         git push origin gh-pages
       fi      
 branches:
+  only:
+    - master
   except:
   - gh-pages
