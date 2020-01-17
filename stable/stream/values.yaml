@@ -30,7 +30,7 @@ db:
   user: TBD
   password: TBD
   port: 5432
-  sslMode: prefer
+  sslMode: disable
   ca:
 
 serviceAccount:
