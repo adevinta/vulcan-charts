@@ -31,9 +31,20 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:
         - name: waitfordb
-          image: postgres:9.6.11-alpine
-          command: ['sh', '-c', 'until pg_isready -h {{ .Values.db.host }} -p {{ .Values.db.port }};
+          image: postgres:9.6.16-alpine
+          command: ['sh', '-c', 'until pg_isready -h $PG_HOST -p $PG_PORT;
           do echo waiting for database; sleep 2; done;']
+          env:
+            - name: PG_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "persistence.fullname" . }}
+                  key: POSTGRES_HOST
+            - name: PG_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "persistence.fullname" . }}
+                  key: POSTGRES_PORT
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
@@ -53,10 +64,12 @@ spec:
             httpGet:
               path: {{ .Values.probePath }}
               port: http
+            initialDelaySeconds: {{ .Values.probeInitialDelay }}
           readinessProbe:
             httpGet:
               path: {{ .Values.probePath }}
               port: http
+            initialDelaySeconds: {{ .Values.probeInitialDelay }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}

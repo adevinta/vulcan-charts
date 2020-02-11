@@ -21,6 +21,7 @@ nameOverride: ""
 fullnameOverride: ""
 containerPort: 3000
 probePath: /status
+probeInitialDelay: 5
 
 conf:
   snsTopic: "arn:aws:sns:TBD:TBD:TBD"

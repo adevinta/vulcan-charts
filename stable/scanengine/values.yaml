@@ -11,6 +11,7 @@ image:
 
 containerPort: 8080
 probePath: /v1/healthcheck
+probeInitialDelay: 4
 
 autoscaling:
   enabled: false

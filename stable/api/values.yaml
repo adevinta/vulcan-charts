@@ -21,6 +21,7 @@ nameOverride: ""
 fullnameOverride: ""
 containerPort: 8080
 probePath: /api/v1/healthcheck
+probeInitialDelay: 4
 
 conf:
   region: TBD
