@@ -19,9 +19,12 @@ autoscaling:
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
-containerPort: 3000
+containerPort: 8080
 probePath: /status
 probeInitialDelay: 5
+
+proxy:
+  enabled: false
 
 conf:
   snsTopic: "arn:aws:sns:TBD:TBD:TBD"

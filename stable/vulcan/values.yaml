@@ -12,6 +12,13 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
+# Those values are useless here, could be defined in the dependant charts.
+proxy:
+  enabled: false
+  port: 80
+  probePath: /proxyhealthz
+  probeInitialDelay: 10
+
 serviceAccount:
   # Specifies whether a service account should be created
   create: true
