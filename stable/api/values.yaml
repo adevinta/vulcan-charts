@@ -23,6 +23,9 @@ containerPort: 8080
 probePath: /api/v1/healthcheck
 probeInitialDelay: 5
 
+proxy:
+  enabled: false
+
 conf:
   region: TBD
   debug: "false"
