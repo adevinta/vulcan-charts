@@ -9,6 +9,9 @@ image:
   tag: latest
   pullPolicy: IfNotPresent
 
+proxy:
+  enabled: false
+
 containerPort: 8080
 probePath: /v1/healthcheck
 probeInitialDelay: 5
