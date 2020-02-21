@@ -22,21 +22,22 @@ data:
 
     defaults
       mode http
-      log global
-      option httplog
       timeout connect 5s
       timeout client 50s
       timeout server 50s
 
-    listen http-in
+    listen http
       bind *:{{ .Values.proxy.port | default 80 }}
+      log global
+      option httplog
+      http-request capture req.hdr(Host) len 20
+      http-request capture req.hdr(User-Agent) len 100
       server app 127.0.0.1:{{ .Values.containerPort }} maxconn 32
 
     frontend stats
       bind *:9101
       option http-use-htx
       http-request use-service prometheus-exporter if { path /metrics }
-      http-request set-log-level silent if { path /metrics }
       monitor-uri {{ .Values.proxy.probePath | default "/proxyhealthz" }}
 {{- end -}}
 
