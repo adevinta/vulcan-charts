@@ -9,6 +9,9 @@ image:
   tag: master
   pullPolicy: IfNotPresent
 
+proxy:
+  enabled: false
+
 autoscaling:
   enabled: false
   minReplicas: 1
