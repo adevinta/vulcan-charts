@@ -10,7 +10,7 @@ kind: Ingress
 metadata:
   name: {{ $fullName }}
   labels:
-    {{- include "insights.labels" . | nindent 4 }}
+{{ include "insights.labels" . | indent 4 }}
   {{- with .Values.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
@@ -26,10 +26,8 @@ spec:
     - host: {{ .Values.ingress.host }}
       http:
         paths:
-        {{- range .Values.conf.proxies }}
-          - path: "{{ .prefix }}/"
+          - path: {{ .Values.ingress.path }}
             backend:
               serviceName: {{ $fullName }}
-              servicePort: {{ .port }}
-        {{- end }}
+              servicePort: {{ $svcPort }}
 {{- end }}

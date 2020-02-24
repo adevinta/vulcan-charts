@@ -1,3 +1,7 @@
+{{- if .Values.proxy.enabled }}
+{{ include "insights.proxy-config-map" . }}
+{{- end }}
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -14,6 +18,10 @@ spec:
       labels:
         {{- include "insights.selectorLabels" . | nindent 8 }}
       annotations:
+        {{- if .Values.proxy.enabled }}
+        checksum/config-proxy: {{ include "insights.proxy-config-map" . | sha256sum }}
+        {{ include "proxy-annotations" . | nindent 8 }}
+        {{- end }}
         {{- with .Values.annotations }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -26,6 +34,9 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
+        {{- if .Values.proxy.enabled }}
+        {{ include "proxy-container" . | nindent 8}}
+        {{- end }}
       {{- $dot := . }}
       {{- range .Values.conf.proxies }}
         - name: "{{ $dot.Chart.Name }}-{{ .name }}"
@@ -47,19 +58,22 @@ spec:
             - name: APP_PORT
               value: "{{ .port }}"
           ports:
-            - name: http
+            - name: {{ .name }}
               containerPort: {{ .port }}
               protocol: TCP
           livenessProbe:
             httpGet:
               path: "{{ $dot.Values.probePath }}"
-              port: http
+              port: {{ .port }}
           readinessProbe:
             httpGet:
               path: "{{ $dot.Values.probePath }}"
-              port: http
+              port: {{ .port }}
           resources:
             {{- toYaml $dot.Values.resources | nindent 12 }}
+      {{- end }}
+      {{- if .Values.proxy.enabled }}
+      {{ include "proxy-volumes" . | nindent 6}}
       {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
