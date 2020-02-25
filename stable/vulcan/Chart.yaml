@@ -1,6 +1,6 @@
 apiVersion: v2
 name: vulcan
-description: A Helm chart for Kubernetes
+description: A Helm chart for deploying Vulcan
 home: https://github.com/adevinta/vulcan-charts
 icon: https://raw.githubusercontent.com/adevinta/vulcan-charts/master/docs/logo/vulcan.png
 
@@ -16,7 +16,7 @@ type: application
 
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
-version: 0.1.0
+version: 0.1.1
 
 # This is the version number of the application being deployed. This version number should be
 # incremented each time you make changes to the application.
@@ -24,38 +24,38 @@ appVersion: 1.16.0
 
 dependencies:
 - name: results
-  version: 0.1.0
+  version: 0.1.1
   repository: "file://../results"
   condition: results.enabled
 - name: stream
-  version: 0.1.0
+  version: 0.1.1
   repository: "file://../stream"
   condition: stream.enabled
 - name: persistence
-  version: 0.1.0
+  version: 0.1.1
   repository: "file://../persistence"
   condition: persistence.enabled
 - name: api
-  version: 0.1.0
+  version: 0.1.1
   repository: "file://../api"
   condition: api.enabled
 - name: crontinuous
-  version: 0.1.0
+  version: 0.1.1
   repository: "file://../crontinuous"
   condition: crontinuous.enabled
 - name: scanengine
-  version: 0.1.0
+  version: 0.1.1
   repository: "file://../scanengine"
   condition: scanengine.enabled
 - name: insights
-  version: 0.1.0
+  version: 0.1.1
   repository: "file://../insights"
   condition: insights.enabled
 - name: ui
-  version: 0.1.0
+  version: 0.1.1
   repository: "file://../ui"
   condition: ui.enabled
 - name: metrics
-  version: 0.1.0
+  version: 0.1.1
   repository: "file://../metrics"
   condition: metrics.enabled

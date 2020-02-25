@@ -1,6 +1,6 @@
 apiVersion: v2
 name: ui
-description: A Helm chart for Kubernetes
+description: A Helm chart for deploying Vulcan ui
 home: https://github.com/adevinta/vulcan-charts
 icon: https://raw.githubusercontent.com/adevinta/vulcan-charts/master/docs/logo/vulcan.png
 
@@ -16,7 +16,7 @@ type: application
 
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
-version: 0.1.0
+version: 0.1.1
 
 # This is the version number of the application being deployed. This version number should be
 # incremented each time you make changes to the application.
