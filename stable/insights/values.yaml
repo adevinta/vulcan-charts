@@ -23,13 +23,13 @@ serviceAccount:
   name:
 
 proxy:
-  port: 8080
-  enabled: true
   cache: true
+  probePath: /healthz
+  probeInitialDelay: 5
 
 conf:
   region: tbd
-  log: "true"
+  log: "false"
   proxies:
     - name: private
       s3Bucket: tbd

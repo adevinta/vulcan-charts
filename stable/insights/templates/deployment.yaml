@@ -1,7 +1,3 @@
-{{- if .Values.proxy.enabled }}
-{{ include "insights.proxy-config-map" . }}
-{{- end }}
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -18,10 +14,9 @@ spec:
       labels:
         {{- include "insights.selectorLabels" . | nindent 8 }}
       annotations:
-        {{- if .Values.proxy.enabled }}
-        checksum/config-proxy: {{ include "insights.proxy-config-map" . | sha256sum }}
-        {{ include "proxy-annotations" . | nindent 8 }}
-        {{- end }}
+        checksum/config: {{ include (print $.Template.BasePath "/config-proxy.yaml") . | sha256sum }}
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '9101'
         {{- with .Values.annotations }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -34,9 +29,27 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        {{- if .Values.proxy.enabled }}
-        {{ include "proxy-container" . | nindent 8}}
-        {{- end }}
+        - name: proxy
+          image: haproxy:alpine
+          ports:
+            - name: http
+              containerPort: {{ .Values.containerPort }}
+            - name: metrics
+              containerPort: 9101
+          volumeMounts:
+          - mountPath: /usr/local/etc/haproxy
+            readOnly: true
+            name: config-proxy
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.proxy.probePath }}
+              port: metrics
+            initialDelaySeconds: {{ .Values.proxy.probeInitialDelay }}
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.proxy.probePath }}
+              port: metrics
+            initialDelaySeconds: {{ .Values.proxy.probeInitialDelay }}
       {{- $dot := . }}
       {{- range .Values.conf.proxies }}
         - name: "{{ $dot.Chart.Name }}-{{ .name }}"
@@ -72,9 +85,10 @@ spec:
           resources:
             {{- toYaml $dot.Values.resources | nindent 12 }}
       {{- end }}
-      {{- if .Values.proxy.enabled }}
-      {{ include "proxy-volumes" . | nindent 6}}
-      {{- end }}
+      volumes:
+      - name: config-proxy
+        configMap:
+          name: {{ .Release.Name }}-{{ .Chart.Name }}-proxy
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

@@ -1,10 +1,9 @@
-{{- define "insights.proxy-config-map" -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
   labels:
-    name: {{ .Release.Name }}-{{ .Chart.Name }}-proxy
-  name: {{ .Release.Name }}-{{ .Chart.Name }}-proxy
+    name: {{ include "insights.fullname" . }}-proxy
+  name: {{ include "insights.fullname" . }}-proxy
 data:
   haproxy.cfg: |
     global
@@ -25,7 +24,7 @@ data:
     {{- end }}
 
     frontend http
-      bind *:{{ .Values.proxy.port | default "80" }}
+      bind *:{{ .Values.containerPort }}
       log global
       option httplog
     {{- if .Values.proxy.cache }}
@@ -52,5 +51,4 @@ data:
       bind *:9101
       option http-use-htx
       http-request use-service prometheus-exporter if { path /metrics }
-      monitor-uri {{ .Values.proxy.probePath | default "/proxyhealthz" }}
-{{- end -}}
+      monitor-uri {{ .Values.proxy.probePath }}
