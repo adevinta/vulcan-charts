@@ -23,8 +23,10 @@ data:
     defaults
       mode http
       timeout connect 5s
-      timeout client 50s
-      timeout server 50s
+      timeout client 25s
+      timeout server 25s
+      timeout tunnel 3600s
+      option  http-server-close
 
     {{- if .Values.proxy.cache }}
     cache small
@@ -35,13 +37,18 @@ data:
     frontend http
       bind *:{{ .Values.proxy.port | default 80 }}
       log global
-      option httplog
+      option httplog clf
     {{- if .Values.proxy.cache }}
       http-request cache-use small
       http-response cache-store small
     {{- end }}
-      http-request capture req.hdr(Host) len 20
+      http-request capture req.hdr(Host) len 50
       http-request capture req.hdr(User-Agent) len 100
+
+    {{- if .Values.proxy.logFormat }}
+      log-format "{{ .Values.proxy.logFormat }}"
+    {{- end }}
+
       default_backend app
 
     backend app
