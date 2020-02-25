@@ -26,19 +26,32 @@ data:
       timeout client 50s
       timeout server 50s
 
-    listen http
+    {{- if .Values.proxy.cache }}
+    cache small
+      total-max-size 64     # mb
+      max-age 240           # seconds
+    {{- end }}
+
+    frontend http
       bind *:{{ .Values.proxy.port | default 80 }}
       log global
       option httplog
+    {{- if .Values.proxy.cache }}
+      http-request cache-use small
+      http-response cache-store small
+    {{- end }}
       http-request capture req.hdr(Host) len 20
       http-request capture req.hdr(User-Agent) len 100
+      default_backend app
+
+    backend app
       server app 127.0.0.1:{{ .Values.containerPort }} maxconn 32
 
     frontend stats
       bind *:9101
       option http-use-htx
       http-request use-service prometheus-exporter if { path /metrics }
-      monitor-uri {{ .Values.proxy.probePath | default "/proxyhealthz" }}
+      monitor-uri {{ .Values.proxy.probePath | default "/healthz" }}
 {{- end -}}
 
 {{- define "proxy-container" -}}
@@ -55,12 +68,12 @@ data:
     name: config-proxy
   livenessProbe:
     httpGet:
-      path: {{ .Values.proxy.probePath | default "/proxyhealthz" }}
+      path: {{ .Values.proxy.probePath | default "/healthz" }}
       port: metrics
     initialDelaySeconds: {{ .Values.proxy.probeInitialDelay | default 5 }}
   readinessProbe:
     httpGet:
-      path: {{ .Values.proxy.probePath | default "/proxyhealthz" }}
+      path: {{ .Values.proxy.probePath | default "/healthz" }}
       port: metrics
     initialDelaySeconds: {{ .Values.proxy.probeInitialDelay | default 5 }}
 {{- end -}}

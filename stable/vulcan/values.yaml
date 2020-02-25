@@ -16,7 +16,7 @@ fullnameOverride: ""
 proxy:
   enabled: false
   port: 80
-  probePath: /proxyhealthz
+  probePath: /healthz
   probeInitialDelay: 10
 
 serviceAccount:
