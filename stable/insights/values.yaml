@@ -23,7 +23,9 @@ serviceAccount:
   name:
 
 proxy:
+  port: 8080
   enabled: true
+  cache: true
 
 conf:
   region: tbd

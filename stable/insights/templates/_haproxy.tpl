@@ -18,10 +18,20 @@ data:
       timeout client 50s
       timeout server 50s
 
+    {{- if .Values.proxy.cache }}
+    cache small
+      total-max-size 64     # mb
+      max-age 240           # seconds
+    {{- end }}
+
     frontend http
-      bind *:{{ .Values.containerPort }}
+      bind *:{{ .Values.proxy.port | default "80" }}
       log global
       option httplog
+    {{- if .Values.proxy.cache }}
+      http-request cache-use small
+      http-response cache-store small
+    {{- end }}
       http-request capture req.hdr(Host) len 20
       http-request capture req.hdr(User-Agent) len 100
       {{- range .Values.conf.proxies }}
