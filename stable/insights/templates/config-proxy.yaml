@@ -8,7 +8,7 @@ data:
   haproxy.cfg: |
     global
       daemon
-      maxconn 64
+      maxconn {{ .Values.proxy.maxconn }}
       log stdout format raw daemon
 
     defaults
@@ -31,7 +31,7 @@ data:
       http-request cache-use small
       http-response cache-store small
     {{- end }}
-      http-request capture req.hdr(Host) len 20
+      http-request capture req.hdr(Host) len 50
       http-request capture req.hdr(User-Agent) len 100
       {{- range .Values.conf.proxies }}
       {{- if .prefix }}
@@ -44,7 +44,7 @@ data:
     {{- $dot := . }}
     {{- range .Values.conf.proxies }}
     backend {{ .name }}
-      server app 127.0.0.1:{{ .port }} maxconn 32
+      server app 127.0.0.1:{{ .port }}
     {{- end }}
 
     frontend stats

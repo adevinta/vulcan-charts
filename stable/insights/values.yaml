@@ -27,6 +27,7 @@ proxy:
   probePath: /healthz
   probeInitialDelay: 5
   metricsPort: 9101
+  maxconn: 64
 
 conf:
   region: tbd

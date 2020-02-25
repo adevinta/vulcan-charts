@@ -17,7 +17,7 @@ data:
   haproxy.cfg: |
     global
       daemon
-      maxconn 64
+      maxconn {{ .Values.proxy.maxconn | default 64 }}
       log stdout format raw daemon
 
     defaults
@@ -52,7 +52,7 @@ data:
       default_backend app
 
     backend app
-      server app 127.0.0.1:{{ .Values.containerPort }} maxconn 32
+      server app 127.0.0.1:{{ .Values.containerPort }}
 
     frontend stats
       bind *:{{ .Values.proxy.metricsPort | default 9101 }}
