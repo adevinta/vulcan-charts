@@ -48,7 +48,7 @@ data:
     {{- end }}
 
     frontend stats
-      bind *:9101
+      bind *:{{ .Values.proxy.metricsPort }}
       option http-use-htx
       http-request use-service prometheus-exporter if { path /metrics }
       monitor-uri {{ .Values.proxy.probePath }}

@@ -16,7 +16,7 @@ spec:
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/config-proxy.yaml") . | sha256sum }}
         prometheus.io/scrape: 'true'
-        prometheus.io/port: '9101'
+        prometheus.io/port: '{{ .Values.proxy.metricsPort }}'
         {{- with .Values.annotations }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -35,7 +35,7 @@ spec:
             - name: http
               containerPort: {{ .Values.containerPort }}
             - name: metrics
-              containerPort: 9101
+              containerPort: {{ .Values.proxy.metricsPort }}
           volumeMounts:
           - mountPath: /usr/local/etc/haproxy
             readOnly: true

@@ -3,7 +3,7 @@ Override names
 */}}
 {{- define "proxy-annotations" -}}
 prometheus.io/scrape: 'true'
-prometheus.io/port: '9101'
+prometheus.io/port: '{{ .Values.proxy.metricsPort | default 9101 }}'
 {{- end -}}
 
 {{- define "proxy-config-map" -}}
@@ -55,7 +55,7 @@ data:
       server app 127.0.0.1:{{ .Values.containerPort }} maxconn 32
 
     frontend stats
-      bind *:9101
+      bind *:{{ .Values.proxy.metricsPort | default 9101 }}
       option http-use-htx
       http-request use-service prometheus-exporter if { path /metrics }
       monitor-uri {{ .Values.proxy.probePath | default "/healthz" }}
@@ -68,7 +68,7 @@ data:
     - name: http
       containerPort: {{ .Values.proxy.port | default "80" }}
     - name: metrics
-      containerPort: 9101
+      containerPort: {{ .Values.proxy.metricsPort | default 9101 }}
   volumeMounts:
   - mountPath: /usr/local/etc/haproxy
     readOnly: true
