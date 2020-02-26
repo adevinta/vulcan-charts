@@ -31,11 +31,11 @@ script:
         echo "Publish charts"
         helm repo index . --url https://adevinta.github.io/vulcan-charts
         git add .
-        git commit -m "Publish stable charts"
+        git commit -m "$TRAVIS_COMMIT_MESSAGE"
         git push origin gh-pages
       fi      
 branches:
   only:
-    - master
+  - master
   except:
   - gh-pages
