@@ -19,6 +19,7 @@ spec:
         {{- include "crontinuous.selectorLabels" . | nindent 8 }}
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/config.yaml") . | sha256sum }}
+        checksum/secrets: {{ include (print $.Template.BasePath "/secrets.yaml") . | sha256sum }}
         {{- if .Values.proxy.enabled }}
         checksum/config-proxy: {{ include "proxy-config-map" . | sha256sum }}
         {{ include "proxy-annotations" . | nindent 8 }}
@@ -45,6 +46,8 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           envFrom:
           - configMapRef:
+              name: {{ include "crontinuous.fullname" . }}
+          - secretRef:
               name: {{ include "crontinuous.fullname" . }}
           ports:
             - name: {{ ternary "app" "http" .Values.proxy.enabled }}

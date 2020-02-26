@@ -10,4 +10,3 @@ data:
   CRONTINUOUS_BUCKET: {{ .Values.conf.crontinuousBucket }}
   VULCAN_API: {{ .Values.conf.vulcanApi  | default  (include "vulcanApi" .)  }}
   VULCAN_USER: {{ .Values.conf.vulcanUser }}
-  VULCAN_TOKEN: {{ .Values.conf.vulcanToken }}
