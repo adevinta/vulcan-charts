@@ -33,7 +33,7 @@ spec:
           image: haproxy:alpine
           ports:
             - name: http
-              containerPort: {{ .Values.containerPort }}
+              containerPort: {{ .Values.proxy.port }}
             - name: metrics
               containerPort: {{ .Values.proxy.metricsPort }}
           volumeMounts:
@@ -52,7 +52,7 @@ spec:
             initialDelaySeconds: {{ .Values.proxy.probeInitialDelay }}
       {{- $dot := . }}
       {{- range $i, $p := .Values.conf.proxies }}
-        {{- $port := add $dot.Values.conf.basePort $i }}
+        {{- $port := add $dot.Values.containerPort $i }}
         - name: "app-{{ $p.name }}"
           securityContext:
             {{- toYaml $dot.Values.securityContext | nindent 12 }}

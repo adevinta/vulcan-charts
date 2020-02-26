@@ -24,6 +24,7 @@ serviceAccount:
 
 proxy:
   cache: true
+  port: 80
   probePath: /healthz
   probeInitialDelay: 5
   metricsPort: 9101
@@ -32,7 +33,6 @@ proxy:
 conf:
   region: tbd
   log: "false"
-  basePort: 9090
   proxies:
     - name: private
       s3Bucket: tbd
