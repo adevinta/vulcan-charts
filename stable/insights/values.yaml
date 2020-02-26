@@ -32,15 +32,14 @@ proxy:
 conf:
   region: tbd
   log: "false"
+  basePort: 9090
   proxies:
     - name: private
       s3Bucket: tbd
       prefix: ""
-      port: 80
     - name: public
       s3Bucket: tbd
       prefix: "/public"
-      port: 81
 
 podSecurityContext: {}
   # fsGroup: 2000

@@ -42,9 +42,11 @@ data:
       {{- end }}
 
     {{- $dot := . }}
-    {{- range .Values.conf.proxies }}
-    backend {{ .name }}
-      server app 127.0.0.1:{{ .port }}
+    {{- range $i, $p := .Values.conf.proxies }}
+    {{- $port := add $dot.Values.conf.basePort $i }}
+
+    backend {{ $p.name }}
+      server app 127.0.0.1:{{ $port }}
     {{- end }}
 
     frontend stats
