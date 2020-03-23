@@ -22,6 +22,7 @@ data:
   SCANENGINE_URL: "{{ .Values.conf.scanEngineUrl | default  (include "scanEngineUrl" .) }}"
   SCHEDULER_URL: "{{ .Values.conf.schedulerUrl | default  (include "crontinuousUrl" .) }}"
   SQS_QUEUE_ARN: "{{ .Values.conf.queueArn }}"
+  REPORTS_HOST: "{{ .Values.conf.reports.host }}"
   SES_REGION: "{{ .Values.conf.ses.region }}"
   SES_CONFIG_SET: "{{ .Values.conf.ses.configSet}}"
   SES_SUBJECT: "{{ .Values.conf.ses.subject }}"

@@ -39,6 +39,8 @@ conf:
     callback: https://vulcan-api/api/v1/login/callback
     trustedDomains: '["vulcan-api"]'
   queueArn: arn:aws:sqs:TBD:TBD:TBD
+  reports:
+    host: TBD
   ses:
     region: TBD
     subject: "[Test] Security Overview"
