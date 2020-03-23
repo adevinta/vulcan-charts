@@ -83,6 +83,8 @@ data:
       path: {{ .Values.proxy.probePath | default "/healthz" }}
       port: metrics
     initialDelaySeconds: {{ .Values.proxy.probeInitialDelay | default 5 }}
+  resources:
+    {{- toYaml .Values.proxy.resources | nindent 12 }}
 {{- end -}}
 
 {{- define "proxy-volumes" -}}
