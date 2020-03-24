@@ -77,12 +77,12 @@ data:
     httpGet:
       path: {{ .Values.proxy.probePath | default "/healthz" }}
       port: metrics
-    initialDelaySeconds: {{ .Values.proxy.probeInitialDelay | default 5 }}
+    initialDelaySeconds: {{ .Values.proxy.probeInitialDelay | default 2 }}
   readinessProbe:
     httpGet:
       path: {{ .Values.proxy.probePath | default "/healthz" }}
       port: metrics
-    initialDelaySeconds: {{ .Values.proxy.probeInitialDelay | default 5 }}
+    initialDelaySeconds: {{ .Values.proxy.probeInitialDelay | default 2 }}
   resources:
     {{- toYaml .Values.proxy.resources | nindent 12 }}
 {{- end -}}
