@@ -79,14 +79,14 @@ spec:
             httpGet:
               path: "{{ $dot.Values.probePath }}"
               port: {{ $port }}
-            initialDelaySeconds: {{ .Values.probeInitialDelay }}
-            timeoutSeconds: {{ .Values.probeTimeout }}
+            initialDelaySeconds: {{ $dot.Values.probeInitialDelay }}
+            timeoutSeconds: {{ $dot.Values.probeTimeout }}
           readinessProbe:
             httpGet:
               path: "{{ $dot.Values.probePath }}"
               port: {{ $port }}
-            initialDelaySeconds: {{ .Values.probeInitialDelay }}
-            timeoutSeconds: {{ .Values.probeTimeout }}
+            initialDelaySeconds: {{ $dot.Values.probeInitialDelay }}
+            timeoutSeconds: {{ $dot.Values.probeTimeout }}
           resources:
             {{- toYaml $dot.Values.resources | nindent 12 }}
       {{- end }}
