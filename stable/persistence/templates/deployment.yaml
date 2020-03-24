@@ -79,11 +79,13 @@ spec:
               path: {{ .Values.probePath }}
               port: {{ .Values.containerPort }}
             initialDelaySeconds: {{ .Values.probeInitialDelay }}
+            timeoutSeconds: {{ .Values.probeTimeout }}
           readinessProbe:
             httpGet:
               path: {{ .Values.probePath }}
               port: {{ .Values.containerPort }}
             initialDelaySeconds: {{ .Values.probeInitialDelay }}
+            timeoutSeconds: {{ .Values.probeTimeout }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- if .Values.proxy.enabled }}

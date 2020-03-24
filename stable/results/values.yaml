@@ -24,6 +24,8 @@ nameOverride: ""
 fullnameOverride: ""
 containerPort: 8080
 probePath: /healthcheck
+probeInitialDelay: 2
+probeTimeout: 2
 
 conf:
   debug: "false"

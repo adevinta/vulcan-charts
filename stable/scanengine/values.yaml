@@ -15,6 +15,7 @@ proxy:
 containerPort: 8080
 probePath: /v1/healthcheck
 probeInitialDelay: 5
+probeTimeout: 2
 
 autoscaling:
   enabled: false

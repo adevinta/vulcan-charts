@@ -21,7 +21,8 @@ nameOverride: ""
 fullnameOverride: ""
 containerPort: 8080
 probePath: /status
-probeInitialDelay: 5
+probeInitialDelay: 7
+probeTimeout: 4
 
 proxy:
   enabled: false

@@ -14,6 +14,8 @@ nameOverride: ""
 fullnameOverride: ""
 probePath: /healthcheck
 containerPort: 8080
+probeInitialDelay: 2
+probeTimeout: 2
 
 serviceAccount:
   # Specifies whether a service account should be created

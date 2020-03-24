@@ -17,7 +17,7 @@ proxy:
   enabled: false
   port: 80
   probePath: /healthz
-  probeInitialDelay: 10
+  probeInitialDelay: 2
 
 serviceAccount:
   # Specifies whether a service account should be created
