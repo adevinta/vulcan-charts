@@ -37,12 +37,11 @@ spec:
       initContainers:
         - name: waitfordb
           image: postgres:9.6.16-alpine
-          command: ['sh', '-c', 'until pg_isready -h $PG_HOST -p $PG_PORT;
-          do echo waiting for database; sleep 2; done;']
+          command: ['sh', '-c', 'until pg_isready -t 5; do echo WaitingDB; done;']
           env:
-          - name: PG_HOST
+          - name: PGHOST
             value: "{{ .Values.db.host }}"
-          - name: PG_PORT
+          - name: PGPORT
             value: "{{ .Values.db.port }}"
       containers:
         {{- if .Values.proxy.enabled }}
