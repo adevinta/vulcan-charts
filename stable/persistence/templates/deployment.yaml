@@ -20,7 +20,6 @@ spec:
         app.kubernetes.io/name: {{ include "persistence.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
       annotations:
-        checksum/config: {{ include (print $.Template.BasePath "/config.yaml") . | sha256sum }}
         checksum/secrets: {{ include (print $.Template.BasePath "/secrets.yaml") . | sha256sum }}
         {{- if .Values.proxy.enabled }}
         checksum/config-proxy: {{ include "proxy-config-map" . | sha256sum }}
@@ -40,19 +39,12 @@ spec:
       initContainers:
         - name: waitfordb
           image: postgres:9.6.16-alpine
-          command: ['sh', '-c', 'until pg_isready -h $PG_HOST -p $PG_PORT;
-          do echo waiting for database; sleep 2; done;']
+          command: ['sh', '-c', 'until pg_isready -t 5; do echo Waiting; done;']
           env:
-            - name: PG_HOST
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ include "persistence.fullname" . }}
-                  key: POSTGRES_HOST
-            - name: PG_PORT
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ include "persistence.fullname" . }}
-                  key: POSTGRES_PORT
+          - name: PGHOST
+            value: "{{ .Values.db.host }}"
+          - name: PGPORT
+            value: "{{ .Values.db.port }}"
       containers:
         {{- if .Values.proxy.enabled }}
         {{ include "proxy-container" . | nindent 8}}
@@ -65,9 +57,38 @@ spec:
           env:
           - name: PORT
             value: "{{ .Values.containerPort }}"
+          - name: POSTGRES_DB
+            value: "{{ .Values.db.name }}"
+          - name: POSTGRES_HOST
+            value: "{{ .Values.db.host }}"
+          - name: POSTGRES_PORT
+            value: "{{ .Values.db.port }}"
+          - name: POSTGRES_USER
+            value: "{{ .Values.db.user }}"
+          - name: POSTGRES_SSLMODE
+            value: "{{ .Values.db.sslMode }}"
+          {{- if .Values.db.ca }}
+          - name: POSTGRES_CA_B64
+            value: "{{ .Values.db.ca | b64enc }}"
+          {{- end }}
+          - name: STREAM_CHANNEL
+            value: "{{ .Values.conf.channel }}"
+          - name: REGION
+            value: "{{ .Values.conf.region }}"
+          - name: SCANS_BUCKET
+            value: "{{ .Values.conf.s3Scans }}"
+          - name: SNS_TOPIC_ARN
+            value: "{{ .Values.conf.snsTopic }}"
+          - name: AWS_REGION
+            value: "{{ .Values.conf.region }}"
+          - name: NESSUS_CHECK_QUEUE
+            value: "{{ .Values.conf.nessusCheckQueue }}"
+          - name: RAILS_MAX_THREADS
+            value: "{{ .Values.conf.railsMaxThreads }}"
+        {{- if .Values.extraEnv }}
+          {{ toYaml .Values.extraEnv | indent 10 }}
+        {{- end }}
           envFrom:
-          - configMapRef:
-              name: {{ include "persistence.fullname" . }}
           - secretRef:
               name: {{ include "persistence.fullname" . }}
           ports:

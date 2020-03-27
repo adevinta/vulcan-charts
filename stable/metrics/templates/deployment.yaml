@@ -16,7 +16,6 @@ spec:
         app.kubernetes.io/name: {{ include "metrics.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
       annotations:
-        checksum/config: {{ include (print $.Template.BasePath "/config.yaml") . | sha256sum }}
         checksum/secrets: {{ include (print $.Template.BasePath "/secrets.yaml") . | sha256sum }}
         {{- with .Values.annotations }}
           {{- toYaml . | nindent 8 }}
@@ -35,9 +34,33 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+          - name: LOG_LEVEL
+            value: "{{ .Values.conf.logLevel }}"
+          - name: SQS_POLLING_INTERVAL
+            value: "{{ .Values.conf.sqsPollingInterval }}"
+          - name: CHECKS_SQS_QUEUE_ARN
+            value: "{{ .Values.conf.checksQueueArn }}"
+          - name: SCANS_SQS_QUEUE_ARN
+            value: "{{ .Values.conf.scansQueueArn }}"
+          - name: RESULTS_HOST
+            value: "{{ .Values.conf.resultsHost | default (include "resultsHost" .)}}"
+          - name: RESULTS_SCHEME
+            value: "{{ .Values.conf.resultsScheme }}"
+          - name: DEVHOSE_URL
+            value: "{{ .Values.conf.devHoseURL }}"
+          - name: LEDGER_SOURCE
+            value: "{{ .Values.conf.ledgerSource }}"
+          - name: LEDGER_TENANT
+            value: "{{ .Values.conf.ledgerTenant }}"
+          - name: DOGSTATSD_ADDR
+            value: "{{ .Values.conf.dogstatsdAddr | default (include "metricsDogstatsdAddr" .)}}"
+          - name: REDIS_ADDR
+            value: "{{ .Values.conf.redisAddr | default (include "metricsRedisAddr" .)}}"
+        {{- if .Values.extraEnv }}
+          {{ toYaml .Values.extraEnv | indent 10 }}
+        {{- end }}
           envFrom:
-          - configMapRef:
-              name: {{ include "metrics.fullname" . }}
           - secretRef:
               name: {{ include "metrics.fullname" . }}
           resources:

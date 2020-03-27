@@ -18,7 +18,6 @@ spec:
       labels:
         {{- include "crontinuous.selectorLabels" . | nindent 8 }}
       annotations:
-        checksum/config: {{ include (print $.Template.BasePath "/config.yaml") . | sha256sum }}
         checksum/secrets: {{ include (print $.Template.BasePath "/secrets.yaml") . | sha256sum }}
         {{- if .Values.proxy.enabled }}
         checksum/config-proxy: {{ include "proxy-config-map" . | sha256sum }}
@@ -44,9 +43,21 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+          - name: PORT
+            value: "{{ .Values.containerPort }}"
+          - name: AWS_REGION
+            value: {{ .Values.conf.region }}
+          - name: CRONTINUOUS_BUCKET
+            value: {{ .Values.conf.crontinuousBucket }}
+          - name: VULCAN_API
+            value: {{ .Values.conf.vulcanApi | default  (include "vulcanApi" .)  }}
+          - name: VULCAN_USER
+            value: {{ .Values.conf.vulcanUser }}
+        {{- if .Values.extraEnv }}
+          {{ toYaml .Values.extraEnv | indent 10 }}
+        {{- end }}
           envFrom:
-          - configMapRef:
-              name: {{ include "crontinuous.fullname" . }}
           - secretRef:
               name: {{ include "crontinuous.fullname" . }}
           ports:

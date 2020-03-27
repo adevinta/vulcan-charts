@@ -31,6 +31,10 @@ fullnameOverride: ""
 conf:
   apiUrl: https://vulcan-api/api/v1/
 
+extraEnv: []
+  # - name: FOO
+  #   value: bar
+
 serviceAccount:
   # Specifies whether a service account should be created
   create: false

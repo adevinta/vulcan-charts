@@ -47,6 +47,9 @@ spec:
             value: "{{ .Values.conf.apiUrl }}"
           - name: PORT
             value: "{{ .Values.containerPort }}"
+        {{- if .Values.extraEnv }}
+          {{ toYaml .Values.extraEnv | indent 10 }}
+        {{- end }}
           ports:
             - name: {{ ternary "app" "http" .Values.proxy.enabled }}
               containerPort: {{ .Values.containerPort }}

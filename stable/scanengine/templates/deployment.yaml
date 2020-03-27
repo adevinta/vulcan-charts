@@ -18,7 +18,6 @@ spec:
       labels:
         {{- include "scanengine.selectorLabels" . | nindent 8 }}
       annotations:
-        checksum/config: {{ include (print $.Template.BasePath "/config.yaml") . | sha256sum }}
         checksum/secrets: {{ include (print $.Template.BasePath "/secrets.yaml") . | sha256sum }}
         {{- if .Values.proxy.enabled }}
         checksum/config-proxy: {{ include "proxy-config-map" . | sha256sum }}
@@ -41,16 +40,10 @@ spec:
           command: ['sh', '-c', 'until pg_isready -h $PG_HOST -p $PG_PORT;
           do echo waiting for database; sleep 2; done;']
           env:
-            - name: PG_HOST
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ include "scanengine.fullname" . }}
-                  key: PG_HOST
-            - name: PG_PORT
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ include "scanengine.fullname" . }}
-                  key: PG_PORT
+          - name: PG_HOST
+            value: "{{ .Values.db.host }}"
+          - name: PG_PORT
+            value: "{{ .Values.db.port }}"
       containers:
         {{- if .Values.proxy.enabled }}
         {{ include "proxy-container" . | nindent 8}}
@@ -60,10 +53,35 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-        #  command: ['tail', '-f', '/dev/null']
+          env:
+          - name: PORT
+            value: "{{ .Values.containerPort }}"
+          - name: PG_HOST
+            value: "{{ .Values.db.host }}"
+          - name: PG_NAME
+            value: "{{ .Values.db.name }}"
+          - name: PG_USER
+            value: "{{ .Values.db.user }}"
+          - name: PG_PORT
+            value: "{{ .Values.db.port }}"
+          - name: PG_SSLMODE
+            value: "{{ .Values.db.sslMode }}"
+          {{- if .Values.db.ca }}
+          - name: PG_CA_B64
+            value: "{{ .Values.db.ca | b64enc }}"
+          {{- end }}
+          - name: LOG_LEVEL
+            value: "{{ .Values.conf.logLevel }}"
+          - name: PERSISTENCE_HOST
+            value: "{{ .Values.conf.persistenceHost | default  (include "persistenceHost" .) }}"
+          - name: SQS_QUEUE_ARN
+            value: "{{ .Values.conf.queueArn }}"
+          - name: SNS_TOPIC_ARN
+            value: "{{ .Values.conf.snsArn }}"
+        {{- if .Values.extraEnv }}
+          {{ toYaml .Values.extraEnv | indent 10 }}
+        {{- end }}
           envFrom:
-          - configMapRef:
-              name: {{ include "scanengine.fullname" . }}
           - secretRef:
               name: {{ include "scanengine.fullname" . }}
           ports:

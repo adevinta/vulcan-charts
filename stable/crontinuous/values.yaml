@@ -34,6 +34,10 @@ conf:    # TBD
   crontinuousBucket: tbd
   vulcanUser: tbd
 
+extraEnv: []
+  # - name: FOO
+  #   value: bar
+
 serviceAccount:
   # Specifies whether a service account should be created
   create: false

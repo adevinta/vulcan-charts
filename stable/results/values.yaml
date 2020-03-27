@@ -33,6 +33,10 @@ conf:
   bucketReports: TBD
   bucketLogs: TBD
 
+extraEnv: []
+  # - name: FOO
+  #   value: bar
+
 serviceAccount:
   # Specifies whether a service account should be created
   create: false

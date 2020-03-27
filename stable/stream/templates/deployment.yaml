@@ -20,7 +20,7 @@ spec:
         app.kubernetes.io/name: {{ include "stream.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
       annotations:
-        checksum/config: {{ include (print $.Template.BasePath "/config.yaml") . | sha256sum }}
+        checksum/secrets: {{ include (print $.Template.BasePath "/secrets.yaml") . | sha256sum }}
         {{- if .Values.proxy.enabled }}
         checksum/config-proxy: {{ include "proxy-config-map" . | sha256sum }}
         {{ include "proxy-annotations" . | nindent 8 }}
@@ -45,9 +45,29 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+          - name: PORT
+            value: "{{ .Values.containerPort }}"
+          - name: LOG_LEVEL
+            value: "{{ .Values.conf.logLevel }}"
+          - name: PG_HOST
+            value: "{{ .Values.db.host }}"
+          - name: PG_NAME
+            value: "{{ .Values.db.name }}"
+          - name: PG_USER
+            value: "{{ .Values.db.user }}"
+          - name: PG_PORT
+            value: "{{ .Values.db.port }}"
+          - name: PG_SSLMODE
+            value: "{{ .Values.db.sslMode }}"
+          {{- if .Values.db.ca }}
+          - name: PG_CA_B64
+            value: "{{ .Values.db.ca | b64enc }}"
+          {{- end }}
+        {{- if .Values.extraEnv }}
+          {{ toYaml .Values.extraEnv | indent 10 }}
+        {{- end }}
           envFrom:
-          - configMapRef:
-              name: {{ include "stream.fullname" . }}
           - secretRef:
               name: {{ include "stream.fullname" . }}
           ports:
