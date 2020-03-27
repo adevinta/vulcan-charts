@@ -86,7 +86,7 @@ spec:
           - name: RAILS_MAX_THREADS
             value: "{{ .Values.conf.railsMaxThreads }}"
         {{- if .Values.extraEnv }}
-          {{ toYaml .Values.extraEnv | indent 10 }}
+          {{ toYaml .Values.extraEnv | nindent 10 }}
         {{- end }}
           envFrom:
           - secretRef:

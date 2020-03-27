@@ -78,7 +78,7 @@ spec:
           - name: SNS_TOPIC_ARN
             value: "{{ .Values.conf.snsArn }}"
         {{- if .Values.extraEnv }}
-          {{ toYaml .Values.extraEnv | indent 10 }}
+          {{ toYaml .Values.extraEnv | nindent 10 }}
         {{- end }}
           envFrom:
           - secretRef:

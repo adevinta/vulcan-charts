@@ -55,7 +55,7 @@ spec:
           - name: VULCAN_USER
             value: {{ .Values.conf.vulcanUser }}
         {{- if .Values.extraEnv }}
-          {{ toYaml .Values.extraEnv | indent 10 }}
+          {{ toYaml .Values.extraEnv | nindent 10 }}
         {{- end }}
           envFrom:
           - secretRef:

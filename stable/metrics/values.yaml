@@ -34,9 +34,9 @@ conf:
   redisPassword: TBD
   dogstatsdApiKey: TBD
 
-extraEnv: []
-  # - name: FOO
-  #   value: bar
+# extraEnv:
+#   - name: FOO
+#     value: bar
 
 serviceAccount:
   # Specifies whether a service account should be created

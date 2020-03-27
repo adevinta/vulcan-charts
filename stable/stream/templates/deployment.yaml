@@ -52,7 +52,7 @@ spec:
             value: "{{ .Values.conf.logLevel }}"
           - name: PG_HOST
             value: "{{ .Values.db.host }}"
-          - name: PG_NAME
+          - name: PG_DB
             value: "{{ .Values.db.name }}"
           - name: PG_USER
             value: "{{ .Values.db.user }}"
@@ -65,7 +65,7 @@ spec:
             value: "{{ .Values.db.ca | b64enc }}"
           {{- end }}
         {{- if .Values.extraEnv }}
-          {{ toYaml .Values.extraEnv | indent 10 }}
+          {{ toYaml .Values.extraEnv | nindent 10 }}
         {{- end }}
           envFrom:
           - secretRef:

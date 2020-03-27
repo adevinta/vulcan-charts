@@ -58,7 +58,7 @@ spec:
           - name: REDIS_ADDR
             value: "{{ .Values.conf.redisAddr | default (include "metricsRedisAddr" .)}}"
         {{- if .Values.extraEnv }}
-          {{ toYaml .Values.extraEnv | indent 10 }}
+          {{ toYaml .Values.extraEnv | nindent 10 }}
         {{- end }}
           envFrom:
           - secretRef:
