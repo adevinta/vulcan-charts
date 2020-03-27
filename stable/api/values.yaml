@@ -47,6 +47,15 @@ conf:
     subject: "[Test] Security Overview"
     from: tbd@tbd.com
     cc: tbd@tbd.com
+  # Security overview general section config.
+  general:
+    companyName: "Company"
+    supportEmail: "support@example.com"
+    contactEmail: "contact@example.com"
+    contactChannel: "https://contact-app.example.com/channel1"
+    documentationLink: "https://docu.example.com"
+    roadmapLink: "https://roadmap.example.com"
+
   vulnerabilityDbUrl: vulnerabilitydbapi # the current FIAAS
   gaId: UA-109338366-3
   s3PrivateBucket: TBD
@@ -72,10 +81,12 @@ serviceAccount:
   # If not set and create is true, a name is generated using the fullname template
   name:
 
-podSecurityContext: {}
+podSecurityContext:
+  {}
   # fsGroup: 2000
 
-securityContext: {}
+securityContext:
+  {}
   # capabilities:
   #   drop:
   #   - ALL
@@ -94,7 +105,8 @@ ingress:
   path: /
   annotations: {}
 
-resources: {}
+resources:
+  {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
   # resources, such as Minikube. If you do want to specify resources, uncomment the following

@@ -39,3 +39,11 @@ data:
   VULCAN_UI: "{{ .Values.conf.vulcanUi }}"
   VIEW_REPORT: "{{ .Values.conf.viewReport }}"
   ENSURE_HEIMDALL: "{{ .Values.conf.ensureHeimdall }}"
+  
+  # Security overview vars.
+  COMPANY_NAME:  "{{ .Values.conf.general.companyName }}"
+  SUPPORT_EMAIL: "{{ .Values.conf.general.supportEmail }}"
+  CONTACT_EMAIL: "{{ .Values.conf.general.contactEmail }}"
+  CONTACT_CHANNEL: "{{ .Values.conf.general.contactChannel }}"
+  DOCUMENTATION_LINK: "{{ .Values.conf.general.documentationLink }}"
+  ROADMAP_LINK: "{{ .Values.conf.general.roadmapLink }}"
