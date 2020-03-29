@@ -59,7 +59,7 @@ spec:
             value: "{{ ternary "https" "http" .Values.ingress.tls }}://{{ .Values.ingress.host }}/v1"
         {{- range $name, $value := .Values.extraEnv }}
           - name: {{ $name }}
-            value: {{ $value }}
+            value: {{ $value | quote }}
         {{- end }}
           ports:
             - name: {{ ternary "app" "http" .Values.proxy.enabled }}

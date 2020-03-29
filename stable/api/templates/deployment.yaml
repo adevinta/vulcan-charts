@@ -136,7 +136,7 @@ spec:
             value: "{{ .Values.conf.general.roadmapLink }}"
         {{- range $name, $value := .Values.extraEnv }}
           - name: {{ $name }}
-            value: {{ $value }}
+            value: {{ $value | quote }}
         {{- end }}
           envFrom:
           - secretRef:

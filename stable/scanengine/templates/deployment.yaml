@@ -79,7 +79,7 @@ spec:
             value: "{{ .Values.conf.snsArn }}"
         {{- range $name, $value := .Values.extraEnv }}
           - name: {{ $name }}
-            value: {{ $value }}
+            value: {{ $value | quote }}
         {{- end }}
           envFrom:
           - secretRef:

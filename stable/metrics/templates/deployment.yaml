@@ -59,7 +59,7 @@ spec:
             value: "{{ .Values.conf.redisAddr | default (include "metricsRedisAddr" .)}}"
         {{- range $name, $value := .Values.extraEnv }}
           - name: {{ $name }}
-            value: {{ $value }}
+            value: {{ $value | quote }}
         {{- end }}
           envFrom:
           - secretRef:
