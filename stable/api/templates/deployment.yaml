@@ -134,8 +134,9 @@ spec:
             value: "{{ .Values.conf.general.documentationLink }}"
           - name: ROADMAP_LINK
             value: "{{ .Values.conf.general.roadmapLink }}"
-        {{- if .Values.extraEnv }}
-          {{ toYaml .Values.extraEnv | nindent 10 }}
+        {{- range $name, $value := .Values.extraEnv }}
+          - name: {{ $name }}
+            value: {{ $value }}
         {{- end }}
           envFrom:
           - secretRef:

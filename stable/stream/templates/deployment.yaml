@@ -64,8 +64,9 @@ spec:
           - name: PG_CA_B64
             value: "{{ .Values.db.ca | b64enc }}"
           {{- end }}
-        {{- if .Values.extraEnv }}
-          {{ toYaml .Values.extraEnv | nindent 10 }}
+        {{- range $name, $value := .Values.extraEnv }}
+          - name: {{ $name }}
+            value: {{ $value }}
         {{- end }}
           envFrom:
           - secretRef:

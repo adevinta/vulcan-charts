@@ -35,8 +35,7 @@ conf:    # TBD
   vulcanUser: tbd
 
 # extraEnv:
-#   - name: FOO
-#     value: bar
+#   FOO: BAR
 
 serviceAccount:
   # Specifies whether a service account should be created

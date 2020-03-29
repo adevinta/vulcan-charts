@@ -32,8 +32,7 @@ conf:
   apiUrl: https://vulcan-api/api/v1/
 
 # extraEnv:
-#   - name: FOO
-#     value: bar
+#   FOO: BAR
 
 serviceAccount:
   # Specifies whether a service account should be created

@@ -77,8 +77,9 @@ spec:
             value: "{{ .Values.conf.queueArn }}"
           - name: SNS_TOPIC_ARN
             value: "{{ .Values.conf.snsArn }}"
-        {{- if .Values.extraEnv }}
-          {{ toYaml .Values.extraEnv | nindent 10 }}
+        {{- range $name, $value := .Values.extraEnv }}
+          - name: {{ $name }}
+            value: {{ $value }}
         {{- end }}
           envFrom:
           - secretRef:

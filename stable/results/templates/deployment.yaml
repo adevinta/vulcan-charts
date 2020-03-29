@@ -57,8 +57,9 @@ spec:
             value: "{{ .Values.conf.bucketLogs }}"
           - name: LINK_BASE
             value: "{{ ternary "https" "http" .Values.ingress.tls }}://{{ .Values.ingress.host }}/v1"
-        {{- if .Values.extraEnv }}
-          {{ toYaml .Values.extraEnv | nindent 10 }}
+        {{- range $name, $value := .Values.extraEnv }}
+          - name: {{ $name }}
+            value: {{ $value }}
         {{- end }}
           ports:
             - name: {{ ternary "app" "http" .Values.proxy.enabled }}

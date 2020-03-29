@@ -57,8 +57,9 @@ spec:
             value: "{{ .Values.conf.dogstatsdAddr | default (include "metricsDogstatsdAddr" .)}}"
           - name: REDIS_ADDR
             value: "{{ .Values.conf.redisAddr | default (include "metricsRedisAddr" .)}}"
-        {{- if .Values.extraEnv }}
-          {{ toYaml .Values.extraEnv | nindent 10 }}
+        {{- range $name, $value := .Values.extraEnv }}
+          - name: {{ $name }}
+            value: {{ $value }}
         {{- end }}
           envFrom:
           - secretRef:
