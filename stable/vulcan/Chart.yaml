@@ -59,3 +59,18 @@ dependencies:
   version: 0.1.1
   repository: "file://../metrics"
   condition: metrics.enabled
+- name: postgresql
+  version: 8.6.11
+  repository: https://charts.bitnami.com/bitnami
+  condition: persistencedb.enabled
+  alias: persistencedb
+- name: postgresql
+  version: 8.6.11
+  repository: https://charts.bitnami.com/bitnami
+  condition: apidb.enabled
+  alias: apidb
+- name: postgresql
+  version: 8.6.11
+  repository: https://charts.bitnami.com/bitnami
+  condition: scanenginedb.enabled
+  alias: scanenginedb
