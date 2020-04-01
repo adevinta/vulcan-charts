@@ -42,7 +42,7 @@ spec:
           command: ['sh', '-c', 'until pg_isready -t 5; do echo WaitingDB; done;']
           env:
           - name: PGHOST
-            value: "{{ .Values.db.host }}"
+            value: "{{ ternary .Values.db.host ( printf "%s-%s" .Release.Name .Values.db.host ) .Values.db.external }}"
           - name: PGPORT
             value: "{{ .Values.db.port }}"
       containers:
@@ -60,7 +60,7 @@ spec:
           - name: COOKIE_DOMAIN
             value: "{{ .Values.conf.cookieDomain }}"
           - name: PG_HOST
-            value: "{{ .Values.db.host }}"
+            value: "{{ ternary .Values.db.host ( printf "%s-%s" .Release.Name .Values.db.host ) .Values.db.external }}"
           - name: PG_NAME
             value: "{{ .Values.db.name }}"
           - name: PG_USER

@@ -19,14 +19,59 @@ proxy:
   probePath: /healthz
   probeInitialDelay: 2
 
+defaults:
+  pg: &pg
+    enabled: true
+    postgresqlUsername: postgres
+    postgresqlPassword: vulcan
+    resources:
+      requests:
+        cpu: "0"
+        memory: "0"
+    persistence:
+      enabled: false
+  db: &db
+    external: false
+    user: postgres
+    password: vulcan
+    sslMode: disable
+
 persistencedb:
-  enabled: false
+  <<: *pg
+  postgresqlDatabase: vulcanpersistence
 
 apidb:
-  enabled: false
+  <<: *pg
+  postgresqlDatabase: vulcanapi
 
 scanenginedb:
-  enabled: false
+  <<: *pg
+  postgresqlDatabase: vulcanscanengine
+
+# Default config for all the services
+persistence:
+  db:
+    <<: *db
+    host: persistencedb
+    name: vulcanpersistence
+
+stream:
+  db:
+    <<: *db
+    host: persistencedb
+    name: vulcanpersistence
+
+scanengine:
+  db:
+    <<: *db
+    host: scanenginedb
+    name: vulcanscanengine
+
+api:
+  db:
+    <<: *db
+    host: apidb
+    name: vulcanapi
 
 serviceAccount:
   # Specifies whether a service account should be created

@@ -51,7 +51,7 @@ spec:
           - name: LOG_LEVEL
             value: "{{ .Values.conf.logLevel }}"
           - name: PG_HOST
-            value: "{{ .Values.db.host }}"
+            value: "{{ ternary .Values.db.host ( printf "%s-%s" .Release.Name .Values.db.host ) .Values.db.external }}"
           - name: PG_DB
             value: "{{ .Values.db.name }}"
           - name: PG_USER
