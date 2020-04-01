@@ -31,7 +31,7 @@ defaults:
     persistence:
       enabled: false
   db: &db
-    external: false
+    internal: true
     user: postgres
     password: vulcan
     sslMode: disable
