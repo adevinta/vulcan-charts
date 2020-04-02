@@ -24,6 +24,15 @@ defaults:
     enabled: true
     postgresqlUsername: postgres
     postgresqlPassword: TBD
+    postgresqlDatabase: persistence
+    initdbScripts:
+      initial-api.sql: |
+        CREATE DATABASE api;
+        CREATE DATABASE scanengine;
+    master:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9187"
     resources:
       requests:
         cpu: "0"
@@ -38,42 +47,34 @@ defaults:
     password: TBD
     sslMode: disable
 
-persistencedb:
+postgresql:
   <<: *pg
-  postgresqlDatabase: vulcanpersistence
-
-apidb:
-  <<: *pg
-  postgresqlDatabase: vulcanapi
-
-scanenginedb:
-  <<: *pg
-  postgresqlDatabase: vulcanscanengine
+  postgresqlDatabase: persistence
 
 # Default config for all the services
 persistence:
   db:
     <<: *db
-    host: persistencedb
-    name: vulcanpersistence
+    host: postgresql
+    name: persistence
 
 stream:
   db:
     <<: *db
-    host: persistencedb
-    name: vulcanpersistence
+    host: postgresql
+    name: persistence
 
 scanengine:
   db:
     <<: *db
-    host: scanenginedb
-    name: vulcanscanengine
+    host: postgresql
+    name: scanengine
 
 api:
   db:
     <<: *db
-    host: apidb
-    name: vulcanapi
+    host: postgresql
+    name: api
 
 serviceAccount:
   # Specifies whether a service account should be created

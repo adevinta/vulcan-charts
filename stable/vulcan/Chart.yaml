@@ -62,15 +62,4 @@ dependencies:
 - name: postgresql
   version: 8.6.11
   repository: https://charts.bitnami.com/bitnami
-  condition: persistencedb.enabled
-  alias: persistencedb
-- name: postgresql
-  version: 8.6.11
-  repository: https://charts.bitnami.com/bitnami
-  condition: apidb.enabled
-  alias: apidb
-- name: postgresql
-  version: 8.6.11
-  repository: https://charts.bitnami.com/bitnami
-  condition: scanenginedb.enabled
-  alias: scanenginedb
+  condition: postgresql.enabled
