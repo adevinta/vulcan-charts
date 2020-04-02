@@ -66,6 +66,7 @@ conf:
   ensureHeimdall: https://public-redirect/index.html?reportUrl=
 
 db:
+  internal: false
   host: TBD
   name: TBD
   user: TBD

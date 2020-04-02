@@ -30,6 +30,7 @@ probeTimeout: 2
 conf:
   logLevel: "DEBUG"
 db:
+  internal: false
   host: TBD
   name: TBD
   user: TBD

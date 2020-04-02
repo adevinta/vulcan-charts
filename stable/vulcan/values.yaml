@@ -23,17 +23,19 @@ defaults:
   pg: &pg
     enabled: true
     postgresqlUsername: postgres
-    postgresqlPassword: vulcan
+    postgresqlPassword: TBD
     resources:
       requests:
         cpu: "0"
         memory: "0"
     persistence:
       enabled: false
+    metrics:
+      enabled: true
   db: &db
     internal: true
     user: postgres
-    password: vulcan
+    password: TBD
     sslMode: disable
 
 persistencedb:

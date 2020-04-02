@@ -34,6 +34,7 @@ conf:
   snsArn: arn:aws:sns:TBD:TBD:TBD
 
 db:
+  internal: false
   host: TBD
   name: TBD
   user: TBD
