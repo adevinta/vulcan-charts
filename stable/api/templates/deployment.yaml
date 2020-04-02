@@ -73,6 +73,8 @@ spec:
           - name: PG_CA_B64
             value: "{{ .Values.db.ca | b64enc }}"
           {{- end }}
+          - name: LOG_LEVEL
+            value: "{{ .Values.conf.log.level }}"
           - name: SAML_MEATADATA
             value: "{{ .Values.conf.saml.metadata }}"
           - name: SAML_ISSUER

@@ -39,6 +39,8 @@ conf:
     issuer: http://okta/TBD
     callback: https://vulcan-api/api/v1/login/callback
     trustedDomains: '["vulcan-api"]'
+  log:
+    level: INFO
   queueArn: arn:aws:sqs:TBD:TBD:TBD
   reports:
     basePath: TBD
