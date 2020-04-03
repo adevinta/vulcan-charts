@@ -19,39 +19,35 @@ proxy:
   probePath: /healthz
   probeInitialDelay: 2
 
-defaults:
-  pg: &pg
+postgresql:
+  enabled: false  # Disabled by default.
+  postgresqlUsername: postgres
+  postgresqlPassword: TBD
+  postgresqlDatabase: persistence
+  initdbScripts:
+    initial-dbs.sql: |
+      CREATE DATABASE api;
+      CREATE DATABASE scanengine;
+  master:
+    annotations:
+      prometheus.io/scrape: "true"
+      prometheus.io/port: "9187"
+  resources:
+    requests:
+      cpu: "0"
+      memory: "0"
+  persistence:
+    enabled: false
+  metrics:
     enabled: true
-    postgresqlUsername: postgres
-    postgresqlPassword: TBD
-    postgresqlDatabase: persistence
-    initdbScripts:
-      initial-api.sql: |
-        CREATE DATABASE api;
-        CREATE DATABASE scanengine;
-    master:
-      annotations:
-        prometheus.io/scrape: "true"
-        prometheus.io/port: "9187"
-    resources:
-      requests:
-        cpu: "0"
-        memory: "0"
-    persistence:
-      enabled: false
-    metrics:
-      enabled: true
-  db: &db
-    internal: true
+
+defaults:
+  db: &db     # Disabled by default. Those parameters must match postgresql.* if enabled
+    internal: false
     user: postgres
     password: TBD
     sslMode: disable
 
-postgresql:
-  <<: *pg
-  postgresqlDatabase: persistence
-
-# Default config for all the services
 persistence:
   db:
     <<: *db
