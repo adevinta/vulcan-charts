@@ -1,0 +1,15 @@
+{{- if .Values.initScripts }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "aws.fullname" . }}-config
+  labels:
+    app: {{ template "aws.name" . }}
+    chart: {{ template "aws.chart" . }}
+    release: {{ .Release.Name | quote }}
+    heritage: {{ .Release.Service | quote }}
+data:
+{{- with .Values.initScripts }}
+{{ toYaml . | indent 2 }}
+{{- end }}
+{{- end }}

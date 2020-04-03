@@ -5,16 +5,91 @@
 replicaCount: 1
 
 image:
-  repository: nginx
+  repository: pafortin/goaws
+  tag: v0.3.1
   pullPolicy: IfNotPresent
 
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
+containerPort: 4100
+probePath:
+
+initScripts:
+  goaws.yaml: |
+    Local:
+      Host: vulcan-events
+      Port: 4100
+      Region: eu-west-1
+      AccountId: "012345678900"
+      LogToFile: false
+      QueueAttributeDefaults:
+        VisibilityTimeout: 30
+        ReceiveMessageWaitTimeSeconds: 0
+      Queues:
+        - Name: VulcanK8SAPIScans
+        - Name: VulcanK8SChecksGeneric
+        - Name: VulcanK8SChecksTenable
+        - Name: VulcanK8SMetricsChecks
+        - Name: VulcanK8SMetricsScans
+        - Name: VulcanK8SScanEngineChecks
+      Topics:
+        - Name: VulcanK8SChecks
+          Subscriptions:
+            - QueueName: VulcanK8SMetricsChecks
+              Raw: true
+            - QueueName: VulcanK8SScanEngineChecks
+              Raw: true
+              #FilterPolicy: '{"foo": ["bar"]}'
+        - Name: VulcanK8SScans
+          Subscriptions:
+            - QueueName: VulcanK8SAPIScans
+              Raw: true
+            - QueueName: VulcanK8SMetricsScans
+              Raw: true
+      RandomLatency:
+        Min: 0
+        Max: 0
+    Developer:
+      Host: localhost
+      Port: 4100
+      # Region: eu-west-1
+      AccountId: "012345678900"
+      LogToFile: false
+      QueueAttributeDefaults:
+        VisibilityTimeout: 30
+        ReceiveMessageWaitTimeSeconds: 0
+      Queues:
+        - Name: vulcan-local-queue
+        - Name: VulcanK8SAPIScans
+        - Name: VulcanK8SChecksGeneric
+        - Name: VulcanK8SChecksTenable
+        - Name: VulcanK8SMetricsChecks
+        - Name: VulcanK8SMetricsScans
+        - Name: VulcanK8SScanEngineChecks
+      Topics:
+        - Name: VulcanK8SChecks
+          Arn: arn:aws:sns::012345678900:VulcanK8SChecks
+          Subscriptions:
+            - QueueName: VulcanK8SMetricsChecks
+              Raw: true
+            - QueueName: VulcanK8SScanEngineChecks
+              Raw: true
+              #FilterPolicy: '{"foo": ["bar"]}'
+        - Name: VulcanK8SScans
+          Arn: arn:aws:sns::012345678900:VulcanK8Scans
+          Subscriptions:
+            - QueueName: VulcanK8SAPIScans
+              Raw: true
+            - QueueName: VulcanK8SMetricsScans
+              Raw: true
+      RandomLatency:
+        Min: 0
+        Max: 0
 
 serviceAccount:
   # Specifies whether a service account should be created
-  create: true
+  create: false
   # Annotations to add to the service account
   annotations: {}
   # The name of the service account to use.
