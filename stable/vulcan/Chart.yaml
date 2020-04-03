@@ -59,3 +59,7 @@ dependencies:
   version: 0.1.1
   repository: "file://../metrics"
   condition: metrics.enabled
+- name: aws
+  version: 0.1.0
+  repository: "file://../aws"
+  condition: aws.enabled
