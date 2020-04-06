@@ -1,4 +1,4 @@
-{{- if .Values.initScripts }}
+{{- if .Values.config }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -9,7 +9,7 @@ metadata:
     release: {{ .Release.Name | quote }}
     heritage: {{ .Release.Service | quote }}
 data:
-{{- with .Values.initScripts }}
+{{- with .Values.config }}
 {{ toYaml . | indent 2 }}
 {{- end }}
 {{- end }}
