@@ -36,6 +36,7 @@ conf:
   railsMaxThreads: 4
 
 db:
+  internal: false
   host: TBD
   name: TBD
   user: TBD

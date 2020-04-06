@@ -40,7 +40,7 @@ spec:
           command: ['sh', '-c', 'until pg_isready -t 5; do echo WaitingDB; done;']
           env:
           - name: PGHOST
-            value: "{{ .Values.db.host }}"
+            value: "{{ ternary ( printf "%s-%s" .Release.Name .Values.db.host ) .Values.db.host .Values.db.internal }}"
           - name: PGPORT
             value: "{{ .Values.db.port }}"
       containers:
@@ -56,7 +56,7 @@ spec:
           - name: PORT
             value: "{{ .Values.containerPort }}"
           - name: PG_HOST
-            value: "{{ .Values.db.host }}"
+            value: "{{ ternary ( printf "%s-%s" .Release.Name .Values.db.host ) .Values.db.host .Values.db.internal }}"
           - name: PG_NAME
             value: "{{ .Values.db.name }}"
           - name: PG_USER
