@@ -42,12 +42,12 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
-          {{- if .Values.initScripts }}
+          {{- if .Values.config }}
           - name: aws-config
             mountPath: /conf
           {{- end }}
       volumes:
-      {{- if .Values.initScripts }}
+      {{- if .Values.config }}
       - name: aws-config
         configMap:
           name: {{ template "aws.fullname" . }}-config
