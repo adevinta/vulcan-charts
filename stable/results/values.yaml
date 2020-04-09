@@ -33,6 +33,12 @@ conf:
   bucketReports: TBD
   bucketLogs: TBD
 
+s3:
+  internal: false
+  internalEndpoint:
+  externalEndpoint:
+
+
 # extraEnv:
 #   FOO: BAR
 

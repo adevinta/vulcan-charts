@@ -50,8 +50,15 @@ defaults:
 
 results:
   conf:
+    region: local-region
     bucketReports: reports
     bucketLogs: logs
+
+  s3:
+    internal: false
+    internalEndpoint: http://{ReleaseName}-s3/
+    externalEndpoint:
+    existingSecret: "{ReleaseName}-s3"
 
 persistence:
   db:
@@ -59,6 +66,7 @@ persistence:
     host: postgresql
     name: persistence
   conf:
+    region: local-region
     s3Scans: scans
 
   sns:
