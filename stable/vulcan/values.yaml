@@ -73,13 +73,15 @@ persistence:
 
   s3:
     internal: false
-    internalEndpoint: http://{ReleaseName}-s3:9000/
+    internalEndpoint: http://{ReleaseName}-s3/
     externalEndpoint:
+    existingSecret: "{ReleaseName}-s3"
 
   conf:
     region: eu-west-1
-    snsTopic: arn:aws:sns:eu-west-1:012345678900:VulcanK8SChecks
+    snsTopic: arn:aws:sns::012345678900:VulcanK8SChecks
     nessusCheckQueue: VulcanK8SChecksTenable
+    s3Scans: scans
 
 stream:
   db:
@@ -125,7 +127,6 @@ aws:
       Local:
         Host: {{ .Release.Name }}-aws
         Port: 4100
-        Region: eu-west-1
         AccountId: "012345678900"
         LogToFile: false
         QueueAttributeDefaults:
@@ -158,25 +159,31 @@ aws:
 
 s3:
   enabled: false
+  accessKey: AKIAIOSFODNN7EXAMPLE
+  secretKey: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+  minioConfig:
+    region: local-region
   buckets:
     - name: reports
-      policy: none
+      policy: public
       purge: false
     - name: logs
-      policy: none
+      policy: public
       purge: false
     - name: scans
-      policy: none
+      policy: public
       purge: false
     - name: insights
-      policy: none
+      policy: public
       purge: false
     - name: public-insights
-      policy: none
+      policy: public
       purge: false
     - name: crontinuous
-      policy: none
+      policy: public
       purge: false
+  service:
+    port: 80
   persistence:
     enabled: false
   serviceAccount:
