@@ -67,3 +67,8 @@ dependencies:
   version: 0.1.0
   repository: "file://../aws"
   condition: aws.enabled
+- name: minio
+  version: 5.0.19
+  repository: https://kubernetes-charts.storage.googleapis.com
+  alias: s3
+  condition: s3.enabled

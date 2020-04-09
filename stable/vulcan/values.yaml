@@ -48,11 +48,18 @@ defaults:
     password: TBD
     sslMode: disable
 
+results:
+  conf:
+    bucketReports: reports
+    bucketLogs: logs
+
 persistence:
   db:
     <<: *db
     host: postgresql
     name: persistence
+  conf:
+    s3Scans: scans
 
   sns:
     internal: false
@@ -86,6 +93,25 @@ api:
     <<: *db
     host: postgresql
     name: api
+  conf:
+    bucketReports: reports
+    bucketLogs: logs
+    s3PrivateBucket: insights
+    s3PublicBucket: public-insights
+
+crontinuous:
+  conf:
+    crontinuousBucket: crontinuous
+
+insights:
+  conf:
+    proxies:
+      - name: private
+        s3Bucket: insights
+        prefix: ""
+      - name: public
+        s3Bucket: public-insights
+        prefix: "/public"
 
 aws:
   enabled: false
@@ -124,6 +150,28 @@ aws:
         RandomLatency:
           Min: 0
           Max: 0
+
+s3:
+  enabled: false
+  buckets:
+    - name: reports
+      policy: none
+      purge: false
+    - name: logs
+      policy: none
+      purge: false
+    - name: scans
+      policy: none
+      purge: false
+    - name: insights
+      policy: none
+      purge: false
+    - name: public-insights
+      policy: none
+      purge: false
+    - name: crontinuous
+      policy: none
+      purge: false
 
 serviceAccount:
   # Specifies whether a service account should be created
