@@ -71,6 +71,11 @@ persistence:
     internalEndpoint: http://{ReleaseName}-aws/
     externalEndpoint:
 
+  s3:
+    internal: false
+    internalEndpoint: http://{ReleaseName}-s3:9000/
+    externalEndpoint:
+
   conf:
     region: eu-west-1
     snsTopic: arn:aws:sns:eu-west-1:012345678900:VulcanK8SChecks
@@ -172,6 +177,14 @@ s3:
     - name: crontinuous
       policy: none
       purge: false
+  persistence:
+    enabled: false
+  serviceAccount:
+    create: false
+  resources:
+    requests:
+      memory: 0
+      cpu: 0
 
 serviceAccount:
   # Specifies whether a service account should be created

@@ -55,6 +55,11 @@ sqs:
   internalEndpoint:
   externalEndpoint:
 
+s3:
+  internal: false
+  internalEndpoint:
+  externalEndpoint:
+
 # extraEnv:
 #   FOO: BAR
 

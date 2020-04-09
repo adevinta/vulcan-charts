@@ -93,6 +93,10 @@ spec:
           - name: AWS_SQS_ENDPOINT
             value: "{{ ternary ( .Values.sqs.internalEndpoint | replace "{ReleaseName}" .Release.Name ) .Values.sqs.externalEndpoint .Values.sqs.internal }}"
           {{- end }}
+          {{- if or .Values.s3.internal .Values.s3.externalEndpoint }}
+          - name: AWS_S3_ENDPOINT
+            value: "{{ ternary ( .Values.s3.internalEndpoint | replace "{ReleaseName}" .Release.Name ) .Values.s3.externalEndpoint .Values.s3.internal }}"
+          {{- end }}
         {{- range $name, $value := .Values.extraEnv }}
           - name: {{ $name }}
             value: {{ $value | quote }}
