@@ -92,7 +92,7 @@ aws:
   config:
     goaws.yaml: |
       Local:
-        Host: localhost
+        Host: {{ .Release.Name }}-aws
         Port: 4100
         Region: eu-west-1
         AccountId: "012345678900"

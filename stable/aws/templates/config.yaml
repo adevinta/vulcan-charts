@@ -9,7 +9,5 @@ metadata:
     release: {{ .Release.Name | quote }}
     heritage: {{ .Release.Service | quote }}
 data:
-{{- with .Values.config }}
-{{ toYaml . | indent 2 }}
-{{- end }}
+{{ tpl ( toYaml .Values.config ) . | indent 2 }}
 {{- end }}
