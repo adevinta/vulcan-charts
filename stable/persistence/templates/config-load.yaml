@@ -1,0 +1,10 @@
+{{ if .Values.conf.loadDb  }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    name: {{ include "persistence.fullname" . }}-load
+  name: {{ include "persistence.fullname" . }}-load
+data:
+  load.sql: {{ (tpl (.Files.Get "conf/load.sql") . | quote ) }}
+{{ end }}

@@ -53,6 +53,10 @@ spec:
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        {{- if .Values.conf.loadDb }}
+          command: ["/app/run.sh"]
+          args: ["/conf/load.sql"]
+        {{- end }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
           - name: PORT
@@ -120,6 +124,11 @@ spec:
             - name: {{ ternary "app" "http" .Values.proxy.enabled }}
               containerPort: {{ .Values.containerPort }}
               protocol: TCP
+      {{- if .Values.conf.loadDb }}
+          volumeMounts:
+          - name: load
+            mountPath: /conf
+      {{- end }}
           livenessProbe:
             httpGet:
               path: {{ .Values.probePath }}
@@ -136,6 +145,11 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- if .Values.proxy.enabled }}
       {{ include "proxy-volumes" . | nindent 6}}
+      {{- end }}
+      {{- if .Values.conf.loadDb }}
+      - name: "load"
+        configMap:
+          name: {{ include "persistence.fullname" . }}-load
       {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
