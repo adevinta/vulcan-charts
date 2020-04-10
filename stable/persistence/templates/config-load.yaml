@@ -1,4 +1,4 @@
-{{ if .Values.conf.loadDb  }}
+{{ if .Values.conf.loadSQL }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -6,5 +6,5 @@ metadata:
     name: {{ include "persistence.fullname" . }}-load
   name: {{ include "persistence.fullname" . }}-load
 data:
-  load.sql: {{ (tpl (.Files.Get "conf/load.sql") . | quote ) }}
+  load.sql: {{ (tpl .Values.conf.loadSQL . | quote ) }}
 {{ end }}
