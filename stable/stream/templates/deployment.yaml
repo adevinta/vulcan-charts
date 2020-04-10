@@ -36,6 +36,15 @@ spec:
       serviceAccountName: {{ template "stream.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+        - name: waitfordb
+          image: postgres:9.6.16-alpine
+          command: ['sh', '-c', 'until pg_isready -t 5; do echo WaitingDB; done;']
+          env:
+          - name: PGHOST
+            value: "{{ ternary ( printf "%s-%s" .Release.Name .Values.db.host ) .Values.db.host .Values.db.internal }}"
+          - name: PGPORT
+            value: "{{ .Values.db.port }}"
       containers:
         {{- if .Values.proxy.enabled }}
         {{ include "proxy-container" . | nindent 8}}
