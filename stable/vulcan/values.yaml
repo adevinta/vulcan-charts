@@ -135,6 +135,11 @@ api:
 crontinuous:
   conf:
     crontinuousBucket: crontinuous
+  s3:
+    internal: false
+    internalEndpoint: http://{ReleaseName}-s3/
+    externalEndpoint:
+    existingSecret: "{ReleaseName}-s3"
 
 insights:
   conf:

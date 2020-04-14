@@ -54,6 +54,22 @@ spec:
             value: {{ .Values.conf.vulcanApi | default  (include "vulcanApi" .)  }}
           - name: VULCAN_USER
             value: {{ .Values.conf.vulcanUser }}
+          {{- if or .Values.s3.internal .Values.s3.externalEndpoint }}
+          - name: AWS_S3_ENDPOINT
+            value: "{{ ternary ( .Values.s3.internalEndpoint | replace "{ReleaseName}" .Release.Name ) .Values.s3.externalEndpoint .Values.s3.internal }}"
+          {{- if or .Values.s3.existingSecret }}
+          - name: AWS_ACCESS_KEY_ID
+            valueFrom:
+              secretKeyRef:
+                name: "{{ .Values.s3.existingSecret | replace "{ReleaseName}" .Release.Name }}"
+                key: access-key
+          - name: AWS_SECRET_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: "{{ .Values.s3.existingSecret | replace "{ReleaseName}" .Release.Name }}"
+                key: secret-key
+          {{- end }}
+          {{- end }}
         {{- range $name, $value := .Values.extraEnv }}
           - name: {{ $name }}
             value: {{ $value | quote }}
