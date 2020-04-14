@@ -121,6 +121,16 @@ api:
     bucketLogs: logs
     s3PrivateBucket: insights
     s3PublicBucket: public-insights
+    queueArn: arn:aws:sqs::012345678900:VulcanK8SAPIScans
+  sqs:
+    internal: false
+    internalEndpoint: http://{ReleaseName}-aws/
+    externalEndpoint:
+  s3:
+    internal: false
+    internalEndpoint: http://{ReleaseName}-s3/
+    externalEndpoint:
+    existingSecret: "{ReleaseName}-s3"
 
 crontinuous:
   conf:
