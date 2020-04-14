@@ -77,6 +77,14 @@ spec:
             value: "{{ .Values.conf.queueArn }}"
           - name: SNS_TOPIC_ARN
             value: "{{ .Values.conf.snsArn }}"
+          {{- if or .Values.sns.internal .Values.sns.externalEndpoint }}
+          - name: AWS_SNS_ENDPOINT
+            value: "{{ ternary ( .Values.sns.internalEndpoint | replace "{ReleaseName}" .Release.Name ) .Values.sns.externalEndpoint .Values.sns.internal }}"
+          {{- end }}
+          {{- if or .Values.sqs.internal .Values.sqs.externalEndpoint }}
+          - name: AWS_SQS_ENDPOINT
+            value: "{{ ternary ( .Values.sqs.internalEndpoint | replace "{ReleaseName}" .Release.Name ) .Values.sqs.externalEndpoint .Values.sqs.internal }}"
+          {{- end }}
         {{- range $name, $value := .Values.extraEnv }}
           - name: {{ $name }}
             value: {{ $value | quote }}

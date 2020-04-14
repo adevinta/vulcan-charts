@@ -86,7 +86,7 @@ persistence:
     existingSecret: "{ReleaseName}-s3"
 
   conf:
-    region: eu-west-1
+    region: local-region
     snsTopic: arn:aws:sns::012345678900:VulcanK8SChecks
     nessusCheckQueue: VulcanK8SChecksTenable
     s3Scans: scans
@@ -105,12 +105,6 @@ stream:
     host: postgresql
     name: persistence
 
-scanengine:
-  db:
-    <<: *db
-    host: postgresql
-    name: scanengine
-
 api:
   db:
     <<: *db
@@ -121,7 +115,7 @@ api:
     bucketLogs: logs
     s3PrivateBucket: insights
     s3PublicBucket: public-insights
-    queueArn: arn:aws:sqs::012345678900:VulcanK8SAPIScans
+    queueArn: arn:aws:sqs:eu-west-1:012345678900:VulcanK8SAPIScans
   sqs:
     internal: false
     internalEndpoint: http://{ReleaseName}-aws/
@@ -141,8 +135,27 @@ crontinuous:
     externalEndpoint:
     existingSecret: "{ReleaseName}-s3"
 
+scanengine:
+  conf:
+    logLevel: "error"
+    queueArn: arn:aws:sqs:local:012345678900:VulcanK8SScanEngineChecks
+    snsArn: arn:aws:sns:local:012345678900:VulcanK8SScans
+  db:
+    <<: *db
+    host: postgresql
+    name: scanengine
+  sns:
+    internal: false
+    internalEndpoint: http://{ReleaseName}-aws/
+    externalEndpoint:
+  sqs:
+    internal: false
+    internalEndpoint: http://{ReleaseName}-aws/
+    externalEndpoint:
+
 insights:
   conf:
+    region: local-region
     proxies:
       - name: private
         s3Bucket: insights
@@ -150,6 +163,11 @@ insights:
       - name: public
         s3Bucket: public-insights
         prefix: "/public"
+  s3:
+    internal: false
+    internalEndpoint: http://{ReleaseName}-s3/
+    externalEndpoint:
+    existingSecret: "{ReleaseName}-s3"
 
 aws:
   enabled: false
@@ -189,6 +207,8 @@ aws:
           Max: 0
 
 s3:
+  image:
+    tag: 2020.4.10-debian-10-r3
   enabled: false
   mode: standalone
   defaultBuckets: "reports,logs,scans,insights,public-insights,crotinuous"
@@ -202,6 +222,9 @@ s3:
     password: AKIAIOSFODNN7EXAMPLE
   secretKey:
     password: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+  extraEnv:
+    - name: MINIO_REGION_NAME
+      value: local-region
 
 serviceAccount:
   # Specifies whether a service account should be created

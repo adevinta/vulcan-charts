@@ -71,6 +71,22 @@ spec:
               value: "{{ $dot.Values.probePath }}"
             - name: APP_PORT
               value: "{{ $port }}"
+            {{- if or $dot.Values.s3.internal $dot.Values.s3.externalEndpoint }}
+            - name: AWS_API_ENDPOINT
+              value: "{{ ternary ( $dot.Values.s3.internalEndpoint | replace "{ReleaseName}" $dot.Release.Name ) $dot.Values.s3.externalEndpoint $dot.Values.s3.internal }}"
+            {{- if $dot.Values.s3.existingSecret }}
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ $dot.Values.s3.existingSecret | replace "{ReleaseName}" $dot.Release.Name }}"
+                  key: access-key
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ $dot.Values.s3.existingSecret | replace "{ReleaseName}" $dot.Release.Name }}"
+                  key: secret-key
+            {{- end }}
+            {{- end }}
           ports:
             - name: {{ $p.name }}
               containerPort: {{ $port }}
