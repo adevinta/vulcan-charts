@@ -175,39 +175,18 @@ aws:
 
 s3:
   enabled: false
-  accessKey: AKIAIOSFODNN7EXAMPLE
-  secretKey: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
-  minioConfig:
-    region: local-region
-  buckets:
-    - name: reports
-      policy: public
-      purge: false
-    - name: logs
-      policy: public
-      purge: false
-    - name: scans
-      policy: public
-      purge: false
-    - name: insights
-      policy: public
-      purge: false
-    - name: public-insights
-      policy: public
-      purge: false
-    - name: crontinuous
-      policy: public
-      purge: false
-  service:
-    port: 80
-  persistence:
-    enabled: false
+  mode: standalone
+  defaultBuckets: "reports,logs,scans,insights,public-insights,crotinuous"
   serviceAccount:
     create: false
-  resources:
-    requests:
-      memory: 0
-      cpu: 0
+  persistence:
+    enabled: false
+  service:
+    port: 80
+  accessKey:
+    password: AKIAIOSFODNN7EXAMPLE
+  secretKey:
+    password: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
 
 serviceAccount:
   # Specifies whether a service account should be created

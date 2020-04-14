@@ -105,12 +105,12 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: "{{ .Values.s3.existingSecret | replace "{ReleaseName}" .Release.Name }}"
-                key: accesskey
+                key: access-key
           - name: AWS_SECRET_ACCESS_KEY
             valueFrom:
               secretKeyRef:
                 name: "{{ .Values.s3.existingSecret | replace "{ReleaseName}" .Release.Name }}"
-                key: secretkey
+                key: secret-key
           {{- end }}
           {{- end }}
         {{- range $name, $value := .Values.extraEnv }}
