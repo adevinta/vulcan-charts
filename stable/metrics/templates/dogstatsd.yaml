@@ -12,20 +12,23 @@ spec:
   selector:
     app: {{ include "metrics.fullname" . }}-dogstatsd
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "metrics.fullname" . }}-dogstatsd
   labels:
     app: {{ include "metrics.fullname" . }}-dogstatsd
 spec:
-  strategy:
-    type: Recreate
   replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "metrics.name" . }}-dogstatsd
+      app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: {{ include "metrics.fullname" . }}-dogstatsd
+        app.kubernetes.io/name: {{ include "metrics.name" . }}-dogstatsd
+        app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
       containers:
         - image: datadog/docker-dd-agent:latest-dogstatsd

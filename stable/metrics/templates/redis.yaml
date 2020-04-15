@@ -11,20 +11,23 @@ spec:
   selector:
     app: {{ include "metrics.fullname" . }}-redis
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "metrics.fullname" . }}-redis
   labels:
     app: {{ include "metrics.fullname" . }}-redis
 spec:
-  strategy:
-    type: Recreate
   replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "metrics.name" . }}-redis
+      app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: {{ include "metrics.fullname" . }}-redis
+        app.kubernetes.io/name: {{ include "metrics.name" . }}-redis
+        app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
       containers:
         - image: redis:alpine
