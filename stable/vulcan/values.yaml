@@ -169,6 +169,15 @@ insights:
     externalEndpoint:
     existingSecret: "{ReleaseName}-s3"
 
+metrics:
+  conf:
+    checksQueueArn: arn:aws:sqs:local-region:012345678900:VulcanK8SMetricsChecks
+    scansQueueArn: arn:aws:sqs:local-region:012345678900:VulcanK8SMetricsScans
+  sqs:
+    internal: false
+    internalEndpoint: http://{ReleaseName}-aws/
+    externalEndpoint:
+
 aws:
   enabled: false
   config:

@@ -57,6 +57,10 @@ spec:
             value: "{{ .Values.conf.dogstatsdAddr | default (include "metricsDogstatsdAddr" .)}}"
           - name: REDIS_ADDR
             value: "{{ .Values.conf.redisAddr | default (include "metricsRedisAddr" .)}}"
+          {{- if or .Values.sqs.internal .Values.sqs.externalEndpoint }}
+          - name: AWS_SQS_ENDPOINT
+            value: "{{ ternary ( .Values.sqs.internalEndpoint | replace "{ReleaseName}" .Release.Name ) .Values.sqs.externalEndpoint .Values.sqs.internal }}"
+          {{- end }}
         {{- range $name, $value := .Values.extraEnv }}
           - name: {{ $name }}
             value: {{ $value | quote }}

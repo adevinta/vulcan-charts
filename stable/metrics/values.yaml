@@ -34,6 +34,11 @@ conf:
   redisPassword: TBD
   dogstatsdApiKey: TBD
 
+sqs:
+  internal: false
+  internalEndpoint: http://{ReleaseName}-aws/
+  externalEndpoint:
+
 # extraEnv:
 #   FOO: BAR
 
