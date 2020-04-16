@@ -35,7 +35,7 @@ conf:
   nessusCheckQueue: TBD
   railsMaxThreads: 4
 
-  loadDb: false
+  # loadSQL:   # SQL Script
   queueGenId: e4febc2a-3c75-40a8-9dea-26d893050f75
   queueGenArn: arn:aws:sqs:eu-west-1:892351162211:VulcanK8SChecksGeneric
   queueGenName: VulcanK8SChecksGeneric
