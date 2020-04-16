@@ -227,6 +227,7 @@ s3:
     enabled: false
   service:
     port: 80
+    type: NodePort    # To bypass problem with minio.chart
   accessKey:
     password: AKIAIOSFODNN7EXAMPLE
   secretKey:
