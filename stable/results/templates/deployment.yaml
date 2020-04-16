@@ -58,7 +58,7 @@ spec:
           - name: LINK_BASE
             value: "{{ ternary "https" "http" .Values.ingress.tls }}://{{ .Values.ingress.host }}/v1"
           {{- if or .Values.s3.internal .Values.s3.externalEndpoint }}
-          - name: AWS_ENDPOINT
+          - name: AWS_S3_ENDPOINT
             value: "{{ ternary ( .Values.s3.internalEndpoint | replace "{ReleaseName}" .Release.Name ) .Values.s3.externalEndpoint .Values.s3.internal }}"
           - name: PATH_STYLE
             value: "true"
