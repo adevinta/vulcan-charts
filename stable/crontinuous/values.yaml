@@ -34,11 +34,6 @@ conf:    # TBD
   crontinuousBucket: tbd
   vulcanUser: tbd
 
-s3:
-  internal: false
-  internalEndpoint:
-  externalEndpoint:
-
 # extraEnv:
 #   FOO: BAR
 

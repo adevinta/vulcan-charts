@@ -47,136 +47,17 @@ defaults:
     user: postgres
     password: TBD
     sslMode: disable
-
-results:
-  conf:
-    region: local-region
-    bucketReports: reports
-    bucketLogs: logs
-
-  s3:
-    internal: false
-    internalEndpoint: http://{ReleaseName}-s3/
-    externalEndpoint:
-    existingSecret: "{ReleaseName}-s3"
-
-persistence:
-  db:
-    <<: *db
-    host: postgresql
-    name: persistence
-  conf:
-    region: local-region
-    s3Scans: scans
-
-  sns:
-    internal: false
-    internalEndpoint: http://{ReleaseName}-aws/
-    externalEndpoint:
-
-  sqs:
-    internal: false
-    internalEndpoint: http://{ReleaseName}-aws/
-    externalEndpoint:
-
-  s3:
-    internal: false
-    internalEndpoint: http://{ReleaseName}-s3/
-    externalEndpoint:
-    existingSecret: "{ReleaseName}-s3"
-
-  conf:
-    region: local-region
-    snsTopic: arn:aws:sns::012345678900:VulcanK8SChecks
-    nessusCheckQueue: VulcanK8SChecksTenable
-    s3Scans: scans
-
-    loadSQL:
-    queueGenId: e4febc2a-3c75-40a8-9dea-26d893050f75
-    queueGenArn: arn:aws:sqs::012345678900:VulcanK8SChecksGeneric
-    queueGenName: VulcanK8SChecksGeneric
-    queueNesId: a4febc2a-3c75-40a8-9dea-26d893050f75
-    queueNesArn: arn:aws:sqs::012345678900:VulcanK8SChecksTenable
-    queueNesName: VulcanK8SChecksTenable
-
-stream:
-  db:
-    <<: *db
-    host: postgresql
-    name: persistence
-
-api:
-  db:
-    <<: *db
-    host: postgresql
-    name: api
-  conf:
-    bucketReports: reports
-    bucketLogs: logs
-    s3PrivateBucket: insights
-    s3PublicBucket: public-insights
-    queueArn: arn:aws:sqs:eu-west-1:012345678900:VulcanK8SAPIScans
-  sqs:
-    internal: false
-    internalEndpoint: http://{ReleaseName}-aws/
-    externalEndpoint:
-  s3:
-    internal: false
-    internalEndpoint: http://{ReleaseName}-s3/
-    externalEndpoint:
-    existingSecret: "{ReleaseName}-s3"
-
-crontinuous:
-  conf:
-    crontinuousBucket: crontinuous
-  s3:
-    internal: false
-    internalEndpoint: http://{ReleaseName}-s3/
-    externalEndpoint:
-    existingSecret: "{ReleaseName}-s3"
-
-scanengine:
-  conf:
-    logLevel: "error"
-    queueArn: arn:aws:sqs:local:012345678900:VulcanK8SScanEngineChecks
-    snsArn: arn:aws:sns:local:012345678900:VulcanK8SScans
-  db:
-    <<: *db
-    host: postgresql
-    name: scanengine
-  sns:
-    internal: false
-    internalEndpoint: http://{ReleaseName}-aws/
-    externalEndpoint:
-  sqs:
-    internal: false
-    internalEndpoint: http://{ReleaseName}-aws/
-    externalEndpoint:
-
-insights:
-  conf:
-    region: local-region
-    proxies:
-      - name: private
-        s3Bucket: insights
-        prefix: ""
-      - name: public
-        s3Bucket: public-insights
-        prefix: "/public"
-  s3:
-    internal: false
-    internalEndpoint: http://{ReleaseName}-s3/
-    externalEndpoint:
-    existingSecret: "{ReleaseName}-s3"
-
-metrics:
-  conf:
-    checksQueueArn: arn:aws:sqs:local-region:012345678900:VulcanK8SMetricsChecks
-    scansQueueArn: arn:aws:sqs:local-region:012345678900:VulcanK8SMetricsScans
-  sqs:
-    internal: false
-    internalEndpoint: http://{ReleaseName}-aws/
-    externalEndpoint:
+  infra: &infra
+    sns:
+      internal: false
+      internalEndpointTpl: http://{{ .Release.Name }}-aws/
+    sqs:
+      internal: false
+      internalEndpointTpl: http://{{ .Release.Name }}-aws/
+    s3:
+      internal: false
+      internalEndpointTpl: http://{{ .Release.Name }}-s3/
+      existingSecretTpl: '{{ .Release.Name }}-s3'
 
 aws:
   enabled: false
@@ -236,6 +117,87 @@ s3:
   extraEnv:
     - name: MINIO_REGION_NAME
       value: local-region
+
+results:
+  <<: *infra
+  conf:
+    region: local-region
+    bucketReports: reports
+    bucketLogs: logs
+
+persistence:
+  <<: *infra
+  db:
+    <<: *db
+    host: postgresql
+    name: persistence
+  conf:
+    region: local-region
+    snsTopic: arn:aws:sns::012345678900:VulcanK8SChecks
+    nessusCheckQueue: VulcanK8SChecksTenable
+    s3Scans: scans
+
+    loadSQL:
+    queueGenId: e4febc2a-3c75-40a8-9dea-26d893050f75
+    queueGenArn: arn:aws:sqs::012345678900:VulcanK8SChecksGeneric
+    queueGenName: VulcanK8SChecksGeneric
+    queueNesId: a4febc2a-3c75-40a8-9dea-26d893050f75
+    queueNesArn: arn:aws:sqs::012345678900:VulcanK8SChecksTenable
+    queueNesName: VulcanK8SChecksTenable
+
+stream:
+  <<: *infra
+  db:
+    <<: *db
+    host: postgresql
+    name: persistence
+
+api:
+  <<: *infra
+  db:
+    <<: *db
+    host: postgresql
+    name: api
+  conf:
+    bucketReports: reports
+    bucketLogs: logs
+    s3PrivateBucket: insights
+    s3PublicBucket: public-insights
+    queueArn: arn:aws:sqs:eu-west-1:012345678900:VulcanK8SAPIScans
+
+crontinuous:
+  <<: *infra
+  conf:
+    crontinuousBucket: crontinuous
+
+scanengine:
+  <<: *infra
+  conf:
+    logLevel: "error"
+    queueArn: arn:aws:sqs:local:012345678900:VulcanK8SScanEngineChecks
+    snsArn: arn:aws:sns:local:012345678900:VulcanK8SScans
+  db:
+    <<: *db
+    host: postgresql
+    name: scanengine
+
+insights:
+  <<: *infra
+  conf:
+    region: local-region
+    proxies:
+      - name: private
+        s3Bucket: insights
+        prefix: ""
+      - name: public
+        s3Bucket: public-insights
+        prefix: "/public"
+
+metrics:
+  <<: *infra
+  conf:
+    checksQueueArn: arn:aws:sqs:local-region:012345678900:VulcanK8SMetricsChecks
+    scansQueueArn: arn:aws:sqs:local-region:012345678900:VulcanK8SMetricsScans
 
 serviceAccount:
   # Specifies whether a service account should be created

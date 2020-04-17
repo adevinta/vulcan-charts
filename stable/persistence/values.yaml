@@ -53,21 +53,6 @@ db:
   sslMode: disable
   ca:
 
-sns:
-  internal: false
-  internalEndpoint:   # http://{ReleaseName}-aws/
-  externalEndpoint:
-
-sqs:
-  internal: false
-  internalEndpoint:
-  externalEndpoint:
-
-s3:
-  internal: false
-  internalEndpoint:
-  externalEndpoint:
-
 # extraEnv:
 #   FOO: BAR
 
