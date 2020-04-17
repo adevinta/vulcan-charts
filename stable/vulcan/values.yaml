@@ -180,11 +180,12 @@ metrics:
 
 aws:
   enabled: false
+  containerPort: 80
   config:
     goaws.yaml: |
       Local:
         Host: {{ .Release.Name }}-aws
-        Port: 4100
+        Port: {{ .Values.containerPort }}
         AccountId: "012345678900"
         LogToFile: false
         QueueAttributeDefaults:
