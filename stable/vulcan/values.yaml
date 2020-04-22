@@ -50,14 +50,17 @@ defaults:
   infra: &infra
     sns:
       internal: false
-      internalEndpointTpl: http://{{ .Release.Name }}-aws/
+      internalEndpointTpl: http://{{ .Release.Name }}-aws
+      region: local-region
     sqs:
       internal: false
-      internalEndpointTpl: http://{{ .Release.Name }}-aws/
+      internalEndpointTpl: http://{{ .Release.Name }}-aws
+      region: local-region
     s3:
       internal: false
-      internalEndpointTpl: http://{{ .Release.Name }}-s3/
+      internalEndpointTpl: http://{{ .Release.Name }}-s3
       existingSecretTpl: '{{ .Release.Name }}-s3'
+      region: local-region
 
 aws:
   enabled: false
