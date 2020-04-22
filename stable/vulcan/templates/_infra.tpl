@@ -4,6 +4,8 @@
   value: "{{ tpl .Values.s3.internalEndpointTpl . }}"
 - name: PATH_STYLE
   value: "true"
+- name: AWS_S3_REGION
+  value: "{{ .Values.s3.region }}"
 {{- if or .Values.s3.existingSecretTpl }}
 - name: AWS_ACCESS_KEY_ID
   valueFrom:
@@ -23,6 +25,8 @@
 {{- if .Values.sns.internal }}
 - name: AWS_SNS_ENDPOINT
   value: "{{ tpl .Values.sns.internalEndpointTpl . }}"
+- name: AWS_SNS_REGION
+  value: "{{ .Values.sns.region }}"
 {{- end }}
 {{- end -}}
 
@@ -30,5 +34,7 @@
 {{- if .Values.sqs.internal }}
 - name: AWS_SQS_ENDPOINT
   value: "{{ tpl .Values.sqs.internalEndpointTpl . }}"
+- name: AWS_SQS_REGION
+  value: "{{ .Values.sqs.region }}"
 {{- end }}
 {{- end -}}
