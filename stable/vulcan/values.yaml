@@ -105,7 +105,7 @@ s3:
     tag: 2020.4.10-debian-10-r3
   enabled: false
   mode: standalone
-  defaultBuckets: "reports,logs,scans,insights,public-insights,crotinuous"
+  defaultBuckets: "reports,logs,scans,insights,public-insights,crontinuous"
   serviceAccount:
     create: false
   persistence:
