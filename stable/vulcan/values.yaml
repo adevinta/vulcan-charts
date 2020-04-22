@@ -167,6 +167,7 @@ api:
     s3PrivateBucket: insights
     s3PublicBucket: public-insights
     queueArn: arn:aws:sqs:eu-west-1:012345678900:VulcanK8SAPIScans
+    queueName: VulcanK8SAPIScans
 
 crontinuous:
   <<: *infra
@@ -178,6 +179,7 @@ scanengine:
   conf:
     logLevel: "error"
     queueArn: arn:aws:sqs:local:012345678900:VulcanK8SScanEngineChecks
+    queueName: VulcanK8SScanEngineChecks
     snsArn: arn:aws:sns:local:012345678900:VulcanK8SScans
   db:
     <<: *db
@@ -200,7 +202,9 @@ metrics:
   <<: *infra
   conf:
     checksQueueArn: arn:aws:sqs:local-region:012345678900:VulcanK8SMetricsChecks
+    checksQueueName: VulcanK8SMetricsChecks
     scansQueueArn: arn:aws:sqs:local-region:012345678900:VulcanK8SMetricsScans
+    scansQueueName: VulcanK8SMetricsScans
 
 serviceAccount:
   # Specifies whether a service account should be created

@@ -57,6 +57,12 @@ spec:
             value: "{{ .Values.conf.dogstatsdAddr | default (include "metricsDogstatsdAddr" .)}}"
           - name: REDIS_ADDR
             value: "{{ .Values.conf.redisAddr | default (include "metricsRedisAddr" .)}}"
+          {{- if .Values.sqs.internal}}
+          - name: CHECKS_SQS_QUEUE_NAME
+            value: "{{ .Values.conf.checksQueueName }}"
+          - name: SCANS_SQS_QUEUE_MAME
+            value: "{{ .Values.conf.scansQueueName }}"
+          {{- end }}
         {{ include "infra-envs-sqs" . | nindent 10 }}
         {{- range $name, $value := .Values.extraEnv }}
           - name: {{ $name }}
