@@ -10,7 +10,8 @@ spec:
     - port: 8125
       protocol: UDP
   selector:
-    app: {{ include "metrics.fullname" . }}-dogstatsd
+    app.kubernetes.io/name: {{ include "metrics.name" . }}-dogstatsd
+    app.kubernetes.io/instance: {{ .Release.Name }}
 ---
 apiVersion: apps/v1
 kind: Deployment

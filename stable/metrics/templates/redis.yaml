@@ -9,7 +9,8 @@ spec:
   ports:
     - port: 6379
   selector:
-    app: {{ include "metrics.fullname" . }}-redis
+    app.kubernetes.io/name: {{ include "metrics.name" . }}-redis
+    app.kubernetes.io/instance: {{ .Release.Name }}
 ---
 apiVersion: apps/v1
 kind: Deployment
