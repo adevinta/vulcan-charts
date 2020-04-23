@@ -60,7 +60,7 @@ spec:
           {{- if .Values.sqs.internal}}
           - name: CHECKS_SQS_QUEUE_NAME
             value: "{{ .Values.conf.checksQueueName }}"
-          - name: SCANS_SQS_QUEUE_MAME
+          - name: SCANS_SQS_QUEUE_NAME
             value: "{{ .Values.conf.scansQueueName }}"
           {{- end }}
         {{ include "infra-envs-s3" . | nindent 10 }}   # Just for credentials
