@@ -28,6 +28,7 @@ postgresql:
     initial-dbs.sql: |
       CREATE DATABASE api;
       CREATE DATABASE scanengine;
+      CREATE DATABASE reportsgenerator;
   master:
     annotations:
       prometheus.io/scrape: "true"
@@ -82,6 +83,7 @@ aws:
           - Name: VulcanK8SMetricsChecks
           - Name: VulcanK8SMetricsScans
           - Name: VulcanK8SScanEngineChecks
+          - Name: VulcanK8SReportsGenerator
         Topics:
           - Name: VulcanK8SChecks
             Subscriptions:
@@ -95,6 +97,10 @@ aws:
               - QueueName: VulcanK8SAPIScans
                 Raw: true
               - QueueName: VulcanK8SMetricsScans
+                Raw: true
+          - Name: VulcanK8SReportsGen
+            Subscriptions:
+              - QueueName: VulcanK8SReportsGenerator
                 Raw: true
         RandomLatency:
           Min: 0
@@ -197,6 +203,21 @@ insights:
       - name: public
         s3Bucket: public-insights
         prefix: "/public"
+
+reportsgenerator:
+  <<: *infra
+  conf:
+    logLevel: "error"
+    queueArn: arn:aws:sqs:local:012345678900:VulcanK8SReportsGenerator
+    queueName: VulcanK8SReportsGenerator
+    generators:
+      scan:
+        publicBucket: public-insights
+        privateBucket: insights
+  db:
+    <<: *db
+    host: postgresql
+    name: reportsgenerator
 
 metrics:
   <<: *infra

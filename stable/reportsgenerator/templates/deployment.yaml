@@ -1,0 +1,152 @@
+{{- if .Values.proxy.enabled }}
+{{ include "proxy-config-map" . }}
+{{- end }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "reportsgenerator.fullname" . }}
+  labels:
+    {{- include "reportsgenerator.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "reportsgenerator.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "reportsgenerator.selectorLabels" . | nindent 8 }}
+      annotations:
+        checksum/secrets: {{ include (print $.Template.BasePath "/secrets.yaml") . | sha256sum }}
+        {{- if .Values.proxy.enabled }}
+        checksum/config-proxy: {{ include "proxy-config-map" . | sha256sum }}
+        {{ include "proxy-annotations" . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.annotations }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "reportsgenerator.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+        - name: waitfordb
+          image: postgres:9.6.16-alpine
+          command: ['sh', '-c', 'until pg_isready -t 5; do echo WaitingDB; done;']
+          env:
+          - name: PGHOST
+            value: "{{ ternary ( printf "%s-%s" .Release.Name .Values.db.host ) .Values.db.host .Values.db.internal }}"
+          - name: PGPORT
+            value: "{{ .Values.db.port }}"
+      containers:
+        {{- if .Values.proxy.enabled }}
+        {{ include "proxy-container" . | nindent 8}}
+        {{- end }}
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+          - name: PORT
+            value: "{{ .Values.containerPort }}"
+          - name: PG_HOST
+            value: "{{ ternary ( printf "%s-%s" .Release.Name .Values.db.host ) .Values.db.host .Values.db.internal }}"
+          - name: PG_NAME
+            value: "{{ .Values.db.name }}"
+          - name: PG_USER
+            value: "{{ .Values.db.user }}"
+          - name: PG_PORT
+            value: "{{ .Values.db.port }}"
+          - name: PG_SSLMODE
+            value: "{{ .Values.db.sslMode }}"
+          {{- if .Values.db.ca }}
+          - name: PG_CA_B64
+            value: "{{ .Values.db.ca | b64enc }}"
+          {{- end }}
+          - name: LOG_LEVEL
+            value: "{{ .Values.conf.logLevel }}"
+          - name: SQS_QUEUE_ARN
+            value: "{{ .Values.conf.queueArn }}"
+          - name: SES_REGION
+            value: "{{ .Values.conf.ses.region }}"
+          - name: SES_FROM
+            value: "{{ .Values.conf.ses.from }}"
+          - name: SES_CC
+            value: "{{ .Values.conf.ses.cc }}"
+          - name: SCAN_EMAIL_SUBJECT
+            value: "{{ .Values.conf.generators.scan.emailSubject }}"
+          - name: SCAN_S3_PUBLIC_BUCKET
+            value: "{{ .Values.conf.generators.scan.publicBucket }}"
+          - name: SCAN_S3_PRIVATE_BUCKET
+            value: "{{ .Values.conf.generators.scan.privateBucket }}"
+          - name: SCAN_GA_ID
+            value: "{{ .Values.conf.generators.scan.gaId }}"
+          - name: SCAN_PROXY_ENDPOINT
+            value: "{{ .Values.conf.generators.scan.proxyEndpoint }}"
+          - name: SCAN_S3_PUBLIC_BUCKET
+            value: "{{ .Values.conf.generators.scan.publicBucket }}"
+          - name: PERSISTENCE_ENDPOINT
+            value: "{{ .Values.conf.persistenceEndpoint  | default  (include "persistenceEndpoint" .)}}"
+          - name: RESULTS_ENDPOINT
+            value: "{{ .Values.conf.resultsEndpoint | default  (include "resultsEndpoint" .)}}"
+          - name: SCAN_PROXY_ENDPOINT
+            value: "{{ .Values.conf.generators.scan.proxyEndpoint }}"
+          - name: VULCAN_UI
+            value: "{{ .Values.conf.vulcanUi }}"
+          - name: SCAN_VIEW_REPORT
+            value: "{{ .Values.conf.viewReport }}"
+          - name: SCAN_REDIRECT_URL
+            value: "{{ .Values.conf.redirectUrl }}"
+          {{- if .Values.sqs.internal}}
+          - name: SQS_QUEUE_NAME
+            value: "{{ .Values.conf.queueName }}"
+          {{- end }}
+        {{ include "infra-envs-sqs" . | nindent 10 }}
+        {{ include "infra-envs-sns" . | nindent 10 }}
+        {{ include "infra-envs-s3" . | nindent 10 }}
+        {{- range $name, $value := .Values.extraEnv }}
+          - name: {{ $name }}
+            value: {{ $value | quote }}
+        {{- end }}
+          envFrom:
+          - secretRef:
+              name: {{ include "reportsgenerator.fullname" . }}
+          ports:
+            - name: {{ ternary "app" "http" .Values.proxy.enabled }}
+              containerPort: {{ .Values.containerPort }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.probePath }}
+              port: {{ .Values.containerPort }}
+            initialDelaySeconds: {{ .Values.probeInitialDelay }}
+            timeoutSeconds: {{ .Values.probeTimeout }}
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.probePath }}
+              port: {{ .Values.containerPort }}
+            initialDelaySeconds: {{ .Values.probeInitialDelay }}
+            timeoutSeconds: {{ .Values.probeTimeout }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- if .Values.proxy.enabled }}
+      {{ include "proxy-volumes" . | nindent 6}}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}

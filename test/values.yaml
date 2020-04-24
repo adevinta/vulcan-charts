@@ -34,3 +34,7 @@ ui:
 insights:
   ingress:
     <<: *ingress
+
+reportsgenerator:
+  ingress:
+    <<: *ingres

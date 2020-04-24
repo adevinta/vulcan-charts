@@ -29,6 +29,10 @@ Override names
 {{- printf "%s-results" .Release.Name -}}
 {{- end -}}
 
+{{- define "reportsGeneratorUrl" -}}
+{{- printf "http://%s-reportsgenerator/" .Release.Name -}}
+{{- end -}}
+
 {{- define "metricsRedisAddr" -}}
 {{- printf "%s-metrics-redis:6379" .Release.Name -}}
 {{- end -}}
