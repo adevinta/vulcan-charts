@@ -111,6 +111,8 @@ spec:
             value: "{{ .Values.conf.s3PrivateBucket }}"
           - name: S3_PUBLIC_BUCKET
             value: "{{ .Values.conf.s3PublicBucket }}"
+          - name: PATH_STYLE
+            value: "{{ .Values.conf.s3PathStyle }}"
           - name: PERSISTENCE_ENDPOINT
             value: "{{ .Values.conf.persistenceEndpoint  | default  (include "persistenceEndpoint" .)}}"
           - name: RESULTS_ENDPOINT

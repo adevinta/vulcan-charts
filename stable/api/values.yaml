@@ -62,6 +62,7 @@ conf:
   gaId: UA-109338366-3
   s3PrivateBucket: TBD
   s3PublicBucket: TBD
+  s3PathStyle: false
   proxyEndpoint: https://vulcan-insights
   vulcanUi: https://vulcan-www
   viewReport: vulcan-api/api/v1/report?team_id=%s&scan_id=%s
