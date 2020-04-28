@@ -4,4 +4,4 @@ description: A Helm chart for deploying Vulcan stream
 home: https://github.com/adevinta/vulcan-charts
 icon: https://raw.githubusercontent.com/adevinta/vulcan-charts/master/docs/logo/vulcan.png
 name: stream
-version: 0.1.1
+version: 0.1.2
