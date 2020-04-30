@@ -14,7 +14,7 @@ fullnameOverride: ""
 
 # Those values are useless here, could be defined in the dependant charts.
 proxy:
-  enabled: false
+  enabled: true
   port: 80
   probePath: /healthz
   probeInitialDelay: 2
