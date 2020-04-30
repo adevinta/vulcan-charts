@@ -61,6 +61,12 @@ defaults:
       internalEndpointTpl: http://{{ .Release.Name }}-s3
       existingSecretTpl: '{{ .Release.Name }}-s3'
       region: local-region
+  proxy:  &proxy
+    proxy:
+      enabled: true
+      port: 80
+      probePath: /healthz
+      probeInitialDelay: 2
 
 aws:
   enabled: false
@@ -121,6 +127,8 @@ s3:
 
 results:
   <<: *infra
+  <<: *proxy
+
   conf:
     region: local-region
     bucketReports: reports
@@ -128,6 +136,7 @@ results:
 
 persistence:
   <<: *infra
+  <<: *proxy
   db:
     <<: *db
     host: postgresql
@@ -148,6 +157,7 @@ persistence:
 
 stream:
   <<: *infra
+  <<: *proxy
   db:
     <<: *db
     host: postgresql
@@ -155,6 +165,7 @@ stream:
 
 api:
   <<: *infra
+  <<: *proxy
   db:
     <<: *db
     host: postgresql
@@ -169,11 +180,13 @@ api:
 
 crontinuous:
   <<: *infra
+  <<: *proxy
   conf:
     crontinuousBucket: crontinuous
 
 scanengine:
   <<: *infra
+  <<: *proxy
   conf:
     logLevel: "error"
     queueArn: arn:aws:sqs:local:012345678900:VulcanK8SScanEngineChecks
