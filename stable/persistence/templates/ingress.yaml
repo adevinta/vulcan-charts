@@ -11,8 +11,9 @@ metadata:
   name: {{ $fullName }}
   labels:
 {{ include "persistence.labels" . | indent 4 }}
-  {{- with .Values.ingress.annotations }}
   annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: 8m
+  {{- with .Values.ingress.annotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
