@@ -197,6 +197,9 @@ scanengine:
     host: postgresql
     name: scanengine
 
+ui:
+  <<: *proxy
+
 insights:
   <<: *infra
   conf:
