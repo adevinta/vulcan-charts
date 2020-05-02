@@ -29,6 +29,8 @@ nameOverride: ""
 fullnameOverride: ""
 
 conf:
+  index: <html><body>Error</body></html>
+
   apiUrl: https://vulcan-api/api/v1/
 
 # extraEnv:
