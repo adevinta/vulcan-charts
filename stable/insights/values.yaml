@@ -33,7 +33,7 @@ proxy:
   maxconn: 64
 
 conf:
-  region: tbd
+  region:
   log: "false"
   proxies:
     - name: private

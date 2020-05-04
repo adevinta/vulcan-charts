@@ -21,7 +21,7 @@ nameOverride: ""
 fullnameOverride: ""
 
 conf:
-  region: tbd
+  region:
   logLevel: warn
   sqsPollingInterval: 10
   checksQueueArn: arn:aws:sqs:TBD:TBD:TBD

@@ -28,7 +28,6 @@ proxy:
   enabled: false
 
 conf:
-  region: TBD
   debug: "false"
   secretKey: TBDTBD
   bucketReports: TBD
@@ -45,7 +44,7 @@ conf:
   reports:
     basePath:  # https://insights
   ses:
-    region: TBD
+    region:
     subject: "[Test] Security Overview"
     from: tbd@tbd.com
     cc: tbd@tbd.com

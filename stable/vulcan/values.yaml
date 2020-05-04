@@ -43,6 +43,7 @@ postgresql:
 
 global:
   domain: sample.com
+  region: local-region
 
 defaults:
   db: &db     # Disabled by default. Those parameters must match postgresql.* if enabled
@@ -54,16 +55,13 @@ defaults:
     sns:
       internal: false
       internalEndpointTpl: http://{{ .Release.Name }}-aws
-      region: local-region
     sqs:
       internal: false
       internalEndpointTpl: http://{{ .Release.Name }}-aws
-      region: local-region
     s3:
       internal: false
       internalEndpointTpl: http://{{ .Release.Name }}-s3
       existingSecretTpl: '{{ .Release.Name }}-s3'
-      region: local-region
   proxy:  &proxy
     proxy:
       enabled: true
@@ -131,9 +129,7 @@ s3:
 results:
   <<: *infra
   <<: *proxy
-
   conf:
-    region: local-region
     bucketReports: reports
     bucketLogs: logs
 
@@ -145,7 +141,6 @@ persistence:
     host: postgresql
     name: persistence
   conf:
-    region: local-region
     snsTopic: arn:aws:sns::012345678900:VulcanK8SChecks
     nessusCheckQueue: VulcanK8SChecksTenable
     s3Scans: scans
@@ -208,7 +203,6 @@ ui:
 insights:
   <<: *infra
   conf:
-    region: local-region
     proxies:
       - name: private
         s3Bucket: insights

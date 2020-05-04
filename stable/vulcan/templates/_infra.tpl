@@ -5,7 +5,7 @@
 - name: PATH_STYLE
   value: "true"
 - name: AWS_S3_REGION
-  value: "{{ .Values.s3.region }}"
+  value: "{{ .Values.s3.region | default .Values.global.region }}"
 {{- if or .Values.s3.existingSecretTpl }}
 - name: AWS_ACCESS_KEY_ID
   valueFrom:
@@ -26,7 +26,7 @@
 - name: AWS_SNS_ENDPOINT
   value: "{{ tpl .Values.sns.internalEndpointTpl . }}"
 - name: AWS_SNS_REGION
-  value: "{{ .Values.sns.region }}"
+  value: "{{ .Values.sns.region | default .Values.global.region }}"
 {{- end }}
 {{- end -}}
 
@@ -35,6 +35,6 @@
 - name: AWS_SQS_ENDPOINT
   value: "{{ tpl .Values.sqs.internalEndpointTpl . }}"
 - name: AWS_SQS_REGION
-  value: "{{ .Values.sqs.region }}"
+  value: "{{ .Values.sqs.region | default .Values.global.region }}"
 {{- end }}
 {{- end -}}

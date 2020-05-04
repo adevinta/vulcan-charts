@@ -60,7 +60,7 @@ spec:
           imagePullPolicy: {{ $dot.Values.image.pullPolicy }}
           env:
             - name: AWS_REGION
-              value: "{{ $dot.Values.conf.region }}"
+              value: "{{ $dot.Values.conf.region | default $dot.Values.global.region }}"
             - name: ACCESS_LOG
               value: "{{ $dot.Values.conf.log }}"
             - name: AWS_S3_BUCKET

@@ -92,7 +92,7 @@ spec:
           - name: REPORTS_BASE_PATH
             value: "{{ .Values.conf.reports.basePath | default ( printf "https://%s" ( include "insights.hostname" . )) }}"
           - name: SES_REGION
-            value: "{{ .Values.conf.ses.region }}"
+            value: "{{ .Values.conf.ses.region | default .Values.global.region }}"
           - name: SES_CONFIG_SET
             value: "{{ .Values.conf.ses.configSet}}"
           - name: SES_SUBJECT

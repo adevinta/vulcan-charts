@@ -32,7 +32,7 @@ global:
 
 conf:
   debug: "false"
-  region: TBD
+  region:
   bucketReports: TBD
   bucketLogs: TBD
 

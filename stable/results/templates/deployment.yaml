@@ -50,7 +50,7 @@ spec:
           - name: DEBUG
             value: "{{ .Values.conf.debug }}"
           - name: AWS_REGION
-            value: "{{ .Values.conf.region }}"
+            value: "{{ .Values.conf.region | default .Values.global.region }}"
           - name: BUCKET_REPORTS
             value: "{{ .Values.conf.bucketReports }}"
           - name: BUCKET_LOGS
