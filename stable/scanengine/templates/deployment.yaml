@@ -1,6 +1,4 @@
-{{- if .Values.proxy.enabled }}
 {{ include "proxy-config-map" . }}
-{{- end }}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -19,10 +17,7 @@ spec:
         {{- include "scanengine.selectorLabels" . | nindent 8 }}
       annotations:
         checksum/secrets: {{ include (print $.Template.BasePath "/secrets.yaml") . | sha256sum }}
-        {{- if .Values.proxy.enabled }}
-        checksum/config-proxy: {{ include "proxy-config-map" . | sha256sum }}
         {{ include "proxy-annotations" . | nindent 8 }}
-        {{- end }}
         {{- with .Values.annotations }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -44,9 +39,7 @@ spec:
           - name: PGPORT
             value: "{{ .Values.db.port }}"
       containers:
-        {{- if .Values.proxy.enabled }}
         {{ include "proxy-container" . | nindent 8}}
-        {{- end }}
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
@@ -109,9 +102,8 @@ spec:
             timeoutSeconds: {{ .Values.probeTimeout }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-      {{- if .Values.proxy.enabled }}
+      volumes:
       {{ include "proxy-volumes" . | nindent 6}}
-      {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
