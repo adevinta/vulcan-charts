@@ -37,6 +37,17 @@ Override names
 {{- printf "%s-metrics-dogstatsd:8125" .Release.Name -}}
 {{- end -}}
 
+{{- define "s3Endpoint" -}}
+{{- printf "http://%s-s3" .Release.Name -}}
+{{- end -}}
+
+{{- define "sqsEndpoint" -}}
+{{- printf "http://%s-aws" .Release.Name -}}
+{{- end -}}
+
+{{- define "snsEndpoint" -}}
+{{- printf "http://%s-aws" .Release.Name -}}
+{{- end -}}
 
 {{- define "api.hostname" -}}
 {{ printf "%s.%s" "www" .Values.global.domain }}
@@ -72,4 +83,8 @@ Override names
 
 {{- define "ui.hostname" -}}
 {{ printf "%s.%s" "www" .Values.global.domain }}
+{{- end -}}
+
+{{- define "postgresqlHost" -}}
+{{  .Values.db.host | default (printf "%s-postgresql" .Release.Name ) }}
 {{- end -}}

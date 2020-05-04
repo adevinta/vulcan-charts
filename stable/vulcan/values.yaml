@@ -20,7 +20,7 @@ proxy:
   probeInitialDelay: 2
 
 postgresql:
-  enabled: false  # Disabled by default.
+  enabled: true
   postgresqlUsername: postgres
   postgresqlPassword: TBD
   postgresqlDatabase: persistence
@@ -42,26 +42,22 @@ postgresql:
     enabled: true
 
 global:
-  domain: sample.com
+  domain: vulcan.local
   region: local-region
+  s3:
+    enabled: true
+  sns:
+    enabled: true
+  sqs:
+    enabled: true
+  postgresql:
+    enabled: true
 
 defaults:
-  db: &db     # Disabled by default. Those parameters must match postgresql.* if enabled
-    internal: false
+  db: &db
     user: postgres
     password: TBD
     sslMode: disable
-  infra: &infra
-    sns:
-      internal: false
-      internalEndpointTpl: http://{{ .Release.Name }}-aws
-    sqs:
-      internal: false
-      internalEndpointTpl: http://{{ .Release.Name }}-aws
-    s3:
-      internal: false
-      internalEndpointTpl: http://{{ .Release.Name }}-s3
-      existingSecretTpl: '{{ .Release.Name }}-s3'
   proxy:  &proxy
     proxy:
       enabled: true
@@ -70,7 +66,6 @@ defaults:
       probeInitialDelay: 2
 
 aws:
-  enabled: false
   containerPort: 80
   config:
     goaws.yaml: |
@@ -108,7 +103,6 @@ aws:
           Max: 0
 
 s3:
-  enabled: false
   mode: standalone
   defaultBuckets: "reports,logs,scans,insights,public-insights,crontinuous"
   serviceAccount:
@@ -127,18 +121,15 @@ s3:
       value: local-region
 
 results:
-  <<: *infra
   <<: *proxy
   conf:
     bucketReports: reports
     bucketLogs: logs
 
 persistence:
-  <<: *infra
   <<: *proxy
   db:
     <<: *db
-    host: postgresql
     name: persistence
   conf:
     snsTopic: arn:aws:sns::012345678900:VulcanK8SChecks
@@ -154,19 +145,15 @@ persistence:
     queueNesName: VulcanK8SChecksTenable
 
 stream:
-  <<: *infra
   <<: *proxy
   db:
     <<: *db
-    host: postgresql
     name: persistence
 
 api:
-  <<: *infra
   <<: *proxy
   db:
     <<: *db
-    host: postgresql
     name: api
   conf:
     bucketReports: reports
@@ -179,13 +166,11 @@ api:
     path: /api
 
 crontinuous:
-  <<: *infra
   <<: *proxy
   conf:
     crontinuousBucket: crontinuous
 
 scanengine:
-  <<: *infra
   <<: *proxy
   conf:
     logLevel: "error"
@@ -194,14 +179,12 @@ scanengine:
     snsArn: arn:aws:sns:local:012345678900:VulcanK8SScans
   db:
     <<: *db
-    host: postgresql
     name: scanengine
 
 ui:
   <<: *proxy
 
 insights:
-  <<: *infra
   conf:
     proxies:
       - name: private
@@ -212,7 +195,6 @@ insights:
         prefix: "/public"
 
 metrics:
-  <<: *infra
   conf:
     checksQueueArn: arn:aws:sqs:local-region:012345678900:VulcanK8SMetricsChecks
     checksQueueName: VulcanK8SMetricsChecks

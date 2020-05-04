@@ -71,21 +71,19 @@ spec:
               value: "{{ $dot.Values.probePath }}"
             - name: APP_PORT
               value: "{{ $port }}"
-            {{- if $dot.Values.s3.internal }}
+            {{- if $dot.Values.global.s3.enabled }}
             - name: AWS_API_ENDPOINT
-              value: "{{ tpl $dot.Values.s3.internalEndpointTpl $dot }}"
-            {{- if $dot.Values.s3.existingSecret }}
+              value: "{{ include "s3Endpoint" $dot }}"
             - name: AWS_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef:
-                  name: "{{ tpl $dot.Values.s3.existingSecretTpl . }}"
+                  name: "{{ printf "%s-s3" $dot.Release.Name  }}"
                   key: access-key
             - name: AWS_SECRET_ACCESS_KEY
               valueFrom:
                 secretKeyRef:
-                  name: "{{ tpl $dot.Values.s3.existingSecretTpl . }}"
+                  name: "{{ printf "%s-s3" $dot.Release.Name  }}"
                   key: secret-key
-            {{- end }}
             {{- end }}
           ports:
             - name: {{ $p.name }}

@@ -62,13 +62,13 @@ dependencies:
 - name: postgresql
   version: 8.9.3
   repository: https://charts.bitnami.com/bitnami
-  condition: postgresql.enabled
+  condition: global.postgresql.enabled
 - name: aws
   version: 0.1.2
   repository: "file://../aws"
-  condition: aws.enabled
+  condition: global.sns.enabled,global.sqs.enabled
 - name: minio
   version: 3.3.6
   repository: https://charts.bitnami.com/bitnami
   alias: s3
-  condition: s3.enabled
+  condition: global.s3.enabled

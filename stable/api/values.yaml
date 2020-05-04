@@ -67,8 +67,7 @@ conf:
   redirectUrl: #  https://public-redirect/index.html?reportUrl=
 
 db:
-  internal: false
-  host: TBD
+  host:
   name: TBD
   user: TBD
   password: TBD

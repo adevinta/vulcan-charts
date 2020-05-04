@@ -35,7 +35,7 @@ spec:
           command: ['sh', '-c', 'until pg_isready -t 5; do echo WaitingDB; done;']
           env:
           - name: PGHOST
-            value: "{{ ternary ( printf "%s-%s" .Release.Name .Values.db.host ) .Values.db.host .Values.db.internal }}"
+            value: "{{ include "postgresqlHost" . }}"
           - name: PGPORT
             value: "{{ .Values.db.port }}"
       containers:
@@ -49,7 +49,7 @@ spec:
           - name: PORT
             value: "{{ .Values.containerPort }}"
           - name: PG_HOST
-            value: "{{ ternary ( printf "%s-%s" .Release.Name .Values.db.host ) .Values.db.host .Values.db.internal }}"
+            value: "{{ include "postgresqlHost" . }}"
           - name: PG_NAME
             value: "{{ .Values.db.name }}"
           - name: PG_USER
@@ -70,7 +70,7 @@ spec:
             value: "{{ .Values.conf.queueArn }}"
           - name: SNS_TOPIC_ARN
             value: "{{ .Values.conf.snsArn }}"
-          {{- if .Values.sqs.internal}}
+          {{- if .Values.global.sqs.enabled}}
           - name: SQS_QUEUE_NAME
             value: "{{ .Values.conf.queueName }}"
           {{- end }}

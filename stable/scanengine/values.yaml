@@ -35,7 +35,7 @@ conf:
 
 db:
   internal: false
-  host: TBD
+  host:
   name: TBD
   user: TBD
   password: TBD
