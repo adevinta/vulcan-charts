@@ -33,17 +33,17 @@ conf:
   secretKey: TBDTBD
   bucketReports: TBD
   bucketLogs: TBD
-  cookieDomain: vulcan
+  cookieDomain:     # default .Values.global.domain
   saml:
     metadata: https://okta/app/TBD/sso/saml/metadata
     issuer: http://okta/TBD
-    callback: https://vulcan-api/api/v1/login/callback
-    trustedDomains: '["vulcan-api"]'
+    callback: # https://vulcan-api/api/v1/login/callback
+    trustedDomains: # '["vulcan-api"]'
   log:
     level: INFO
   queueArn: arn:aws:sqs:TBD:TBD:TBD
   reports:
-    basePath: TBD
+    basePath:  # https://insights
   ses:
     region: TBD
     subject: "[Test] Security Overview"
@@ -59,13 +59,13 @@ conf:
     roadmapLink: "https://roadmap.example.com"
 
   vulnerabilityDbUrl: vulnerabilitydbapi # the current FIAAS
-  gaId: UA-109338366-3
+  gaId: UA-000000000-0
   s3PrivateBucket: TBD
   s3PublicBucket: TBD
-  proxyEndpoint: https://vulcan-insights
-  vulcanUi: https://vulcan-www
-  viewReport: vulcan-api/api/v1/report?team_id=%s&scan_id=%s
-  redirectUrl: https://public-redirect/index.html?reportUrl=
+  # proxyEndpoint: https://vulcan-insights
+  # vulcanUi: https://vulcan-www
+  # viewReport: vulcan-api/api/v1/report?team_id=%s&scan_id=%s
+  redirectUrl: #  https://public-redirect/index.html?reportUrl=
 
 db:
   internal: false
@@ -107,7 +107,7 @@ service:
 ingress:
   enabled: false
   tls: true
-  host: vulcan-api
+  host:
   path: /
   annotations: {}
 

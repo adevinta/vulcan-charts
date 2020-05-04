@@ -56,7 +56,7 @@ spec:
           - name: BUCKET_LOGS
             value: "{{ .Values.conf.bucketLogs }}"
           - name: LINK_BASE
-            value: "{{ ternary "https" "http" .Values.ingress.tls }}://{{ .Values.ingress.host }}/v1"
+            value: "{{ ternary "https" "http" .Values.ingress.tls }}://{{ include "results.hostname" . }}/v1"
         {{ include "infra-envs-s3" . | nindent 10 }}
         {{- range $name, $value := .Values.extraEnv }}
           - name: {{ $name }}

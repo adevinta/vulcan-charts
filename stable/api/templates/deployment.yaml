@@ -58,7 +58,7 @@ spec:
           - name: PORT
             value: "{{ .Values.containerPort }}"
           - name: COOKIE_DOMAIN
-            value: "{{ .Values.conf.cookieDomain }}"
+            value: "{{ default .Values.global.domain .Values.conf.cookieDomain }}"
           - name: PG_HOST
             value: "{{ ternary ( printf "%s-%s" .Release.Name .Values.db.host ) .Values.db.host .Values.db.internal }}"
           - name: PG_NAME
@@ -80,9 +80,9 @@ spec:
           - name: SAML_ISSUER
             value: "{{ .Values.conf.saml.issuer }}"
           - name: SAML_CALLBACK
-            value: "{{ .Values.conf.saml.callback }}"
+            value: "{{ .Values.conf.saml.callback | default ( printf "https://%s/api/v1/login/callback" ( include "api.hostname" . )) }}"
           - name: SAML_TRUSTED_DOMAINS
-            value: {{ .Values.conf.saml.trustedDomains | quote }}
+            value: {{ ( .Values.conf.saml.trustedDomains | quote ) | default ( printf "'[\"%s\"]'" ( include "api.hostname" . )) }}
           - name: SCANENGINE_URL
             value: "{{ .Values.conf.scanEngineUrl | default  (include "scanEngineUrl" .) }}"
           - name: SCHEDULER_URL
@@ -90,7 +90,7 @@ spec:
           - name: SQS_QUEUE_ARN
             value: "{{ .Values.conf.queueArn }}"
           - name: REPORTS_BASE_PATH
-            value: "{{ .Values.conf.reports.basePath }}"
+            value: "{{ .Values.conf.reports.basePath | default ( printf "https://%s" ( include "insights.hostname" . )) }}"
           - name: SES_REGION
             value: "{{ .Values.conf.ses.region }}"
           - name: SES_CONFIG_SET
@@ -112,15 +112,15 @@ spec:
           - name: S3_PUBLIC_BUCKET
             value: "{{ .Values.conf.s3PublicBucket }}"
           - name: PERSISTENCE_ENDPOINT
-            value: "{{ .Values.conf.persistenceEndpoint  | default  (include "persistenceEndpoint" .)}}"
+            value: "{{ .Values.conf.persistenceEndpoint | default (include "persistenceEndpoint" .)}}"
           - name: RESULTS_ENDPOINT
-            value: "{{ .Values.conf.resultsEndpoint | default  (include "resultsEndpoint" .)}}"
+            value: "{{ .Values.conf.resultsEndpoint | default (include "resultsEndpoint" .)}}"
           - name: PROXY_ENDPOINT
-            value: "{{ .Values.conf.proxyEndpoint }}"
+            value: "{{ .Values.conf.reports.basePath | default ( printf "https://%s" ( include "insights.hostname" . )) }}"
           - name: VULCAN_UI
-            value: "{{ .Values.conf.vulcanUi }}"
+            value: "{{ .Values.conf.vulcanUi | default (printf "https://%s/" ( include "ui.hostname" . )) }}"
           - name: VIEW_REPORT
-            value: "{{ .Values.conf.viewReport }}"
+            value: "{{ .Values.conf.viewReport | default ( printf "https://%s/api/v1/report?team_id=%s&scan_id=%s" ( include "ui.hostname" . ) "%s" "%s") }}"
           - name: REDIRECT_URL
             value: "{{ .Values.conf.redirectUrl }}"
           # Security overview vars.

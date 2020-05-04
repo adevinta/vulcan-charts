@@ -41,6 +41,9 @@ postgresql:
   metrics:
     enabled: true
 
+global:
+  domain: sample.com
+
 defaults:
   db: &db     # Disabled by default. Those parameters must match postgresql.* if enabled
     internal: false
@@ -177,6 +180,8 @@ api:
     s3PublicBucket: public-insights
     queueArn: arn:aws:sqs:eu-west-1:012345678900:VulcanK8SAPIScans
     queueName: VulcanK8SAPIScans
+  ingress:
+    path: /api
 
 crontinuous:
   <<: *infra

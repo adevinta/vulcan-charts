@@ -27,6 +27,9 @@ probePath: /healthcheck
 probeInitialDelay: 2
 probeTimeout: 2
 
+global:
+  domain: vulcan.local
+
 conf:
   debug: "false"
   region: TBD
@@ -61,7 +64,7 @@ service:
 ingress:
   enabled: false
   tls: true
-  host: vulcan-results
+  host:
   path: /
   annotations: {}
     # kubernetes.io/ingress.class: nginx

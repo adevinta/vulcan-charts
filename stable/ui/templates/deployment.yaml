@@ -44,7 +44,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
           - name: API_URL
-            value: "{{ .Values.conf.apiUrl }}"
+            value: "{{ printf "https://%s/api/v1/" ( include "api.hostname" . ) }}"
           - name: PORT
             value: "{{ .Values.containerPort }}"
         {{- range $name, $value := .Values.extraEnv }}

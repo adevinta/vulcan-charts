@@ -36,3 +36,40 @@ Override names
 {{- define "metricsDogstatsdAddr" -}}
 {{- printf "%s-metrics-dogstatsd:8125" .Release.Name -}}
 {{- end -}}
+
+
+{{- define "api.hostname" -}}
+{{ printf "%s.%s" "www" .Values.global.domain }}
+{{- end -}}
+
+{{- define "aws.hostname" -}}
+{{ printf "%s.%s" "aws" .Values.global.domain }}
+{{- end -}}
+
+{{- define "crontinuous.hostname" -}}
+{{ printf "%s.%s" "crontinuous" .Values.global.domain}}
+{{- end -}}
+
+{{- define "insights.hostname" -}}
+{{ printf "%s.%s" "insights" .Values.global.domain }}
+{{- end -}}
+
+{{- define "persistence.hostname" -}}
+{{ printf "%s.%s" "persistence" .Values.global.domain }}
+{{- end -}}
+
+{{- define "results.hostname" -}}
+{{ printf "%s.%s" "results" .Values.global.domain }}
+{{- end -}}
+
+{{- define "scanengine.hostname" -}}
+{{ printf "%s.%s" "scanengine" .Values.global.domain }}
+{{- end -}}
+
+{{- define "stream.hostname" -}}
+{{ printf "%s.%s" "stream" .Values.global.domain }}
+{{- end -}}
+
+{{- define "ui.hostname" -}}
+{{ printf "%s.%s" "www" .Values.global.domain }}
+{{- end -}}

@@ -61,7 +61,7 @@ service:
 ingress:
   enabled: false
   tls: true
-  host: vulcan-insights
+  host:
   path: /
   annotations: {}
 
