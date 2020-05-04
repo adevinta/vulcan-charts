@@ -12,6 +12,10 @@ metadata:
   labels:
 {{ include "ui.labels" . | indent 4 }}
   annotations:
+{{- if .Values.defaultBackend.enabled }}
+    nginx.ingress.kubernetes.io/custom-http-errors: {{ .Values.defaultBackend.httpCodes | default "403" }}
+    nginx.ingress.kubernetes.io/default-backend: {{ include "ui.fullname" . }}-db
+{{- end }}
   {{- with .Values.ingress.annotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}

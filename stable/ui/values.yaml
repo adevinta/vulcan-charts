@@ -31,6 +31,10 @@ fullnameOverride: ""
 conf:
   apiUrl: # https://vulcan-api/api/v1/
 
+defaultBackend:
+  enabled: true
+  index: <html><body>Error</body></html>
+  httpCodes: "403"
 # extraEnv:
 #   FOO: BAR
 
