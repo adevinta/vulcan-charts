@@ -15,6 +15,10 @@ metadata:
     nginx.ingress.kubernetes.io/enable-cors: "true"
     nginx.ingress.kubernetes.io/cors-allow-origin: "https:/{{ include "ui.hostname" . }} {{ .Values.ingress.extraCorsAllowOrigin }}"
     nginx.ingress.kubernetes.io/proxy-body-size: 8m
+{{- if .Values.defaultBackend.enabled }}
+    nginx.ingress.kubernetes.io/custom-http-errors: {{ .Values.defaultBackend.httpCodes | default "403" | quote }}
+    nginx.ingress.kubernetes.io/default-backend: {{ include "ui.fullname" . }}-db
+{{- end }}
   {{- with .Values.ingress.annotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}

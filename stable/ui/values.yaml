@@ -33,8 +33,9 @@ conf:
 
 defaultBackend:
   enabled: true
-  index: <html><body>Error</body></html>
+  index: "<html><body><h1>403 error</h1>Do you have to access through a VPN service?</body></html>"
   httpCodes: "403"
+
 # extraEnv:
 #   FOO: BAR
 

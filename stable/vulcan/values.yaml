@@ -15,7 +15,7 @@ fullnameOverride: ""
 # Those values are useless here, could be defined in the dependant charts.
 proxy:
   enabled: true
-  port: 80
+  port: 9090    # We use non 80 port to prevent prometheus trying to access metrics on port 80
   probePath: /healthz
   probeInitialDelay: 2
 
