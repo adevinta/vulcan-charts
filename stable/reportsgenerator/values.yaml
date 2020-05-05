@@ -32,7 +32,7 @@ conf:
   logLevel: "info"
   queueArn: arn:aws:sqs:TBD:TBD:TBD
   ses:
-    region: TBD
+    region:
     from: tbd@tbd.com
     cc: '["tbd@tbd.com"]'
   generators:
@@ -48,7 +48,7 @@ conf:
   
 db:
   internal: false
-  host: TBD
+  host:
   name: TBD
   user: TBD
   password: TBD

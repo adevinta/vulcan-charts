@@ -67,7 +67,7 @@ spec:
           - name: SQS_QUEUE_ARN
             value: "{{ .Values.conf.queueArn }}"
           - name: SES_REGION
-            value: "{{ .Values.conf.ses.region }}"
+            value: "{{ .Values.conf.ses.region | default .Values.global.region }}"
           - name: SES_FROM
             value: "{{ .Values.conf.ses.from }}"
           - name: SES_CC
