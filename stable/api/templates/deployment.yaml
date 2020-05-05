@@ -77,7 +77,7 @@ spec:
           - name: SAML_TRUSTED_DOMAINS
             value: {{ ( .Values.conf.saml.trustedDomains | quote ) | default ( printf "'[\"%s\"]'" ( include "api.hostname" . )) }}
           - name: SCANENGINE_URL
-            value: "{{ .Values.conf.scanEngineUrl | default  (include "scanEngineUrl" .) }}"
+            value: "{{ .Values.conf.scanengineUrl | default  (include "scanengineUrl" .) }}"
           - name: SCHEDULER_URL
             value: "{{ .Values.conf.schedulerUrl | default  (include "crontinuousUrl" .) }}"
           - name: SQS_QUEUE_ARN

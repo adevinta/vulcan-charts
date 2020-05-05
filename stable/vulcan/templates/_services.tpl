@@ -9,7 +9,7 @@ Override names
 {{- printf "http://%s-api/api" .Release.Name -}}
 {{- end -}}
 
-{{- define "scanEngineUrl" -}}
+{{- define "scanengineUrl" -}}
 {{- printf "http://%s-scanengine/v1/" .Release.Name -}}
 {{- end -}}
 
