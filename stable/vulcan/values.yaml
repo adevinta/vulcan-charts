@@ -14,13 +14,13 @@ fullnameOverride: ""
 
 # Those values are useless here, could be defined in the dependant charts.
 proxy:
-  enabled: false
+  enabled: true
   port: 80
   probePath: /healthz
   probeInitialDelay: 2
 
 postgresql:
-  enabled: false  # Disabled by default.
+  enabled: true
   postgresqlUsername: postgres
   postgresqlPassword: TBD
   postgresqlDatabase: persistence
@@ -42,29 +42,31 @@ postgresql:
   metrics:
     enabled: true
 
+global:
+  domain: vulcan.local
+  region: local-region
+  s3:
+    enabled: true
+  sns:
+    enabled: true
+  sqs:
+    enabled: true
+  postgresql:
+    enabled: true
+
 defaults:
-  db: &db     # Disabled by default. Those parameters must match postgresql.* if enabled
-    internal: false
+  db: &db
     user: postgres
     password: TBD
     sslMode: disable
-  infra: &infra
-    sns:
-      internal: false
-      internalEndpointTpl: http://{{ .Release.Name }}-aws
-      region: local-region
-    sqs:
-      internal: false
-      internalEndpointTpl: http://{{ .Release.Name }}-aws
-      region: local-region
-    s3:
-      internal: false
-      internalEndpointTpl: http://{{ .Release.Name }}-s3
-      existingSecretTpl: '{{ .Release.Name }}-s3'
-      region: local-region
+  proxy:  &proxy
+    proxy:
+      enabled: true
+      port: 80
+      probePath: /healthz
+      probeInitialDelay: 2
 
 aws:
-  enabled: false
   containerPort: 80
   config:
     goaws.yaml: |
@@ -107,9 +109,6 @@ aws:
           Max: 0
 
 s3:
-  image:
-    tag: 2020.4.10-debian-10-r3
-  enabled: false
   mode: standalone
   defaultBuckets: "reports,logs,scans,insights,public-insights,crontinuous"
   serviceAccount:
@@ -128,20 +127,17 @@ s3:
       value: local-region
 
 results:
-  <<: *infra
+  <<: *proxy
   conf:
-    region: local-region
     bucketReports: reports
     bucketLogs: logs
 
 persistence:
-  <<: *infra
+  <<: *proxy
   db:
     <<: *db
-    host: postgresql
     name: persistence
   conf:
-    region: local-region
     snsTopic: arn:aws:sns::012345678900:VulcanK8SChecks
     nessusCheckQueue: VulcanK8SChecksTenable
     s3Scans: scans
@@ -155,17 +151,15 @@ persistence:
     queueNesName: VulcanK8SChecksTenable
 
 stream:
-  <<: *infra
+  <<: *proxy
   db:
     <<: *db
-    host: postgresql
     name: persistence
 
 api:
-  <<: *infra
+  <<: *proxy
   db:
     <<: *db
-    host: postgresql
     name: api
   conf:
     bucketReports: reports
@@ -174,14 +168,16 @@ api:
     s3PublicBucket: public-insights
     queueArn: arn:aws:sqs:eu-west-1:012345678900:VulcanK8SAPIScans
     queueName: VulcanK8SAPIScans
+  ingress:
+    path: /api
 
 crontinuous:
-  <<: *infra
+  <<: *proxy
   conf:
     crontinuousBucket: crontinuous
 
 scanengine:
-  <<: *infra
+  <<: *proxy
   conf:
     logLevel: "error"
     queueArn: arn:aws:sqs:local:012345678900:VulcanK8SScanEngineChecks
@@ -189,13 +185,13 @@ scanengine:
     snsArn: arn:aws:sns:local:012345678900:VulcanK8SScans
   db:
     <<: *db
-    host: postgresql
     name: scanengine
 
+ui:
+  <<: *proxy
+
 insights:
-  <<: *infra
   conf:
-    region: local-region
     proxies:
       - name: private
         s3Bucket: insights
@@ -220,7 +216,6 @@ reportsgenerator:
     name: reportsgenerator
 
 metrics:
-  <<: *infra
   conf:
     checksQueueArn: arn:aws:sqs:local-region:012345678900:VulcanK8SMetricsChecks
     checksQueueName: VulcanK8SMetricsChecks

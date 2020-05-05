@@ -11,19 +11,20 @@ metadata:
   name: {{ $fullName }}
   labels:
 {{ include "persistence.labels" . | indent 4 }}
-  {{- with .Values.ingress.annotations }}
   annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: 8m
+  {{- with .Values.ingress.annotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
 {{- if .Values.ingress.tls }}
   tls:
     - hosts:
-        - {{ .Values.ingress.host }}
+        - {{ include "persistence.hostname" . }}
       secretName: {{ $fullName }}-tls
 {{- end }}
   rules:
-    - host: {{ .Values.ingress.host }}
+    - host: {{ include "persistence.hostname" . }}
       http:
         paths:
           - path: {{ .Values.ingress.path }}

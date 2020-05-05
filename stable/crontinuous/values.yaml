@@ -29,7 +29,7 @@ nameOverride: ""
 fullnameOverride: ""
 
 conf:    # TBD
-  region: TBD
+  region:
   vulcanToken: TBDTBDTBD
   crontinuousBucket: tbd
   vulcanUser: tbd

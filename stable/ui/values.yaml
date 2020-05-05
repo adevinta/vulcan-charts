@@ -29,8 +29,12 @@ nameOverride: ""
 fullnameOverride: ""
 
 conf:
-  apiUrl: https://vulcan-api/api/v1/
+  apiUrl: # https://vulcan-api/api/v1/
 
+defaultBackend:
+  enabled: true
+  index: <html><body>Error</body></html>
+  httpCodes: "403"
 # extraEnv:
 #   FOO: BAR
 
@@ -59,7 +63,7 @@ service:
 ingress:
   enabled: false
   tls: true
-  host: chart-example.local
+  host:
   path: /
   annotations: {}
     # kubernetes.io/ingress.class: nginx

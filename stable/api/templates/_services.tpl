@@ -1,7 +1,7 @@
 {{/*
 Define names that can be overriden in a parent chart
 */}}
-{{- define "scanEngineUrl" -}}
+{{- define "scanengineUrl" -}}
 {{- printf "http://%s-scanengine/v1/" .Release.Name -}}
 {{- end -}}
 

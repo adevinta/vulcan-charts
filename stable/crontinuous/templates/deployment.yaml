@@ -1,6 +1,4 @@
-{{- if .Values.proxy.enabled }}
-{{ include "proxy-config-map" . }}
-{{- end }}
+{{- include "proxy-config-map" . }}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -19,10 +17,7 @@ spec:
         {{- include "crontinuous.selectorLabels" . | nindent 8 }}
       annotations:
         checksum/secrets: {{ include (print $.Template.BasePath "/secrets.yaml") . | sha256sum }}
-        {{- if .Values.proxy.enabled }}
-        checksum/config-proxy: {{ include "proxy-config-map" . | sha256sum }}
-        {{ include "proxy-annotations" . | nindent 8 }}
-        {{- end }}
+        {{- include "proxy-annotations" . | nindent 8 }}
         {{- with .Values.annotations }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -35,9 +30,7 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        {{- if .Values.proxy.enabled }}
-        {{ include "proxy-container" . | nindent 8}}
-        {{- end }}
+        {{- include "proxy-container" . | nindent 8}}
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
@@ -47,7 +40,7 @@ spec:
           - name: PORT
             value: "{{ .Values.containerPort }}"
           - name: AWS_REGION
-            value: {{ .Values.conf.region }}
+            value: {{ .Values.conf.region | default .Values.global.region }}
           - name: CRONTINUOUS_BUCKET
             value: {{ .Values.conf.crontinuousBucket }}
           - name: VULCAN_API
@@ -80,9 +73,8 @@ spec:
             timeoutSeconds: {{ .Values.probeTimeout }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-      {{- if .Values.proxy.enabled }}
-      {{ include "proxy-volumes" . | nindent 6}}
-      {{- end }}
+      volumes:
+      {{- include "proxy-volumes" . | nindent 6}}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

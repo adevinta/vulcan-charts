@@ -45,7 +45,7 @@ conf:
 
 db:
   internal: false
-  host: TBD
+  host:
   name: TBD
   user: TBD
   password: TBD
@@ -81,7 +81,7 @@ service:
 ingress:
   enabled: false
   tls: true
-  host: chart-example.local
+  host:
   path: /
   annotations: {}
     # kubernetes.io/ingress.class: nginx

@@ -1,6 +1,4 @@
-{{- if .Values.proxy.enabled }}
-{{ include "proxy-config-map" . }}
-{{- end }}
+{{- include "proxy-config-map" . }}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -21,10 +19,7 @@ spec:
         app.kubernetes.io/instance: {{ .Release.Name }}
       annotations:
         checksum/secrets: {{ include (print $.Template.BasePath "/secrets.yaml") . | sha256sum }}
-        {{- if .Values.proxy.enabled }}
-        checksum/config-proxy: {{ include "proxy-config-map" . | sha256sum }}
-        {{ include "proxy-annotations" . | nindent 8 }}
-        {{- end }}
+        {{- include "proxy-annotations" . | nindent 8 }}
         {{- with .Values.annotations }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -42,13 +37,11 @@ spec:
           command: ['sh', '-c', 'until pg_isready -t 5; do echo WaitingDB; done;']
           env:
           - name: PGHOST
-            value: "{{ ternary ( printf "%s-%s" .Release.Name .Values.db.host ) .Values.db.host .Values.db.internal }}"
+            value: "{{ include "postgresqlHost" . }}"
           - name: PGPORT
             value: "{{ .Values.db.port }}"
       containers:
-        {{- if .Values.proxy.enabled }}
-        {{ include "proxy-container" . | nindent 8}}
-        {{- end }}
+        {{- include "proxy-container" . | nindent 8}}
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
@@ -58,9 +51,9 @@ spec:
           - name: PORT
             value: "{{ .Values.containerPort }}"
           - name: COOKIE_DOMAIN
-            value: "{{ .Values.conf.cookieDomain }}"
+            value: "{{ default .Values.global.domain .Values.conf.cookieDomain }}"
           - name: PG_HOST
-            value: "{{ ternary ( printf "%s-%s" .Release.Name .Values.db.host ) .Values.db.host .Values.db.internal }}"
+            value: "{{ include "postgresqlHost" . }}"
           - name: PG_NAME
             value: "{{ .Values.db.name }}"
           - name: PG_USER
@@ -80,19 +73,19 @@ spec:
           - name: SAML_ISSUER
             value: "{{ .Values.conf.saml.issuer }}"
           - name: SAML_CALLBACK
-            value: "{{ .Values.conf.saml.callback }}"
+            value: "{{ .Values.conf.saml.callback | default ( printf "https://%s/api/v1/login/callback" ( include "api.hostname" . )) }}"
           - name: SAML_TRUSTED_DOMAINS
-            value: {{ .Values.conf.saml.trustedDomains | quote }}
+            value: {{ ( .Values.conf.saml.trustedDomains | quote ) | default ( printf "'[\"%s\"]'" ( include "api.hostname" . )) }}
           - name: SCANENGINE_URL
-            value: "{{ .Values.conf.scanEngineUrl | default  (include "scanEngineUrl" .) }}"
+            value: "{{ .Values.conf.scanengineUrl | default  (include "scanengineUrl" .) }}"
           - name: SCHEDULER_URL
             value: "{{ .Values.conf.schedulerUrl | default  (include "crontinuousUrl" .) }}"
           - name: SQS_QUEUE_ARN
             value: "{{ .Values.conf.queueArn }}"
           - name: REPORTS_BASE_PATH
-            value: "{{ .Values.conf.reports.basePath }}"
+            value: "{{ .Values.conf.reports.basePath | default ( printf "https://%s" ( include "insights.hostname" . )) }}"
           - name: SES_REGION
-            value: "{{ .Values.conf.ses.region }}"
+            value: "{{ .Values.conf.ses.region | default .Values.global.region }}"
           - name: SES_CONFIG_SET
             value: "{{ .Values.conf.ses.configSet}}"
           - name: SES_SUBJECT
@@ -112,15 +105,15 @@ spec:
           - name: S3_PUBLIC_BUCKET
             value: "{{ .Values.conf.s3PublicBucket }}"
           - name: PERSISTENCE_ENDPOINT
-            value: "{{ .Values.conf.persistenceEndpoint  | default  (include "persistenceEndpoint" .)}}"
+            value: "{{ .Values.conf.persistenceEndpoint | default (include "persistenceEndpoint" .)}}"
           - name: RESULTS_ENDPOINT
-            value: "{{ .Values.conf.resultsEndpoint | default  (include "resultsEndpoint" .)}}"
+            value: "{{ .Values.conf.resultsEndpoint | default (include "resultsEndpoint" .)}}"
           - name: PROXY_ENDPOINT
-            value: "{{ .Values.conf.proxyEndpoint }}"
+            value: "{{ .Values.conf.reports.basePath | default ( printf "https://%s" ( include "insights.hostname" . )) }}"
           - name: VULCAN_UI
-            value: "{{ .Values.conf.vulcanUi }}"
+            value: "{{ .Values.conf.vulcanUi | default (printf "https://%s/" ( include "ui.hostname" . )) }}"
           - name: VIEW_REPORT
-            value: "{{ .Values.conf.viewReport }}"
+            value: "{{ .Values.conf.viewReport | default ( printf "https://%s/api/v1/report?team_id=%s&scan_id=%s" ( include "ui.hostname" . ) "%s" "%s") }}"
           - name: REDIRECT_URL
             value: "{{ .Values.conf.redirectUrl }}"
           # Security overview vars.
@@ -136,7 +129,7 @@ spec:
             value: "{{ .Values.conf.general.documentationLink }}"
           - name: ROADMAP_LINK
             value: "{{ .Values.conf.general.roadmapLink }}"
-          {{- if .Values.sqs.internal}}
+          {{- if .Values.global.sqs.enabled}}
           - name: SQS_QUEUE_NAME
             value: "{{ .Values.conf.queueName }}"
           {{- end }}
@@ -167,9 +160,8 @@ spec:
             timeoutSeconds: {{ .Values.probeTimeout }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-      {{- if .Values.proxy.enabled }}
-      {{ include "proxy-volumes" . | nindent 6}}
-      {{- end }}
+      volumes:
+      {{- include "proxy-volumes" . | nindent 6}}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
