@@ -85,15 +85,15 @@ spec:
           - name: SCAN_S3_PUBLIC_BUCKET
             value: "{{ .Values.conf.generators.scan.publicBucket }}"
           - name: PERSISTENCE_ENDPOINT
-            value: "{{ .Values.conf.persistenceEndpoint  | default  (include "persistenceEndpoint" .)}}"
+            value: "{{ .Values.conf.persistenceEndpoint | default (include "persistenceEndpoint" .)}}"
           - name: RESULTS_ENDPOINT
-            value: "{{ .Values.conf.resultsEndpoint | default  (include "resultsEndpoint" .)}}"
+            value: "{{ .Values.conf.resultsEndpoint | default (include "resultsEndpoint" .)}}"
           - name: SCAN_PROXY_ENDPOINT
-            value: "{{ .Values.conf.generators.scan.proxyEndpoint }}"
+            value: "{{ .Values.conf.reports.basePath | default ( printf "https://%s" ( include "insights.hostname" . )) }}"
           - name: VULCAN_UI
-            value: "{{ .Values.conf.vulcanUi }}"
+            value: "{{ .Values.conf.vulcanUi | default (printf "https://%s/" ( include "ui.hostname" . )) }}"
           - name: SCAN_VIEW_REPORT
-            value: "{{ .Values.conf.viewReport }}"
+            value: "{{ .Values.conf.viewReport | default ( printf "https://%s/api/v1/report?team_id=%s&scan_id=%s" ( include "ui.hostname" . ) "%s" "%s") }}"
           - name: SCAN_REDIRECT_URL
             value: "{{ .Values.conf.redirectUrl }}"
           {{- if .Values.sqs.internal}}
