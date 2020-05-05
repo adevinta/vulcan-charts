@@ -81,6 +81,10 @@ Override names
 {{ printf "%s.%s" "scanengine" .Values.global.domain }}
 {{- end -}}
 
+{{- define "reportsgenerator.hostname" -}}
+{{ printf "%s.%s" "reportsgenerator" .Values.global.domain }}
+{{- end -}}
+
 {{- define "stream.hostname" -}}
 {{ printf "%s.%s" "stream" .Values.global.domain }}
 {{- end -}}

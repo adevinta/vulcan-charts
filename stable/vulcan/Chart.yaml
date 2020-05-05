@@ -60,7 +60,7 @@ dependencies:
   repository: "file://../metrics"
   condition: metrics.enabled
 - name: reportsgenerator
-  version: 0.1.1
+  version: 0.1.2
   repository: "file://../reportsgenerator"
   condition: reportsgenerator.enabled
 - name: postgresql
