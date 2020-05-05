@@ -41,10 +41,10 @@ conf:
       publicBucket: TBD
       privateBucket: TBD
       gaId: UA-109338366-3
-      proxyEndpoint: https://vulcan-insights
-      vulcanUi: https://vulcan-www
-      viewReport: vulcan-api/api/v1/report?team_id=%s&scan_id=%s
-      redirectUrl: https://public-redirect/index.html?reportUrl=
+      #proxyEndpoint: https://vulcan-insights
+      #vulcanUi: https://vulcan-www
+      #viewReport: vulcan-api/api/v1/report?team_id=%s&scan_id=%s
+      redirectUrl: # https://public-redirect/index.html?reportUrl=
   
 db:
   internal: false
