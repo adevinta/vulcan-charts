@@ -80,8 +80,6 @@ spec:
             value: "{{ .Values.conf.generators.scan.privateBucket }}"
           - name: SCAN_GA_ID
             value: "{{ .Values.conf.generators.scan.gaId }}"
-          - name: SCAN_PROXY_ENDPOINT
-            value: "{{ .Values.conf.generators.scan.proxyEndpoint }}"
           - name: SCAN_S3_PUBLIC_BUCKET
             value: "{{ .Values.conf.generators.scan.publicBucket }}"
           - name: PERSISTENCE_ENDPOINT
