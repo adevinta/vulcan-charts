@@ -17,7 +17,7 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-body-size: 8m
 {{- if .Values.defaultBackend.enabled }}
     nginx.ingress.kubernetes.io/custom-http-errors: {{ .Values.defaultBackend.httpCodes | default "403" | quote }}
-    nginx.ingress.kubernetes.io/default-backend: {{ include "ui.fullname" . }}-db
+    nginx.ingress.kubernetes.io/default-backend: {{ include "defaultBackendHost" . }}
 {{- end }}
   {{- with .Values.ingress.annotations }}
     {{- toYaml . | nindent 4 }}

@@ -29,6 +29,10 @@ Override names
 {{- printf "%s-results" .Release.Name -}}
 {{- end -}}
 
+{{- define "defaultBackendHost" -}}
+{{- printf "%s-ui-db" .Release.Name -}}
+{{- end -}}
+
 {{- define "metricsRedisAddr" -}}
 {{- printf "%s-metrics-redis:6379" .Release.Name -}}
 {{- end -}}
