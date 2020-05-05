@@ -201,7 +201,6 @@ insights:
         prefix: "/public"
 
 reportsgenerator:
-  <<: *infra
   conf:
     logLevel: "error"
     queueArn: arn:aws:sqs:local:012345678900:VulcanK8SReportsGenerator
