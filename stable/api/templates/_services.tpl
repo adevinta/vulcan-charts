@@ -5,6 +5,10 @@ Define names that can be overriden in a parent chart
 {{- printf "http://%s-scanengine/v1/" .Release.Name -}}
 {{- end -}}
 
+{{- define "reportsgeneratorUrl" -}}
+{{- printf "http://%s-reportsgenerator/" .Release.Name -}}
+{{- end -}}
+
 {{- define "crontinuousUrl" -}}
 {{- printf "http://%s-crontinuous/" .Release.Name -}}
 {{- end -}}
