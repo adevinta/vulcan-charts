@@ -201,6 +201,7 @@ insights:
         prefix: "/public"
 
 reportsgenerator:
+  <<: *proxy
   conf:
     logLevel: "error"
     queueArn: arn:aws:sqs:local:012345678900:VulcanK8SReportsGenerator
