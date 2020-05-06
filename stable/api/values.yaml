@@ -43,7 +43,6 @@ conf:
   queueArn: arn:aws:sqs:TBD:TBD:TBD
   reports:
     snsArn: arn:aws:sns:TBD:TBD:TBD
-    apiUrl: reportsgenerator
   vulnerabilityDbUrl: vulnerabilitydbapi # the current FIAAS
 
 db:
