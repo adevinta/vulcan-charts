@@ -82,53 +82,14 @@ spec:
             value: "{{ .Values.conf.schedulerUrl | default  (include "crontinuousUrl" .) }}"
           - name: SQS_QUEUE_ARN
             value: "{{ .Values.conf.queueArn }}"
-          - name: REPORTS_BASE_PATH
-            value: "{{ .Values.conf.reports.basePath | default ( printf "https://%s" ( include "insights.hostname" . )) }}"
-          - name: SES_REGION
-            value: "{{ .Values.conf.ses.region | default .Values.global.region }}"
-          - name: SES_CONFIG_SET
-            value: "{{ .Values.conf.ses.configSet}}"
-          - name: SES_SUBJECT
-            value: "{{ .Values.conf.ses.subject }}"
-          - name: SES_FROM
-            value: "{{ .Values.conf.ses.from }}"
-          - name: SES_CC
-            value: "{{ .Values.conf.ses.cc }}"
+          - name: REPORTS_SNS_ARN
+            value: "{{ .Values.conf.reports.snsArn }}"
+          - name: REPORTS_API_URL
+            value: "{{ .Values.conf.reports.apiUrl }}"
           - name: PERSISTENCE_HOST
             value: "{{ .Values.conf.persistenceHost | default  (include "persistenceHost" .) }}"
           - name: VULNERABILITYDB_URL
             value: "{{ .Values.conf.vulnerabilityDbUrl }}"
-          - name: GA_ID
-            value: "{{ .Values.conf.gaId }}"
-          - name: S3_PRIVATE_BUCKET
-            value: "{{ .Values.conf.s3PrivateBucket }}"
-          - name: S3_PUBLIC_BUCKET
-            value: "{{ .Values.conf.s3PublicBucket }}"
-          - name: PERSISTENCE_ENDPOINT
-            value: "{{ .Values.conf.persistenceEndpoint | default (include "persistenceEndpoint" .)}}"
-          - name: RESULTS_ENDPOINT
-            value: "{{ .Values.conf.resultsEndpoint | default (include "resultsEndpoint" .)}}"
-          - name: PROXY_ENDPOINT
-            value: "{{ .Values.conf.reports.basePath | default ( printf "https://%s" ( include "insights.hostname" . )) }}"
-          - name: VULCAN_UI
-            value: "{{ .Values.conf.vulcanUi | default (printf "https://%s/" ( include "ui.hostname" . )) }}"
-          - name: VIEW_REPORT
-            value: "{{ .Values.conf.viewReport | default ( printf "https://%s/api/v1/report?team_id=%s&scan_id=%s" ( include "ui.hostname" . ) "%s" "%s") }}"
-          - name: REDIRECT_URL
-            value: "{{ .Values.conf.redirectUrl }}"
-          # Security overview vars.
-          - name: COMPANY_NAME
-            value:  "{{ .Values.conf.general.companyName }}"
-          - name: SUPPORT_EMAIL
-            value: "{{ .Values.conf.general.supportEmail }}"
-          - name: CONTACT_EMAIL
-            value: "{{ .Values.conf.general.contactEmail }}"
-          - name: CONTACT_CHANNEL
-            value: "{{ .Values.conf.general.contactChannel }}"
-          - name: DOCUMENTATION_LINK
-            value: "{{ .Values.conf.general.documentationLink }}"
-          - name: ROADMAP_LINK
-            value: "{{ .Values.conf.general.roadmapLink }}"
           {{- if .Values.global.sqs.enabled}}
           - name: SQS_QUEUE_NAME
             value: "{{ .Values.conf.queueName }}"
