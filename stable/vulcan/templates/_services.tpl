@@ -29,7 +29,7 @@ Override names
 {{- printf "%s-results" .Release.Name -}}
 {{- end -}}
 
-{{- define "reportsGeneratorUrl" -}}
+{{- define "reportsgeneratorUrl" -}}
 {{- printf "http://%s-reportsgenerator/" .Release.Name -}}
 {{- end -}}
 
