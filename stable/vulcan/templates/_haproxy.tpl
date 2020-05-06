@@ -79,18 +79,22 @@ data:
   - mountPath: /usr/local/etc/haproxy
     readOnly: true
     name: config-proxy
+  {{- if .Values.proxy.probe }}
   livenessProbe:
     httpGet:
       path: {{ .Values.proxy.probePath | default "/healthz" }}
       port: metrics
-    initialDelaySeconds: {{ .Values.proxy.probeInitialDelay | default 2 }}
+    initialDelaySeconds: {{ .Values.proxy.probeInitialDelay | default 5 }}
+    timeoutSeconds: {{ .Values.proxy.probeTimeoutSeconds | default 3 }}
   readinessProbe:
     httpGet:
       path: {{ .Values.proxy.probePath | default "/healthz" }}
       port: metrics
-    initialDelaySeconds: {{ .Values.proxy.probeInitialDelay | default 2 }}
+    initialDelaySeconds: {{ .Values.proxy.probeInitialDelay | default 5 }}
+    timeoutSeconds: {{ .Values.proxy.probeTimeoutSeconds | default 3 }}
+  {{- end }}
   resources:
-    {{- toYaml .Values.proxy.resources | nindent 12 }}
+    {{- toYaml .Values.proxy.resources | nindent 4 }}
 {{- end -}}
 {{- end -}}
 
