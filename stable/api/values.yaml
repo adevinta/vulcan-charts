@@ -42,29 +42,9 @@ conf:
     level: INFO
   queueArn: arn:aws:sqs:TBD:TBD:TBD
   reports:
-    basePath:  # https://insights
-  ses:
-    region:
-    subject: "[Test] Security Overview"
-    from: tbd@tbd.com
-    cc: tbd@tbd.com
-  # Security overview general section config.
-  general:
-    companyName: "Company"
-    supportEmail: "support@example.com"
-    contactEmail: "contact@example.com"
-    contactChannel: "https://contact-app.example.com/channel1"
-    documentationLink: "https://docu.example.com"
-    roadmapLink: "https://roadmap.example.com"
-
+    snsArn: arn:aws:sns:TBD:TBD:TBD
+    apiUrl: reportsgenerator
   vulnerabilityDbUrl: vulnerabilitydbapi # the current FIAAS
-  gaId: UA-000000000-0
-  s3PrivateBucket: TBD
-  s3PublicBucket: TBD
-  # proxyEndpoint: https://vulcan-insights
-  # vulcanUi: https://vulcan-www
-  # viewReport: vulcan-api/api/v1/report?team_id=%s&scan_id=%s
-  redirectUrl: #  https://public-redirect/index.html?reportUrl=
 
 db:
   host:
