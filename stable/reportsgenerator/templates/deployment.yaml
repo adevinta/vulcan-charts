@@ -94,7 +94,7 @@ spec:
             value: "{{ .Values.conf.viewReport | default ( printf "https://%s/api/v1/report?team_id=%s&scan_id=%s" ( include "ui.hostname" . ) "%s" "%s") }}"
           - name: SCAN_REDIRECT_URL
             value: "{{ .Values.conf.redirectUrl }}"
-          {{- if .Values.global.sqs.internal}}
+          {{- if .Values.global.sqs.enabled}}
           - name: SQS_QUEUE_NAME
             value: "{{ .Values.conf.queueName }}"
           {{- end }}
