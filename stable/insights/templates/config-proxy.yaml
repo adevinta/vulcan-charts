@@ -8,14 +8,16 @@ data:
   haproxy.cfg: |
     global
       daemon
-      maxconn {{ .Values.proxy.maxconn }}
+      maxconn {{ .Values.proxy.maxconn | default 64 }}
       log stdout format raw daemon
 
     defaults
       mode http
       timeout connect 5s
-      timeout client 50s
-      timeout server 50s
+      timeout client 25s
+      timeout server 25s
+      timeout tunnel 3600s
+      option  http-server-close
 
     {{- if .Values.proxy.cache }}
     cache small
@@ -24,9 +26,9 @@ data:
     {{- end }}
 
     frontend http
-      bind *:{{ .Values.proxy.port }}
+      bind *:{{ .Values.proxy.port | default 80 }}
       log global
-      option httplog
+      option httplog clf
     {{- if .Values.proxy.cache }}
       http-request cache-use small
       http-response cache-store small

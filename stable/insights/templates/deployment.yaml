@@ -29,27 +29,7 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: proxy
-          image: haproxy:alpine
-          ports:
-            - name: http
-              containerPort: {{ .Values.proxy.port }}
-            - name: metrics
-              containerPort: {{ .Values.proxy.metricsPort }}
-          volumeMounts:
-          - mountPath: /usr/local/etc/haproxy
-            readOnly: true
-            name: config-proxy
-          livenessProbe:
-            httpGet:
-              path: {{ .Values.proxy.probePath }}
-              port: metrics
-            initialDelaySeconds: {{ .Values.proxy.probeInitialDelay }}
-          readinessProbe:
-            httpGet:
-              path: {{ .Values.proxy.probePath }}
-              port: metrics
-            initialDelaySeconds: {{ .Values.proxy.probeInitialDelay }}
+      {{- include "proxy-container" . | nindent 8 }}
       {{- $dot := . }}
       {{- range $i, $p := .Values.conf.proxies }}
         {{- $port := add $dot.Values.containerPort $i }}

@@ -63,8 +63,11 @@ defaults:
     proxy:
       enabled: true
       port: 80
+      probe: false
       probePath: /healthz
-      probeInitialDelay: 2
+      probeInitialDelay: 5
+      probeTimeoutSeconds: 3
+      resources: {}
 
 aws:
   containerPort: 80
@@ -191,6 +194,7 @@ ui:
   <<: *proxy
 
 insights:
+  <<: *proxy
   conf:
     proxies:
       - name: private

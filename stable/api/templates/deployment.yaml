@@ -41,7 +41,7 @@ spec:
           - name: PGPORT
             value: "{{ .Values.db.port }}"
       containers:
-        {{- include "proxy-container" . | nindent 8}}
+        {{- include "proxy-container" . | nindent 8 }}
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
