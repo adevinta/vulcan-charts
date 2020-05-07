@@ -76,7 +76,7 @@ spec:
           {{- end }}
         {{ include "infra-envs-sqs" . | nindent 10 }}
         {{ include "infra-envs-sns" . | nindent 10 }}
-        {{ include "infra-envs-s3" . | nindent 10 }}
+        {{ include "infra-envs-minio" . | nindent 10 }}
         {{- range $name, $value := .Values.extraEnv }}
           - name: {{ $name }}
             value: {{ $value | quote }}

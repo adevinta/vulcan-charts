@@ -133,7 +133,7 @@ spec:
           - name: SQS_QUEUE_NAME
             value: "{{ .Values.conf.queueName }}"
           {{- end }}
-        {{ include "infra-envs-s3" . | nindent 10 }}
+        {{ include "infra-envs-minio" . | nindent 10 }}
         {{ include "infra-envs-sqs" . | nindent 10 }}
         {{- range $name, $value := .Values.extraEnv }}
           - name: {{ $name }}

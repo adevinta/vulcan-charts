@@ -1,7 +1,7 @@
-{{- define "infra-envs-s3" -}}
-{{- if .Values.global.s3.enabled }}
+{{- define "infra-envs-minio" -}}
+{{- if .Values.global.minio.enabled }}
 - name: AWS_S3_ENDPOINT
-  value: "{{ include "s3Endpoint" . }}"
+  value: "{{ include "minioEndpoint" . }}"
 - name: PATH_STYLE
   value: "true"
 - name: AWS_S3_REGION
@@ -9,12 +9,12 @@
 - name: AWS_ACCESS_KEY_ID
   valueFrom:
     secretKeyRef:
-      name: "{{ printf "%s-s3" .Release.Name }}"
+      name: "{{ printf "%s-minio" .Release.Name }}"
       key: access-key
 - name: AWS_SECRET_ACCESS_KEY
   valueFrom:
     secretKeyRef:
-      name: "{{ printf "%s-s3" .Release.Name }}"
+      name: "{{ printf "%s-minio" .Release.Name }}"
       key: secret-key
 {{- end }}
 {{- end -}}

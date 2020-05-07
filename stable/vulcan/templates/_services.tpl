@@ -41,8 +41,8 @@ Override names
 {{- printf "%s-metrics-dogstatsd:8125" .Release.Name -}}
 {{- end -}}
 
-{{- define "s3Endpoint" -}}
-{{- printf "http://%s-s3" .Release.Name -}}
+{{- define "minioEndpoint" -}}
+{{- printf "http://%s-minio" .Release.Name -}}
 {{- end -}}
 
 {{- define "sqsEndpoint" -}}

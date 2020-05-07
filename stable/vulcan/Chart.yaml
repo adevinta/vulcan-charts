@@ -70,5 +70,5 @@ dependencies:
 - name: minio
   version: 3.3.6
   repository: https://charts.bitnami.com/bitnami
-  alias: s3
-  condition: global.s3.enabled
+  alias: minio
+  condition: global.minio.enabled

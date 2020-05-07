@@ -82,7 +82,7 @@ spec:
             value: "{{ .Values.conf.nessusCheckQueue }}"
           - name: RAILS_MAX_THREADS
             value: "{{ .Values.conf.railsMaxThreads }}"
-        {{ include "infra-envs-s3" . | nindent 10 }}
+        {{ include "infra-envs-minio" . | nindent 10 }}
         {{ include "infra-envs-sqs" . | nindent 10 }}
         {{ include "infra-envs-sns" . | nindent 10 }}
         {{- range $name, $value := .Values.extraEnv }}

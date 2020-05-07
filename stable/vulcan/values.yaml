@@ -44,7 +44,7 @@ postgresql:
 global:
   domain: vulcan.local
   region: local-region
-  s3:
+  minio:
     enabled: true
   sns:
     enabled: true
@@ -105,7 +105,7 @@ aws:
           Min: 0
           Max: 0
 
-s3:
+minio:
   mode: standalone
   defaultBuckets: "reports,logs,scans,insights,public-insights,crontinuous"
   serviceAccount:
