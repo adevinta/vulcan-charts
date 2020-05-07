@@ -47,7 +47,7 @@ spec:
             value: {{ .Values.conf.vulcanApi | default  (include "vulcanApi" .)  }}
           - name: VULCAN_USER
             value: {{ .Values.conf.vulcanUser }}
-        {{ include "infra-envs-minio" . | nindent 10 }}
+        {{- include "infra-envs-minio" . | nindent 10 }}
         {{- range $name, $value := .Values.extraEnv }}
           - name: {{ $name }}
             value: {{ $value | quote }}
