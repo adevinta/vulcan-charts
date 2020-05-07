@@ -1,5 +1,5 @@
 apiVersion: v2
-name: aws
+name: goaws
 description: A Helm chart for deploying Vulcan goaws
 home: https://github.com/adevinta/vulcan-charts
 icon: https://raw.githubusercontent.com/adevinta/vulcan-charts/master/docs/logo/vulcan.png

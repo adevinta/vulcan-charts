@@ -1,14 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "aws.fullname" . }}
+  name: {{ include "goaws.fullname" . }}
   labels:
-    {{- include "aws.labels" . | nindent 4 }}
+    {{- include "goaws.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "aws.selectorLabels" . | nindent 6 }}
+      {{- include "goaws.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       annotations:
@@ -16,13 +16,13 @@ spec:
         checksum/config: {{ include (print $.Template.BasePath "/config.yaml") . | sha256sum }}
       {{- end }}
       labels:
-        {{- include "aws.selectorLabels" . | nindent 8 }}
+        {{- include "goaws.selectorLabels" . | nindent 8 }}
     spec:
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-      serviceAccountName: {{ include "aws.serviceAccountName" . }}
+      serviceAccountName: {{ include "goaws.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -39,14 +39,14 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
           {{- if .Values.config }}
-          - name: aws-config
+          - name: goaws-config
             mountPath: /conf
           {{- end }}
       volumes:
       {{- if .Values.config }}
-      - name: aws-config
+      - name: goaws-config
         configMap:
-          name: {{ template "aws.fullname" . }}-config
+          name: {{ template "goaws.fullname" . }}-config
       {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:

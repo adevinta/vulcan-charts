@@ -1,5 +1,5 @@
 {{- if .Values.ingress.enabled -}}
-{{- $fullName := include "aws.fullname" . -}}
+{{- $fullName := include "goaws.fullname" . -}}
 {{- $svcPort := .Values.service.port -}}
 {{- if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
 apiVersion: networking.k8s.io/v1beta1
@@ -10,7 +10,7 @@ kind: Ingress
 metadata:
   name: {{ $fullName }}
   labels:
-    {{- include "aws.labels" . | nindent 4 }}
+    {{- include "goaws.labels" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
@@ -19,11 +19,11 @@ spec:
 {{- if .Values.ingress.tls }}
   tls:
     - hosts:
-        - {{ include "aws.hostname" . }}
+        - {{ include "goaws.hostname" . }}
       secretName: {{ $fullName }}-tls
 {{- end }}
   rules:
-    - host: {{ include "aws.hostname" . }}
+    - host: {{ include "goaws.hostname" . }}
       http:
         paths:
           - path: {{ .Values.ingress.path }}

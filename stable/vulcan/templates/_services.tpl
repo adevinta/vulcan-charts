@@ -46,19 +46,19 @@ Override names
 {{- end -}}
 
 {{- define "sqsEndpoint" -}}
-{{- printf "http://%s-aws" .Release.Name -}}
+{{- printf "http://%s-goaws" .Release.Name -}}
 {{- end -}}
 
 {{- define "snsEndpoint" -}}
-{{- printf "http://%s-aws" .Release.Name -}}
+{{- printf "http://%s-goaws" .Release.Name -}}
 {{- end -}}
 
 {{- define "api.hostname" -}}
 {{ printf "%s.%s" "www" .Values.global.domain }}
 {{- end -}}
 
-{{- define "aws.hostname" -}}
-{{ printf "%s.%s" "aws" .Values.global.domain }}
+{{- define "goaws.hostname" -}}
+{{ printf "%s.%s" "goaws" .Values.global.domain }}
 {{- end -}}
 
 {{- define "crontinuous.hostname" -}}

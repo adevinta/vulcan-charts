@@ -40,7 +40,7 @@ conf:
     trustedDomains: # '["vulcan-api"]'
   log:
     level: INFO
-  queueArn: arn:aws:sqs:TBD:TBD:TBD
+  queueArn: arn:aws:sqs:local:TBD:TBD
   reports:
     basePath:  # https://insights
   ses:

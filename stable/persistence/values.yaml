@@ -28,7 +28,7 @@ proxy:
   enabled: false
 
 conf:
-  snsTopic: "arn:aws:sns:TBD:TBD:TBD"
+  snsTopic: "arn:aws:sns:local:TBD:TBD"
   s3Scans: TBD
   secretKeyBase: TBDTBD
   channel: events
@@ -37,10 +37,10 @@ conf:
 
   # loadSQL:   # SQL Script
   queueGenId: 00000000-0000-0000-0000-000000000000
-  queueGenArn: arn:aws:sqs:eu-west-1:012345678900:VulcanK8SChecksGeneric
+  queueGenArn: arn:aws:sqs:local:012345678900:VulcanK8SChecksGeneric
   queueGenName: VulcanK8SChecksGeneric
   queueNesId: 00000000-0000-0000-0000-000000000001
-  queueNesArn: arn:aws:sqs:eu-west-1:012345678900:VulcanK8SChecksTenable
+  queueNesArn: arn:aws:sqs:local:012345678900:VulcanK8SChecksTenable
   queueNesName: VulcanK8SChecksTenable
 
 db:
