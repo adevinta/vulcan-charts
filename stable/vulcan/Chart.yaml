@@ -60,7 +60,7 @@ dependencies:
   repository: "file://../metrics"
   condition: metrics.enabled
 - name: postgresql
-  version: 8.9.3
+  version: 8.9.4
   repository: https://charts.bitnami.com/bitnami
   condition: global.postgresql.enabled
 - name: aws

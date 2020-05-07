@@ -36,11 +36,11 @@ conf:
   railsMaxThreads: 4
 
   # loadSQL:   # SQL Script
-  queueGenId: e4febc2a-3c75-40a8-9dea-26d893050f75
-  queueGenArn: arn:aws:sqs:eu-west-1:892351162211:VulcanK8SChecksGeneric
+  queueGenId: 00000000-0000-0000-0000-000000000000
+  queueGenArn: arn:aws:sqs:eu-west-1:012345678900:VulcanK8SChecksGeneric
   queueGenName: VulcanK8SChecksGeneric
-  queueNesId: a4febc2a-3c75-40a8-9dea-26d893050f75
-  queueNesArn: arn:aws:sqs:eu-west-1:892351162211:VulcanK8SChecksTenable
+  queueNesId: 00000000-0000-0000-0000-000000000001
+  queueNesArn: arn:aws:sqs:eu-west-1:012345678900:VulcanK8SChecksTenable
   queueNesName: VulcanK8SChecksTenable
 
 db:

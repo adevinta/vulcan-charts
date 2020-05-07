@@ -61,9 +61,9 @@ conf:
   gaId: UA-000000000-0
   s3PrivateBucket: TBD
   s3PublicBucket: TBD
-  # proxyEndpoint: https://vulcan-insights
-  # vulcanUi: https://vulcan-www
-  # viewReport: vulcan-api/api/v1/report?team_id=%s&scan_id=%s
+  proxyEndpoint: # https://vulcan-insights
+  vulcanUi: # https://vulcan-www
+  viewReport: # vulcan-api/api/v1/report?team_id=%s&scan_id=%s
   redirectUrl: #  https://public-redirect/index.html?reportUrl=
 
 db:
