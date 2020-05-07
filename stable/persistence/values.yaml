@@ -28,7 +28,6 @@ proxy:
   enabled: false
 
 conf:
-  logLevel: warn
   snsTopic: "arn:aws:sns:local:TBD:TBD"
   s3Scans: TBD
   secretKeyBase: TBDTBD
