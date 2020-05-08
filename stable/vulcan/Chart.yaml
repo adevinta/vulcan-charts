@@ -64,15 +64,15 @@ dependencies:
   repository: "file://../reportsgenerator"
   condition: reportsgenerator.enabled
 - name: postgresql
-  version: 8.9.3
+  version: 8.9.4
   repository: https://charts.bitnami.com/bitnami
   condition: global.postgresql.enabled
-- name: aws
+- name: goaws
   version: 0.2.0
-  repository: "file://../aws"
+  repository: "file://../goaws"
   condition: global.sns.enabled,global.sqs.enabled
 - name: minio
   version: 3.3.6
   repository: https://charts.bitnami.com/bitnami
-  alias: s3
-  condition: global.s3.enabled
+  alias: minio
+  condition: global.minio.enabled

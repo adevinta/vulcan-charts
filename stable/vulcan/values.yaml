@@ -12,13 +12,6 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
-# Those values are useless here, could be defined in the dependant charts.
-proxy:
-  enabled: true
-  port: 9090    # We use non 80 port to prevent prometheus trying to access metrics on port 80
-  probePath: /healthz
-  probeInitialDelay: 2
-
 postgresql:
   enabled: true
   postgresqlUsername: postgres
@@ -45,7 +38,7 @@ postgresql:
 global:
   domain: vulcan.local
   region: local-region
-  s3:
+  minio:
     enabled: true
   sns:
     enabled: true
@@ -62,19 +55,19 @@ defaults:
   proxy:  &proxy
     proxy:
       enabled: true
-      port: 80
+      port: 9090  # We use non 80 port to prevent prometheus trying to access metrics on port 80
       probe: false
       probePath: /healthz
       probeInitialDelay: 5
       probeTimeoutSeconds: 3
       resources: {}
 
-aws:
+goaws:
   containerPort: 80
   config:
     goaws.yaml: |
       Local:
-        Host: {{ .Release.Name }}-aws
+        Host: {{ .Release.Name }}-goaws
         Port: {{ .Values.containerPort }}
         AccountId: "012345678900"
         LogToFile: false
@@ -111,7 +104,7 @@ aws:
           Min: 0
           Max: 0
 
-s3:
+minio:
   mode: standalone
   defaultBuckets: "reports,logs,scans,insights,public-insights,crontinuous"
   serviceAccount:
@@ -141,16 +134,16 @@ persistence:
     <<: *db
     name: persistence
   conf:
-    snsTopic: arn:aws:sns::012345678900:VulcanK8SChecks
+    snsTopic: arn:aws:sns:local:012345678900:VulcanK8SChecks
     nessusCheckQueue: VulcanK8SChecksTenable
     s3Scans: scans
 
     loadSQL:
     queueGenId: e4febc2a-3c75-40a8-9dea-26d893050f75
-    queueGenArn: arn:aws:sqs::012345678900:VulcanK8SChecksGeneric
+    queueGenArn: arn:aws:sqs:local:012345678900:VulcanK8SChecksGeneric
     queueGenName: VulcanK8SChecksGeneric
     queueNesId: a4febc2a-3c75-40a8-9dea-26d893050f75
-    queueNesArn: arn:aws:sqs::012345678900:VulcanK8SChecksTenable
+    queueNesArn: arn:aws:sqs:local:012345678900:VulcanK8SChecksTenable
     queueNesName: VulcanK8SChecksTenable
 
 stream:
@@ -169,7 +162,7 @@ api:
     bucketLogs: logs
     s3PrivateBucket: insights
     s3PublicBucket: public-insights
-    queueArn: arn:aws:sqs:eu-west-1:012345678900:VulcanK8SAPIScans
+    queueArn: arn:aws:sqs:local:012345678900:VulcanK8SAPIScans
     queueName: VulcanK8SAPIScans
   ingress:
     path: /api
@@ -221,9 +214,9 @@ reportsgenerator:
 
 metrics:
   conf:
-    checksQueueArn: arn:aws:sqs:local-region:012345678900:VulcanK8SMetricsChecks
+    checksQueueArn: arn:aws:sqs:local:012345678900:VulcanK8SMetricsChecks
     checksQueueName: VulcanK8SMetricsChecks
-    scansQueueArn: arn:aws:sqs:local-region:012345678900:VulcanK8SMetricsScans
+    scansQueueArn: arn:aws:sqs:local:012345678900:VulcanK8SMetricsScans
     scansQueueName: VulcanK8SMetricsScans
 
 serviceAccount:

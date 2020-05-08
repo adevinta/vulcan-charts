@@ -51,18 +51,18 @@ spec:
               value: "{{ $dot.Values.probePath }}"
             - name: APP_PORT
               value: "{{ $port }}"
-            {{- if $dot.Values.global.s3.enabled }}
+            {{- if $dot.Values.global.minio.enabled }}
             - name: AWS_API_ENDPOINT
-              value: "{{ include "s3Endpoint" $dot }}"
+              value: "{{ include "minioEndpoint" $dot }}"
             - name: AWS_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef:
-                  name: "{{ printf "%s-s3" $dot.Release.Name  }}"
+                  name: "{{ printf "%s-minio" $dot.Release.Name  }}"
                   key: access-key
             - name: AWS_SECRET_ACCESS_KEY
               valueFrom:
                 secretKeyRef:
-                  name: "{{ printf "%s-s3" $dot.Release.Name  }}"
+                  name: "{{ printf "%s-minio" $dot.Release.Name  }}"
                   key: secret-key
             {{- end }}
           ports:

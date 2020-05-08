@@ -45,24 +45,24 @@ Override names
 {{- printf "%s-metrics-dogstatsd:8125" .Release.Name -}}
 {{- end -}}
 
-{{- define "s3Endpoint" -}}
-{{- printf "http://%s-s3" .Release.Name -}}
+{{- define "minioEndpoint" -}}
+{{- printf "http://%s-minio" .Release.Name -}}
 {{- end -}}
 
 {{- define "sqsEndpoint" -}}
-{{- printf "http://%s-aws" .Release.Name -}}
+{{- printf "http://%s-goaws" .Release.Name -}}
 {{- end -}}
 
 {{- define "snsEndpoint" -}}
-{{- printf "http://%s-aws" .Release.Name -}}
+{{- printf "http://%s-goaws" .Release.Name -}}
 {{- end -}}
 
 {{- define "api.hostname" -}}
 {{ printf "%s.%s" "www" .Values.global.domain }}
 {{- end -}}
 
-{{- define "aws.hostname" -}}
-{{ printf "%s.%s" "aws" .Values.global.domain }}
+{{- define "goaws.hostname" -}}
+{{ printf "%s.%s" "goaws" .Values.global.domain }}
 {{- end -}}
 
 {{- define "crontinuous.hostname" -}}

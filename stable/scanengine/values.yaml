@@ -30,8 +30,8 @@ fullnameOverride: ""
 
 conf:
   logLevel: "error"
-  queueArn: arn:aws:sqs:TBD:TBD:TBD
-  snsArn: arn:aws:sns:TBD:TBD:TBD
+  queueArn: arn:aws:sqs:local:TBD:TBD
+  snsArn: arn:aws:sns:local:TBD:TBD
 
 db:
   internal: false

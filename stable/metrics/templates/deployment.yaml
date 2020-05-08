@@ -57,14 +57,14 @@ spec:
             value: "{{ .Values.conf.dogstatsdAddr | default (include "metricsDogstatsdAddr" .)}}"
           - name: REDIS_ADDR
             value: "{{ .Values.conf.redisAddr | default (include "metricsRedisAddr" .)}}"
-          {{- if .Values.global.sqs.enabled}}
+          {{- if .Values.global.sqs.enabled }}
           - name: CHECKS_SQS_QUEUE_NAME
             value: "{{ .Values.conf.checksQueueName }}"
           - name: SCANS_SQS_QUEUE_NAME
             value: "{{ .Values.conf.scansQueueName }}"
           {{- end }}
-        {{ include "infra-envs-s3" . | nindent 10 }}   # Just for credentials
-        {{ include "infra-envs-sqs" . | nindent 10 }}
+        {{- include "infra-envs-minio" . | nindent 10 }}   # Just for credentials
+        {{- include "infra-envs-sqs" . | nindent 10 }}
         {{- range $name, $value := .Values.extraEnv }}
           - name: {{ $name }}
             value: {{ $value | quote }}
