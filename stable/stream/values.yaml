@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   repository: adevinta/vulcan-stream
-  tag: master
+  tag: latest
   pullPolicy: IfNotPresent
 
 proxy:
