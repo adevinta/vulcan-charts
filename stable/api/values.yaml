@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   repository: containers.mpi-internal.com/spt-security/vulcan-api
-  tag: docker
+  tag: latest
   pullPolicy: IfNotPresent
 
 autoscaling:

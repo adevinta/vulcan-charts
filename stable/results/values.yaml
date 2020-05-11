@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   repository: adevinta/vulcan-results
-  tag: master
+  tag: latest
   pullPolicy: IfNotPresent
 
 proxy:
