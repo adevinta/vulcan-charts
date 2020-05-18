@@ -2,24 +2,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "metrics.fullname" . }}-sqs
+  name: {{ include "vulcan.fullname" . }}-sqsexporter
   labels:
-    {{- include "metrics.labels" . | nindent 4 }}
+    {{- include "vulcan.labels" . | nindent 4 }}
 spec:
-  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "metrics.name" . }}-sqs
+      app.kubernetes.io/name: {{ include "vulcan.name" . }}-sqsexporter
       app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: {{ include "metrics.name" . }}-sqs
+        app.kubernetes.io/name: {{ include "vulcan.name" . }}-sqsexporter
         app.kubernetes.io/instance: {{ .Release.Name }}
       annotations:
         prometheus.io/scrape: 'true'
         prometheus.io/port: '9384'
-        {{- with .Values.annotations }}
+        {{- with .Values.sqsExporter.annotations }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
@@ -27,7 +26,7 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-      serviceAccountName: {{ template "metrics.serviceAccountName" . }}
+      serviceAccountName: {{ template "vulcan.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -35,7 +34,7 @@ spec:
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.sqsExporter.image.repository }}:{{ .Values.sqsExporter.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          imagePullPolicy: {{ .Values.sqsExporter.image.pullPolicy }}
           ports:
             - name: metrics
               containerPort: 9384
@@ -52,7 +51,7 @@ spec:
             value: TBD
           {{- end }}
           resources:
-            {{- toYaml .Values.resources | nindent 12 }}
+            {{- toYaml .Values.sqsExporter.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

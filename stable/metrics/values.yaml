@@ -34,13 +34,6 @@ conf:
   redisPassword: TBD
   dogstatsdApiKey: TBD
 
-sqsExporter:
-  enabled: false
-  image:
-    repository: jesusfcr/sqs-exporter
-    tag: custom-endpoint
-  queueNamePrefix: VulcanK8S
-
 # extraEnv:
 #   FOO: BAR
 
