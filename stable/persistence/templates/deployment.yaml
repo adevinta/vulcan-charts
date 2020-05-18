@@ -7,7 +7,9 @@ metadata:
   labels:
 {{ include "persistence.labels" . | indent 4 }}
 spec:
+  {{- if .Values.replicaCount }}
   replicas: {{ .Values.replicaCount }}
+  {{- end }}
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ include "persistence.name" . }}
