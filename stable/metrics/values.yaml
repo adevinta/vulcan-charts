@@ -38,7 +38,7 @@ sqsExporter:
   enabled: false
   image:
     repository: jesusfcr/sqs-exporter
-    tag: latest
+    tag: custom-endpoint
   queueNamePrefix: VulcanK8S
 
 # extraEnv:
