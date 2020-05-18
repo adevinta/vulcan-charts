@@ -186,9 +186,6 @@ metrics:
     checksQueueName: VulcanK8SMetricsChecks
     scansQueueArn: arn:aws:sqs:local:012345678900:VulcanK8SMetricsScans
     scansQueueName: VulcanK8SMetricsScans
-  sqsExporter:
-    enabled: true
-    queueNamePrefix: VulcanK8S
 
 sqsExporter:
   enabled: true
@@ -197,7 +194,6 @@ sqsExporter:
     tag: custom-endpoint
   queueNamePrefix: VulcanK8S
   resources: {}
-
 
 serviceAccount:
   # Specifies whether a service account should be created
