@@ -31,6 +31,8 @@ fullnameOverride: ""
 conf:
   logLevel: "info"
   queueArn: arn:aws:sqs:TBD:TBD:TBD
+  persistenceEndpoint:
+  resultsEndpoint:
   ses:
     region:
     from: tbd@tbd.com

@@ -87,14 +87,16 @@ spec:
           - name: RESULTS_ENDPOINT
             value: "{{ .Values.conf.resultsEndpoint | default (include "resultsEndpoint" .)}}"
           - name: SCAN_PROXY_ENDPOINT
-            value: "{{ ( printf "https://%s" ( include "insights.hostname" . )) }}"
+            value: "{{ .Values.conf.generators.scan.proxyEndpoint | default (printf "https://%s" ( include "insights.hostname" . )) }}"
           - name: VULCAN_UI
-            value: "{{ .Values.conf.vulcanUi | default (printf "https://%s/" ( include "ui.hostname" . )) }}"
+            value: "{{ .Values.conf.generators.scan.vulcanUi | default (printf "https://%s/" ( include "ui.hostname" . )) }}"
           - name: SCAN_VIEW_REPORT
-            value: "{{ .Values.conf.viewReport | default ( printf "https://%s/api/v1/report?team_id=%s&scan_id=%s" ( include "ui.hostname" . ) "%s" "%s") }}"
+            value: "{{ .Values.conf.generators.scan.viewReport | default ( printf "https://%s/api/v1/report?team_id=%s&scan_id=%s" ( include "ui.hostname" . ) "%s" "%s") }}"
+          {{- if .Values.conf.generators.scan.redirectUrl }}
           - name: SCAN_REDIRECT_URL
-            value: "{{ .Values.conf.redirectUrl }}"
-          {{- if .Values.global.sqs.enabled}}
+            value: "{{ .Values.conf.generators.scan.redirectUrl }}"
+          {{- end }}
+          {{- if .Values.global.sqs.enabled }}
           - name: SQS_QUEUE_NAME
             value: "{{ .Values.conf.queueName }}"
           {{- end }}
