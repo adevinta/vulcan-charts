@@ -32,7 +32,6 @@ conf:
   ledgerSource: tbd
   ledgerTenant: tbd
   redisPassword: TBD
-  dogstatsdApiKey: TBD
 
 # extraEnv:
 #   FOO: BAR
