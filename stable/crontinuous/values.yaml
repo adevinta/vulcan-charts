@@ -12,6 +12,9 @@ image:
 proxy:
   enabled: false
 
+dogstatsd:
+  enabled: false
+
 containerPort: 8080
 probePath: /healthcheck
 probeInitialDelay: 2

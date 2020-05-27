@@ -9,9 +9,6 @@ image:
   tag: latest
   pullPolicy: IfNotPresent
 
-proxy:
-  enabled: false
-
 autoscaling:
   enabled: false
   minReplicas: 1
@@ -27,8 +24,15 @@ probePath: /status
 probeInitialDelay: 2
 probeTimeout: 2
 
+proxy:
+  enabled: false
+
+dogstatsd:
+  enabled: false
+
 conf:
   logLevel: "DEBUG"
+
 db:
   internal: false
   host:

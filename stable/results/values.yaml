@@ -9,9 +9,6 @@ image:
   tag: latest
   pullPolicy: IfNotPresent
 
-proxy:
-  enabled: false
-
 autoscaling:
   enabled: false
   minReplicas: 1
@@ -29,6 +26,12 @@ probeTimeout: 2
 
 global:
   domain: vulcan.local
+
+proxy:
+  enabled: false
+
+dogstatsd:
+  enabled: false
 
 conf:
   debug: "false"

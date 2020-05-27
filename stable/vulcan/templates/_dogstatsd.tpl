@@ -1,4 +1,5 @@
 {{- define "dogstatsd-sidecar" -}}
+{{- if .Values.dogstatsd.enabled -}}
 - name: dogstatsd
   image: datadog/docker-dd-agent:latest-dogstatsd
   envFrom:
@@ -8,4 +9,6 @@
     - containerPort: 8125
       name: dogstatsd
       protocol: UDP
+
+{{- end -}}
 {{- end -}}

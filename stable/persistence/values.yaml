@@ -27,6 +27,9 @@ probeTimeout: 4
 proxy:
   enabled: false
 
+dogstatsd:
+  enabled: false
+
 conf:
   snsTopic: "arn:aws:sns:local:TBD:TBD"
   s3Scans: TBD

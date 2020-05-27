@@ -20,6 +20,9 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
+dogstatsd:
+  enabled: true
+
 conf:
   region:
   logLevel: warn

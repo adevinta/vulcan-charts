@@ -9,9 +9,6 @@ image:
   tag: latest
   pullPolicy: IfNotPresent
 
-proxy:
-  enabled: false
-
 containerPort: 8080
 probePath: /index.html
 probeInitialDelay: 2
@@ -27,6 +24,12 @@ autoscaling:
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
+
+proxy:
+  enabled: false
+
+dogstatsd:
+  enabled: false
 
 conf:
   apiUrl: # https://vulcan-api/api/v1/
