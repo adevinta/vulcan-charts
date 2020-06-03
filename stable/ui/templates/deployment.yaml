@@ -43,6 +43,7 @@ spec:
             value: "{{ printf "https://%s/api/v1/" ( include "api.hostname" . ) }}"
           - name: PORT
             value: "{{ .Values.containerPort }}"
+        {{- include "dogstatsd-envs" . | nindent 10 }}
         {{- range $name, $value := .Values.extraEnv }}
           - name: {{ $name }}
             value: {{ $value | quote }}

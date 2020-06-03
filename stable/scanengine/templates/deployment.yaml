@@ -80,6 +80,7 @@ spec:
         {{- include "infra-envs-sqs" . | nindent 10 }}
         {{- include "infra-envs-sns" . | nindent 10 }}
         {{- include "infra-envs-minio" . | nindent 10 }}
+        {{- include "dogstatsd-envs" . | nindent 10 }}
         {{- range $name, $value := .Values.extraEnv }}
           - name: {{ $name }}
             value: {{ $value | quote }}
