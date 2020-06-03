@@ -2,7 +2,7 @@
 {{- if .Values.dogstatsd.enabled -}}
 {{- if eq ( .Values.dogstatsd.host | default "localhost") "localhost" }}
 - name: dogstatsd
-  image: datadog/docker-dd-agent:latest-dogstatsd
+  image: {{ .Values.dogstatsd.image | default "datadog/dogstatsd:7.19.2" }}
   envFrom:
   - secretRef:
       name: {{ .Release.Name }}-dogstatsd
