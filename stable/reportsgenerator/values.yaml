@@ -7,7 +7,7 @@ replicaCount: 1
 image:
   repository: containers.mpi-internal.com/spt-security/vulcan-reports-generator
   tag: latest
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 
 proxy:
   enabled: false

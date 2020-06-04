@@ -7,7 +7,7 @@ replicaCount:
 image:
   repository: containers.mpi-internal.com/spt-security/vulcan-ui
   tag: latest
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 
 proxy:
   enabled: false

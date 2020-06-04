@@ -32,6 +32,7 @@ spec:
       initContainers:
         - name: waitfordb
           image: postgres:9.6.16-alpine
+          imagePullPolicy: Always
           command: ['sh', '-c', 'until pg_isready -t 5; do echo WaitingDB; done;']
           env:
           - name: PGHOST

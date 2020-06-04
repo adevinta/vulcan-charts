@@ -7,7 +7,7 @@ replicaCount:
 image:
   repository: pottava/s3-proxy
   tag: "2.0"
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 
 imagePullSecrets: []
 nameOverride: ""

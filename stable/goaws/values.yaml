@@ -7,7 +7,7 @@ replicaCount:
 image:
   repository: pafortin/goaws
   tag: v0.3.1
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 
 imagePullSecrets: []
 nameOverride: ""

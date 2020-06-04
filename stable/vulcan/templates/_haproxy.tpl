@@ -70,6 +70,7 @@ data:
 {{- if .Values.proxy.enabled -}}
 - name: proxy
   image: haproxy:alpine
+  imagePullPolicy: Always
   ports:
     - name: http
       containerPort: {{ .Values.proxy.port | default "80" }}
