@@ -31,7 +31,8 @@ spec:
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
       containers:
-        - image: redis:alpine
+        - image: redis:6.0-alpine
+          pullPolicy: Always
           name: redis
           args: ["--requirepass", "$(REDIS_PASSWORD)"]
           env:
