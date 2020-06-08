@@ -32,7 +32,7 @@ spec:
     spec:
       containers:
         - image: redis:6.0-alpine
-          pullPolicy: Always
+          imagePullPolicy: Always
           name: redis
           args: ["--requirepass", "$(REDIS_PASSWORD)"]
           env:
