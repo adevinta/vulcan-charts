@@ -27,6 +27,24 @@ probePath: /status
 probeInitialDelay: 2
 probeTimeout: 2
 
+livenessProbe:
+  enabled: true
+  path: /status
+  initialDelaySeconds: 5
+  periodSeconds: 5
+  timeoutSeconds: 3
+  successThreshold: 1
+  failureThreshold: 10
+
+readinessProbe:
+  enabled: true
+  path: /status
+  initialDelaySeconds: 5
+  periodSeconds: 5
+  timeoutSeconds: 3
+  successThreshold: 1
+  failureThreshold: 5
+
 conf:
   logLevel: "DEBUG"
 db:

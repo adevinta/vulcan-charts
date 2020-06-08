@@ -71,18 +71,28 @@ spec:
             - name: {{ $p.name }}
               containerPort: {{ $port }}
               protocol: TCP
+          {{- if $dot.Values.livenessProbe.enabled }}
           livenessProbe:
             httpGet:
-              path: "{{ $dot.Values.probePath }}"
+              path: {{ $dot.Values.livenessProbe.path }}
               port: {{ $port }}
-            initialDelaySeconds: {{ $dot.Values.probeInitialDelay }}
-            timeoutSeconds: {{ $dot.Values.probeTimeout }}
+            initialDelaySeconds: {{ $dot.Values.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ $dot.Values.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ $dot.Values.livenessProbe.timeoutSeconds }}
+            successThreshold: {{ $dot.Values.livenessProbe.successThreshold }}
+            failureThreshold: {{ $dot.Values.livenessProbe.failureThreshold }}
+          {{- end }}
+          {{- if $dot.Values.readinessProbe.enabled }}
           readinessProbe:
             httpGet:
-              path: "{{ $dot.Values.probePath }}"
+              path: {{ $dot.Values.readinessProbe.path }}
               port: {{ $port }}
-            initialDelaySeconds: {{ $dot.Values.probeInitialDelay }}
-            timeoutSeconds: {{ $dot.Values.probeTimeout }}
+            initialDelaySeconds: {{ $dot.Values.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ $dot.Values.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ $dot.Values.readinessProbe.timeoutSeconds }}
+            successThreshold: {{ $dot.Values.readinessProbe.successThreshold }}
+            failureThreshold: {{ $dot.Values.readinessProbe.failureThreshold }}
+          {{- end }}
           resources:
             {{- toYaml $dot.Values.resources | nindent 12 }}
       {{- end }}

@@ -20,9 +20,24 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 containerPort: 8080
-probePath: /status
-probeInitialDelay: 7
-probeTimeout: 4
+
+livenessProbe:
+  enabled: true
+  path: /status
+  initialDelaySeconds: 10
+  periodSeconds: 5
+  timeoutSeconds: 5
+  successThreshold: 1
+  failureThreshold: 10
+
+readinessProbe:
+  enabled: true
+  path: /status
+  initialDelaySeconds: 10
+  periodSeconds: 5
+  timeoutSeconds: 5
+  successThreshold: 1
+  failureThreshold: 5
 
 proxy:
   enabled: false
