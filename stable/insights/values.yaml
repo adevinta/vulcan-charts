@@ -16,7 +16,6 @@ containerPort: 8080
 
 livenessProbe:
   enabled: true
-  path: /healthcheck
   initialDelaySeconds: 5
   timeoutSeconds: 3
   periodSeconds: 10
@@ -25,7 +24,6 @@ livenessProbe:
 
 readinessProbe:
   enabled: true
-  path: /healthcheck
   initialDelaySeconds: 5
   timeoutSeconds: 3
   periodSeconds: 10
