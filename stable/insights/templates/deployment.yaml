@@ -50,7 +50,7 @@ spec:
             - name: STRIP_PATH
               value: "{{ $p.prefix }}"
             - name: HEALTHCHECK_PATH
-              value: /healthcheck
+              value: "/healthcheck"
             - name: APP_PORT
               value: "{{ $port }}"
             {{- if $dot.Values.global.minio.enabled }}
@@ -74,7 +74,7 @@ spec:
           {{- if $dot.Values.livenessProbe.enabled }}
           livenessProbe:
             httpGet:
-              path: /healthcheck
+              path: "/healthcheck"
               port: {{ $port }}
             initialDelaySeconds: {{ $dot.Values.livenessProbe.initialDelaySeconds }}
             periodSeconds: {{ $dot.Values.livenessProbe.periodSeconds }}
@@ -85,7 +85,7 @@ spec:
           {{- if $dot.Values.readinessProbe.enabled }}
           readinessProbe:
             httpGet:
-              path: /healthcheck
+              path: "/healthcheck"
               port: {{ $port }}
             initialDelaySeconds: {{ $dot.Values.readinessProbe.initialDelaySeconds }}
             periodSeconds: {{ $dot.Values.readinessProbe.periodSeconds }}
