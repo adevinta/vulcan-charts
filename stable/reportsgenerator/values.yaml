@@ -7,7 +7,7 @@ replicaCount: 1
 image:
   repository: containers.mpi-internal.com/spt-security/vulcan-reports-generator
   tag: latest
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 
 proxy:
   enabled: false
@@ -54,15 +54,15 @@ conf:
     cc: '["tbd@tbd.com"]'
   generators:
     scan:
-      emailSubject: TBD
+      emailSubject: "Security Overview"
       publicBucket: TBD
       privateBucket: TBD
-      gaId: UA-109338366-3
+      gaId: UA-000000000-0
       #proxyEndpoint: https://vulcan-insights
       #vulcanUi: https://vulcan-www
       #viewReport: vulcan-api/api/v1/report?team_id=%s&scan_id=%s
       redirectUrl: # https://public-redirect/index.html?reportUrl=
-  
+
 db:
   internal: false
   host:

@@ -7,7 +7,7 @@ replicaCount:
 image:
   repository: adevinta/vulcan-persistence
   tag: latest
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 
 autoscaling:
   enabled: false
