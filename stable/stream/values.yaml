@@ -7,7 +7,7 @@ replicaCount:
 image:
   repository: adevinta/vulcan-stream
   tag: latest
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 
 autoscaling:
   enabled: false
@@ -29,6 +29,24 @@ proxy:
 
 dogstatsd:
   enabled: false
+
+livenessProbe:
+  enabled: true
+  path: /status
+  initialDelaySeconds: 5
+  periodSeconds: 5
+  timeoutSeconds: 3
+  successThreshold: 1
+  failureThreshold: 10
+
+readinessProbe:
+  enabled: true
+  path: /status
+  initialDelaySeconds: 5
+  periodSeconds: 5
+  timeoutSeconds: 3
+  successThreshold: 1
+  failureThreshold: 5
 
 conf:
   logLevel: "DEBUG"

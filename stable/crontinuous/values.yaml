@@ -7,7 +7,7 @@ replicaCount:
 image:
   repository: nginx
   tag: latest
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 
 proxy:
   enabled: false
@@ -16,9 +16,24 @@ dogstatsd:
   enabled: false
 
 containerPort: 8080
-probePath: /healthcheck
-probeInitialDelay: 2
-probeTimeout: 2
+
+livenessProbe:
+  enabled: true
+  path: /healthcheck
+  initialDelaySeconds: 5
+  timeoutSeconds: 3
+  periodSeconds: 10
+  successThreshold: 1
+  failureThreshold: 10
+
+readinessProbe:
+  enabled: true
+  path: /healthcheck
+  initialDelaySeconds: 5
+  timeoutSeconds: 3
+  periodSeconds: 10
+  successThreshold: 1
+  failureThreshold: 5
 
 autoscaling:
   enabled: false

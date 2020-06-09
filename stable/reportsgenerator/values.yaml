@@ -7,12 +7,27 @@ replicaCount: 1
 image:
   repository: containers.mpi-internal.com/spt-security/vulcan-reports-generator
   tag: latest
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 
 containerPort: 8080
-probePath: /healthcheck
-probeInitialDelay: 5
-probeTimeout: 2
+
+livenessProbe:
+  enabled: true
+  path: /healthcheck
+  initialDelaySeconds: 10
+  periodSeconds: 5
+  timeoutSeconds: 3
+  successThreshold: 1
+  failureThreshold: 10
+
+readinessProbe:
+  enabled: true
+  path: /healthcheck
+  initialDelaySeconds: 10
+  periodSeconds: 5
+  timeoutSeconds: 3
+  successThreshold: 1
+  failureThreshold: 5
 
 autoscaling:
   enabled: false

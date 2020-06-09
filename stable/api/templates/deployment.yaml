@@ -35,7 +35,8 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:
         - name: waitfordb
-          image: postgres:9.6.16-alpine
+          image: postgres:9.6-alpine
+          imagePullPolicy: Always
           command: ['sh', '-c', 'until pg_isready -t 5; do echo WaitingDB; done;']
           env:
           - name: PGHOST
@@ -111,18 +112,28 @@ spec:
             - name: {{ ternary "app" "http" .Values.proxy.enabled }}
               containerPort: {{ .Values.containerPort }}
               protocol: TCP
+          {{- if .Values.livenessProbe.enabled }}
           livenessProbe:
             httpGet:
-              path: {{ .Values.probePath }}
+              path: {{ .Values.livenessProbe.path }}
               port: {{ .Values.containerPort }}
-            initialDelaySeconds: {{ .Values.probeInitialDelay }}
-            timeoutSeconds: {{ .Values.probeTimeout }}
+            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.livenessProbe.successThreshold }}
+            failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+          {{- end }}
+          {{- if .Values.readinessProbe.enabled }}
           readinessProbe:
             httpGet:
-              path: {{ .Values.probePath }}
+              path: {{ .Values.readinessProbe.path }}
               port: {{ .Values.containerPort }}
-            initialDelaySeconds: {{ .Values.probeInitialDelay }}
-            timeoutSeconds: {{ .Values.probeTimeout }}
+            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.readinessProbe.successThreshold }}
+            failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+          {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:

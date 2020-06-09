@@ -104,6 +104,7 @@ defaults:
   proxy:  &proxy
     proxy:
       enabled: true
+      image: haproxy:2.1-alpine
       port: 9090  # We use non 80 port to prevent prometheus trying to access metrics on port 80
       probe: false
       probePath: /healthz

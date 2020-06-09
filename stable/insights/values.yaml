@@ -7,15 +7,28 @@ replicaCount:
 image:
   repository: pottava/s3-proxy
   tag: "2.0"
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
-probePath: /healthcheck
 containerPort: 8080
-probeInitialDelay: 2
-probeTimeout: 2
+
+livenessProbe:
+  enabled: true
+  initialDelaySeconds: 5
+  timeoutSeconds: 3
+  periodSeconds: 10
+  successThreshold: 1
+  failureThreshold: 10
+
+readinessProbe:
+  enabled: true
+  initialDelaySeconds: 5
+  timeoutSeconds: 3
+  periodSeconds: 10
+  successThreshold: 1
+  failureThreshold: 5
 
 serviceAccount:
   # Specifies whether a service account should be created
