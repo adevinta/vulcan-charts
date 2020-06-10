@@ -80,6 +80,7 @@ spec:
             - name: {{ ternary "app" "http" .Values.proxy.enabled }}
               containerPort: {{ .Values.containerPort }}
               protocol: TCP
+          {{- include "common-lifecycle" . | nindent 10 }}
           {{- if .Values.livenessProbe.enabled }}
           livenessProbe:
             httpGet:

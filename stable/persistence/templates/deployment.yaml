@@ -104,6 +104,7 @@ spec:
           - name: load
             mountPath: /conf
       {{- end }}
+          {{- include "common-lifecycle" . | nindent 10 }}
           {{- if .Values.livenessProbe.enabled }}
           livenessProbe:
             httpGet:

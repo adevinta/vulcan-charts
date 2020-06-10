@@ -80,6 +80,12 @@ data:
   - mountPath: /usr/local/etc/haproxy
     readOnly: true
     name: config-proxy
+  {{- if .Values.proxy.lifecycle.preStopSleep }}
+  lifecycle:
+    preStop:
+      exec:
+        command: ["/bin/sh","-c","sleep {{ .Values.proxy.lifecycle.preStopSleep }};"]
+  {{- end }}
   {{- if .Values.proxy.probe }}
   livenessProbe:
     httpGet:
