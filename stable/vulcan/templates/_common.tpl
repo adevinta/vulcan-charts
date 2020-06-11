@@ -14,9 +14,14 @@ lifecycle:
 {{- end -}}
 {{- if .Values.livenessProbe.enabled }}
 livenessProbe:
+{{- if .Values.livenessProbe.command }}
+  exec:
+    command: {{ .Values.livenessProbe.command }}
+{{- else }}
   httpGet:
     path: {{ .Values.livenessProbe.path }}
     port: {{ .Values.containerPort }}
+{{- end -}}
   initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
   periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
   timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
@@ -25,9 +30,14 @@ livenessProbe:
 {{- end }}
 {{- if .Values.readinessProbe.enabled }}
 readinessProbe:
+{{- if .Values.readinessProbe.command }}
+  exec:
+    command: {{ .Values.readinessProbe.command }}
+{{- else }}
   httpGet:
     path: {{ .Values.readinessProbe.path }}
     port: {{ .Values.containerPort }}
+{{- end -}}
   initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
   periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
   timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
@@ -41,4 +51,3 @@ readinessProbe:
 terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
 {{- end -}}
 {{- end -}}
-
