@@ -126,6 +126,7 @@ persistence:
   <<: *proxy
   lifecycle:
     preStopSleep: 5
+    # preStopCommand:  '["/bin/sh", "-c", "/app/stop.sh 30"]'
   db:
     <<: *db
     name: persistence
