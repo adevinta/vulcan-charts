@@ -21,7 +21,7 @@ livenessProbe:
   httpGet:
     path: {{ .Values.livenessProbe.path }}
     port: {{ .Values.containerPort }}
-{{- end -}}
+{{- end }}
   initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
   periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
   timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
@@ -37,7 +37,7 @@ readinessProbe:
   httpGet:
     path: {{ .Values.readinessProbe.path }}
     port: {{ .Values.containerPort }}
-{{- end -}}
+{{- end }}
   initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
   periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
   timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
