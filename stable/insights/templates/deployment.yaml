@@ -72,11 +72,20 @@ spec:
             - name: {{ $p.name }}
               containerPort: {{ $port }}
               protocol: TCP
-          {{- include "common-lifecycle" $dot | nindent 10 }}
-          {{- if $dot.Values.livenessProbe.enabled }}
+          {{- if or $dot.Values.lifecycle.preStopCommand $dot.Values.lifecycle.preStopSleep }}
+          lifecycle:
+            preStop:
+              exec:
+          {{- if $dot.Values.lifecycle.preStopCommand }}
+                command: {{ $dot.Values.lifecycle.preStopCommand }}
+          {{- else }}
+                command: ["/bin/sh","-c","sleep {{ $dot.Values.lifecycle.preStopSleep }};"]
+          {{- end -}}
+          {{- end -}}
+          {{- if $dot.Values.readinessProbe.enabled }}
           livenessProbe:
             httpGet:
-              path: "/healthcheck"
+              path: {{ $dot.Values.livenessProbe.path }}
               port: {{ $port }}
             initialDelaySeconds: {{ $dot.Values.livenessProbe.initialDelaySeconds }}
             periodSeconds: {{ $dot.Values.livenessProbe.periodSeconds }}
@@ -87,7 +96,7 @@ spec:
           {{- if $dot.Values.readinessProbe.enabled }}
           readinessProbe:
             httpGet:
-              path: "/healthcheck"
+              path: {{ $dot.Values.readinessProbe.path }}
               port: {{ $port }}
             initialDelaySeconds: {{ $dot.Values.readinessProbe.initialDelaySeconds }}
             periodSeconds: {{ $dot.Values.readinessProbe.periodSeconds }}

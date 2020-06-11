@@ -203,9 +203,13 @@ insights:
       - name: private
         s3Bucket: insights
         prefix: ""
+        lifecycle:
+          preStopSleep: 5
       - name: public
         s3Bucket: public-insights
         prefix: "/public"
+        lifecycle:
+          preStopSleep: 5
 
 reportsgenerator:
   <<: *proxy
