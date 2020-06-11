@@ -71,6 +71,7 @@ spec:
             - name: {{ $p.name }}
               containerPort: {{ $port }}
               protocol: TCP
+          {{- include "common-lifecycle" $dot | nindent 10 }}
           {{- if $dot.Values.livenessProbe.enabled }}
           livenessProbe:
             httpGet:

@@ -153,7 +153,7 @@ stream:
 api:
   <<: *proxy
   lifecycle:
-    preStopSleep: 10
+    preStopSleep: 5
   db:
     <<: *db
     name: api
@@ -170,14 +170,14 @@ api:
 crontinuous:
   <<: *proxy
   lifecycle:
-    preStopSleep: 10
+    preStopSleep: 5
   conf:
     crontinuousBucket: crontinuous
 
 scanengine:
   <<: *proxy
   lifecycle:
-    preStopSleep: 10
+    preStopSleep: 5
   conf:
     logLevel: "error"
     queueArn: arn:aws:sqs:local:012345678900:VulcanK8SScanEngineChecks
@@ -194,6 +194,8 @@ ui:
 
 insights:
   <<: *proxy
+  lifecycle:
+    preStopSleep: 5
   conf:
     proxies:
       - name: private
@@ -206,7 +208,7 @@ insights:
 reportsgenerator:
   <<: *proxy
   lifecycle:
-    preStopSleep: 10
+    preStopSleep: 5
   conf:
     logLevel: "error"
     queueArn: arn:aws:sqs:local:012345678900:VulcanK8SReportsGenerator
