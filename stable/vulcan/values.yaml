@@ -127,6 +127,7 @@ persistence:
   lifecycle:
     preStopSleep: 5
     # preStopCommand:  '["/bin/sh", "-c", "/app/stop.sh 30"]'
+  terminationGracePeriodSeconds: 60
   db:
     <<: *db
     name: persistence

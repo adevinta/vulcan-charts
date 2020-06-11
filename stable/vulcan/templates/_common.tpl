@@ -13,3 +13,9 @@ lifecycle:
 {{- end -}}
 {{- end -}}
 {{- end -}}
+
+{{- define "common-spec" -}}
+{{- if .Values.terminationGracePeriodSeconds -}}
+terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
+{{- end -}}
+{{- end -}}
