@@ -9,9 +9,6 @@ image:
   tag: latest
   pullPolicy: Always
 
-proxy:
-  enabled: false
-
 autoscaling:
   enabled: false
   minReplicas: 1
@@ -44,6 +41,12 @@ readinessProbe:
 
 global:
   domain: vulcan.local
+
+proxy:
+  enabled: false
+
+dogstatsd:
+  enabled: false
 
 conf:
   debug: "false"

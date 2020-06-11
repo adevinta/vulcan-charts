@@ -9,9 +9,6 @@ image:
   tag: latest
   pullPolicy: Always
 
-proxy:
-  enabled: false
-
 containerPort: 8080
 
 livenessProbe:
@@ -42,6 +39,12 @@ autoscaling:
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
+
+proxy:
+  enabled: false
+
+dogstatsd:
+  enabled: false
 
 conf:
   apiUrl: # https://vulcan-api/api/v1/

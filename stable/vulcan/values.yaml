@@ -237,6 +237,9 @@ sqsExporter:
   queueNamePrefix: VulcanK8S
   resources: {}
 
+dogstatsd:
+  apiKey: TBD
+
 serviceAccount:
   # Specifies whether a service account should be created
   create: false

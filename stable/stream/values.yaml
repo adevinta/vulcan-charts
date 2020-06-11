@@ -9,9 +9,6 @@ image:
   tag: latest
   pullPolicy: Always
 
-proxy:
-  enabled: false
-
 autoscaling:
   enabled: false
   minReplicas: 1
@@ -26,6 +23,12 @@ containerPort: 8080
 probePath: /status
 probeInitialDelay: 2
 probeTimeout: 2
+
+proxy:
+  enabled: false
+
+dogstatsd:
+  enabled: false
 
 livenessProbe:
   enabled: true
@@ -47,6 +50,7 @@ readinessProbe:
 
 conf:
   logLevel: "DEBUG"
+
 db:
   internal: false
   host:

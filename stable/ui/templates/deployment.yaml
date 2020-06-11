@@ -31,6 +31,7 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
+        {{- include "dogstatsd-sidecar" . | nindent 8 }}
         {{- include "proxy-container" . | nindent 8 }}
         - name: {{ .Chart.Name }}
           securityContext:
@@ -42,6 +43,7 @@ spec:
             value: "{{ printf "https://%s/api/v1/" ( include "api.hostname" . ) }}"
           - name: PORT
             value: "{{ .Values.containerPort }}"
+        {{- include "dogstatsd-envs" . | nindent 10 }}
         {{- range $name, $value := .Values.extraEnv }}
           - name: {{ $name }}
             value: {{ $value | quote }}

@@ -32,6 +32,7 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
+        {{- include "dogstatsd-sidecar" . | nindent 8 }}
         {{- include "proxy-container" . | nindent 8}}
         - name: {{ .Chart.Name }}
           securityContext:
@@ -50,6 +51,7 @@ spec:
           - name: VULCAN_USER
             value: {{ .Values.conf.vulcanUser }}
         {{- include "infra-envs-minio" . | nindent 10 }}
+        {{- include "dogstatsd-envs" . | nindent 10 }}
         {{- range $name, $value := .Values.extraEnv }}
           - name: {{ $name }}
             value: {{ $value | quote }}

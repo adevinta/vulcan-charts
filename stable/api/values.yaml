@@ -42,6 +42,9 @@ readinessProbe:
 proxy:
   enabled: false
 
+dogstatsd:
+  enabled: false
+
 conf:
   debug: "false"
   secretKey: TBDTBD
