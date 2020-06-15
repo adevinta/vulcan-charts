@@ -154,6 +154,7 @@ api:
     s3PublicBucket: public-insights
     queueArn: arn:aws:sqs:local:012345678900:VulcanK8SAPIScans
     queueName: VulcanK8SAPIScans
+    redirectUrl:
   ingress:
     path: /api
 

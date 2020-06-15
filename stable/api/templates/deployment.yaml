@@ -90,6 +90,8 @@ spec:
             value: "{{ .Values.conf.reports.snsArn }}"
           - name: REPORTS_API_URL
             value: "{{ .Values.conf.reports.apiUrl | default (include "reportsgeneratorUrl" .) }}"
+          - name: SCAN_REDIRECT_URL
+            value: "{{ .Values.conf.reports.redirectUrl }}"
           - name: PERSISTENCE_HOST
             value: "{{ .Values.conf.persistenceHost | default  (include "persistenceHost" .) }}"
           - name: VULNERABILITYDB_URL
