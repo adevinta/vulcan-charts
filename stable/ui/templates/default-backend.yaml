@@ -31,7 +31,7 @@ spec:
           image: nginx:alpine
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
-        {{- range $name, $value := .Values.extraEnv }}
+        {{- range $name, $value := .Values.defaultBackend.extraEnv }}
           - name: {{ $name }}
             value: {{ $value | quote }}
         {{- end }}
