@@ -3,7 +3,7 @@
 # Declare variables to be passed into your templates.
 global:
   domain: vulcan.local
-  region: local-region
+  region: local
   minio:
     enabled: true
   sns:
@@ -94,7 +94,7 @@ minio:
     password: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
   extraEnv:
     - name: MINIO_REGION_NAME
-      value: local-region
+      value: local
 
 defaults:
   db: &db
@@ -166,7 +166,8 @@ api:
     s3PublicBucket: public-insights
     queueArn: arn:aws:sqs:local:012345678900:VulcanK8SAPIScans
     queueName: VulcanK8SAPIScans
-    redirectUrl:
+    reports:
+      snsArn: arn:aws:sns:local:012345678900:VulcanK8SReportsGen
   ingress:
     path: /api
 
