@@ -43,7 +43,7 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
-conf:    # TBD
+conf:
   region:
   vulcanToken: TBDTBDTBD
   crontinuousBucket: tbd
