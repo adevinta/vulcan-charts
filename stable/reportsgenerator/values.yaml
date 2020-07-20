@@ -43,9 +43,6 @@ fullnameOverride: ""
 global:
   region:
 
-infra:
-  sqs: true
-
 conf:
   logLevel: "info"
   queueArn: arn:aws:sqs:TBD:TBD:TBD

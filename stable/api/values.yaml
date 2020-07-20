@@ -42,11 +42,6 @@ readinessProbe:
 global:
   domain:
 
-infra:
-  sqs: true
-  sns: true
-  s3: true
-
 conf:
   debug: "false"
   secretKey: TBDTBD

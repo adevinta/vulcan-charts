@@ -42,9 +42,6 @@ readinessProbe:
 global:
   domain: vulcan.local
 
-infra:
-  s3: true
-
 conf:
   debug: "false"
   region:

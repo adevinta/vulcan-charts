@@ -23,9 +23,6 @@ fullnameOverride: ""
 global:
   region:
 
-infra:
-  sqs: true
-
 conf:
   region:
   logLevel: warn

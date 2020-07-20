@@ -40,10 +40,6 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
-infra:
-  sqs: true
-  sns: true
-
 conf:
   logLevel: "error"
   queueArn: arn:aws:sqs:local:TBD:TBD
