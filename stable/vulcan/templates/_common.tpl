@@ -73,3 +73,11 @@ terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
 {{- define "common-volumes" -}}
 {{- include "proxy-volumes" . }}
 {{- end -}}
+
+{{- define "common-appPortName" -}}
+{{- if .Values.proxy -}}
+{{- ternary "app" "http" .Values.proxy.enabled -}}
+{{- else -}}
+http
+{{- end -}}
+{{- end -}}

@@ -19,6 +19,10 @@
 {{- define "common-volumes" -}}
 {{- end -}}
 
+{{- define "common-appPortName" -}}
+http
+{{- end -}}
+
 {{- define "persistenceHost" -}}
 {{- .Values.conf.persistenceHost -}}
 {{- end -}}

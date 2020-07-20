@@ -19,6 +19,10 @@
 {{- define "common-volumes" -}}
 {{- end -}}
 
+{{- define "common-appPortName" -}}
+http
+{{- end -}}
+
 {{- define "postgresqlHost" -}}
 {{- .Values.db.host -}}
 {{- end -}}

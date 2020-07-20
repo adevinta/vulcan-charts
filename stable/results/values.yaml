@@ -42,9 +42,6 @@ readinessProbe:
 global:
   domain: vulcan.local
 
-proxy:
-  enabled: false
-
 infra:
   s3: true
 

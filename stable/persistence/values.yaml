@@ -42,9 +42,6 @@ readinessProbe:
 global:
   region:
 
-proxy:
-  enabled: false
-
 infra:
   s3: true
   sns: true

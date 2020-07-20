@@ -22,6 +22,10 @@ Define names that can be overriden in a parent chart
 {{- define "common-volumes" -}}
 {{- end -}}
 
+{{- define "common-appPortName" -}}
+http
+{{- end -}}
+
 {{- define "persistenceEndpoint" -}}
 {{- end -}}
 

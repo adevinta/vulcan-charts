@@ -18,3 +18,7 @@
 
 {{- define "common-volumes" -}}
 {{- end -}}
+
+{{- define "common-appPortName" -}}
+http
+{{- end -}}
