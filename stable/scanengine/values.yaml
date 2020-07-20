@@ -47,9 +47,6 @@ infra:
   sqs: true
   sns: true
 
-dogstatsd:
-  enabled: false
-
 conf:
   logLevel: "error"
   queueArn: arn:aws:sqs:local:TBD:TBD

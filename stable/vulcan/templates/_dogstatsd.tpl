@@ -1,4 +1,5 @@
 {{- define "dogstatsd-sidecar" -}}
+{{- if .Values.dogstatsd -}}
 {{- if .Values.dogstatsd.enabled -}}
 {{- if eq ( .Values.dogstatsd.host | default "localhost") "localhost" }}
 - name: dogstatsd
@@ -15,8 +16,10 @@
 {{- end -}}
 {{- end -}}
 {{- end -}}
+{{- end -}}
 
 {{- define "dogstatsd-envs" -}}
+{{- if .Values.dogstatsd -}}
 {{- if .Values.dogstatsd.enabled -}}
 - name: DOGSTATSD_ENABLED
   value: "true"
@@ -24,5 +27,6 @@
   value: "{{ .Values.dogstatsd.host | default "localhost" }}"
 - name: DOGSTATSD_PORT
   value: "{{ .Values.dogstatsd.port | default "8125" }}"
+{{- end -}}
 {{- end -}}
 {{- end -}}

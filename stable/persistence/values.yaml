@@ -45,9 +45,6 @@ global:
 proxy:
   enabled: false
 
-dogstatsd:
-  enabled: false
-
 infra:
   s3: true
   sns: true

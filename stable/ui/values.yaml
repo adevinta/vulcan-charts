@@ -43,9 +43,6 @@ fullnameOverride: ""
 proxy:
   enabled: false
 
-dogstatsd:
-  enabled: false
-
 infra:
   sqs: false
 

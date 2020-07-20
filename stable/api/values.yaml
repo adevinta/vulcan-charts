@@ -50,9 +50,6 @@ infra:
   sns: true
   s3: true
 
-dogstatsd:
-  enabled: false
-
 conf:
   debug: "false"
   secretKey: TBDTBD

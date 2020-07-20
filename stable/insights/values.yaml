@@ -55,9 +55,6 @@ proxy:
   metricsPort: 9101
   maxconn: 64
 
-dogstatsd:
-  enabled: false
-
 conf:
   region:
   log: "false"
