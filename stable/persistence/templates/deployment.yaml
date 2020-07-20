@@ -75,13 +75,13 @@ spec:
           - name: STREAM_CHANNEL
             value: "{{ .Values.conf.channel }}"
           - name: REGION
-            value: "{{ .Values.conf.region | default .Values.global.region }}"
+            value: "{{ .Values.conf.region | default (include "region" .) }}"
           - name: SCANS_BUCKET
             value: "{{ .Values.conf.s3Scans }}"
           - name: SNS_TOPIC_ARN
             value: "{{ .Values.conf.snsTopic }}"
           - name: AWS_REGION
-            value: "{{ .Values.conf.region | default .Values.global.region }}"
+            value: "{{ .Values.conf.region | default (include "region" .) }}"
           - name: NESSUS_CHECK_QUEUE
             value: "{{ .Values.conf.nessusCheckQueue }}"
           - name: RAILS_MAX_THREADS

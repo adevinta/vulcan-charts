@@ -43,7 +43,7 @@ spec:
           - name: PORT
             value: "{{ .Values.containerPort }}"
           - name: AWS_REGION
-            value: {{ .Values.conf.region | default .Values.global.region }}
+            value: {{ .Values.conf.region | default (include "region" .) }}
           - name: CRONTINUOUS_BUCKET
             value: {{ .Values.conf.crontinuousBucket }}
           - name: VULCAN_API

@@ -82,6 +82,10 @@ http
 {{- end -}}
 {{- end -}}
 
+{{- define "region" -}}
+{{- .Values.global.region -}}
+{{- end -}}
+
 {{/*
 Override names
 */}}

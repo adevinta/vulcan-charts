@@ -22,3 +22,7 @@
 {{- define "common-appPortName" -}}
 http
 {{- end -}}
+
+{{- define "region" -}}
+{{- .Values.conf.region -}}
+{{- end -}}

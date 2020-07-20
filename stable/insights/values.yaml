@@ -15,7 +15,6 @@ fullnameOverride: ""
 containerPort: 8080
 
 global:
-  region:
   minio:
     enabled: false
 

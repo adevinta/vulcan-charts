@@ -40,9 +40,6 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
-global:
-  region:
-
 conf:
   logLevel: "info"
   queueArn: arn:aws:sqs:TBD:TBD:TBD

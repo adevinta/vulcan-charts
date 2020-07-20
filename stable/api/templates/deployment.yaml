@@ -55,7 +55,7 @@ spec:
           - name: PORT
             value: "{{ .Values.containerPort }}"
           - name: COOKIE_DOMAIN
-            value: "{{ .Values.conf.cookieDomain | default .Values.global.domain }}"
+            value: "{{ .Values.conf.cookieDomain | default (include "domain" .) }}"
           - name: PG_HOST
             value: "{{ .Values.db.host | default (include "postgresqlHost" .) }}"
           - name: PG_NAME

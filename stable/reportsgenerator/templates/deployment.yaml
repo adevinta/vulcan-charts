@@ -69,7 +69,7 @@ spec:
           - name: SQS_QUEUE_ARN
             value: "{{ .Values.conf.queueArn }}"
           - name: SES_REGION
-            value: "{{ .Values.conf.ses.region | default .Values.global.region }}"
+            value: "{{ .Values.conf.ses.region | default (include "region" .) }}"
           - name: SES_FROM
             value: "{{ .Values.conf.ses.from }}"
           - name: SES_CC
@@ -83,9 +83,9 @@ spec:
           - name: SCAN_GA_ID
             value: "{{ .Values.conf.generators.scan.gaId }}"
           - name: PERSISTENCE_ENDPOINT
-            value: "{{ .Values.conf.persistenceEndpoint | default (include "persistenceEndpoint" .)}}"
+            value: "{{ .Values.conf.persistenceEndpoint | default (include "persistenceEndpoint" .) }}"
           - name: RESULTS_ENDPOINT
-            value: "{{ .Values.conf.resultsEndpoint | default (include "resultsEndpoint" .)}}"
+            value: "{{ .Values.conf.resultsEndpoint | default (include "resultsEndpoint" .) }}"
           - name: SCAN_PROXY_ENDPOINT
             value: "{{ .Values.conf.generators.scan.proxyEndpoint | default (printf "https://%s" ( include "insights.hostname" . )) }}"
           - name: VULCAN_UI

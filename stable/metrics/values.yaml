@@ -20,9 +20,6 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
-global:
-  region:
-
 conf:
   region:
   logLevel: warn

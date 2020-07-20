@@ -23,6 +23,14 @@
 http
 {{- end -}}
 
+{{- define "domain" -}}
+{{- .Values.conf.cookieDomain -}}
+{{- end -}}
+
+{{- define "region" -}}
+{{- .Values.conf.region -}}
+{{- end -}}
+
 {{- define "persistenceHost" -}}
 {{- .Values.conf.persistenceHost -}}
 {{- end -}}

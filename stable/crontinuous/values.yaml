@@ -9,9 +9,6 @@ image:
   tag: latest
   pullPolicy: Always
 
-global:
-  region:
-
 containerPort: 8080
 
 livenessProbe:

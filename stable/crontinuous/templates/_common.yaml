@@ -23,6 +23,10 @@
 http
 {{- end -}}
 
+{{- define "region" -}}
+{{- .Values.conf.region -}}
+{{- end -}}
+
 {{- define "vulcanApi" -}}
 {{- .Values.conf.vulcanApi -}}
 {{- end -}}
