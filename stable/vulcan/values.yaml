@@ -228,6 +228,8 @@ reportsgenerator:
 metrics:
   proxy:
     enabled: false
+  dogstatsd:
+    enabled: true
   conf:
     checksQueueArn: arn:aws:sqs:local:012345678900:VulcanK8SMetricsChecks
     checksQueueName: VulcanK8SMetricsChecks
