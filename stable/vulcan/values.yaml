@@ -142,14 +142,6 @@ persistence:
     nessusCheckQueue: VulcanK8SChecksTenable
     s3Scans: scans
 
-    loadSQL:
-    queueGenId: e4febc2a-3c75-40a8-9dea-26d893050f75
-    queueGenArn: arn:aws:sqs:local:012345678900:VulcanK8SChecksGeneric
-    queueGenName: VulcanK8SChecksGeneric
-    queueNesId: a4febc2a-3c75-40a8-9dea-26d893050f75
-    queueNesArn: arn:aws:sqs:local:012345678900:VulcanK8SChecksTenable
-    queueNesName: VulcanK8SChecksTenable
-
 stream:
   <<: *proxy
   lifecycle:
