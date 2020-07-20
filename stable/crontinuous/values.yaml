@@ -12,9 +12,6 @@ image:
 global:
   region:
 
-infra:
-  s3: true
-
 containerPort: 8080
 
 livenessProbe:
