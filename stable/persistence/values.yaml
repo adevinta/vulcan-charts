@@ -39,20 +39,6 @@ readinessProbe:
   successThreshold: 1
   failureThreshold: 5
 
-global:
-  region:
-
-proxy:
-  enabled: false
-
-dogstatsd:
-  enabled: false
-
-infra:
-  s3: true
-  sns: true
-  sqs: true
-
 conf:
   snsTopic: "arn:aws:sns:local:TBD:TBD"
   s3Scans: TBD
@@ -60,14 +46,6 @@ conf:
   channel: events
   nessusCheckQueue: TBD
   railsMaxThreads: 4
-
-  # loadSQL:   # SQL Script
-  queueGenId: 00000000-0000-0000-0000-000000000000
-  queueGenArn: arn:aws:sqs:local:012345678900:VulcanK8SChecksGeneric
-  queueGenName: VulcanK8SChecksGeneric
-  queueNesId: 00000000-0000-0000-0000-000000000001
-  queueNesArn: arn:aws:sqs:local:012345678900:VulcanK8SChecksTenable
-  queueNesName: VulcanK8SChecksTenable
 
 db:
   internal: false

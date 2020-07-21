@@ -118,6 +118,8 @@ results:
   <<: *proxy
   lifecycle:
     preStopSleep: 30
+  infra:
+    s3: true
   conf:
     bucketReports: reports
     bucketLogs: logs
@@ -128,6 +130,10 @@ persistence:
     preStopSleep: 30
     # preStopCommand:  '["/bin/sh", "-c", "/app/stop.sh 30"]'
   terminationGracePeriodSeconds: 60
+  infra:
+    s3: true
+    sns: true
+    sqs: true
   db:
     <<: *db
     name: persistence
@@ -135,14 +141,6 @@ persistence:
     snsTopic: arn:aws:sns:local:012345678900:VulcanK8SChecks
     nessusCheckQueue: VulcanK8SChecksTenable
     s3Scans: scans
-
-    loadSQL:
-    queueGenId: e4febc2a-3c75-40a8-9dea-26d893050f75
-    queueGenArn: arn:aws:sqs:local:012345678900:VulcanK8SChecksGeneric
-    queueGenName: VulcanK8SChecksGeneric
-    queueNesId: a4febc2a-3c75-40a8-9dea-26d893050f75
-    queueNesArn: arn:aws:sqs:local:012345678900:VulcanK8SChecksTenable
-    queueNesName: VulcanK8SChecksTenable
 
 stream:
   <<: *proxy
@@ -154,6 +152,10 @@ stream:
 
 api:
   <<: *proxy
+  infra:
+    sqs: true
+    sns: true
+    s3: true
   lifecycle:
     preStopSleep: 30
   db:
@@ -173,6 +175,8 @@ api:
 
 crontinuous:
   <<: *proxy
+  infra:
+    s3: true
   lifecycle:
     preStopSleep: 30
   conf:
@@ -182,6 +186,9 @@ scanengine:
   <<: *proxy
   lifecycle:
     preStopSleep: 30
+  infra:
+    sqs: true
+    sns: true
   conf:
     logLevel: "error"
     queueArn: arn:aws:sqs:local:012345678900:VulcanK8SScanEngineChecks
@@ -195,6 +202,8 @@ ui:
   <<: *proxy
   lifecycle:
     preStopSleep: 30
+  infra:
+    sqs: false
 
 insights:
   <<: *proxy
@@ -218,6 +227,8 @@ reportsgenerator:
   <<: *proxy
   lifecycle:
     preStopSleep: 30
+  infra:
+    sqs: true
   conf:
     logLevel: "error"
     queueArn: arn:aws:sqs:local:012345678900:VulcanK8SReportsGenerator
@@ -233,6 +244,10 @@ reportsgenerator:
 metrics:
   proxy:
     enabled: false
+  infra:
+    sqs: true
+  dogstatsd:
+    enabled: true
   conf:
     checksQueueArn: arn:aws:sqs:local:012345678900:VulcanK8SMetricsChecks
     checksQueueName: VulcanK8SMetricsChecks

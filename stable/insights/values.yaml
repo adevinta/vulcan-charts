@@ -15,7 +15,6 @@ fullnameOverride: ""
 containerPort: 8080
 
 global:
-  region:
   minio:
     enabled: false
 
@@ -55,9 +54,6 @@ proxy:
   probeInitialDelay: 5
   metricsPort: 9101
   maxconn: 64
-
-dogstatsd:
-  enabled: false
 
 conf:
   region:

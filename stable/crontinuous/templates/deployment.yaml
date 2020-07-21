@@ -43,7 +43,7 @@ spec:
           - name: PORT
             value: "{{ .Values.containerPort }}"
           - name: AWS_REGION
-            value: {{ .Values.conf.region | default .Values.global.region }}
+            value: {{ .Values.conf.region | default (include "region" .) }}
           - name: CRONTINUOUS_BUCKET
             value: {{ .Values.conf.crontinuousBucket }}
           - name: VULCAN_API
@@ -59,7 +59,7 @@ spec:
           - secretRef:
               name: {{ include "crontinuous.fullname" . }}
           ports:
-            - name: {{ ternary "app" "http" .Values.proxy.enabled }}
+            - name: {{ include "common-appPortName" . }}
               containerPort: {{ .Values.containerPort }}
               protocol: TCP
           {{- include "common-lifecycle" . | nindent 10 }}

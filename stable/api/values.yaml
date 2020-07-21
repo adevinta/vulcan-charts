@@ -39,20 +39,6 @@ readinessProbe:
   successThreshold: 1
   failureThreshold: 5
 
-global:
-  domain:
-
-proxy:
-  enabled: false
-
-infra:
-  sqs: true
-  sns: true
-  s3: true
-
-dogstatsd:
-  enabled: false
-
 conf:
   debug: "false"
   secretKey: TBDTBD

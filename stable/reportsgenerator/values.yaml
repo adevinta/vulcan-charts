@@ -40,18 +40,6 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
-global:
-  region:
-
-proxy:
-  enabled: false
-
-dogstatsd:
-  enabled: false
-
-infra:
-  sqs: true
-
 conf:
   logLevel: "info"
   queueArn: arn:aws:sqs:TBD:TBD:TBD
@@ -68,9 +56,9 @@ conf:
       publicBucket: TBD
       privateBucket: TBD
       gaId: UA-000000000-0
-      #proxyEndpoint: https://vulcan-insights
-      #vulcanUi: https://vulcan-www
-      #viewReport: vulcan-api/api/v1/report?team_id=%s&scan_id=%s
+      proxyEndpoint: # https://vulcan-insights
+      vulcanUi: # https://vulcan-www
+      viewReport: # vulcan-api/api/v1/report?team_id=%s&scan_id=%s
       redirectUrl: # https://public-redirect/index.html?reportUrl=
 
 db:

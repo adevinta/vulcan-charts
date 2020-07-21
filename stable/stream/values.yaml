@@ -24,12 +24,6 @@ probePath: /status
 probeInitialDelay: 2
 probeTimeout: 2
 
-proxy:
-  enabled: false
-
-dogstatsd:
-  enabled: false
-
 livenessProbe:
   enabled: true
   path: /status

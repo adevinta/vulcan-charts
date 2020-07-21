@@ -46,7 +46,7 @@ spec:
           - name: DEBUG
             value: "{{ .Values.conf.debug }}"
           - name: AWS_REGION
-            value: "{{ .Values.conf.region | default .Values.global.region }}"
+            value: "{{ .Values.conf.region | default (include "region" .) }}"
           - name: BUCKET_REPORTS
             value: "{{ .Values.conf.bucketReports }}"
           - name: BUCKET_LOGS
@@ -59,7 +59,7 @@ spec:
             value: {{ $value | quote }}
         {{- end }}
           ports:
-            - name: {{ ternary "app" "http" .Values.proxy.enabled }}
+            - name: {{ include "common-appPortName" . }}
               containerPort: {{ .Values.containerPort }}
               protocol: TCP
           {{- include "common-lifecycle" . | nindent 10 }}

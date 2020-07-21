@@ -9,18 +9,6 @@ image:
   tag: latest
   pullPolicy: Always
 
-global:
-  region:
-
-infra:
-  s3: true
-
-proxy:
-  enabled: false
-
-dogstatsd:
-  enabled: false
-
 containerPort: 8080
 
 livenessProbe:
@@ -52,7 +40,7 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
-conf:    # TBD
+conf:
   region:
   vulcanToken: TBDTBDTBD
   crontinuousBucket: tbd

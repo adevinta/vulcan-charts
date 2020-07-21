@@ -49,7 +49,7 @@ spec:
             value: {{ $value | quote }}
         {{- end }}
           ports:
-            - name: {{ ternary "app" "http" .Values.proxy.enabled }}
+            - name: {{ include "common-appPortName" . }}
               containerPort: {{ .Values.containerPort }}
               protocol: TCP
           {{- include "common-lifecycle" . | nindent 10 }}
