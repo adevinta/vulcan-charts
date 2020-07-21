@@ -56,6 +56,7 @@ spec:
             - name: {{ include "common-appPortName" . }}
               containerPort: {{ .Values.containerPort }}
               protocol: TCP
+          {{- include "common-lifecycle" . | nindent 10 }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
