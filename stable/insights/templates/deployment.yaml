@@ -33,7 +33,7 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
       {{- include "common-containers" . | nindent 8 }}
-        - name: "app"
+        - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -53,7 +53,7 @@ spec:
               value: "{{ .Values.containerPort }}"
         {{- include "common-envs" . | nindent 10 -}}
           ports:
-            - name: {{ ternary "app" "http" .Values.proxy.enabled }}
+            - name: {{ include "common-appPortName" . }}
               containerPort: {{ .Values.containerPort }}
               protocol: TCP
           resources:
