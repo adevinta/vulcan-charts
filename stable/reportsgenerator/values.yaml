@@ -48,8 +48,8 @@ conf:
   resultsEndpoint:
   ses:
     region:
-    from: tbd@tbd.com
-    cc: '[\"tbd@tbd.com\"]'
+    from: jane.doe@example.com
+    cc: '[\"john.doe@example.com\"]'
   generators:
     scan:
       emailSubject: "Security Overview"

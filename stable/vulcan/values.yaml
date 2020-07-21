@@ -16,7 +16,7 @@ global:
 postgresql:
   enabled: true
   postgresqlUsername: postgres
-  postgresqlPassword: TBD
+  postgresqlPassword: not-secure-password
   postgresqlDatabase: persistence
   initdbScripts:
     initial-dbs.sql: |
@@ -63,7 +63,6 @@ goaws:
                 Raw: true
               - QueueName: VulcanK8SScanEngineChecks
                 Raw: true
-                #FilterPolicy: '{"foo": ["bar"]}'
           - Name: VulcanK8SScans
             Subscriptions:
               - QueueName: VulcanK8SAPIScans
@@ -89,9 +88,9 @@ minio:
     port: 80
     type: NodePort    # To bypass problem with minio.chart
   accessKey:
-    password: AKIAIOSFODNN7EXAMPLE
+    password: AKIAINSECUREACCESSKEY
   secretKey:
-    password: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+    password: "INSECURESECRETKEYINSECURESECRETKEY"
   extraEnv:
     - name: MINIO_REGION_NAME
       value: local

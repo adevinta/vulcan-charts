@@ -42,7 +42,7 @@ readinessProbe:
 conf:
   snsTopic: "arn:aws:sns:local:TBD:TBD"
   s3Scans: TBD
-  secretKeyBase: TBDTBD
+  secretKeyBase: TBD
   channel: events
   nessusCheckQueue: TBD
   railsMaxThreads: 4

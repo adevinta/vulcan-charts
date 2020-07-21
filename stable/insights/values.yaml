@@ -45,7 +45,7 @@ serviceAccount:
 conf:
   region:
   log: "false"
-  s3Bucket: tbd
+  s3Bucket: TBD
   prefix:
 
 podSecurityContext: {}

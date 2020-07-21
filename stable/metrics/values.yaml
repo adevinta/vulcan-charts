@@ -28,9 +28,9 @@ conf:
   scansQueueArn: arn:aws:sqs:local:TBD:TBD
   resultsScheme: http
   devHoseURL: http://devhose/devhose
-  ledgerToken: token
-  ledgerSource: tbd
-  ledgerTenant: tbd
+  ledgerToken: TOKEN
+  ledgerSource: TBD
+  ledgerTenant: TBD
   redisPassword: TBD
   redisAddr:
   resultsHost:

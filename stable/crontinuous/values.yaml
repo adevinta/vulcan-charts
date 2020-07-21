@@ -42,9 +42,9 @@ fullnameOverride: ""
 
 conf:
   region:
-  vulcanToken: TBDTBDTBD
-  crontinuousBucket: tbd
-  vulcanUser: tbd
+  vulcanToken: TOKEN
+  crontinuousBucket: TBD
+  vulcanUser: TBD
   vulcanApi:  # http://host/api
 
 # extraEnv:
