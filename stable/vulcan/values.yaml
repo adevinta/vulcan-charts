@@ -110,6 +110,10 @@ defaults:
       probePath: /healthz
       probeInitialDelay: 5
       probeTimeoutSeconds: 3
+      # timeoutConnect: 5s
+      # timeoutClient: 25s
+      # timeoutServer: 25s
+      # timeoutTunnel: 3600s
       lifecycle:
         preStopSleep: 30
       resources: {}

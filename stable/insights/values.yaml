@@ -53,6 +53,10 @@ proxy:
   probeInitialDelay: 5
   metricsPort: 9101
   maxconn: 64
+  # timeoutConnect: 5s
+  # timeoutClient: 25s
+  # timeoutServer: 25s
+  # timeoutTunnel: 3600s
 
 conf:
   region:
