@@ -13,10 +13,10 @@ data:
 
     defaults
       mode http
-      timeout connect {{ .Values.proxy.timeoutConnect | default 5s }}
-      timeout client {{ .Values.proxy.timeoutClient | default 25s }}
-      timeout server {{ .Values.proxy.timeoutServer | default 25s }}
-      timeout tunnel {{ .Values.proxy.timeoutTunnel | default 3600s }}
+      timeout connect {{ .Values.proxy.timeoutConnect | default "5s" }}
+      timeout client {{ .Values.proxy.timeoutClient | default "25s" }}
+      timeout server {{ .Values.proxy.timeoutServer | default "25s" }}
+      timeout tunnel {{ .Values.proxy.timeoutTunnel | default "3600s" }}
       option  http-server-close
 
     {{- if .Values.proxy.cache }}
