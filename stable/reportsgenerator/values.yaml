@@ -60,6 +60,9 @@ conf:
       vulcanUi: # https://vulcan-www
       viewReport: # vulcan-api/api/v1/report?team_id=%s&scan_id=%s
       redirectUrl: # https://public-redirect/index.html?reportUrl=
+    livereport:
+      emailSubject: #Live Report
+      emailTemplateFile: #Template file path
 
 db:
   internal: false
