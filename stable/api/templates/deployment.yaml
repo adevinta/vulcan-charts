@@ -96,6 +96,12 @@ spec:
             value: "{{ .Values.conf.persistenceHost | default  (include "persistenceHost" .) }}"
           - name: VULNERABILITYDB_URL
             value: "{{ .Values.conf.vulnerabilityDbUrl }}"
+          - name: CGCATALOGUE_URL
+            value: "{{ .Values.conf.cgcatalogue.url }}"
+          - name: CGCATALOGUE_RETRIES
+            value: "{{ .Values.conf.cgcatalogue.retries }}"
+          - name: CGCATALOGUE_RETRY_INTERVAL
+            value: "{{ .Values.conf.cgcatalogue.retry_interval}}"
         {{- include "common-envs" . | nindent 10 -}}
         {{- range $name, $value := .Values.extraEnv }}
           - name: {{ $name }}
