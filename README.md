@@ -2,7 +2,6 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Build Status](https://travis-ci.org/adevinta/vulcan-charts.svg?branch=master)](https://travis-ci.org/adevinta/vulcan-charts)
-
 https://adevinta.github.io/vulcan-charts
 
 ## Vulcan Charts
