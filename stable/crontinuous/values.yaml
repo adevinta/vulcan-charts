@@ -46,9 +46,9 @@ conf:
   crontinuousBucket: tbd
   vulcanUser: tbd
   vulcanApi:  # http://host/api
-  enableTeamsWhitelistScan: false
+  enableTeamsWhitelistScan: "false"
   teamsWhitelistScan: '[]'
-  enableTeamsWhitelistReport: false
+  enableTeamsWhitelistReport: "false"
   teamsWhitelistReport: '[]'
 
 # extraEnv:
