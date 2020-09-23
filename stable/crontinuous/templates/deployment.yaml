@@ -51,13 +51,13 @@ spec:
           - name: VULCAN_USER
             value: {{ .Values.conf.vulcanUser }}
           - name: ENABLE_TEAMS_WHITELIST_SCAN
-            value: {{ .Values.conf.enableTeamsWhitelistScan }}
+            value: {{ .Values.conf.enableTeamsWhitelistScan | quote }}
           - name: TEAMS_WHITELIST_SCAN
-            value: {{ .Values.conf.teamsWhitelistScan }}
+            value: {{ .Values.conf.teamsWhitelistScan | quote}}
           - name: ENABLE_TEAMS_WHITELIST_REPORT
-            value: {{ .Values.conf.enableTeamsWhitelistReport }}
+            value: {{ .Values.conf.enableTeamsWhitelistReport | quote }}
           - name: TEAMS_WHITELIST_REPORT
-            value: {{ .Values.conf.teamsWhitelistReport }}
+            value: {{ .Values.conf.teamsWhitelistReport | quote }}
         {{- include "common-envs" . | nindent 10 }}
         {{- range $name, $value := .Values.extraEnv }}
           - name: {{ $name }}
