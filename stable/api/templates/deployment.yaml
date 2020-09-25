@@ -92,6 +92,8 @@ spec:
             value: "{{ .Values.conf.reports.apiUrl | default (include "reportsgeneratorUrl" .) }}"
           - name: SCAN_REDIRECT_URL
             value: "{{ .Values.conf.reports.redirectUrl }}"
+          - name: VULCAN_UI_URL
+            value: "{{ .Values.conf.reports.vulcanUIUrl }}"
           - name: PERSISTENCE_HOST
             value: "{{ .Values.conf.persistenceHost | default  (include "persistenceHost" .) }}"
           - name: VULNERABILITYDB_URL
