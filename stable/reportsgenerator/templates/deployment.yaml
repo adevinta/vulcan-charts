@@ -97,7 +97,7 @@ spec:
             value: "{{ .Values.conf.generators.scan.redirectUrl }}"
           {{- end }}
           - name: LIVEREPORT_EMAIL_SUBJECT
-          value: "{{ .Values.conf.generators.livereport.emailSubject }}"
+            value: "{{ .Values.conf.generators.livereport.emailSubject }}"
         {{- include "common-envs" . | nindent 10 }}
         {{- range $name, $value := .Values.extraEnv }}
           - name: {{ $name }}
