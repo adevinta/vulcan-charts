@@ -264,6 +264,16 @@ sqsExporter:
 dogstatsd:
   apiKey: TBD
 
+# customTplManifests: |
+#     apiVersion: v1
+#     kind: ConfigMap
+#     metadata:
+#       labels:
+#         {{- include "vulcan.labels" . | nindent 4 }}
+#       name: {{ .Release.Name }}-extra
+#     data:
+#       FOO: var
+
 serviceAccount:
   # Specifies whether a service account should be created
   create: false
