@@ -165,10 +165,6 @@ Override names
 {{- printf "%s.%s" "results" .Values.global.domain -}}
 {{- end -}}
 
-{{- define "scanengine.hostname" -}}
-{{- printf "%s.%s" "scanengine" .Values.global.domain -}}
-{{- end -}}
-
 {{- define "reportsgenerator.hostname" -}}
 {{- printf "%s.%s" "reportsgenerator" .Values.global.domain -}}
 {{- end -}}
