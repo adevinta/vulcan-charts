@@ -149,10 +149,6 @@ Override names
 {{- printf "%s.%s" "www" .Values.global.domain -}}
 {{- end -}}
 
-{{- define "crontinuous.hostname" -}}
-{{- printf "%s.%s" "crontinuous" .Values.global.domain -}}
-{{- end -}}
-
 {{- define "insights.hostname" -}}
 {{- printf "%s.%s" "insights" .Values.global.domain -}}
 {{- end -}}
