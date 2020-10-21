@@ -1,11 +1,20 @@
 default:
   ingress: &ingress
-    enabled: true
+    enabled: false
     tls: false
 
 results:
+  conf:
+    linkBase: https://results.chart-example.local
   ingress:
-    <<: *ingress
+    enabled: true
+    hosts:
+      - host: results.vulcan.local
+        paths: [/]
+    tls:
+      - secretName: results-vulcan-tls
+        hosts:
+        - results.vulcan.local
 
 stream:
   ingress:

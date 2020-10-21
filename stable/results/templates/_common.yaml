@@ -26,7 +26,3 @@ http
 {{- define "region" -}}
 {{- .Values.conf.region -}}
 {{- end -}}
-
-{{- define "results.hostname" -}}
-{{ .Values.conf.resultsHost }}
-{{- end -}}
