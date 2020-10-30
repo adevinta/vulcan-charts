@@ -35,9 +35,9 @@ spec:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       containers:
+      - name: redis
         image: "{{ .Values.redis.image.repository }}:{{ .Values.redis.image.tag }}"
         imagePullPolicy: Always
-        name: redis
         args: ["--requirepass", "$(REDIS_PASSWORD)"]
         env:
           - name: REDIS_PASSWORD
