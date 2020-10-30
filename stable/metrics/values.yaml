@@ -9,6 +9,11 @@ image:
   tag: latest
   pullPolicy: Always
 
+redis:
+  image:
+    repository: redis
+    tag: 6.0-alpine
+
 autoscaling:
   enabled: false
   minReplicas: 1

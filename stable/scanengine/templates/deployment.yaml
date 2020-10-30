@@ -34,7 +34,7 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:
         - name: waitfordb
-          image: postgres:9.6-alpine
+          image: "{{ .Values.waitfordb.image.repository }}:{{ .Values.waitfordb.image.tag }}"
           imagePullPolicy: Always
           command: ['sh', '-c', 'until pg_isready -t 5; do echo WaitingDB; done;']
           env:

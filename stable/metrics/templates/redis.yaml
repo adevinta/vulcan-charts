@@ -30,17 +30,21 @@ spec:
         app.kubernetes.io/name: {{ include "metrics.name" . }}-redis
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
       containers:
-        - image: redis:6.0-alpine
-          imagePullPolicy: Always
-          name: redis
-          args: ["--requirepass", "$(REDIS_PASSWORD)"]
-          env:
-            - name: REDIS_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "metrics.fullname" . }}
-                  key: REDIS_PASSWORD
-          ports:
-            - containerPort: 6379
-              name: redis
+        image: "{{ .Values.redis.image.repository }}:{{ .Values.redis.image.tag }}"
+        imagePullPolicy: Always
+        name: redis
+        args: ["--requirepass", "$(REDIS_PASSWORD)"]
+        env:
+          - name: REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "metrics.fullname" . }}
+                key: REDIS_PASSWORD
+        ports:
+          - containerPort: 6379
+            name: redis
