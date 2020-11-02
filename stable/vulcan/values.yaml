@@ -119,7 +119,7 @@ defaults:
       lifecycle:
         preStopSleep: 30
       resources: {}
-    dogststsd: &dogstatsd
+    dogstatsd: &dogstatsd
       image: 
         repository: datadog/dogstatsd
         tag: 7.19.2
