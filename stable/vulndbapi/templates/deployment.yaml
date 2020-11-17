@@ -1,0 +1,95 @@
+{{- include "common-manifests" . }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "vulndbapi.fullname" . }}
+  labels:
+    {{- include "vulndbapi.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "vulndbapi.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "vulndbapi.selectorLabels" . | nindent 8 }}
+      annotations:
+        checksum/secrets: {{ include (print $.Template.BasePath "/secrets.yaml") . | sha256sum }}
+        {{- include "common-annotations" . | nindent 8 }}
+        {{- with .Values.annotations }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+    {{- include "common-spec" . | nindent 6 }}
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "vulndbapi.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+        - name: waitfordb
+          image: "{{ .Values.waitfordb.image.repository }}:{{ .Values.waitfordb.image.tag }}"
+          imagePullPolicy: Always
+          command: ['sh', '-c', 'until pg_isready -t 5; do echo WaitingDB; done;']
+          env:
+          - name: PGHOST
+            value: "{{ .Values.db.host | default (include "postgresqlHost" .) }}"
+          - name: PGPORT
+            value: "{{ .Values.db.port }}"
+      containers:
+        {{- include "common-containers" . | nindent 8 }}
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+          - name: PG_HOST
+            value: "{{ .Values.db.host | default (include "postgresqlHost" .) }}"
+          - name: PG_NAME
+            value: "{{ .Values.db.name }}"
+          - name: PG_USER
+            value: "{{ .Values.db.user }}"
+          - name: PG_PORT
+            value: "{{ .Values.db.port }}"
+          - name: PG_SSLMODE
+            value: "{{ .Values.db.sslMode }}"
+          {{- if .Values.db.ca }}
+          - name: PG_CA_B64
+            value: "{{ .Values.db.ca | b64enc }}"
+          {{- end }}
+          - name: LOG_LEVEL
+            value: "{{ .Values.conf.logLevel }}"
+        {{- include "common-envs" . | nindent 10 }}
+        {{- range $name, $value := .Values.extraEnv }}
+          - name: {{ $name }}
+            value: {{ $value | quote }}
+        {{- end }}
+          envFrom:
+          - secretRef:
+              name: {{ include "vulndbapi.fullname" . }}
+          ports:
+            - name: {{ include "common-appPortName" . }}
+              containerPort: {{ .Values.containerPort }}
+              protocol: TCP
+          {{- include "common-lifecycle" . | nindent 10 }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+      {{- include "common-volumes" . | nindent 6}}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}

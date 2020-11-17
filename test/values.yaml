@@ -38,3 +38,7 @@ insights:
 reportsgenerator:
   ingress:
     <<: *ingress
+
+vulndbapi:
+  ingress:
+    <<: *ingress

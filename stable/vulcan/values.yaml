@@ -260,6 +260,16 @@ metrics:
     scansQueueArn: arn:aws:sqs:local:012345678900:VulcanK8SMetricsScans
     scansQueueName: VulcanK8SMetricsScans
 
+vulndbapi:
+  <<: *common
+  lifecycle:
+    preStopSleep: 30
+  conf:
+    logLevel: "error"
+  db:
+    <<: *db
+    name: vulnerabilitydb
+
 sqsExporter:
   enabled: true
   image:

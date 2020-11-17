@@ -125,6 +125,10 @@ Override names
 {{- printf "http://%s-reportsgenerator/" .Release.Name -}}
 {{- end -}}
 
+{{- define "vulndbapiUrl" -}}
+{{- printf "http://%s-vulndbapi/" .Release.Name -}}
+{{- end -}}
+
 {{- define "defaultBackendHost" -}}
 {{- printf "%s-ui-db" .Release.Name -}}
 {{- end -}}
@@ -175,6 +179,10 @@ Override names
 
 {{- define "reportsgenerator.hostname" -}}
 {{- printf "%s.%s" "reportsgenerator" .Values.global.domain -}}
+{{- end -}}
+
+{{- define "vulndbapi.hostname" -}}
+{{- printf "%s.%s" "vulndbapi" .Values.global.domain -}}
 {{- end -}}
 
 {{- define "stream.hostname" -}}
