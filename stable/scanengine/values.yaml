@@ -9,6 +9,11 @@ image:
   tag: latest
   pullPolicy: Always
 
+waitfordb:
+  image:
+    repository: postgres
+    tag: 9.6-alpine
+
 containerPort: 8080
 
 livenessProbe:

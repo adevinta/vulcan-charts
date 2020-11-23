@@ -3,7 +3,7 @@
 {{- if .Values.dogstatsd.enabled -}}
 {{- if eq ( .Values.dogstatsd.host | default "localhost") "localhost" }}
 - name: dogstatsd
-  image: {{ .Values.dogstatsd.image | default "datadog/dogstatsd:7.19.2" }}
+  image: "{{ .Values.dogstatsd.image.repository }}:{{ .Values.dogstatsd.image.tag }}"
   envFrom:
   - secretRef:
       name: {{ .Release.Name }}-dogstatsd

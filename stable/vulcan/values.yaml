@@ -101,10 +101,12 @@ defaults:
     user: postgres
     password: TBD
     sslMode: disable
-  proxy:  &proxy
+  common:  &common
     proxy:
       enabled: true
-      image: haproxy:2.1-alpine
+      image: 
+        repository: haproxy
+        tag: 2.1-alpine
       port: 9090  # We use non 80 port to prevent prometheus trying to access metrics on port 80
       probe: false
       probePath: /healthz
@@ -117,9 +119,13 @@ defaults:
       lifecycle:
         preStopSleep: 30
       resources: {}
+    dogstatsd: &dogstatsd
+      image: 
+        repository: datadog/dogstatsd
+        tag: 7.19.2
 
 results:
-  <<: *proxy
+  <<: *common
   lifecycle:
     preStopSleep: 30
   infra:
@@ -130,7 +136,7 @@ results:
     linkBase: http://results/v1
 
 persistence:
-  <<: *proxy
+  <<: *common
   lifecycle:
     preStopSleep: 30
     # preStopCommand:  '["/bin/sh", "-c", "/app/stop.sh 30"]'
@@ -148,7 +154,7 @@ persistence:
     s3Scans: scans
 
 stream:
-  <<: *proxy
+  <<: *common
   lifecycle:
     preStopSleep: 30
   db:
@@ -156,7 +162,7 @@ stream:
     name: persistence
 
 api:
-  <<: *proxy
+  <<: *common
   infra:
     sqs: true
     sns: true
@@ -179,7 +185,7 @@ api:
     path: /api
 
 crontinuous:
-  <<: *proxy
+  <<: *common
   infra:
     s3: true
   lifecycle:
@@ -188,7 +194,7 @@ crontinuous:
     crontinuousBucket: crontinuous
 
 scanengine:
-  <<: *proxy
+  <<: *common
   lifecycle:
     preStopSleep: 30
   infra:
@@ -204,14 +210,14 @@ scanengine:
     name: scanengine
 
 ui:
-  <<: *proxy
+  <<: *common
   lifecycle:
     preStopSleep: 30
   infra:
     sqs: false
 
 insights:
-  <<: *proxy
+  <<: *common
   lifecycle:
     preStopSleep: 30
   conf:
@@ -224,7 +230,7 @@ insights:
         prefix: "/public"
 
 reportsgenerator:
-  <<: *proxy
+  <<: *common
   lifecycle:
     preStopSleep: 30
   infra:
@@ -247,6 +253,7 @@ metrics:
   infra:
     sqs: true
   dogstatsd:
+    <<: *dogstatsd
     enabled: true
   conf:
     checksQueueArn: arn:aws:sqs:local:012345678900:VulcanK8SMetricsChecks

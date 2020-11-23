@@ -69,7 +69,7 @@ data:
 {{- define "proxy-container" -}}
 {{- if .Values.proxy.enabled }}
 - name: proxy
-  image: {{ .Values.proxy.image | default "haproxy:2.1-alpine" }}
+  image: "{{ .Values.proxy.image.repository }}:{{ .Values.proxy.image.tag }}"
   imagePullPolicy: Always
   ports:
     - name: http
