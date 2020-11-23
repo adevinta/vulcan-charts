@@ -22,7 +22,14 @@ stream:
 
 persistence:
   ingress:
-    <<: *ingress
+    enabled: true
+    hosts:
+      - host: persistence.vulcan.local
+        paths: [/]
+    tls:
+      - secretName: persistence-vulcan-tls
+        hosts:
+        - persistence.vulcan.local
 
 api:
   ingress:
