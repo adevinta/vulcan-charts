@@ -145,6 +145,14 @@ Override names
 {{- printf "http://%s-goaws" .Release.Name -}}
 {{- end -}}
 
+{{- define "sqsBaseUrl" -}}
+{{- printf "http://%s-goaws/%s" .Release.Name .Values.global.goaws.accountId -}}
+{{- end -}}
+
+{{- define "snsBaseUrl" -}}
+{{- printf "http://%s-goaws/%s" .Release.Name .Values.global.goaws.accountId -}}
+{{- end -}}
+
 {{- define "api.hostname" -}}
 {{- printf "%s.%s" "www" .Values.global.domain -}}
 {{- end -}}

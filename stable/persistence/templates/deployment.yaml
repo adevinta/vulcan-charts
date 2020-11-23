@@ -87,7 +87,7 @@ spec:
           - name: RAILS_MAX_THREADS
             value: "{{ .Values.conf.railsMaxThreads }}"
           - name: AWS_CREATE_CHECKS_SQS_URL
-            value: "{{ .Values.conf.awsCreateChecksSqsUrl }}"
+            value: "{{ .Values.conf.awsCreateChecksSqsUrl | default (printf "%s/%s" (include "sqsBaseUrl" .) .Values.conf.awsCreateChecksSqsName) }}"
           - name: AWS_CREATE_CHECKS_WORKERS
             value: "{{ .Values.conf.awsCreateChecksWorkers }}"
         {{- include "common-envs" . | nindent 10 }}

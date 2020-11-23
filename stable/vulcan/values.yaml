@@ -6,6 +6,8 @@ global:
   region: local
   minio:
     enabled: true
+  goaws:
+    accountId: "012345678900"
   sns:
     enabled: true
   sqs:
@@ -43,7 +45,7 @@ goaws:
       Local:
         Host: {{ .Release.Name }}-goaws
         Port: {{ .Values.containerPort }}
-        AccountId: "012345678900"
+        AccountId: "{{ .Values.global.goaws.accountId }}"
         LogToFile: false
         QueueAttributeDefaults:
           VisibilityTimeout: 30
@@ -156,7 +158,8 @@ persistence:
     snsTopic: arn:aws:sns:local:012345678900:VulcanK8SChecks
     nessusCheckQueue: VulcanK8SChecksTenable
     s3Scans: scans
-    awsCreateChecksSqsUrl: https://sqs.eu-west-1.amazonaws.com/012345678900/VulcanK8SPersistenceChecks
+    # awsCreateChecksSqsUrl: https://localhost/012345678900/VulcanK8SPersistenceChecks
+    awsCreateChecksSqsName: VulcanK8SPersistenceChecks
 
 stream:
   <<: *common
