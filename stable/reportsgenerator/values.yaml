@@ -50,7 +50,7 @@ conf:
   queueArn: arn:aws:sqs:TBD:TBD:TBD
   queueName: TBD
   persistenceEndpoint:
-  resultsEndpoint:
+  resultsUrl:
   ses:
     region:
     from: tbd@tbd.com

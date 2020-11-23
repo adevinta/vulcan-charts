@@ -26,3 +26,7 @@ http
 {{- define "postgresqlHost" -}}
 {{- .Values.db.host -}}
 {{- end -}}
+
+{{- define "resultsUrl" -}}
+{{- .Values.conf.resultsUrl -}}
+{{- end -}}

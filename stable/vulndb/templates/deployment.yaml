@@ -57,7 +57,7 @@ spec:
           - name: SNS_TOPIC_ARN
             value: "{{ .Values.conf.vulnsTopicArn }}"
           - name: RESULTS_URL
-            value: "{{ .Values.conf.resultsUrl }}"
+            value: "{{ .Values.conf.resultsUrl | default (include "resultsUrl" .)}}"
           - name: PG_HOST
             value: "{{ .Values.db.host | default (include "postgresqlHost" .) }}"
           - name: PG_NAME

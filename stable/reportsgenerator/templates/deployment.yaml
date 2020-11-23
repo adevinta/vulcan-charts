@@ -85,7 +85,7 @@ spec:
           - name: PERSISTENCE_ENDPOINT
             value: "{{ .Values.conf.persistenceEndpoint | default (include "persistenceEndpoint" .) }}"
           - name: RESULTS_ENDPOINT
-            value: "{{ .Values.conf.resultsEndpoint | default (include "resultsEndpoint" .) }}"
+            value: "{{ .Values.conf.resultsUrl | default (include "resultsUrl" .) }}"
           - name: SCAN_PROXY_ENDPOINT
             value: "{{ .Values.conf.generators.scan.proxyEndpoint | default (printf "https://%s" ( include "insights.hostname" . )) }}"
           - name: VULCAN_UI

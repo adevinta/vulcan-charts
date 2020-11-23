@@ -113,7 +113,7 @@ Override names
 {{- printf "http://%s-persistence" .Release.Name -}}
 {{- end -}}
 
-{{- define "resultsEndpoint" -}}
+{{- define "resultsUrl" -}}
 {{- printf "http://%s-results" .Release.Name -}}
 {{- end -}}
 

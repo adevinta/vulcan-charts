@@ -37,8 +37,8 @@ http
 {{- .Values.db.host -}}
 {{- end -}}
 
-{{- define "resultsEndpoint" -}}
-{{- .Values.conf.resultsEndpoint -}}
+{{- define "resultsUrl" -}}
+{{- .Values.conf.resultsUrl -}}
 {{- end -}}
 
 {{- define "insights.hostname" -}}
