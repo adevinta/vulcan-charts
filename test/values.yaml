@@ -42,8 +42,22 @@ persistence:
         - persistence.vulcan.local
 
 api:
+  conf:
+    saml:
+      callback: https://www.vulcan.local/api/v1/login/callback
+      trustedDomains: "'[\"www.vulcan.local\"]'"
+
   ingress:
-    <<: *ingress
+    enabled: true
+    annotations:
+      nginx.ingress.kubernetes.io/proxy-body-size: 8m
+    hosts:
+      - host: www.vulcan.local
+        paths: [/api]
+    tls:
+      - secretName: api-vulcan-tls
+        hosts:
+        - api.vulcan.local
 
 crontinuous:
   ingress:

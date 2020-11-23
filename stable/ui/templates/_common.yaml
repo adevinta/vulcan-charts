@@ -22,7 +22,3 @@
 {{- define "common-appPortName" -}}
 http
 {{- end -}}
-
-{{- define "api.hostname" -}}
-{{ .Values.conf.apiHostname }}
-{{- end -}}

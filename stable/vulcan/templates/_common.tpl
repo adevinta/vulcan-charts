@@ -145,10 +145,6 @@ Override names
 {{- printf "http://%s-goaws" .Release.Name -}}
 {{- end -}}
 
-{{- define "api.hostname" -}}
-{{- printf "%s.%s" "www" .Values.global.domain -}}
-{{- end -}}
-
 {{- define "insights.hostname" -}}
 {{- printf "%s.%s" "insights" .Values.global.domain -}}
 {{- end -}}

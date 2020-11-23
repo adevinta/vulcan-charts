@@ -77,9 +77,9 @@ spec:
           - name: SAML_ISSUER
             value: "{{ .Values.conf.saml.issuer }}"
           - name: SAML_CALLBACK
-            value: "{{ .Values.conf.saml.callback | default ( printf "https://%s/api/v1/login/callback" ( include "api.hostname" . )) }}"
+            value: "{{ .Values.conf.saml.callback }}"
           - name: SAML_TRUSTED_DOMAINS
-            value: {{ ( .Values.conf.saml.trustedDomains | quote ) | default ( printf "'[\"%s\"]'" ( include "api.hostname" . )) }}
+            value: {{ .Values.conf.saml.trustedDomains | quote }}
           - name: SCANENGINE_URL
             value: "{{ .Values.conf.scanengineUrl | default  (include "scanengineUrl" .) }}"
           - name: SCHEDULER_URL

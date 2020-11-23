@@ -47,10 +47,6 @@ http
 {{- .Values.conf.scanengineUrl -}}
 {{- end -}}
 
-{{- define "api.hostname" -}}
-{{ .Values.conf.apiHostname }}
-{{- end -}}
-
 {{- define "postgresqlHost" -}}
 {{- .Values.db.host -}}
 {{- end -}}

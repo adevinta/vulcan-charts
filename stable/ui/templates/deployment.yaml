@@ -40,7 +40,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
           - name: API_URL
-            value: "{{ printf "https://%s/api/v1/" ( include "api.hostname" . ) }}"
+            value: "{{ .Values.apiUrl }}"
           - name: PORT
             value: "{{ .Values.containerPort }}"
           - name: LIVE_REPORT_WHITELIST
