@@ -43,6 +43,3 @@ http
 
 {{- define "insights.hostname" -}}
 {{- end -}}
-
-{{- define "ui.hostname" -}}
-{{- end -}}

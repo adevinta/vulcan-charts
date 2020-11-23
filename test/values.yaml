@@ -55,12 +55,24 @@ scanengine:
 
 ui:
   ingress:
-    <<: *ingress
+    enabled: true
+    hosts:
+      - host: www.vulcan.local
+        paths: [/]
+    tls:
+      - secretName: ui-vulcan-tls
+        hosts:
+        - www.vulcan.local
 
 insights:
   ingress:
     <<: *ingress
 
 reportsgenerator:
+  conf:
+    generators:
+      scan:
+        vulcanUi: http://www.vulcan.local/
+
   ingress:
     <<: *ingress

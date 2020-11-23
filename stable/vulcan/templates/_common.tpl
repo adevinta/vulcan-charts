@@ -153,10 +153,6 @@ Override names
 {{- printf "%s.%s" "insights" .Values.global.domain -}}
 {{- end -}}
 
-{{- define "ui.hostname" -}}
-{{- printf "%s.%s" "www" .Values.global.domain -}}
-{{- end -}}
-
 {{- define "postgresqlHost" -}}
 {{- printf "%s-postgresql" .Release.Name -}}
 {{- end -}}

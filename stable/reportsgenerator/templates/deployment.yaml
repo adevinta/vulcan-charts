@@ -89,9 +89,9 @@ spec:
           - name: SCAN_PROXY_ENDPOINT
             value: "{{ .Values.conf.generators.scan.proxyEndpoint | default (printf "https://%s" ( include "insights.hostname" . )) }}"
           - name: VULCAN_UI
-            value: "{{ .Values.conf.generators.scan.vulcanUi | default (printf "https://%s/" ( include "ui.hostname" . )) }}"
+            value: "{{ .Values.conf.generators.scan.vulcanUi }}"
           - name: SCAN_VIEW_REPORT
-            value: "{{ .Values.conf.generators.scan.viewReport | default ( printf "https://%s/api/v1/report?team_id=%s&scan_id=%s" ( include "ui.hostname" . ) "%s" "%s") }}"
+            value: "{{ printf "%sapi/v1/report?team_id=%s&scan_id=%s" .Values.conf.generators.scan.vulcanUi "%s" "%s" }}"
           {{- if .Values.conf.generators.scan.redirectUrl }}
           - name: SCAN_REDIRECT_URL
             value: "{{ .Values.conf.generators.scan.redirectUrl }}"
