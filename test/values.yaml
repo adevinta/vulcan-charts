@@ -45,7 +45,7 @@ api:
   conf:
     saml:
       callback: https://www.vulcan.local/api/v1/login/callback
-      trustedDomains: "'[\"www.vulcan.local\"]'"
+      trustedDomains: '["www.vulcan.local"]'
 
   ingress:
     enabled: true
