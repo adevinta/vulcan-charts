@@ -87,7 +87,7 @@ spec:
           - name: RESULTS_ENDPOINT
             value: "{{ .Values.conf.resultsEndpoint | default (include "resultsEndpoint" .) }}"
           - name: SCAN_PROXY_ENDPOINT
-            value: "{{ .Values.conf.generators.scan.proxyEndpoint | default (printf "https://%s" ( include "insights.hostname" . )) }}"
+            value: "{{ .Values.conf.generators.scan.proxyEndpoint }}"
           - name: VULCAN_UI
             value: "{{ .Values.conf.generators.scan.vulcanUi }}"
           - name: SCAN_VIEW_REPORT

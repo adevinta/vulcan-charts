@@ -80,13 +80,29 @@ ui:
 
 insights:
   ingress:
-    <<: *ingress
+    enabled: true
+    annotations:
+      nginx.ingress.kubernetes.io/configuration-snippet: |
+        more_set_headers "X-Frame-Options: SAMEORIGIN";
+        more_set_headers "X-Content-Type-Options: nosniff";
+        more_set_headers "X-Frame-Options: DENY";
+        more_set_headers "X-Xss-Protection: 1";
+        more_set_headers "Strict-Transport-Security: max-age=31536000; includeSubDomains";
+        more_set_headers "Content-Security-Policy: default-src 'none'; script-src 'self' 'unsafe-inline' https://insights.vulcan.local https://www.google-analytics.com; font-src 'self' https://insights.vulcan.local; connect-src 'self' https://insights.vulcan.local; img-src 'self' https://insights.vulcan.local https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://insights.vulcan.local; object-src 'none'";
+    hosts:
+      - host: insights.vulcan.local
+        paths: [/]
+    tls:
+      - secretName: insights-vulcan-tls
+        hosts:
+        - insights.vulcan.local
 
 reportsgenerator:
   conf:
     generators:
       scan:
         vulcanUi: http://www.vulcan.local/
+        proxyEndpoint: http://insights.vulcan.local
 
   ingress:
     <<: *ingress
