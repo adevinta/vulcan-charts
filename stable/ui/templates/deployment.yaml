@@ -40,7 +40,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
           - name: API_URL
-            value: "{{ .Values.apiUrl }}"
+            value: "{{ .Values.conf.apiUrl }}"
           - name: PORT
             value: "{{ .Values.containerPort }}"
           - name: LIVE_REPORT_WHITELIST

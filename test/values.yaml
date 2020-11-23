@@ -68,6 +68,8 @@ scanengine:
     <<: *ingress
 
 ui:
+  conf:
+    apiUrl: https://www.vulcan.local/api/v1/
   ingress:
     enabled: true
     hosts:
