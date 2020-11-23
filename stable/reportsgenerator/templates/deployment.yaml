@@ -83,7 +83,7 @@ spec:
           - name: SCAN_GA_ID
             value: "{{ .Values.conf.generators.scan.gaId }}"
           - name: PERSISTENCE_ENDPOINT
-            value: "{{ .Values.conf.persistenceEndpoint | default (include "persistenceEndpoint" .) }}"
+            value: "{{ .Values.conf.persistenceUrl | default (include "persistenceUrl" .) }}"
           - name: RESULTS_ENDPOINT
             value: "{{ .Values.conf.resultsUrl | default (include "resultsUrl" .) }}"
           - name: SCAN_PROXY_ENDPOINT

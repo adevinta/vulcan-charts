@@ -109,7 +109,7 @@ Override names
 {{- printf "http://%s-crontinuous/" .Release.Name -}}
 {{- end -}}
 
-{{- define "persistenceEndpoint" -}}
+{{- define "persistenceUrl" -}}
 {{- printf "http://%s-persistence" .Release.Name -}}
 {{- end -}}
 

@@ -30,7 +30,7 @@ http
 {{- .Values.conf.ses.region -}}
 {{- end -}}
 
-{{- define "persistenceEndpoint" -}}
+{{- define "persistenceUrl" -}}
 {{- end -}}
 
 {{- define "postgresqlHost" -}}
