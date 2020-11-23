@@ -30,3 +30,7 @@ http
 {{- define "postgresqlHost" -}}
 {{ .Values.db.host }}
 {{- end -}}
+
+{{- define "sqsBaseUrl" -}}
+http://localhost/012345678900
+{{- end -}}
