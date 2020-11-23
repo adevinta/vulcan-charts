@@ -18,7 +18,17 @@ results:
 
 stream:
   ingress:
-    <<: *ingress
+    annotations:
+      nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+      nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+    enabled: true
+    hosts:
+      - host: stream.vulcan.local
+        paths: [/]
+    tls:
+      - secretName: stream-vulcan-tls
+        hosts:
+        - stream.vulcan.local
 
 persistence:
   ingress:

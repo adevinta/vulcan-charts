@@ -153,10 +153,6 @@ Override names
 {{- printf "%s.%s" "insights" .Values.global.domain -}}
 {{- end -}}
 
-{{- define "stream.hostname" -}}
-{{- printf "%s.%s" "stream" .Values.global.domain -}}
-{{- end -}}
-
 {{- define "ui.hostname" -}}
 {{- printf "%s.%s" "www" .Values.global.domain -}}
 {{- end -}}
