@@ -97,7 +97,7 @@ spec:
           - name: PERSISTENCE_HOST
             value: "{{ .Values.conf.persistenceHost | default  (include "persistenceHost" .) }}"
           - name: VULNERABILITYDB_URL
-            value: "{{ .Values.conf.vulnerabilityDbUrl }}"
+            value: "{{ .Values.conf.vulndbapiUrl | default  (include "vulndbapiUrl" .) }}"
           - name: CGCATALOGUE_URL
             value: "{{ .Values.conf.cgcatalogue.url }}"
           - name: CGCATALOGUE_RETRIES
