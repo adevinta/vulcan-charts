@@ -1,11 +1,11 @@
-# Default values for reportsgenerator.
+# Default values for vulndbapi.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
 replicaCount: 1
 
 image:
-  repository: containers.mpi-internal.com/spt-security/vulcan-reports-generator
+  repository: containers.mpi-internal.com/spt-security/vulnerability-db-api
   tag: latest
   pullPolicy: Always
 
@@ -13,7 +13,7 @@ waitfordb:
   image:
     repository: postgres
     tag: 9.6-alpine
-
+  
 containerPort: 8080
 
 livenessProbe:
@@ -47,26 +47,6 @@ fullnameOverride: ""
 
 conf:
   logLevel: "info"
-  queueArn: arn:aws:sqs:TBD:TBD:TBD
-  queueName: TBD
-  persistenceUrl:
-  resultsUrl:
-  ses:
-    region:
-    from: tbd@tbd.com
-    cc: '[\"tbd@tbd.com\"]'
-  generators:
-    scan:
-      emailSubject: "Security Overview"
-      publicBucket: TBD
-      privateBucket: TBD
-      gaId: UA-000000000-0
-      proxyEndpoint: # https://vulcan-insights
-      vulcanUi: # https://vulcan-www
-      viewReport: # vulcan-api/api/v1/report?team_id=%s&scan_id=%s
-      redirectUrl: # https://public-redirect/index.html?reportUrl=
-    livereport:
-      emailSubject: #Vulcan Digest
 
 db:
   internal: false

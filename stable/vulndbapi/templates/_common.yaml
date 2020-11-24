@@ -26,23 +26,6 @@ Define names that can be overriden in a parent chart
 http
 {{- end -}}
 
-{{- define "region" -}}
-{{- .Values.conf.ses.region -}}
-{{- end -}}
-
-{{- define "persistenceUrl" -}}
-{{- end -}}
-
 {{- define "postgresqlHost" -}}
 {{- .Values.db.host -}}
-{{- end -}}
-
-{{- define "resultsUrl" -}}
-{{- .Values.conf.resultsUrl -}}
-{{- end -}}
-
-{{- define "insights.hostname" -}}
-{{- end -}}
-
-{{- define "ui.hostname" -}}
 {{- end -}}

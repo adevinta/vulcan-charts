@@ -62,7 +62,7 @@ conf:
     snsArn: arn:aws:sns:TBD:TBD:TBD
     redirectUrl:
     vulcanUIUrl:
-  vulnerabilityDbUrl: vulnerabilitydbapi # the current FIAAS
+  vulndbapiUrl: # http://vulnerabilitydbapi
   persistenceHost:
   crontinuousUrl:
   reportsgeneratorUrl:

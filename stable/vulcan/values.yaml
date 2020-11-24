@@ -25,6 +25,7 @@ postgresql:
       CREATE DATABASE api;
       CREATE DATABASE scanengine;
       CREATE DATABASE reportsgenerator;
+      CREATE DATABASE vulnerabilitydb;
   master:
     annotations:
       prometheus.io/scrape: "true"
@@ -59,6 +60,7 @@ goaws:
           - Name: VulcanK8SScanEngineChecks
           - Name: VulcanK8SReportsGenerator
           - Name: VulcanK8SPersistenceChecks
+          - Name: VulcanK8SVulnDBChecks
         Topics:
           - Name: VulcanK8SChecks
             Subscriptions:
@@ -81,6 +83,7 @@ goaws:
             Subscriptions:
               - QueueName: VulcanK8SPersistenceChecks
                 Raw: true
+          - Name: VulcanK8SVulnDBVulns
         RandomLatency:
           Min: 0
           Max: 0
@@ -267,9 +270,32 @@ metrics:
     enabled: true
   conf:
     checksQueueArn: arn:aws:sqs:local:012345678900:VulcanK8SMetricsChecks
-    checksQueueName: VulcanK8SMetricsChecks
     scansQueueArn: arn:aws:sqs:local:012345678900:VulcanK8SMetricsScans
-    scansQueueName: VulcanK8SMetricsScans
+
+vulndbapi:
+  <<: *common
+  lifecycle:
+    preStopSleep: 30
+  conf:
+    logLevel: "error"
+  db:
+    <<: *db
+    name: vulnerabilitydb
+
+vulndb:
+  <<: *common
+  proxy:
+    enabled: false
+  infra:
+    sqs: true
+    sns: true
+  conf:
+    logLevel: "error"
+    checksQueueArn: arn:aws:sqs:local:012345678900:VulcanK8SVulnDBChecks
+    vulnsTopicArn: arn:aws:sns:local:012345678900:VulcanK8SVulnDBVulns
+  db:
+    <<: *db
+    name: vulnerabilitydb
 
 sqsExporter:
   enabled: true
