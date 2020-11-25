@@ -3,22 +3,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "api.fullname" . }}
+  name: {{ include "vulndbapi.fullname" . }}
   labels:
-{{ include "api.labels" . | indent 4 }}
+    {{- include "vulndbapi.labels" . | nindent 4 }}
 spec:
-  {{- if .Values.replicaCount }}
   replicas: {{ .Values.replicaCount }}
-  {{- end }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "api.name" . }}
-      app.kubernetes.io/instance: {{ .Release.Name }}
+      {{- include "vulndbapi.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: {{ include "api.name" . }}
-        app.kubernetes.io/instance: {{ .Release.Name }}
+        {{- include "vulndbapi.selectorLabels" . | nindent 8 }}
       annotations:
         checksum/secrets: {{ include (print $.Template.BasePath "/secrets.yaml") . | sha256sum }}
         {{- include "common-annotations" . | nindent 8 }}
@@ -31,7 +27,7 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-      serviceAccountName: {{ template "api.serviceAccountName" . }}
+      serviceAccountName: {{ include "vulndbapi.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:
@@ -52,10 +48,6 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
-          - name: PORT
-            value: "{{ .Values.containerPort }}"
-          - name: COOKIE_DOMAIN
-            value: "{{ .Values.conf.cookieDomain | default (include "domain" .) }}"
           - name: PG_HOST
             value: "{{ .Values.db.host | default (include "postgresqlHost" .) }}"
           - name: PG_NAME
@@ -71,47 +63,15 @@ spec:
             value: "{{ .Values.db.ca | b64enc }}"
           {{- end }}
           - name: LOG_LEVEL
-            value: "{{ .Values.conf.log.level }}"
-          - name: SAML_MEATADATA
-            value: "{{ .Values.conf.saml.metadata }}"
-          - name: SAML_ISSUER
-            value: "{{ .Values.conf.saml.issuer }}"
-          - name: SAML_CALLBACK
-            value: "{{ .Values.conf.saml.callback }}"
-          - name: SAML_TRUSTED_DOMAINS
-            value: {{ printf "'%s'" .Values.conf.saml.trustedDomains }}
-          - name: SCANENGINE_URL
-            value: "{{ .Values.conf.scanengineUrl | default  (include "scanengineUrl" .) }}"
-          - name: SCHEDULER_URL
-            value: "{{ .Values.conf.schedulerUrl | default  (include "crontinuousUrl" .) }}"
-          - name: SQS_QUEUE_ARN
-            value: "{{ .Values.conf.queueArn }}"
-          - name: REPORTS_SNS_ARN
-            value: "{{ .Values.conf.reports.snsArn }}"
-          - name: REPORTS_API_URL
-            value: "{{ .Values.conf.reports.apiUrl | default (include "reportsgeneratorUrl" .) }}"
-          - name: SCAN_REDIRECT_URL
-            value: "{{ .Values.conf.reports.redirectUrl }}"
-          - name: VULCAN_UI_URL
-            value: "{{ .Values.conf.reports.vulcanUIUrl }}"
-          - name: PERSISTENCE_HOST
-            value: "{{ .Values.conf.persistenceHost | default  (include "persistenceHost" .) }}"
-          - name: VULNERABILITYDB_URL
-            value: "{{ .Values.conf.vulndbapiUrl | default  (include "vulndbapiUrl" .) }}"
-          - name: CGCATALOGUE_URL
-            value: "{{ .Values.conf.cgcatalogue.url }}"
-          - name: CGCATALOGUE_RETRIES
-            value: "{{ .Values.conf.cgcatalogue.retries }}"
-          - name: CGCATALOGUE_RETRY_INTERVAL
-            value: "{{ .Values.conf.cgcatalogue.retry_interval}}"
-        {{- include "common-envs" . | nindent 10 -}}
+            value: "{{ .Values.conf.logLevel }}"
+        {{- include "common-envs" . | nindent 10 }}
         {{- range $name, $value := .Values.extraEnv }}
           - name: {{ $name }}
             value: {{ $value | quote }}
         {{- end }}
           envFrom:
           - secretRef:
-              name: {{ include "api.fullname" . }}
+              name: {{ include "vulndbapi.fullname" . }}
           ports:
             - name: {{ include "common-appPortName" . }}
               containerPort: {{ .Values.containerPort }}

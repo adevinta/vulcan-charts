@@ -1,11 +1,11 @@
-# Default values for api.
+# Default values for vulndbapi.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-replicaCount:
+replicaCount: 1
 
 image:
-  repository: containers.mpi-internal.com/spt-security/vulcan-api
+  repository: containers.mpi-internal.com/spt-security/vulnerability-db-api
   tag: latest
   pullPolicy: Always
 
@@ -13,6 +13,26 @@ waitfordb:
   image:
     repository: postgres
     tag: 9.6-alpine
+  
+containerPort: 8080
+
+livenessProbe:
+  enabled: true
+  path: /healthcheck
+  initialDelaySeconds: 10
+  periodSeconds: 5
+  timeoutSeconds: 3
+  successThreshold: 1
+  failureThreshold: 10
+
+readinessProbe:
+  enabled: true
+  path: /healthcheck
+  initialDelaySeconds: 10
+  periodSeconds: 5
+  timeoutSeconds: 3
+  successThreshold: 1
+  failureThreshold: 5
 
 autoscaling:
   enabled: false
@@ -24,57 +44,12 @@ autoscaling:
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
-containerPort: 8080
-
-livenessProbe:
-  enabled: true
-  path: /api/v1/healthcheck
-  initialDelaySeconds: 10
-  timeoutSeconds: 3
-  periodSeconds: 10
-  successThreshold: 1
-  failureThreshold: 10
-
-readinessProbe:
-  enabled: true
-  path: /api/v1/healthcheck
-  initialDelaySeconds: 10
-  timeoutSeconds: 3
-  periodSeconds: 10
-  successThreshold: 1
-  failureThreshold: 5
 
 conf:
-  debug: "false"
-  secretKey: TBDTBD
-  bucketReports: TBD
-  bucketLogs: TBD
-  cookieDomain:     # default .Values.global.domain
-  saml:
-    metadata: https://okta/app/TBD/sso/saml/metadata
-    issuer: http://okta/TBD
-    callback: # https://vulcan-api/api/v1/login/callback
-    trustedDomains: # '["vulcan-api"]'
-  log:
-    level: INFO
-  queueArn: arn:aws:sqs:local:TBD:TBD
-  reports:
-    snsArn: arn:aws:sns:TBD:TBD:TBD
-    redirectUrl:
-    vulcanUIUrl:
-  vulndbapiUrl: # http://vulnerabilitydbapi
-  persistenceHost:
-  crontinuousUrl:
-  reportsgeneratorUrl:
-  scanengineUrl:
-  apiHostname:
-  cgcatalogue:
-    url: "http://catalogue.example.com"
-    key: "key"
-    retries: 1
-    retry_interval: 2
+  logLevel: "info"
 
 db:
+  internal: false
   host:
   name: TBD
   user: TBD
@@ -82,10 +57,6 @@ db:
   port: 5432
   sslMode: disable
   ca:
-
-defaultBackend:
-  enabled: true
-  httpCodes: "403"
 
 # extraEnv:
 #   FOO: BAR
@@ -97,12 +68,10 @@ serviceAccount:
   # If not set and create is true, a name is generated using the fullname template
   name:
 
-podSecurityContext:
-  {}
+podSecurityContext: {}
   # fsGroup: 2000
 
-securityContext:
-  {}
+securityContext: {}
   # capabilities:
   #   drop:
   #   - ALL
@@ -116,19 +85,14 @@ service:
 
 ingress:
   enabled: false
+  tls: true
+  host: chart-example.local
+  path: /
   annotations: {}
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
-  hosts:
-    - host: chart-example.local
-      paths: []
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
 
-resources:
-  {}
+resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
   # resources, such as Minikube. If you do want to specify resources, uncomment the following

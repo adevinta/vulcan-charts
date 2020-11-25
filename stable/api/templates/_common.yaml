@@ -35,6 +35,10 @@ http
 {{- .Values.conf.persistenceHost -}}
 {{- end -}}
 
+{{- define "vulndbapiUrl" -}}
+{{- .Values.conf.vulndbapiUrl -}}
+{{- end -}}
+
 {{- define "crontinuousUrl" -}}
 {{- .Values.conf.crontinuousUrl -}}
 {{- end -}}
