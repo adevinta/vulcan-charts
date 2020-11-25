@@ -153,14 +153,6 @@ Override names
 {{- printf "http://%s-goaws" .Release.Name -}}
 {{- end -}}
 
-{{- define "vulndbapi.hostname" -}}
-{{- printf "%s.%s" "vulndbapi" .Values.global.domain -}}
-{{- end -}}
-
-{{- define "vulndb.hostname" -}}
-{{- printf "%s.%s" "vulndb" .Values.global.domain -}}
-{{- end -}}
-
 {{- define "postgresqlHost" -}}
 {{- printf "%s-postgresql" .Release.Name -}}
 {{- end -}}
