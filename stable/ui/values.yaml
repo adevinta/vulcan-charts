@@ -47,16 +47,6 @@ conf:
   apiUrl: # https://vulcan-api/api/v1/
   liveReportWhitelist: '[]'
 
-defaultBackend:
-  image: 
-    repository: nginx
-    tag: alpine
-  enabled: true
-  index: "<html><body><h1>403 error</h1>Do you have to access through a VPN service?</body></html>"
-  httpCodes: "403"
-  # extraEnv:
-  #   FOO: BAR
-
 # extraEnv:
 #   FOO: BAR
 

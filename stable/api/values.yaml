@@ -83,10 +83,6 @@ db:
   sslMode: disable
   ca:
 
-defaultBackend:
-  enabled: true
-  httpCodes: "403"
-
 # extraEnv:
 #   FOO: BAR
 
