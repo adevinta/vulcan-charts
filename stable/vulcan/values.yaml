@@ -6,6 +6,8 @@ global:
   region: local
   minio:
     enabled: true
+  goaws:
+    accountId: "012345678900"
   sns:
     enabled: true
   sqs:
@@ -44,7 +46,7 @@ goaws:
       Local:
         Host: {{ .Release.Name }}-goaws
         Port: {{ .Values.containerPort }}
-        AccountId: "012345678900"
+        AccountId: "{{ .Values.global.goaws.accountId }}"
         LogToFile: false
         QueueAttributeDefaults:
           VisibilityTimeout: 30
@@ -57,6 +59,7 @@ goaws:
           - Name: VulcanK8SMetricsScans
           - Name: VulcanK8SScanEngineChecks
           - Name: VulcanK8SReportsGenerator
+          - Name: VulcanK8SPersistenceChecks
           - Name: VulcanK8SVulnDBChecks
         Topics:
           - Name: VulcanK8SChecks
@@ -75,6 +78,10 @@ goaws:
           - Name: VulcanK8SReportsGen
             Subscriptions:
               - QueueName: VulcanK8SReportsGenerator
+                Raw: true
+          - Name: VulcanK8SScanEngineChecks
+            Subscriptions:
+              - QueueName: VulcanK8SPersistenceChecks
                 Raw: true
           - Name: VulcanK8SVulnDBVulns
         RandomLatency:
@@ -155,6 +162,8 @@ persistence:
     snsTopic: arn:aws:sns:local:012345678900:VulcanK8SChecks
     nessusCheckQueue: VulcanK8SChecksTenable
     s3Scans: scans
+    # awsCreateChecksSqsUrl: https://localhost/012345678900/VulcanK8SPersistenceChecks
+    awsCreateChecksSqsName: VulcanK8SPersistenceChecks
 
 stream:
   <<: *common
@@ -208,6 +217,8 @@ scanengine:
     queueArn: arn:aws:sqs:local:012345678900:VulcanK8SScanEngineChecks
     queueName: VulcanK8SScanEngineChecks
     snsArn: arn:aws:sns:local:012345678900:VulcanK8SScans
+    snsChecks:
+      topicArn: arn:aws:sns:eu-west-1:012345678900:VulcanK8SScanEngineChecks
   db:
     <<: *db
     name: scanengine
