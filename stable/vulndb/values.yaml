@@ -5,7 +5,7 @@
 replicaCount:
 
 image:
-  repository: containers.mpi-internal.com/spt-security/vulnerability-db
+  repository: adevinta/vulnerability-db
   tag: latest
   pullPolicy: Always
 
