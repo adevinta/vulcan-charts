@@ -5,7 +5,7 @@
 replicaCount:
 
 image:
-  repository: containers.mpi-internal.com/spt-security/vulcan-crontinuous
+  repository: adevinta/vulcan-crontinuous
   tag: latest
   pullPolicy: Always
 
