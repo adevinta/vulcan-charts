@@ -43,8 +43,6 @@ spec:
             value: "{{ .Values.conf.apiUrl }}"
           - name: PORT
             value: "{{ .Values.containerPort }}"
-          - name: LIVE_REPORT_WHITELIST
-            value: {{ .Values.conf.liveReportWhitelist | quote }}
         {{- include "common-envs" . | nindent 10 }}
         {{- range $name, $value := .Values.extraEnv }}
           - name: {{ $name }}

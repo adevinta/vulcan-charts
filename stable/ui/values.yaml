@@ -45,7 +45,6 @@ proxy:
 
 conf:
   apiUrl: # https://vulcan-api/api/v1/
-  liveReportWhitelist: '[]'
 
 # extraEnv:
 #   FOO: BAR
