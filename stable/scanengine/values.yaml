@@ -56,8 +56,8 @@ conf:
   checkCreator:
     numOfWorkers: 2
     period: 20
-# configFiles:
-#   queues.yaml: |
+# configFiles: |
+#   queues.yaml:
 #     queues:
 #       ...
 
