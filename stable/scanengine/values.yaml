@@ -56,7 +56,10 @@ conf:
   checkCreator:
     numOfWorkers: 2
     period: 20
-
+# configFiles:
+#   queues.yaml: |
+#     queues:
+#       ...
 
 db:
   internal: false
