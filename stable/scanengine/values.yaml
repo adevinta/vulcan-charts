@@ -58,8 +58,7 @@ conf:
     period: 20
 # configFiles:
 #   queues.yaml: |
-#     queues:
-#       ...
+#     queues: ...
 
 db:
   internal: false
