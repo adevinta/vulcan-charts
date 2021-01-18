@@ -6,5 +6,5 @@ metadata:
   labels:
     {{- include "scanengine.labels" . | nindent 4 }}-configs
 data:
-  {{- tpl .Values.configFiles . | toYaml | nindent 2 }}
+  {{- .Values.configFiles | toYaml | nindent 2 }}
 {{- end -}}

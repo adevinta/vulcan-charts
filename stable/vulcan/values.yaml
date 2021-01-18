@@ -219,8 +219,8 @@ scanengine:
     snsArn: arn:aws:sns:local:012345678900:VulcanK8SScans
     snsChecks:
       topicArn: arn:aws:sns:eu-west-1:012345678900:VulcanK8SScanEngineChecks
-  configFiles: |
-    queues.yaml:
+  configFiles:
+    queues.yaml: |
       queues:
       - name: default
         arn: arn:aws:sqs:local:012345678900:VulcanK8SChecksGeneric
