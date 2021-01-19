@@ -99,13 +99,13 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
             {{- if .Values.configFiles }}
-            - name: configFiles 
+            - name: config-files 
               mountPath: /app/config
             {{- end }}
       volumes:
       {{- include "common-volumes" . | nindent 6}}
       {{- if .Values.configFiles }}
-      - name: configFiles
+      - name: config-files
         configMap:
           name: {{ include "scanengine.fullname" . }}-configs
       {{- end }}
