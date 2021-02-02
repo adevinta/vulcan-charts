@@ -132,7 +132,7 @@ defaults:
     dogstatsd: &dogstatsd
       image: 
         repository: datadog/dogstatsd
-        tag: 7.19.2
+        tag: 7.25.1
 
 results:
   <<: *common
