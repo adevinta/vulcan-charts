@@ -116,7 +116,7 @@ defaults:
       enabled: true
       image: 
         repository: haproxy
-        tag: 2.1-alpine
+        tag: 2.2-alpine
       port: 9090  # We use non 80 port to prevent prometheus trying to access metrics on port 80
       probe: false
       probePath: /healthz
