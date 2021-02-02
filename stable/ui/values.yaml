@@ -15,7 +15,7 @@ livenessProbe:
   enabled: true
   path: /index.html
   initialDelaySeconds: 5
-  periodSeconds: 5
+  periodSeconds: 10
   timeoutSeconds: 3
   successThreshold: 1
   failureThreshold: 10
@@ -24,7 +24,7 @@ readinessProbe:
   enabled: true
   path: /index.html
   initialDelaySeconds: 5
-  periodSeconds: 5
+  periodSeconds: 10
   timeoutSeconds: 3
   successThreshold: 1
   failureThreshold: 5
