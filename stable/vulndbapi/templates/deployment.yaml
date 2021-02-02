@@ -7,7 +7,9 @@ metadata:
   labels:
     {{- include "vulndbapi.labels" . | nindent 4 }}
 spec:
+  {{- if .Values.replicaCount }}
   replicas: {{ .Values.replicaCount }}
+  {{- end }}
   selector:
     matchLabels:
       {{- include "vulndbapi.selectorLabels" . | nindent 6 }}
