@@ -40,7 +40,7 @@ postgresql:
     enabled: true
 
 goaws:
-  containerPort: 80
+  containerPort: 8080
   config:
     goaws.yaml: |
       Local:
