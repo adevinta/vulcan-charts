@@ -32,7 +32,7 @@ data:
       timeout tunnel {{ .Values.proxy.timeoutTunnel | default "3600s" }}
       option  http-server-close
 
-    {{- if .Values.proxy.cache }}
+    {{- if .Values.proxy.cache.enabled }}
     cache small
       total-max-size {{ .Values.proxy.cache.maxSize | default 64 }}     # mb
       max-age {{ .Values.proxy.cache.maxAge | default 240 }}           # seconds
@@ -42,7 +42,7 @@ data:
       bind *:{{ .Values.proxy.port | default 80 }}
       log global
       option httplog clf
-    {{- if .Values.proxy.cache }}
+    {{- if .Values.proxy.cache.enabled }}
       http-request cache-use small
       http-response cache-store small
     {{- end }}

@@ -47,7 +47,8 @@ serviceAccount:
   name:
 
 proxy:
-  cache: true
+  cache:
+    enabled: true
   port: 80
   probePath: /healthz
   probeInitialDelay: 5

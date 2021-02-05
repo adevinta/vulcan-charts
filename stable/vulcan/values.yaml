@@ -118,6 +118,10 @@ defaults:
         repository: haproxy
         tag: 2.1-alpine
       port: 9090  # We use non 80 port to prevent prometheus trying to access metrics on port 80
+      cache:
+        enabled: false
+        maxSize: 64 # mb
+        maxAge: 240 # seconds
       probe: false
       probePath: /healthz
       probeInitialDelay: 5
