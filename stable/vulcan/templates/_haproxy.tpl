@@ -34,8 +34,8 @@ data:
 
     {{- if .Values.proxy.cache }}
     cache small
-      total-max-size 64     # mb
-      max-age 240           # seconds
+      total-max-size {{ .Values.proxy.cache.maxSize | default 64 }}     # mb
+      max-age {{ .Values.proxy.cache.maxAge | default 240 }}           # seconds
     {{- end }}
 
     frontend http
