@@ -72,6 +72,8 @@ spec:
           - name: POSTGRES_CA_B64
             value: "{{ .Values.db.ca | b64enc }}"
           {{- end }}
+          - name: LOG_LEVEL
+            value: "{{ .Values.conf.logLevel }}"
           - name: STREAM_CHANNEL
             value: "{{ .Values.conf.channel }}"
           - name: REGION
@@ -87,7 +89,7 @@ spec:
           - name: RAILS_MAX_THREADS
             value: "{{ .Values.conf.railsMaxThreads }}"
           - name: AWS_CREATE_CHECKS_SQS_URL
-            value: "{{ .Values.conf.awsCreateChecksSqsUrl | default (printf "%s/%s" (include "sqsBaseUrl" .) .Values.conf.awsCreateChecksSqsName) }}"
+            value: "{{ .Values.conf.awsCreateChecksSqsUrl | default (printf "%s/%s" (include "sqsEndpoint" .) .Values.conf.awsCreateChecksSqsName) }}"
           - name: AWS_CREATE_CHECKS_WORKERS
             value: "{{ .Values.conf.awsCreateChecksWorkers }}"
         {{- include "common-envs" . | nindent 10 }}

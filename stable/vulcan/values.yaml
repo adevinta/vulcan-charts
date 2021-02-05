@@ -163,6 +163,7 @@ persistence:
     <<: *db
     name: persistence
   conf:
+    logLevel: warn
     snsTopic: arn:aws:sns:local:012345678900:VulcanK8SChecks
     nessusCheckQueue: VulcanK8SChecksTenable
     s3Scans: scans
