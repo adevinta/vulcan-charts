@@ -3,9 +3,9 @@ entries:
   api:
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-02-04T16:03:26.844201135Z"
+    created: "2021-02-05T15:03:52.927656403Z"
     description: A Helm chart for deploying Vulcan api
-    digest: 929ebae3c64b04f1aa43ae43bf66f973ce9d89f04336aac65975c9b1eacee16e
+    digest: 62c57704b4dc62fe2f1e29ee6fe71d72309bfe6ce389f3997ac4d5b1b58a8c06
     home: https://github.com/adevinta/vulcan-charts
     icon: https://raw.githubusercontent.com/adevinta/vulcan-charts/master/docs/logo/vulcan.png
     name: api
@@ -14,7 +14,7 @@ entries:
     version: 0.2.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-02-04T16:03:26.843572794Z"
+    created: "2021-02-05T15:03:52.927021547Z"
     description: A Helm chart for deploying Vulcan api
     digest: 951564ca7cdc16980cc4acb72de432886bfaaf251d6abb1a86205104a8f1592b
     home: https://github.com/adevinta/vulcan-charts
@@ -25,7 +25,7 @@ entries:
     version: 0.1.1
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-02-04T16:03:26.842900232Z"
+    created: "2021-02-05T15:03:52.926401086Z"
     description: A Helm chart for deploying Vulcan api service
     digest: 7ba04f69e9f977ba4df2c940a57dc3ced7cdb6fb36042ef4d073998e3fdde883
     home: https://github.com/adevinta/vulcan-charts
@@ -37,9 +37,9 @@ entries:
   crontinuous:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2021-02-04T16:03:26.84565514Z"
+    created: "2021-02-05T15:03:52.929134063Z"
     description: A Helm chart for deploying Vulcan crontinuous
-    digest: 6356875fbd0c493906567aec86cc0b8180057f9346f90bcfba030d758d673a07
+    digest: 922eaf277ee1cc3ceb0d15226d0063c885e43b5b70fde2cbbdf641d85ac6d981
     home: https://github.com/adevinta/vulcan-charts
     icon: https://raw.githubusercontent.com/adevinta/vulcan-charts/master/docs/logo/vulcan.png
     name: crontinuous
@@ -49,7 +49,7 @@ entries:
     version: 0.2.0
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2021-02-04T16:03:26.845173653Z"
+    created: "2021-02-05T15:03:52.928635139Z"
     description: A Helm chart for deploying Vulcan crontinuous
     digest: 6b5b2743df4bcfc89b71def795391859f474ab08fb732c0674678a5791fb2103
     home: https://github.com/adevinta/vulcan-charts
@@ -61,7 +61,7 @@ entries:
     version: 0.1.1
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2021-02-04T16:03:26.84473308Z"
+    created: "2021-02-05T15:03:52.928190646Z"
     description: A Helm chart for deploying vulcan crontinuous
     digest: d98a7809fabf28a3e34d7f2f06cb20be397aefdb6e41ad7d2785df62e93cd946
     home: https://github.com/adevinta/vulcan-charts
@@ -74,9 +74,9 @@ entries:
   goaws:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2021-02-04T16:03:26.846015868Z"
+    created: "2021-02-05T15:03:52.929525798Z"
     description: A Helm chart for deploying Vulcan goaws
-    digest: ebd2951956d34b7d86f6fa1a2b95a6edb7498406d8a546e220dc7df4abed9618
+    digest: c9a4fa28a743a5ab2392d21de1a050211100597a3d15f9d43b702e2857d47731
     home: https://github.com/adevinta/vulcan-charts
     icon: https://raw.githubusercontent.com/adevinta/vulcan-charts/master/docs/logo/vulcan.png
     name: goaws
@@ -87,9 +87,9 @@ entries:
   insights:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2021-02-04T16:03:26.847553376Z"
+    created: "2021-02-05T15:03:52.930941067Z"
     description: A Helm chart for deploying Vulcan insights
-    digest: ac2233d349dcba917437e5a7d39abc8bde0ff39177579694c8c636d34c4fdf9b
+    digest: 133b6d1ead68557d9339dca577e6c56fc1a4f4ab396ce548b8898bfa0c09d015
     home: https://github.com/adevinta/vulcan-charts
     icon: https://raw.githubusercontent.com/adevinta/vulcan-charts/master/docs/logo/vulcan.png
     name: insights
@@ -99,7 +99,7 @@ entries:
     version: 0.2.0
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2021-02-04T16:03:26.846983853Z"
+    created: "2021-02-05T15:03:52.930370885Z"
     description: A Helm chart for deploying Vulcan insights
     digest: c175c04bafb107525ae98f5e16e1b7c29850e50a6e2279729db0957deb7162d1
     home: https://github.com/adevinta/vulcan-charts
@@ -111,7 +111,7 @@ entries:
     version: 0.1.1
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2021-02-04T16:03:26.846450536Z"
+    created: "2021-02-05T15:03:52.929912891Z"
     description: A Helm chart for Kubernetes
     digest: b839f7a06438e1e68479582241814b00c02cc8ce4d10b890d199ed47ad4003bd
     home: https://github.com/adevinta/vulcan-charts
@@ -124,9 +124,9 @@ entries:
   metrics:
   - apiVersion: v2
     appVersion: "1.0"
-    created: "2021-02-04T16:03:26.850778244Z"
+    created: "2021-02-05T15:03:52.932278154Z"
     description: A Helm chart for deploying Vulcan metrics
-    digest: 6069620a46affdee9488f8dccec772532156234589d9b771f78b47569fd1e353
+    digest: d914c63e05f0d224c87d440952383303a5cdc1151ecd82853dadb2b5451d6a68
     home: https://github.com/adevinta/vulcan-charts
     icon: https://raw.githubusercontent.com/adevinta/vulcan-charts/master/docs/logo/vulcan.png
     name: metrics
@@ -136,7 +136,7 @@ entries:
     version: 0.2.0
   - apiVersion: v2
     appVersion: "1.0"
-    created: "2021-02-04T16:03:26.849803251Z"
+    created: "2021-02-05T15:03:52.931799723Z"
     description: A Helm chart for deploying Vulcan metrics
     digest: 7b5b91bb53744ff682c1a854342b9b754de0b767ecbc16454ecedc3b24c51d2c
     home: https://github.com/adevinta/vulcan-charts
@@ -148,7 +148,7 @@ entries:
     version: 0.1.1
   - apiVersion: v2
     appVersion: "1.0"
-    created: "2021-02-04T16:03:26.84882177Z"
+    created: "2021-02-05T15:03:52.931374536Z"
     description: A Helm chart for Kubernetes
     digest: 29fa2a2e4a4e22eb7bfa84a2ea23c296c528fcc6e6a8f199b70223c633420e6d
     home: https://github.com/adevinta/vulcan-charts
@@ -161,9 +161,9 @@ entries:
   persistence:
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-02-04T16:03:26.852723869Z"
+    created: "2021-02-05T15:03:52.934236445Z"
     description: A Helm chart for deploying Vulcan persistence
-    digest: fa5cb228372a16595726024d67c1219a15de7da74dfc309a79d1b52062016025
+    digest: 3fd06f97796900ab016746554651ee6c0db172f2b71ebe48bf91faeeba87deb3
     home: https://github.com/adevinta/vulcan-charts
     icon: https://raw.githubusercontent.com/adevinta/vulcan-charts/master/docs/logo/vulcan.png
     name: persistence
@@ -172,7 +172,7 @@ entries:
     version: 0.2.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-02-04T16:03:26.852130908Z"
+    created: "2021-02-05T15:03:52.933290766Z"
     description: A Helm chart for deploying Vulcan persistence
     digest: dfaea338924c8e8a2870a4f4887a96d1203a5becee99d6af7156d3e547f11a3f
     home: https://github.com/adevinta/vulcan-charts
@@ -183,7 +183,7 @@ entries:
     version: 0.1.1
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-02-04T16:03:26.85161256Z"
+    created: "2021-02-05T15:03:52.932788797Z"
     description: A Helm chart for deploying Vulcan persistence service
     digest: 929bac477bb3e1aa9bba78312a79074d93e32f2168ad3a3d7d3aa6b290941017
     home: https://github.com/adevinta/vulcan-charts
@@ -195,9 +195,9 @@ entries:
   reportsgenerator:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2021-02-04T16:03:26.853295045Z"
+    created: "2021-02-05T15:03:52.935718404Z"
     description: A Helm chart for deploying Vulcan reports generator
-    digest: adebe034eb418517a9e740bbf3bfe05a57483eae5cf719010190cdd2660ff61e
+    digest: c4a419d2c51fe428803a6b041afbfb6e66c877e7462f297dc192fa1c5ee8d6a4
     home: https://github.com/adevinta/vulcan-charts
     icon: https://raw.githubusercontent.com/adevinta/vulcan-charts/master/docs/logo/vulcan.png
     name: reportsgenerator
@@ -208,9 +208,9 @@ entries:
   results:
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-02-04T16:03:26.854523465Z"
+    created: "2021-02-05T15:03:52.938274949Z"
     description: A Helm chart for deploying Vulcan results
-    digest: 320d3465e46d6b7de026d3a403575b325b333d535aa9e26af67037e8d9870c8d
+    digest: 846844d1450ecb56e78adb3a737f2d0de0119624e5d74f8d3ebe1cd64db84a04
     home: https://github.com/adevinta/vulcan-charts
     icon: https://raw.githubusercontent.com/adevinta/vulcan-charts/master/docs/logo/vulcan.png
     name: results
@@ -219,7 +219,7 @@ entries:
     version: 0.2.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-02-04T16:03:26.854063579Z"
+    created: "2021-02-05T15:03:52.937762436Z"
     description: A Helm chart for deploying Vulcan results
     digest: 1a0d2234580b866a356dc62873d1e54908cf274977ba601c38431aa73985f58b
     home: https://github.com/adevinta/vulcan-charts
@@ -230,7 +230,7 @@ entries:
     version: 0.1.1
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-02-04T16:03:26.853682477Z"
+    created: "2021-02-05T15:03:52.936679255Z"
     description: A Helm chart for deploying Vulcan results service
     digest: d37c8938068f8dfeadf401be917a94884ea8f6a9e029a22db24564a7a9677eb4
     home: https://github.com/adevinta/vulcan-charts
@@ -242,9 +242,9 @@ entries:
   scanengine:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2021-02-04T16:03:26.85595823Z"
+    created: "2021-02-05T15:03:52.939806392Z"
     description: A Helm chart for deploying Vulcan scan engine
-    digest: 1de2e2fb3895dbffad1ed74674e8c6a33cbc9cc2006d7d6cc85472aa02d0c5f0
+    digest: 44001f52187f4a36a98f46259895af984bffb32e8458affa55d75488c858ef71
     home: https://github.com/adevinta/vulcan-charts
     icon: https://raw.githubusercontent.com/adevinta/vulcan-charts/master/docs/logo/vulcan.png
     name: scanengine
@@ -254,7 +254,7 @@ entries:
     version: 0.2.0
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2021-02-04T16:03:26.855416421Z"
+    created: "2021-02-05T15:03:52.939271499Z"
     description: A Helm chart for deploying Vulcan scan engine
     digest: fcf05c0fef8b176280d6eccbbf9ed8c49a7665cbfc23ca43478307d0708ec639
     home: https://github.com/adevinta/vulcan-charts
@@ -266,7 +266,7 @@ entries:
     version: 0.1.1
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2021-02-04T16:03:26.854952973Z"
+    created: "2021-02-05T15:03:52.93879966Z"
     description: A Helm chart for Kubernetes
     digest: 2c765c3cbc67a647125464340de5a54b11a8cfa789c568c58f3b833f9da9beb1
     home: https://github.com/adevinta/vulcan-charts
@@ -279,9 +279,9 @@ entries:
   stream:
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-02-04T16:03:26.857368876Z"
+    created: "2021-02-05T15:03:52.941202374Z"
     description: A Helm chart for deploying Vulcan stream
-    digest: 958eda4cd66960786c5b73cb96d825737e24d22b2e038a1c9f70db6ea010ac58
+    digest: 9d78f4ef7bbf6e64e3909f99033eda13619d0abde74a4a4ab2032ec9ec7ddb91
     home: https://github.com/adevinta/vulcan-charts
     icon: https://raw.githubusercontent.com/adevinta/vulcan-charts/master/docs/logo/vulcan.png
     name: stream
@@ -290,7 +290,7 @@ entries:
     version: 0.2.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-02-04T16:03:26.856847632Z"
+    created: "2021-02-05T15:03:52.940685894Z"
     description: A Helm chart for deploying Vulcan stream
     digest: 25020f483872b44f8a4cc527da7aa010601a07f9c6050fee422cd3b2b7a3f2bb
     home: https://github.com/adevinta/vulcan-charts
@@ -301,7 +301,7 @@ entries:
     version: 0.1.1
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-02-04T16:03:26.856402982Z"
+    created: "2021-02-05T15:03:52.940266562Z"
     description: A Helm chart for deploying Vulcan stream service
     digest: caa6a740e8214a5eb4ee4f5d7e2ec2bdf089c48757acd607d507dbea58cd3b2d
     home: https://github.com/adevinta/vulcan-charts
@@ -313,9 +313,9 @@ entries:
   ui:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2021-02-04T16:03:26.858665849Z"
+    created: "2021-02-05T15:03:52.942504065Z"
     description: A Helm chart for deploying Vulcan ui
-    digest: 325fdcc63c1ee612efb0dea77f548a8c7b3ce1ddde8af8d03ed18dfb5f76b507
+    digest: aceae5b91a9f3b0f156a9691f25ce20fe90f0bcbc1e3711636574c01f463ed2d
     home: https://github.com/adevinta/vulcan-charts
     icon: https://raw.githubusercontent.com/adevinta/vulcan-charts/master/docs/logo/vulcan.png
     name: ui
@@ -325,7 +325,7 @@ entries:
     version: 0.2.0
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2021-02-04T16:03:26.858166176Z"
+    created: "2021-02-05T15:03:52.942054634Z"
     description: A Helm chart for deploying Vulcan ui
     digest: d26ce2beee7a35b83e6a5ddafe241a13e1803c9285664611b80c7e498a1dd99b
     home: https://github.com/adevinta/vulcan-charts
@@ -337,7 +337,7 @@ entries:
     version: 0.1.1
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2021-02-04T16:03:26.857757852Z"
+    created: "2021-02-05T15:03:52.941639838Z"
     description: A Helm chart for Kubernetes
     digest: aebb8d217f62a96ed161535e0f0292493e71d6aa5e23de25cb63c2cac56537bb
     home: https://github.com/adevinta/vulcan-charts
@@ -350,7 +350,7 @@ entries:
   vulcan:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2021-02-04T16:03:26.882128955Z"
+    created: "2021-02-05T15:03:52.966681403Z"
     dependencies:
     - condition: results.enabled
       name: results
@@ -414,7 +414,7 @@ entries:
       repository: https://charts.bitnami.com/bitnami
       version: 3.3.6
     description: A Helm chart for deploying Vulcan
-    digest: 3b648c1845931e705d3ec5e14f5a19078942f8beb83c6c04bd38eaa0ed439f30
+    digest: 4f813437cbeca5fd5d5d200f80db89f25991a5b45f1512601c8de4cf791f4888
     home: https://github.com/adevinta/vulcan-charts
     icon: https://raw.githubusercontent.com/adevinta/vulcan-charts/master/docs/logo/vulcan.png
     name: vulcan
@@ -424,7 +424,7 @@ entries:
     version: 0.2.0
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2021-02-04T16:03:26.87028175Z"
+    created: "2021-02-05T15:03:52.953868717Z"
     dependencies:
     - condition: results.enabled
       name: results
@@ -477,7 +477,7 @@ entries:
     version: 0.1.1
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2021-02-04T16:03:26.864635522Z"
+    created: "2021-02-05T15:03:52.945845874Z"
     dependencies:
     - condition: results.enabled
       name: results
@@ -527,9 +527,9 @@ entries:
   vulndb:
   - apiVersion: v2
     appVersion: "1.0"
-    created: "2021-02-04T16:03:26.882557262Z"
+    created: "2021-02-05T15:03:52.967109197Z"
     description: A Helm chart for deploying Vulcan Vulnerability DB
-    digest: f4c48a2cf4df4dcf2b004889ca9c1d792ad2ab7f84b7917532f177154f9cbbeb
+    digest: 3f1e05cbf232d12e14c40e62358a5842a83b16061e08fdf6faf5d8f9c3588f1a
     home: https://github.com/adevinta/vulcan-charts
     icon: https://raw.githubusercontent.com/adevinta/vulcan-charts/master/docs/logo/vulcan.png
     name: vulndb
@@ -540,9 +540,9 @@ entries:
   vulndbapi:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2021-02-04T16:03:26.88304572Z"
+    created: "2021-02-05T15:03:52.967619416Z"
     description: A Helm chart for deploying Vulcan Vulnerability DB API
-    digest: c066ef1be8d8e6dc75560f7c3b3d4a159f6424a0e3ab8f6e3dcf669b6a19404a
+    digest: 37822e4451813b177c269423af0c7fb9167878f50efb472f012882827387f4ca
     home: https://github.com/adevinta/vulcan-charts
     icon: https://raw.githubusercontent.com/adevinta/vulcan-charts/master/docs/logo/vulcan.png
     name: vulndbapi
@@ -550,4 +550,4 @@ entries:
     urls:
     - https://adevinta.github.io/vulcan-charts/vulndbapi-0.2.0.tgz
     version: 0.2.0
-generated: "2021-02-04T16:03:26.842115514Z"
+generated: "2021-02-05T15:03:52.925602273Z"
