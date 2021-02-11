@@ -7,7 +7,7 @@ metadata:
   labels:
     {{- include "scanengine.labels" . | nindent 4 }}
 spec:
-  {{- if .Values.replicaCount }}
+  {{- if kindIs "int64" .Values.replicaCount }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
