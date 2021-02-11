@@ -50,8 +50,9 @@ conf:
   queueArn: arn:aws:sqs:local:TBD:TBD
   snsArn: arn:aws:sns:local:TBD:TBD
   persistenceHost:
-  enableAsyncCreation: true
-  snsChecks:
+  scansSNS:
+    topicArn: arn:aws:sns:local:TBD:TBD
+  checksSNS:
     topicArn: arn:aws:sns:local:TBD:TBD
   checkCreator:
     numOfWorkers: 2

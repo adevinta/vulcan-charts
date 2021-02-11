@@ -72,12 +72,10 @@ spec:
             value: "{{ .Values.conf.persistenceHost | default  (include "persistenceHost" .) }}"
           - name: SQS_QUEUE_ARN
             value: "{{ .Values.conf.queueArn }}"
-          - name: SNS_TOPIC_ARN
-            value: "{{ .Values.conf.snsArn }}"
-          - name: "ASYNC_CHECK_CREATION"
-            value: "{{ .Values.conf.enableAsyncCreation }}"
+          - name: "AWS_SNS_SCANS_ARN"
+            value: "{{ .Values.conf.scansSNS.topicArn }}"
           - name: "AWS_SNS_CHECKS_ARN"
-            value: "{{ .Values.conf.snsChecks.topicArn }}"
+            value: "{{ .Values.conf.checksSNS.topicArn }}"
           - name: "AWS_CHECK_CREATOR_WORKERS"
             value: "{{ .Values.conf.checkCreator.numOfWorkers }}"
           - name: "AWS_CHECK_CREATOR_PERIOD"
