@@ -30,7 +30,7 @@ livenessProbe:
   enabled: true
   path: /status
   initialDelaySeconds: 10
-  periodSeconds: 5
+  periodSeconds: 10
   timeoutSeconds: 5
   successThreshold: 1
   failureThreshold: 10
@@ -39,19 +39,20 @@ readinessProbe:
   enabled: true
   path: /status
   initialDelaySeconds: 10
-  periodSeconds: 5
+  periodSeconds: 10
   timeoutSeconds: 5
   successThreshold: 1
   failureThreshold: 5
 
 conf:
+  logLevel:
   snsTopic: "arn:aws:sns:local:TBD:TBD"
   s3Scans: TBD
   secretKeyBase: TBDTBD
   channel: events
   nessusCheckQueue: TBD
   railsMaxThreads: 4
-  # awsCreateChecksSqsUrl: https://localhost/012345678900/VulcanK8SPersistenceChecks
+  # awsCreateChecksSqsUrl: http://localhost/VulcanK8SPersistenceChecks
   awsCreateChecksSqsName: VulcanK8SPersistenceChecks
   awsCreateChecksWorkers: 4
 

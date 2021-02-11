@@ -40,7 +40,7 @@ postgresql:
     enabled: true
 
 goaws:
-  containerPort: 80
+  containerPort: 8080
   config:
     goaws.yaml: |
       Local:
@@ -116,8 +116,12 @@ defaults:
       enabled: true
       image: 
         repository: haproxy
-        tag: 2.1-alpine
+        tag: 2.2-alpine
       port: 9090  # We use non 80 port to prevent prometheus trying to access metrics on port 80
+      cache:
+        enabled: false
+        maxSize: 64 # mb
+        maxAge: 240 # seconds
       probe: false
       probePath: /healthz
       probeInitialDelay: 5
@@ -132,7 +136,7 @@ defaults:
     dogstatsd: &dogstatsd
       image: 
         repository: datadog/dogstatsd
-        tag: 7.19.2
+        tag: 7.25.1
 
 results:
   <<: *common
@@ -159,6 +163,7 @@ persistence:
     <<: *db
     name: persistence
   conf:
+    logLevel: warn
     snsTopic: arn:aws:sns:local:012345678900:VulcanK8SChecks
     nessusCheckQueue: VulcanK8SChecksTenable
     s3Scans: scans

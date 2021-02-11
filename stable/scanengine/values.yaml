@@ -5,7 +5,7 @@
 replicaCount:
 
 image:
-  repository: containers.mpi-internal.com/spt-security/vulcan-scan-engine
+  repository: adevinta/vulcan-scan-engine
   tag: latest
   pullPolicy: Always
 
@@ -20,7 +20,7 @@ livenessProbe:
   enabled: true
   path: /v1/healthcheck
   initialDelaySeconds: 10
-  periodSeconds: 5
+  periodSeconds: 10
   timeoutSeconds: 3
   successThreshold: 1
   failureThreshold: 10
@@ -29,7 +29,7 @@ readinessProbe:
   enabled: true
   path: /v1/healthcheck
   initialDelaySeconds: 10
-  periodSeconds: 5
+  periodSeconds: 10
   timeoutSeconds: 3
   successThreshold: 1
   failureThreshold: 5
