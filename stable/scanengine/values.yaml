@@ -56,9 +56,12 @@ conf:
   checkCreator:
     numOfWorkers: 2
     period: 20
-# configFiles:
-#   queues.yaml: |
-#     queues: ...
+  queues:
+    default:
+      arn: arn:aws:sqs:local:TBD:TBD
+    nessus:
+      arn: arn:aws:sqs:local:TBD:TBD
+      checktypes: '[\"vulcan-nessus\"]'
 
 db:
   internal: false

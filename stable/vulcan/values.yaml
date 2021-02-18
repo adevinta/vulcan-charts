@@ -224,15 +224,13 @@ scanengine:
     snsArn: arn:aws:sns:local:012345678900:VulcanK8SScans
     snsChecks:
       topicArn: arn:aws:sns:eu-west-1:012345678900:VulcanK8SScanEngineChecks
-  configFiles:
-    queues.yaml: |
-      queues:
-      - name: default
-        arn: arn:aws:sqs:local:012345678900:VulcanK8SChecksGeneric
-      - name: nessus
-        arn: arn:aws:sqs:local:012345678900:VulcanK8SChecksTenable
-        checks:
-          - vulcan-nessus
+    queues:
+      default:
+        arn: arn:aws:sqs:local:TBD:TBD
+      nessus:
+        arn: arn:aws:sqs:local:TBD:TBD
+        checktypes: '[\"vulcan-nessus\"]'
+
   db:
     <<: *db
     name: scanengine

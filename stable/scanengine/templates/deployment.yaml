@@ -80,6 +80,12 @@ spec:
             value: "{{ .Values.conf.checkCreator.numOfWorkers }}"
           - name: "AWS_CHECK_CREATOR_PERIOD"
             value: "{{ .Values.conf.checkCreator.period }}"
+          - name: "QUEUES_DEFAULT_ARN"
+            value: "{{ .Values.conf.queues.default.arn }}"
+          - name: "QUEUES_NESSUS_ARN"
+            value: "{{ .Values.conf.queues.nessus.arn }}"
+          - name: "QUEUES_NESSUS_CHECKTYPES"
+            value: "{{ .Values.conf.queues.nessus.checktypes }}"
         {{- include "common-envs" . | nindent 10 }}
         {{- range $name, $value := .Values.extraEnv }}
           - name: {{ $name }}
@@ -95,18 +101,8 @@ spec:
           {{- include "common-lifecycle" . | nindent 10 }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-          volumeMounts:
-            {{- if .Values.configFiles }}
-            - name: config-files 
-              mountPath: /app/config
-            {{- end }}
       volumes:
       {{- include "common-volumes" . | nindent 6}}
-      {{- if .Values.configFiles }}
-      - name: config-files
-        configMap:
-          name: {{ include "scanengine.fullname" . }}-configs
-      {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
