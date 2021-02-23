@@ -53,6 +53,7 @@ conf:
     topicArn: arn:aws:sns:local:TBD:TBD
   checksSNS:
     topicArn: arn:aws:sns:local:TBD:TBD
+  streamUrl:
   checkCreator:
     numOfWorkers: 2
     period: 20

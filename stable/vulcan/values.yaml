@@ -221,14 +221,15 @@ scanengine:
     logLevel: "error"
     queueArn: arn:aws:sqs:local:012345678900:VulcanK8SScanEngineChecks
     queueName: VulcanK8SScanEngineChecks
-    snsArn: arn:aws:sns:local:012345678900:VulcanK8SScans
-    snsChecks:
+    scansSNS:
+      topicArn: arn:aws:sns:local:012345678900:VulcanK8SScans
+    checksSNS:
       topicArn: arn:aws:sns:eu-west-1:012345678900:VulcanK8SScanEngineChecks
     queues:
       default:
-        arn: arn:aws:sqs:local:TBD:TBD
+        arn: VulcanK8SChecksGeneric
       nessus:
-        arn: arn:aws:sqs:local:TBD:TBD
+        arn: VulcanK8SChecksTenable
         checktypes: '[\"vulcan-nessus\"]'
 
   db:

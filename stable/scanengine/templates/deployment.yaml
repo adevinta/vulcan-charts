@@ -76,6 +76,8 @@ spec:
             value: "{{ .Values.conf.scansSNS.topicArn }}"
           - name: "AWS_SNS_CHECKS_ARN"
             value: "{{ .Values.conf.checksSNS.topicArn }}"
+          - name: "STREAM_URL"
+            value: "{{ .Values.conf.streamUrl }}"
           - name: "AWS_CHECK_CREATOR_WORKERS"
             value: "{{ .Values.conf.checkCreator.numOfWorkers }}"
           - name: "AWS_CHECK_CREATOR_PERIOD"
