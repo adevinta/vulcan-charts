@@ -49,16 +49,12 @@ readinessProbe:
 
 conf:
   logLevel: "DEBUG"
-
-db:
-  internal: false
-  host:
-  name: TBD
-  user: TBD
-  password: TBD
-  port: 5432
-  sslMode: disable
-  ca:
+  redis:
+    addr: TBD
+    usr: TBD
+    pwd: TBD
+    db: 0   # default
+    ttl: 0  # default
 
 # extraEnv:
 #   FOO: BAR

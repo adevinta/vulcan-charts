@@ -174,9 +174,14 @@ stream:
   <<: *common
   lifecycle:
     preStopSleep: 30
-  db:
-    <<: *db
-    name: persistence
+  conf:
+    logLevel: "DEBUG"
+    redis:
+      addr: TBD
+      usr: TBD
+      pwd: TBD
+      db: 0   # default
+      ttl: 0  # default
 
 api:
   <<: *common

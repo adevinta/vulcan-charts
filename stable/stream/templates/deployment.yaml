@@ -56,20 +56,16 @@ spec:
             value: "{{ .Values.containerPort }}"
           - name: LOG_LEVEL
             value: "{{ .Values.conf.logLevel }}"
-          - name: PG_HOST
-            value: "{{ .Values.db.host | default (include "postgresqlHost" .) }}"
-          - name: PG_DB
-            value: "{{ .Values.db.name }}"
-          - name: PG_USER
-            value: "{{ .Values.db.user }}"
-          - name: PG_PORT
-            value: "{{ .Values.db.port }}"
-          - name: PG_SSLMODE
-            value: "{{ .Values.db.sslMode }}"
-          {{- if .Values.db.ca }}
-          - name: PG_CA_B64
-            value: "{{ .Values.db.ca | b64enc }}"
-          {{- end }}
+          - name: REDIS_ADDR
+            value: "{{ .Values.conf.addr }}"
+          - name: REDIS_USR
+            value: "{{ .Values.conf.usr }}"
+          - name: REDIS_PWD
+            value: "{{ .Values.conf.pwd }}"
+          - name: REDIS_DB
+            value: "{{ .Values.conf.db }}"
+          - name: REDIS_TTL
+            value: "{{ .Values.conf.ttl }}"
         {{- include "common-envs" . | nindent 10 }}
         {{- range $name, $value := .Values.extraEnv }}
           - name: {{ $name }}
