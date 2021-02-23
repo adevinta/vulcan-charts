@@ -56,8 +56,10 @@ spec:
             value: "{{ .Values.containerPort }}"
           - name: LOG_LEVEL
             value: "{{ .Values.conf.logLevel }}"
-          - name: REDIS_ADDR
-            value: "{{ .Values.conf.addr }}"
+          - name: REDIS_HOST
+            value: "{{ .Values.conf.host }}"
+          - name: REDIS_PORT
+            value: "{{ .Values.conf.port }}"
           - name: REDIS_USR
             value: "{{ .Values.conf.usr }}"
           - name: REDIS_PWD

@@ -50,7 +50,8 @@ readinessProbe:
 conf:
   logLevel: "DEBUG"
   redis:
-    addr: TBD
+    host: TBD
+    port: TBD
     usr: TBD
     pwd: TBD
     db: 0   # default

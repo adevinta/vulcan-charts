@@ -177,7 +177,8 @@ stream:
   conf:
     logLevel: "DEBUG"
     redis:
-      addr: TBD
+      host: TBD
+      port: TDB
       usr: TBD
       pwd: TBD
       db: 0   # default
