@@ -62,8 +62,6 @@ spec:
             value: "{{ .Values.conf.port }}"
           - name: REDIS_USR
             value: "{{ .Values.conf.usr }}"
-          - name: REDIS_PWD
-            value: "{{ .Values.conf.pwd }}"
           - name: REDIS_DB
             value: "{{ .Values.conf.db }}"
           - name: REDIS_TTL
