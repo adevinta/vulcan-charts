@@ -34,16 +34,6 @@ spec:
       serviceAccountName: {{ template "stream.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
-      initContainers:
-        - name: waitfordb
-          image: "{{ .Values.waitfordb.image.repository }}:{{ .Values.waitfordb.image.tag }}"
-          imagePullPolicy: Always
-          command: ['sh', '-c', 'until pg_isready -t 5; do echo WaitingDB; done;']
-          env:
-          - name: PGHOST
-            value: "{{ .Values.db.host | default (include "postgresqlHost" .) }}"
-          - name: PGPORT
-            value: "{{ .Values.db.port }}"
       containers:
         {{- include "common-containers" . | nindent 8}}
         - name: {{ .Chart.Name }}
