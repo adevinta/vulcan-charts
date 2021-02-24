@@ -30,3 +30,7 @@ http
 {{- define "persistenceHost" -}}
 {{- .Values.conf.persistenceHost -}}
 {{- end -}}
+
+{{- define "streamUrl" -}}
+{{- .Values.conf.streamUrl -}}
+{{- end -}}

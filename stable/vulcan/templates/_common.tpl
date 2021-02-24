@@ -133,6 +133,10 @@ Override names
 {{- printf "http://%s-vulndb/" .Release.Name -}}
 {{- end -}}
 
+{{- define "streamUrl" -}}
+{{- printf "http://%s-stream" .Release.Name -}}
+{{- end -}}
+
 {{- define "metricsRedisAddr" -}}
 {{- printf "%s-metrics-redis:6379" .Release.Name -}}
 {{- end -}}
