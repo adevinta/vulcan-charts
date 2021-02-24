@@ -70,17 +70,17 @@ spec:
             value: "{{ .Values.conf.logLevel }}"
           - name: PERSISTENCE_HOST
             value: "{{ .Values.conf.persistenceHost | default  (include "persistenceHost" .) }}"
-          - name: SQS_QUEUE_ARN
+          - name: CHECKS_SQS_ARN
             value: "{{ .Values.conf.queueArn }}"
-          - name: "AWS_SNS_SCANS_ARN"
+          - name: "SCANS_SNS_ARN"
             value: "{{ .Values.conf.scansSNS.topicArn }}"
-          - name: "AWS_SNS_CHECKS_ARN"
+          - name: "CHECKS_SNS_ARN"
             value: "{{ .Values.conf.checksSNS.topicArn }}"
           - name: "STREAM_URL"
             value: "{{ .Values.conf.streamUrl | default  (include "streamUrl" .) }}"
-          - name: "AWS_CHECK_CREATOR_WORKERS"
+          - name: "CHECKS_CREATOR_WORKERS"
             value: "{{ .Values.conf.checkCreator.numOfWorkers }}"
-          - name: "AWS_CHECK_CREATOR_PERIOD"
+          - name: "CHECKS_CREATOR_PERIOD"
             value: "{{ .Values.conf.checkCreator.period }}"
           - name: "QUEUES_DEFAULT_ARN"
             value: "{{ .Values.conf.queues.default.arn }}"
