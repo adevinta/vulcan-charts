@@ -98,8 +98,8 @@ spec:
             value: "{{ .Values.conf.persistenceHost | default  (include "persistenceHost" .) }}"
           - name: VULNERABILITYDB_URL
             value: "{{ .Values.conf.vulndbapiUrl | default  (include "vulndbapiUrl" .) }}"
-          - name: AWSCATALOGUE_IMPL
-            value: "{{ .Values.conf.awscatalogue.impl }}"
+          - name: AWSCATALOGUE_KIND
+            value: "{{ .Values.conf.awscatalogue.kind }}"
           - name: AWSCATALOGUE_URL
             value: "{{ .Values.conf.awscatalogue.url }}"
           - name: AWSCATALOGUE_RETRIES

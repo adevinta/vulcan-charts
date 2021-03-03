@@ -69,7 +69,7 @@ conf:
   scanengineUrl:
   apiHostname:
   awscatalogue:
-    impl: None
+    kind: None
     url: http://catalogue.example.com
     key: key
     retries: 1
