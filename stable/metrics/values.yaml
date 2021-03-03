@@ -31,14 +31,18 @@ conf:
   sqsPollingInterval: 10
   checksQueueArn: arn:aws:sqs:local:TBD:TBD
   scansQueueArn: arn:aws:sqs:local:TBD:TBD
+  findingsQueueArn: arn:aws:sqs:local:TBD:TBD
   resultsScheme: http
   devHoseURL: http://devhose/devhose
   devHoseToken: token
   devHoseTenant: tbd
-  ledgerSource: tbd
+  devHoseMetricsSource: tbd
+  devHoseFindingsSource: tbd
   redisPassword: TBD
   redisAddr:
   resultsHost:
+  vulcanAPIBaseURL: tbd
+  vulcanAPIToken: token
 
 # extraEnv:
 #   FOO: BAR

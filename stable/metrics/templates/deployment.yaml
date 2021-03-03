@@ -46,6 +46,8 @@ spec:
             value: "{{ .Values.conf.checksQueueArn }}"
           - name: SCANS_SQS_QUEUE_ARN
             value: "{{ .Values.conf.scansQueueArn }}"
+          - name: FINDINGS_SQS_QUEUE_ARN
+            value: "{{ .Values.conf.findingsQueueArn }}"
           - name: RESULTS_HOST
             value: "{{ .Values.conf.resultsHost | default (include "resultsHost" .)}}"
           - name: RESULTS_SCHEME
@@ -54,10 +56,14 @@ spec:
             value: "{{ .Values.conf.devHoseURL }}"
           - name: DEVHOSE_TENANT
             value: "{{ .Values.conf.devHoseTenant }}"
-          - name: LEDGER_SOURCE
-            value: "{{ .Values.conf.ledgerSource }}"
+          - name: DEVHOSE_METRICS_SOURCE
+            value: "{{ .Values.conf.devHoseMetricsSource }}"
+          - name: DEVHOSE_FINDINGS_SOURCE
+            value: "{{ .Values.conf.devHoseFindingsSource }}"
           - name: REDIS_ADDR
             value: "{{ .Values.conf.redisAddr | default (include "metricsRedisAddr" .)}}"
+          - name: VULCAN_API_BASE_URL
+            value: "{{ .Values.conf.vulcanAPIBaseURL }}"
         {{- include "common-envs" . | nindent 10 }}
         {{- range $name, $value := .Values.extraEnv }}
           - name: {{ $name }}
