@@ -30,3 +30,7 @@ http
 {{- define "metricsRedisAddr" -}}
 {{- .Values.conf.metricsRedisAddr -}}
 {{- end -}}
+
+{{- define "vulcanApi" -}}
+{{- .Values.conf.vulcanApi -}}
+{{- end -}}

@@ -57,6 +57,7 @@ goaws:
           - Name: VulcanK8SChecksTenable
           - Name: VulcanK8SMetricsChecks
           - Name: VulcanK8SMetricsScans
+          - Name: VulcanK8SMetricsFindings
           - Name: VulcanK8SScanEngineChecks
           - Name: VulcanK8SReportsGenerator
           - Name: VulcanK8SPersistenceChecks
@@ -84,6 +85,8 @@ goaws:
               - QueueName: VulcanK8SPersistenceChecks
                 Raw: true
           - Name: VulcanK8SVulnDBVulns
+              - QueueName: VulcanK8SMetricsFindings
+                Raw: true
         RandomLatency:
           Min: 0
           Max: 0
@@ -114,7 +117,7 @@ defaults:
   common:  &common
     proxy:
       enabled: true
-      image: 
+      image:
         repository: haproxy
         tag: 2.2-alpine
       port: 9090  # We use non 80 port to prevent prometheus trying to access metrics on port 80
@@ -291,6 +294,7 @@ metrics:
   conf:
     checksQueueArn: arn:aws:sqs:local:012345678900:VulcanK8SMetricsChecks
     scansQueueArn: arn:aws:sqs:local:012345678900:VulcanK8SMetricsScans
+    findingsQueueArn: arn:aws:sqs:local:012345678900:VulcanK8SMetricsFindings
 
 vulndbapi:
   <<: *common

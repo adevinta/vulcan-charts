@@ -62,8 +62,8 @@ spec:
             value: "{{ .Values.conf.devHoseFindingsSource }}"
           - name: REDIS_ADDR
             value: "{{ .Values.conf.redisAddr | default (include "metricsRedisAddr" .)}}"
-          - name: VULCAN_API_BASE_URL
-            value: "{{ .Values.conf.vulcanAPIBaseURL }}"
+          - name: VULCAN_API
+            value: {{ .Values.conf.vulcanApi | default (include "vulcanApi" .) }}
         {{- include "common-envs" . | nindent 10 }}
         {{- range $name, $value := .Values.extraEnv }}
           - name: {{ $name }}

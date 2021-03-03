@@ -41,7 +41,7 @@ conf:
   redisPassword: TBD
   redisAddr:
   resultsHost:
-  vulcanAPIBaseURL: tbd
+  vulcanAPI: tbd
   vulcanAPIToken: token
 
 # extraEnv:
