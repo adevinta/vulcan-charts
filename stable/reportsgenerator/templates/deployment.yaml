@@ -84,8 +84,8 @@ spec:
             value: "{{ .Values.conf.generators.scan.privateBucket }}"
           - name: SCAN_GA_ID
             value: "{{ .Values.conf.generators.scan.gaId }}"
-          - name: PERSISTENCE_ENDPOINT
-            value: "{{ .Values.conf.persistenceUrl | default (include "persistenceUrl" .) }}"
+          - name: PERSISTENCE_ENDPOINT  # We keep this PERSISTENCE variable for compatibility
+            value: "{{ .Values.conf.scanengineUrl | default (include "scanengineUrl" .) }}"
           - name: RESULTS_ENDPOINT
             value: "{{ .Values.conf.resultsUrl | default (include "resultsUrl" .) }}"
           - name: SCAN_PROXY_ENDPOINT

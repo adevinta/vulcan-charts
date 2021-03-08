@@ -81,9 +81,9 @@ spec:
           - name: SAML_TRUSTED_DOMAINS
             value: {{ printf "'%s'" .Values.conf.saml.trustedDomains }}
           - name: SCANENGINE_URL
-            value: "{{ .Values.conf.scanengineUrl | default  (include "scanengineUrl" .) }}"
+            value: "{{ .Values.conf.scanengineUrl | default ( printf "%s/v1/" (include "scanengineUrl" .) ) }}"
           - name: SCHEDULER_URL
-            value: "{{ .Values.conf.schedulerUrl | default  (include "crontinuousUrl" .) }}"
+            value: "{{ .Values.conf.schedulerUrl | default (include "crontinuousUrl" .) }}"
           - name: SQS_QUEUE_ARN
             value: "{{ .Values.conf.queueArn }}"
           - name: REPORTS_SNS_ARN

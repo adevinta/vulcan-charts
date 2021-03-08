@@ -102,7 +102,7 @@ Override names
 {{- end -}}
 
 {{- define "scanengineUrl" -}}
-{{- printf "http://%s-scanengine/v1/" .Release.Name -}}
+{{- printf "http://%s-scanengine" .Release.Name -}}
 {{- end -}}
 
 {{- define "crontinuousUrl" -}}

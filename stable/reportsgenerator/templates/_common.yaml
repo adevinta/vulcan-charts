@@ -30,7 +30,8 @@ http
 {{- .Values.conf.ses.region -}}
 {{- end -}}
 
-{{- define "persistenceUrl" -}}
+{{- define "scanengineUrl" -}}
+{{- .Values.conf.scanengineUrl -}}
 {{- end -}}
 
 {{- define "postgresqlHost" -}}
