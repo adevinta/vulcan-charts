@@ -43,6 +43,7 @@ conf:
   resultsHost:
   vulcanApi: # http://host/api
   vulcanAPIToken: token
+  vulcanAPIExternal: # https://external/api
 
 # extraEnv:
 #   FOO: BAR
