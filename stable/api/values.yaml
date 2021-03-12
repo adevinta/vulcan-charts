@@ -57,6 +57,7 @@ conf:
     trustedDomains: # '["vulcan-api"]'
   log:
     level: INFO
+  defaultOwners: '[]'
   queueArn: arn:aws:sqs:local:TBD:TBD
   reports:
     snsArn: arn:aws:sns:TBD:TBD:TBD
