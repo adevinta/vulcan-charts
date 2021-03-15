@@ -81,7 +81,7 @@ spec:
           - name: SAML_TRUSTED_DOMAINS
             value: {{ printf "'%s'" .Values.conf.saml.trustedDomains }}
           - name: DEFAULT_OWNERS
-            value: "{{ .Values.conf.defaultOwners }}"
+            value: {{ printf "'%s'" .Values.conf.defaultOwners }}
           - name: SCANENGINE_URL
             value: "{{ .Values.conf.scanengineUrl | default ( printf "%s/v1/" (include "scanengineUrl" .) ) }}"
           - name: SCHEDULER_URL
