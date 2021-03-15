@@ -239,7 +239,7 @@ scanengine:
         arn: VulcanK8SChecksGeneric
       nessus:
         arn: VulcanK8SChecksTenable
-        checktypes: '[\"vulcan-nessus\"]'
+        checktypes: '["vulcan-nessus"]'
 
   db:
     <<: *db

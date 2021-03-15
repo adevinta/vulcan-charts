@@ -54,7 +54,7 @@ conf:
   ses:
     region:
     from: tbd@tbd.com
-    cc: '[\"tbd@tbd.com\"]'
+    cc: '["tbd@tbd.com"]'
   generators:
     scan:
       emailSubject: "Security Overview"

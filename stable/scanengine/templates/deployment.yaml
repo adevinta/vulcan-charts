@@ -87,7 +87,7 @@ spec:
           - name: "QUEUES_NESSUS_ARN"
             value: "{{ .Values.conf.queues.nessus.arn }}"
           - name: "QUEUES_NESSUS_CHECKTYPES"
-            value: "{{ .Values.conf.queues.nessus.checktypes }}"
+            value: {{ .Values.conf.queues.nessus.checktypes | quote }}
         {{- include "common-envs" . | nindent 10 }}
         {{- range $name, $value := .Values.extraEnv }}
           - name: {{ $name }}

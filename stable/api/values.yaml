@@ -54,10 +54,10 @@ conf:
     metadata: https://okta/app/TBD/sso/saml/metadata
     issuer: http://okta/TBD
     callback: # https://vulcan-api/api/v1/login/callback
-    trustedDomains: # '["vulcan-api"]'
+    trustedDomains: '[]'  # '["vulcan-api"]'
   log:
     level: INFO
-  defaultOwners: '[]'
+  defaultOwners: '[]'  # '["owner1","owner2"]'
   queueArn: arn:aws:sqs:local:TBD:TBD
   reports:
     snsArn: arn:aws:sns:TBD:TBD:TBD

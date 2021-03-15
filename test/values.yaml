@@ -60,6 +60,9 @@ api:
         - api.vulcan.local
 
 crontinuous:
+  conf:
+    teamsWhitelistScan: '["team1", "team2"]'
+    teamsWhitelistReport: '["team3"]'
   ingress:
     <<: *ingress
 
@@ -105,7 +108,8 @@ reportsgenerator:
       scan:
         vulcanUi: http://www.vulcan.local/
         proxyEndpoint: http://insights.vulcan.local
-
+    ses:
+      cc: '["tbd@tbd.com"]'
   ingress:
     <<: *ingress
 

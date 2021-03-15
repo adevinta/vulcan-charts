@@ -79,9 +79,9 @@ spec:
           - name: SAML_CALLBACK
             value: "{{ .Values.conf.saml.callback }}"
           - name: SAML_TRUSTED_DOMAINS
-            value: {{ printf "'%s'" .Values.conf.saml.trustedDomains }}
+            value: {{ .Values.conf.saml.trustedDomains | quote }}
           - name: DEFAULT_OWNERS
-            value: {{ printf "'%s'" .Values.conf.defaultOwners }}
+            value: {{ .Values.conf.defaultOwners | quote }}
           - name: SCANENGINE_URL
             value: "{{ .Values.conf.scanengineUrl | default ( printf "%s/v1/" (include "scanengineUrl" .) ) }}"
           - name: SCHEDULER_URL
