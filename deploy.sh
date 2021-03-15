@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Copyright 2019 Adevinta
+
 set -ev
 
 # Create the helm packages to publish
