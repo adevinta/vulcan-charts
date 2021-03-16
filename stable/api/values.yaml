@@ -5,7 +5,7 @@
 replicaCount:
 
 image:
-  repository: containers.mpi-internal.com/spt-security/vulcan-api
+  repository: adevinta/vulcan-api
   tag: latest
   pullPolicy: Always
 
