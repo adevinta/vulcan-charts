@@ -45,6 +45,13 @@ proxy:
 
 conf:
   apiUrl: # https://vulcan-api/api/v1/
+  docs:
+    apiLink: # vulcan API doc
+    whitelistingLink: # vulcan scanner IPs
+    discoveryLink: # vulcan asset discovery doc
+  contact:
+    email: # vulcan contact email
+    slack: # vulcan slack channel
 
 # extraEnv:
 #   FOO: BAR

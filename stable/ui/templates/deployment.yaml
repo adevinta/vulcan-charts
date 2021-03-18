@@ -43,6 +43,16 @@ spec:
             value: "{{ .Values.conf.apiUrl }}"
           - name: PORT
             value: "{{ .Values.containerPort }}"
+          - name: UI_DOCS_MAIN_LINK
+            value: "{{ .Values.conf.docs.apiLink }}"
+          - name: UI_DOCS_WHITELISTING_LINK
+            value: "{{ .Values.conf.docs.whitelistingLink }}"
+          - name: UI_DOCS_DISCOVERY_LINK
+            value: "{{ .Values.conf.docs.discoveryLink }}"
+          - name: UI_CONTACT_EMAIL
+            value: "{{ .Values.conf.contact.email }}"
+          - name: UI_CONTACT_SLACK
+            value: "{{ .Values.conf.contact.slack }}"
         {{- include "common-envs" . | nindent 10 }}
         {{- range $name, $value := .Values.extraEnv }}
           - name: {{ $name }}
