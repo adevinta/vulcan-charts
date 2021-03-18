@@ -49,6 +49,7 @@ conf:
     apiLink: # vulcan API doc
     whitelistingLink: # vulcan scanner IPs
     discoveryLink: # vulcan asset discovery doc
+    auditRoleLink: # vulcan AWS audit role doc
   contact:
     email: # vulcan contact email
     slack: # vulcan slack channel
