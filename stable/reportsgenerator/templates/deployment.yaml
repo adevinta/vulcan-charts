@@ -84,6 +84,20 @@ spec:
             value: "{{ .Values.conf.generators.scan.privateBucket }}"
           - name: SCAN_GA_ID
             value: "{{ .Values.conf.generators.scan.gaId }}"
+          - name: SCAN_COMPANY_NAME
+            value: "{{ .Values.conf.generators.scan.contact.companyName }}"
+          - name: SCAN_SUPPORT_EMAIL
+            value: "{{ .Values.conf.generators.scan.contact.supportEmail }}"
+          - name: SCAN_CONTACT_EMAIL
+            value: "{{ .Values.conf.generators.scan.contact.email }}"
+          - name: SCAN_CONTACT_CHANNEL
+            value: "{{ .Values.conf.generators.scan.contact.slackChannel }}"
+          - name: SCAN_CONTACT_JIRA
+            value: "{{ .Values.conf.generators.scan.contact.jira }}"
+          - name: SCAN_DOCS_API_LINK
+            value: "{{ .Values.conf.generators.scan.docs.apiDocLink }}"
+          - name: SCAN_DOCS_ROADMAP_LINK
+            value: "{{ .Values.conf.generators.scan.docs.roadmapLink }}"
           - name: PERSISTENCE_ENDPOINT  # We keep this PERSISTENCE variable for compatibility
             value: "{{ .Values.conf.scanengineUrl | default (include "scanengineUrl" .) }}"
           - name: RESULTS_ENDPOINT

@@ -62,6 +62,15 @@ conf:
       privateBucket: TBD
       gaId: UA-000000000-0
       proxyEndpoint: # https://vulcan-insights
+      contact:
+        companyName:
+        supportEmail:
+        email:
+        slackChannel:
+        jira: # vulcan Jira project
+      docs:
+        apiDocLink: # vulcan-api doc link
+        roadmapLink: # vulcan roadmap link
       vulcanUi: # https://vulcan-www
       viewReport: # vulcan-api/api/v1/report?team_id=%s&scan_id=%s
       redirectUrl: # https://public-redirect/index.html?reportUrl=
