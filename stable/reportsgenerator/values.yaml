@@ -5,7 +5,7 @@
 replicaCount:
 
 image:
-  repository: containers.mpi-internal.com/spt-security/vulcan-reports-generator
+  repository: adevinta/vulcan-reports-generator
   tag: latest
   pullPolicy: Always
 
