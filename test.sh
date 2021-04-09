@@ -7,7 +7,7 @@ helm lint ./stable/*
 pushd examples
 for f in *.yaml
 do
-  helm template vulcan ../stable/vulcan --namespace ns -f $f > templates/$f
-  helm template vulcan ../stable/vulcan -f $f --debug| kubeval --strict --ignore-missing-schemas
+    helm template vulcan ../stable/vulcan --namespace ns -f $f --debug > templates/$f
+    cat templates/$f | kubeval --strict --ignore-missing-schemas
 done
 popd
