@@ -234,49 +234,6 @@ data:
         Min: 0
         Max: 0
 ---
-# Source: vulcan/charts/insights/templates/config-proxy.yaml
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  labels:
-    name: myrelease-insights-proxy
-  name: myrelease-insights-proxy
-data:
-  haproxy.cfg: |
-    global
-      daemon
-      maxconn 64
-      log stdout format raw daemon
-
-    defaults
-      mode http
-      timeout connect 5s
-      timeout client 25s
-      timeout server 25s
-      timeout tunnel 3600s
-      option  http-server-close
-
-    frontend http
-      bind *:9090
-      log global
-      option httplog clf
-      http-request capture req.hdr(Host) len 50
-      http-request capture req.hdr(User-Agent) len 100
-      default_backend private
-      use_backend public if { path -i -m beg /public }
-
-    backend private
-      server app 127.0.0.1:8080
-
-    backend public
-      server app 127.0.0.1:8081
-
-    frontend stats
-      bind *:9101
-      option http-use-htx
-      http-request use-service prometheus-exporter if { path /metrics }
-      monitor-uri /healthz
----
 # Source: vulcan/charts/postgresql/templates/initialization-configmap.yaml
 apiVersion: v1
 kind: ConfigMap
@@ -504,6 +461,59 @@ data:
       http-request use-service prometheus-exporter if { path /metrics }
       monitor-uri /healthz
 ---
+# Source: vulcan/templates/insights/config.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: myrelease-vulcan-insights-proxy
+  labels:
+    helm.sh/chart: vulcan-0.2.0
+    app.kubernetes.io/name: vulcan
+    app.kubernetes.io/instance: myrelease
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: insights
+data:
+  haproxy.cfg: |
+    global
+      daemon
+      maxconn 64
+      log stdout format raw daemon
+
+    defaults
+      mode http
+      timeout connect 5s
+      timeout client 25s
+      timeout server 25s
+      timeout tunnel 3600s
+      option  http-server-close
+    cache small
+      total-max-size 64     # mb
+      max-age 240           # seconds
+
+    frontend http
+      bind *:9090
+      log global
+      option httplog clf
+      http-request cache-use small
+      http-response cache-store small
+      http-request capture req.hdr(Host) len 50
+      http-request capture req.hdr(User-Agent) len 100
+      default_backend private
+      use_backend public if { path -i -m beg /public }
+
+    backend private
+      server app 127.0.0.1:8080
+
+    backend public
+      server app 127.0.0.1:8081
+
+    frontend stats
+      bind *:9101
+      option http-use-htx
+      http-request use-service prometheus-exporter if { path /metrics }
+      monitor-uri /healthz
+---
 # Source: vulcan/templates/persistence/deployment.yaml
 apiVersion: v1
 kind: ConfigMap
@@ -704,28 +714,6 @@ spec:
       name: http
   selector:
     app.kubernetes.io/name: goaws
-    app.kubernetes.io/instance: myrelease
----
-# Source: vulcan/charts/insights/templates/service.yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: myrelease-insights
-  labels:
-    helm.sh/chart: insights-0.2.0
-    app.kubernetes.io/name: insights
-    app.kubernetes.io/instance: myrelease
-    app.kubernetes.io/version: "1.16.0"
-    app.kubernetes.io/managed-by: Helm
-spec:
-  type: ClusterIP
-  ports:
-    - port: 80
-      targetPort: http
-      protocol: TCP
-      name: http
-  selector:
-    app.kubernetes.io/name: insights
     app.kubernetes.io/instance: myrelease
 ---
 # Source: vulcan/charts/metrics/templates/redis.yaml
@@ -944,6 +932,30 @@ spec:
       app.kubernetes.io/instance: myrelease
       app.kubernetes.io/component: crontinuous
 ---
+# Source: vulcan/templates/insights/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: myrelease-vulcan-insights
+  labels:
+    helm.sh/chart: vulcan-0.2.0
+    app.kubernetes.io/name: vulcan
+    app.kubernetes.io/instance: myrelease
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: insights
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+      app.kubernetes.io/name: vulcan
+      app.kubernetes.io/instance: myrelease
+      app.kubernetes.io/component: insights
+---
 # Source: vulcan/templates/persistence/service.yaml
 apiVersion: v1
 kind: Service
@@ -1086,177 +1098,6 @@ spec:
       - name: goaws-config
         configMap:
           name: myrelease-goaws-config
----
-# Source: vulcan/charts/insights/templates/deployment.yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: myrelease-insights
-  labels:
-    helm.sh/chart: insights-0.2.0
-    app.kubernetes.io/name: insights
-    app.kubernetes.io/instance: myrelease
-    app.kubernetes.io/version: "1.16.0"
-    app.kubernetes.io/managed-by: Helm
-spec:
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: insights
-      app.kubernetes.io/instance: myrelease
-  template:
-    metadata:
-      labels:
-        app.kubernetes.io/name: insights
-        app.kubernetes.io/instance: myrelease
-      annotations:
-        checksum/config: 6ac01178c2c3ae348581d08e24b207cf9cdaaad3e227a9ef3db88e40703bcdae
-        prometheus.io/scrape: 'true'
-        prometheus.io/port: '9101'
-    spec:
-      
-      serviceAccountName: default
-      securityContext:
-        {}
-      containers:
-        
-        - name: proxy
-          image: "haproxy:2.2-alpine"
-          imagePullPolicy: Always
-          ports:
-            - name: http
-              containerPort: 9090
-            - name: metrics
-              containerPort: 9101
-          volumeMounts:
-          - mountPath: /usr/local/etc/haproxy
-            readOnly: true
-            name: config-proxy
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh","-c","sleep 30;"]
-          resources:
-            {}
-        - name: "app-private"
-          securityContext:
-            {}
-          image: "pottava/s3-proxy:2.0"
-          imagePullPolicy: Always
-          env:
-            - name: AWS_REGION
-              value: "local"
-            - name: ACCESS_LOG
-              value: "false"
-            - name: AWS_S3_BUCKET
-              value: "insights"
-            - name: STRIP_PATH
-              value: ""
-            - name: HEALTHCHECK_PATH
-              value: "/healthcheck"
-            - name: APP_PORT
-              value: "8080"
-            - name: AWS_API_ENDPOINT
-              value: "http://myrelease-minio"
-            - name: AWS_ACCESS_KEY_ID
-              valueFrom:
-                secretKeyRef:
-                  name: "myrelease-minio"
-                  key: access-key
-            - name: AWS_SECRET_ACCESS_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: "myrelease-minio"
-                  key: secret-key
-          ports:
-            - name: private
-              containerPort: 8080
-              protocol: TCP
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh","-c","sleep 30;"]
-          livenessProbe:
-            httpGet:
-              path: /healthcheck
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 10
-          readinessProbe:
-            httpGet:
-              path: /healthcheck
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 5
-          resources:
-            {}
-        - name: "app-public"
-          securityContext:
-            {}
-          image: "pottava/s3-proxy:2.0"
-          imagePullPolicy: Always
-          env:
-            - name: AWS_REGION
-              value: "local"
-            - name: ACCESS_LOG
-              value: "false"
-            - name: AWS_S3_BUCKET
-              value: "public-insights"
-            - name: STRIP_PATH
-              value: "/public"
-            - name: HEALTHCHECK_PATH
-              value: "/healthcheck"
-            - name: APP_PORT
-              value: "8081"
-            - name: AWS_API_ENDPOINT
-              value: "http://myrelease-minio"
-            - name: AWS_ACCESS_KEY_ID
-              valueFrom:
-                secretKeyRef:
-                  name: "myrelease-minio"
-                  key: access-key
-            - name: AWS_SECRET_ACCESS_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: "myrelease-minio"
-                  key: secret-key
-          ports:
-            - name: public
-              containerPort: 8081
-              protocol: TCP
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh","-c","sleep 30;"]
-          livenessProbe:
-            httpGet:
-              path: /healthcheck
-              port: 8081
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 10
-          readinessProbe:
-            httpGet:
-              path: /healthcheck
-              port: 8081
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 5
-          resources:
-            {}
-      volumes:
-      - name: config-proxy
-        configMap:
-          name: myrelease-insights-proxy
 ---
 # Source: vulcan/charts/metrics/templates/deployment.yaml
 apiVersion: apps/v1
@@ -2256,6 +2097,155 @@ spec:
         configMap:
           name: myrelease-vulcan-crontinuous-proxy
 ---
+# Source: vulcan/templates/insights/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myrelease-vulcan-insights
+  labels:
+    helm.sh/chart: vulcan-0.2.0
+    app.kubernetes.io/name: vulcan
+    app.kubernetes.io/instance: myrelease
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: insights
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: vulcan
+      app.kubernetes.io/instance: myrelease
+      app.kubernetes.io/component: insights
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: vulcan
+        app.kubernetes.io/instance: myrelease
+        app.kubernetes.io/component: insights
+      annotations:
+        checksum/config: b2db139c798ffd421862d3dcdc41c8b58fd4c5c34edc89ecfc45cf2fce7d0785
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '9101'
+    spec:
+      
+      securityContext:
+        {}
+      containers:
+        
+        - name: proxy
+          image: "haproxy:2.2-alpine"
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 9090
+            - name: metrics
+              containerPort: 9101
+          volumeMounts:
+          - mountPath: /usr/local/etc/haproxy
+            readOnly: true
+            name: config-proxy
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","sleep 30;"]
+          resources:
+            {}
+        - name: "insights-private"
+          securityContext:
+            {}
+          image: "pottava/s3-proxy:2.0"
+          imagePullPolicy: Always
+          env:
+            - name: AWS_REGION
+              value: "local"
+            - name: ACCESS_LOG
+              value: "false"
+            - name: AWS_S3_BUCKET
+              value: "insights"
+            - name: STRIP_PATH
+              value: ""
+            - name: HEALTHCHECK_PATH
+              value: "/healthcheck"
+            - name: APP_PORT
+              value: "8080"
+          ports:
+            - name: private
+              containerPort: 8080
+              protocol: TCP
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","sleep 30;"]
+          livenessProbe:
+            httpGet:
+              path: /healthcheck
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 10
+          readinessProbe:
+            httpGet:
+              path: /healthcheck
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 5
+          resources:
+            {}
+        - name: "insights-public"
+          securityContext:
+            {}
+          image: "pottava/s3-proxy:2.0"
+          imagePullPolicy: Always
+          env:
+            - name: AWS_REGION
+              value: "local"
+            - name: ACCESS_LOG
+              value: "false"
+            - name: AWS_S3_BUCKET
+              value: "public-insights"
+            - name: STRIP_PATH
+              value: "/public"
+            - name: HEALTHCHECK_PATH
+              value: "/healthcheck"
+            - name: APP_PORT
+              value: "8081"
+          ports:
+            - name: public
+              containerPort: 8081
+              protocol: TCP
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","sleep 30;"]
+          livenessProbe:
+            httpGet:
+              path: /healthcheck
+              port: 8081
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 10
+          readinessProbe:
+            httpGet:
+              path: /healthcheck
+              port: 8081
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 5
+          resources:
+            {}
+      volumes:
+      - name: config-proxy
+        configMap:
+          name: myrelease-vulcan-insights-proxy
+---
 # Source: vulcan/templates/persistence/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -2986,39 +2976,6 @@ spec:
         - name: data
           emptyDir: {}
 ---
-# Source: vulcan/charts/insights/templates/ingress.yaml
-apiVersion: networking.k8s.io/v1beta1
-kind: Ingress
-metadata:
-  name: myrelease-insights
-  labels:
-    helm.sh/chart: insights-0.2.0
-    app.kubernetes.io/name: insights
-    app.kubernetes.io/instance: myrelease
-    app.kubernetes.io/version: "1.16.0"
-    app.kubernetes.io/managed-by: Helm
-  annotations:
-    nginx.ingress.kubernetes.io/configuration-snippet: |
-      more_set_headers "X-Frame-Options: SAMEORIGIN";
-      more_set_headers "X-Content-Type-Options: nosniff";
-      more_set_headers "X-Frame-Options: DENY";
-      more_set_headers "X-Xss-Protection: 1";
-      more_set_headers "Strict-Transport-Security: max-age=31536000; includeSubDomains";
-      more_set_headers "Content-Security-Policy: default-src 'none'; script-src 'self' 'unsafe-inline' https://insights.vulcan.local https://www.google-analytics.com; font-src 'self' https://insights.vulcan.local; connect-src 'self' https://insights.vulcan.local; img-src 'self' https://insights.vulcan.local https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://insights.vulcan.local; object-src 'none'";
-spec:
-  tls:
-    - hosts:
-        - "insights.vulcan.local"
-      secretName: vulcan-insights-tls
-  rules:
-    - host: "insights.vulcan.local"
-      http:
-        paths:
-          - path: /
-            backend:
-              serviceName: myrelease-insights
-              servicePort: 80
----
 # Source: vulcan/charts/ui/templates/ingress.yaml
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
@@ -3095,6 +3052,40 @@ spec:
           - path: /api
             backend:
               serviceName: myrelease-vulcan-api
+              servicePort: 80
+---
+# Source: vulcan/templates/insights/hpa.yaml
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: myrelease-vulcan-insights
+  labels:
+    helm.sh/chart: vulcan-0.2.0
+    app.kubernetes.io/name: vulcan
+    app.kubernetes.io/instance: myrelease
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: insights
+  annotations:
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "X-Frame-Options: SAMEORIGIN";
+      more_set_headers "X-Content-Type-Options: nosniff";
+      more_set_headers "X-Frame-Options: DENY";
+      more_set_headers "X-Xss-Protection: 1";
+      more_set_headers "Strict-Transport-Security: max-age=31536000; includeSubDomains";
+      more_set_headers "Content-Security-Policy: default-src 'none'; script-src 'self' 'unsafe-inline' https://insights.vulcan.local https://www.google-analytics.com; font-src 'self' https://insights.vulcan.local; connect-src 'self' https://insights.vulcan.local; img-src 'self' https://insights.vulcan.local https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://insights.vulcan.local; object-src 'none'";
+spec:
+  tls:
+    - hosts:
+        - "insights.vulcan.local"
+      secretName: vulcan-insights-tls
+  rules:
+    - host: "insights.vulcan.local"
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: myrelease-vulcan-insights
               servicePort: 80
 ---
 # Source: vulcan/templates/persistence/hpa.yaml

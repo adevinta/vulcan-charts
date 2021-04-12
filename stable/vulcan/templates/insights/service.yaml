@@ -1,0 +1,1 @@
+{{- include "comp-service" (dict "comp" .Values.insights "context" $) }}
