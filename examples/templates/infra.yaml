@@ -1,17 +1,4 @@
 ---
-# Source: vulcan/charts/api/templates/secrets.yaml
-apiVersion: v1
-kind: Secret
-metadata:
-  labels:
-    name: myrelease-api
-  name: myrelease-api
-type: Opaque
-data:
-  PG_PASSWORD: "VEJE"
-  SECRET_KEY: "VEJEVEJE"
-  AWSCATALOGUE_KEY: "a2V5"
----
 # Source: vulcan/charts/crontinuous/templates/secrets.yaml
 apiVersion: v1
 kind: Secret
@@ -99,6 +86,24 @@ type: Opaque
 data:
   PG_PASSWORD: "VEJE"
 ---
+# Source: vulcan/templates/api/secrets.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: myrelease-vulcan-api
+  labels:
+    helm.sh/chart: vulcan-0.2.0
+    app.kubernetes.io/name: vulcan
+    app.kubernetes.io/instance: myrelease
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: api
+type: Opaque
+data:
+  PG_PASSWORD: "VEJE"
+  SECRET_KEY: "VEJEVEJE"
+  AWSCATALOGUE_KEY: "a2V5"
+---
 # Source: vulcan/templates/dogstatsd-secret.yaml
 apiVersion: v1
 kind: Secret
@@ -163,46 +168,6 @@ metadata:
 type: Opaque
 data:
   REDIS_PWD: "VEJE"
----
-# Source: vulcan/charts/api/templates/deployment.yaml
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  labels:
-    name: myrelease-api-proxy
-  name: myrelease-api-proxy
-data:
-  haproxy.cfg: |
-    global
-      daemon
-      maxconn 64
-      log stdout format raw daemon
-
-    defaults
-      mode http
-      timeout connect 5s
-      timeout client 25s
-      timeout server 25s
-      timeout tunnel 3600s
-      option  http-server-close
-
-    frontend http
-      bind *:9090
-      log global
-      option httplog clf
-      http-request capture req.hdr(Host) len 50
-      http-request capture req.hdr(User-Agent) len 100
-
-      default_backend app
-
-    backend app
-      server app 127.0.0.1:8080
-
-    frontend stats
-      bind *:9101
-      option http-use-htx
-      http-request use-service prometheus-exporter if { path /metrics }
-      monitor-uri /healthz
 ---
 # Source: vulcan/charts/crontinuous/templates/deployment.yaml
 apiVersion: v1
@@ -484,6 +449,51 @@ data:
       http-request use-service prometheus-exporter if { path /metrics }
       monitor-uri /healthz
 ---
+# Source: vulcan/templates/api/deployment.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: myrelease-vulcan-api-proxy
+  labels:
+    helm.sh/chart: vulcan-0.2.0
+    app.kubernetes.io/name: vulcan
+    app.kubernetes.io/instance: myrelease
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: api-proxy
+data:
+  haproxy.cfg: |
+    global
+      daemon
+      maxconn 64
+      log stdout format raw daemon
+
+    defaults
+      mode http
+      timeout connect 5s
+      timeout client 25s
+      timeout server 25s
+      timeout tunnel 3600s
+      option  http-server-close
+
+    frontend http
+      bind *:9090
+      log global
+      option httplog clf
+      http-request capture req.hdr(Host) len 50
+      http-request capture req.hdr(User-Agent) len 100
+
+      default_backend app
+
+    backend app
+      server app 127.0.0.1:8080
+
+    frontend stats
+      bind *:9101
+      option http-use-htx
+      http-request use-service prometheus-exporter if { path /metrics }
+      monitor-uri /healthz
+---
 # Source: vulcan/templates/persistence/deployment.yaml
 apiVersion: v1
 kind: ConfigMap
@@ -663,28 +673,6 @@ data:
       option http-use-htx
       http-request use-service prometheus-exporter if { path /metrics }
       monitor-uri /healthz
----
-# Source: vulcan/charts/api/templates/service.yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: myrelease-api
-  labels:
-    app.kubernetes.io/name: api
-    helm.sh/chart: api-0.2.0
-    app.kubernetes.io/instance: myrelease
-    app.kubernetes.io/version: "1.0"
-    app.kubernetes.io/managed-by: Helm
-spec:
-  type: ClusterIP
-  ports:
-    - port: 80
-      targetPort: http
-      protocol: TCP
-      name: http
-  selector:
-    app.kubernetes.io/name: api
-    app.kubernetes.io/instance: myrelease
 ---
 # Source: vulcan/charts/crontinuous/templates/service.yaml
 apiVersion: v1
@@ -920,6 +908,30 @@ spec:
     app.kubernetes.io/name: vulndbapi
     app.kubernetes.io/instance: myrelease
 ---
+# Source: vulcan/templates/api/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: myrelease-vulcan-api
+  labels:
+    helm.sh/chart: vulcan-0.2.0
+    app.kubernetes.io/name: vulcan
+    app.kubernetes.io/instance: myrelease
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: api
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+      app.kubernetes.io/name: vulcan
+      app.kubernetes.io/instance: myrelease
+      app.kubernetes.io/component: api
+---
 # Source: vulcan/templates/persistence/service.yaml
 apiVersion: v1
 kind: Service
@@ -1015,182 +1027,6 @@ spec:
       app.kubernetes.io/name: vulcan
       app.kubernetes.io/instance: myrelease
       app.kubernetes.io/component: stream
----
-# Source: vulcan/charts/api/templates/deployment.yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: myrelease-api
-  labels:
-    app.kubernetes.io/name: api
-    helm.sh/chart: api-0.2.0
-    app.kubernetes.io/instance: myrelease
-    app.kubernetes.io/version: "1.0"
-    app.kubernetes.io/managed-by: Helm
-spec:
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: api
-      app.kubernetes.io/instance: myrelease
-  template:
-    metadata:
-      labels:
-        app.kubernetes.io/name: api
-        app.kubernetes.io/instance: myrelease
-      annotations:
-        checksum/secrets: d640145469e32fb0dfa718b71b5ffda0005a476d7ae2123160d1ac54954c65d7
-        checksum/config-proxy: c63ffa905b34eba0ac7e45ff0366f9087e7dfc12a3b121c41e9ce24184d88ce1
-        prometheus.io/scrape: 'true'
-        prometheus.io/port: '9101'
-    spec:
-      
-      serviceAccountName: default
-      securityContext:
-        {}
-      initContainers:
-        - name: waitfordb
-          image: "postgres:9.6-alpine"
-          imagePullPolicy: Always
-          command: ['sh', '-c', 'until pg_isready -t 5; do echo WaitingDB; done;']
-          env:
-          - name: PGHOST
-            value: "myrelease-postgresql"
-          - name: PGPORT
-            value: "5432"
-      containers:
-        
-        - name: proxy
-          image: "haproxy:2.2-alpine"
-          imagePullPolicy: Always
-          ports:
-            - name: http
-              containerPort: 9090
-            - name: metrics
-              containerPort: 9101
-          volumeMounts:
-          - mountPath: /usr/local/etc/haproxy
-            readOnly: true
-            name: config-proxy
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh","-c","sleep 30;"]
-          resources:
-            {}
-        - name: api
-          securityContext:
-            {}
-          image: "adevinta/vulcan-api:latest"
-          imagePullPolicy: Always
-          env:
-          - name: PORT
-            value: "8080"
-          - name: COOKIE_DOMAIN
-            value: "vulcan.local"
-          - name: PG_HOST
-            value: "myrelease-postgresql"
-          - name: PG_NAME
-            value: "api"
-          - name: PG_USER
-            value: "postgres"
-          - name: PG_PORT
-            value: "5432"
-          - name: PG_SSLMODE
-            value: "disable"
-          - name: LOG_LEVEL
-            value: "INFO"
-          - name: SAML_MEATADATA
-            value: "https://okta/app/TBD/sso/saml/metadata"
-          - name: SAML_ISSUER
-            value: "http://okta/TBD"
-          - name: SAML_CALLBACK
-            value: "https://www.vulcan.local/api/v1/login/callback"
-          - name: SAML_TRUSTED_DOMAINS
-            value: "[\"www.vulcan.local\"]"
-          - name: DEFAULT_OWNERS
-            value: "[]"
-          - name: SCANENGINE_URL
-            value: "http://myrelease-scanengine/v1/"
-          - name: SCHEDULER_URL
-            value: "http://myrelease-crontinuous/"
-          - name: SQS_QUEUE_ARN
-            value: "arn:aws:sqs:local:012345678900:VulcanK8SAPIScans"
-          - name: REPORTS_SNS_ARN
-            value: "arn:aws:sns:local:012345678900:VulcanK8SReportsGen"
-          - name: REPORTS_API_URL
-            value: "http://myrelease-reportsgenerator/"
-          - name: SCAN_REDIRECT_URL
-            value: ""
-          - name: VULCAN_UI_URL
-            value: ""
-          - name: PERSISTENCE_HOST
-            value: "myrelease-persistence"
-          - name: VULNERABILITYDB_URL
-            value: "http://myrelease-vulndbapi/"
-          - name: AWSCATALOGUE_KIND
-            value: "None"
-          - name: AWSCATALOGUE_URL
-            value: "http://catalogue.example.com"
-          - name: AWSCATALOGUE_RETRIES
-            value: "1"
-          - name: AWSCATALOGUE_RETRY_INTERVAL
-            value: "2"
-          - name: AWS_SNS_ENDPOINT
-            value: "http://myrelease-goaws"
-          - name: AWS_SQS_ENDPOINT
-            value: "http://myrelease-goaws"
-          - name: AWS_S3_ENDPOINT
-            value: "http://myrelease-minio"
-          - name: PATH_STYLE
-            value: "true"
-          - name: AWS_S3_REGION
-            value: "local"
-          - name: AWS_ACCESS_KEY_ID
-            valueFrom:
-              secretKeyRef:
-                name: "myrelease-minio"
-                key: access-key
-          - name: AWS_SECRET_ACCESS_KEY
-            valueFrom:
-              secretKeyRef:
-                name: "myrelease-minio"
-                key: secret-key
-          
-          envFrom:
-          - secretRef:
-              name: myrelease-api
-          ports:
-            - name: app
-              containerPort: 8080
-              protocol: TCP
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh","-c","sleep 30;"]
-          livenessProbe:
-            httpGet:
-              path: /api/v1/healthcheck
-              port: 8080
-            initialDelaySeconds: 10
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 10
-          readinessProbe:
-            httpGet:
-              path: /api/v1/healthcheck
-              port: 8080
-            initialDelaySeconds: 10
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 5
-          resources:
-            {}
-      volumes:
-      - name: config-proxy
-        configMap:
-          name: myrelease-api-proxy
 ---
 # Source: vulcan/charts/crontinuous/templates/deployment.yaml
 apiVersion: apps/v1
@@ -2228,6 +2064,184 @@ spec:
         configMap:
           name: myrelease-vulndbapi-proxy
 ---
+# Source: vulcan/templates/api/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myrelease-vulcan-api
+  labels:
+    helm.sh/chart: vulcan-0.2.0
+    app.kubernetes.io/name: vulcan
+    app.kubernetes.io/instance: myrelease
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: api
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: vulcan
+      app.kubernetes.io/instance: myrelease
+      app.kubernetes.io/component: api
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: vulcan
+        app.kubernetes.io/instance: myrelease
+        app.kubernetes.io/component: api
+      annotations:
+        checksum/secrets: eaaa7366b71fec2bbab5dafef5d250aebbda1d287d189d4a0fa8c77363922cfa
+        checksum/config-proxy: 89cc41cd8e71243b6fc70328d3aac603c76f92eaf8b32c67f045f54d10a977cd
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '9101'
+    spec:
+      
+      securityContext:
+        {}
+      initContainers:
+        - name: waitfordb
+          image: "postgres:9.6-alpine"
+          imagePullPolicy: Always
+          command: ['sh', '-c', 'until pg_isready -t 5; do echo WaitingDB; done;']
+          env:
+          - name: PGHOST
+            value: "myrelease-postgresql"
+          - name: PGPORT
+            value: ""
+      containers:
+        
+        - name: proxy
+          image: "haproxy:2.2-alpine"
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 9090
+            - name: metrics
+              containerPort: 9101
+          volumeMounts:
+          - mountPath: /usr/local/etc/haproxy
+            readOnly: true
+            name: config-proxy
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","sleep 30;"]
+          resources:
+            {}
+        - name: api
+          securityContext:
+            {}
+          image: "adevinta/vulcan-api:latest"
+          imagePullPolicy: Always
+          env:
+          - name: PORT
+            value: "8080"
+          - name: PG_HOST
+            value: "myrelease-postgresql"
+          - name: PG_NAME
+            value: "api"
+          - name: PG_USER
+            value: "postgres"
+          - name: PG_PORT
+            value: ""
+          - name: PG_SSLMODE
+            value: "disable"
+          - name: LOG_LEVEL
+            value: ""
+          - name: COOKIE_DOMAIN
+            value: "vulcan.local"
+          - name: SAML_MEATADATA
+            value: "https://okta/app/TBD/sso/saml/metadata"
+          - name: SAML_ISSUER
+            value: "http://okta/TBD"
+          - name: SAML_CALLBACK
+            value: "https://www.vulcan.local/api/v1/login/callback"
+          - name: SAML_TRUSTED_DOMAINS
+            value: "[\"www.vulcan.local\"]"
+          - name: DEFAULT_OWNERS
+            value: "[]"
+          - name: SCANENGINE_URL
+            value: "http://myrelease-scanengine/v1/"
+          - name: SCHEDULER_URL
+            value: "http://myrelease-crontinuous/"
+          - name: SQS_QUEUE_ARN
+            value: "arn:aws:sqs:local:012345678900:VulcanK8SAPIScans"
+          - name: REPORTS_SNS_ARN
+            value: "arn:aws:sns:local:012345678900:VulcanK8SReportsGen"
+          - name: REPORTS_API_URL
+            value: "http://myrelease-reportsgenerator/"
+          - name: SCAN_REDIRECT_URL
+            value: ""
+          - name: VULCAN_UI_URL
+            value: ""
+          - name: PERSISTENCE_HOST
+            value: "myrelease-persistence"
+          - name: VULNERABILITYDB_URL
+            value: "http://myrelease-vulndbapi/"
+          - name: AWSCATALOGUE_KIND
+            value: "None"
+          - name: AWSCATALOGUE_URL
+            value: "http://catalogue.example.com"
+          - name: AWSCATALOGUE_RETRIES
+            value: "1"
+          - name: AWSCATALOGUE_RETRY_INTERVAL
+            value: "2"
+          - name: AWS_SNS_ENDPOINT
+            value: "http://myrelease-goaws"
+          - name: AWS_SQS_ENDPOINT
+            value: "http://myrelease-goaws"
+          - name: AWS_S3_ENDPOINT
+            value: "http://myrelease-minio"
+          - name: PATH_STYLE
+            value: "true"
+          - name: AWS_S3_REGION
+            value: "local"
+          - name: AWS_ACCESS_KEY_ID
+            valueFrom:
+              secretKeyRef:
+                name: "myrelease-minio"
+                key: access-key
+          - name: AWS_SECRET_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: "myrelease-minio"
+                key: secret-key
+          
+          envFrom:
+          - secretRef:
+              name: myrelease-vulcan-api
+          ports:
+            - name: app
+              containerPort: 8080
+              protocol: TCP
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","sleep 30;"]
+          livenessProbe:
+            httpGet:
+              path: /api/v1/healthcheck
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 10
+          readinessProbe:
+            httpGet:
+              path: /api/v1/healthcheck
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 5
+          resources:
+            {}
+      volumes:
+      - name: config-proxy
+        configMap:
+          name: myrelease-vulcan-api-proxy
+---
 # Source: vulcan/templates/persistence/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -2958,33 +2972,6 @@ spec:
         - name: data
           emptyDir: {}
 ---
-# Source: vulcan/charts/api/templates/ingress.yaml
-apiVersion: networking.k8s.io/v1beta1
-kind: Ingress
-metadata:
-  name: myrelease-api
-  labels:
-    app.kubernetes.io/name: api
-    helm.sh/chart: api-0.2.0
-    app.kubernetes.io/instance: myrelease
-    app.kubernetes.io/version: "1.0"
-    app.kubernetes.io/managed-by: Helm
-  annotations:
-    nginx.ingress.kubernetes.io/proxy-body-size: 8m
-spec:
-  tls:
-    - hosts:
-        - "api.vulcan.local"
-      secretName: vulcan-api-tls
-  rules:
-    - host: "www.vulcan.local"
-      http:
-        paths:
-          - path: /api
-            backend:
-              serviceName: myrelease-api
-              servicePort: 80
----
 # Source: vulcan/charts/insights/templates/ingress.yaml
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
@@ -3066,6 +3053,34 @@ spec:
           - path: /
             backend:
               serviceName: myrelease-vulndbapi
+              servicePort: 80
+---
+# Source: vulcan/templates/api/hpa.yaml
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: myrelease-vulcan-api
+  labels:
+    helm.sh/chart: vulcan-0.2.0
+    app.kubernetes.io/name: vulcan
+    app.kubernetes.io/instance: myrelease
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: api
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: 8m
+spec:
+  tls:
+    - hosts:
+        - "api.vulcan.local"
+      secretName: vulcan-api-tls
+  rules:
+    - host: "www.vulcan.local"
+      http:
+        paths:
+          - path: /api
+            backend:
+              serviceName: myrelease-vulcan-api
               servicePort: 80
 ---
 # Source: vulcan/templates/persistence/hpa.yaml

@@ -335,17 +335,42 @@ stream:
 
 
 api:
-  <<: *common
+  enabled: true
+  name: api
+  <<: *comp
+
+  image:
+    repository: adevinta/vulcan-api
+    tag: latest
+    pullPolicy: Always
+
+  waitfordb:
+    image:
+      repository: postgres
+      tag: 9.6-alpine
+
   infra:
     sqs: true
     sns: true
     s3: true
+
   lifecycle:
     preStopSleep: 30
+
+  livenessProbe:
+    <<: *comp-livenessProbe
+    path: /api/v1/healthcheck
+
+  readinessProbe:
+    <<: *comp-readynessProbe
+    path: /api/v1/healthcheck
+
   db:
     <<: *db
     name: api
+
   conf:
+    debug: "false"
     bucketReports: reports
     bucketLogs: logs
     s3PrivateBucket: insights
@@ -354,8 +379,37 @@ api:
     queueName: VulcanK8SAPIScans
     reports:
       snsArn: arn:aws:sns:local:012345678900:VulcanK8SReportsGen
+      redirectUrl:
+      vulcanUIUrl:
+    secretKey: TBDTBD
+    cookieDomain:     # default .Values.global.domain
+    saml:
+      metadata: https://okta/app/TBD/sso/saml/metadata
+      issuer: http://okta/TBD
+      callback: # https://vulcan-api/api/v1/login/callback
+      trustedDomains: '[]'  # '["vulcan-api"]'
+    log:
+      level: INFO
+    defaultOwners: '[]'  # '["owner1","owner2"]'
+    vulndbapiUrl: # http://vulnerabilitydbapi
+    persistenceHost:
+    crontinuousUrl:
+    reportsgeneratorUrl:
+    scanengineUrl:
+    apiHostname:
+    awscatalogue:
+      kind: None
+      url: http://catalogue.example.com
+      key: key
+      retries: 1
+      retry_interval: 2
+
+  # extraEnv:
+  #   FOO: BAR
+
   ingress:
     path: /api
+
 
 crontinuous:
   <<: *common

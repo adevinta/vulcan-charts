@@ -1,26 +1,26 @@
-{{- $c := (dict "comp" .Values.scanengine "context" $) -}}
+{{- $c := (dict "comp" .Values.api "context" $) -}}
 {{- if $c.comp.enabled }}
 {{- include "comp-common-manifests" $c }}
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "scanengine.name" . }}
+  name: {{ include "api.name" . }}
   labels: {{- include "vulcan.labels" . | nindent 4 }}
-    app.kubernetes.io/component: scanengine
+    app.kubernetes.io/component: api
 spec:
   {{- if kindIs "int64" $c.comp.replicaCount }}
   replicas: {{ $c.comp.replicaCount }}
   {{- end }}
   selector:
     matchLabels: {{- include "vulcan.selectorLabels" . | nindent 6 }}
-      app.kubernetes.io/component: scanengine
+      app.kubernetes.io/component: api
   template:
     metadata:
       labels: {{- include "vulcan.selectorLabels" . | nindent 8 }}
-        app.kubernetes.io/component: scanengine
+        app.kubernetes.io/component: api
       annotations:
-        checksum/secrets: {{ include (print $.Template.BasePath "/scanengine/secrets.yaml") . | sha256sum }}
+        checksum/secrets: {{ include (print $.Template.BasePath "/api/secrets.yaml") . | sha256sum }}
         {{- include "comp-common-annotations" $c | nindent 8 }}
         {{- with $c.comp.annotations }}
           {{- toYaml . | nindent 8 }}
@@ -69,26 +69,44 @@ spec:
           {{- end }}
           - name: LOG_LEVEL
             value: "{{ $c.comp.conf.logLevel }}"
+          - name: COOKIE_DOMAIN
+            value: "{{ $c.comp.conf.cookieDomain | default (include "domain" .) }}"
+          - name: SAML_MEATADATA
+            value: "{{ $c.comp.conf.saml.metadata }}"
+          - name: SAML_ISSUER
+            value: "{{ $c.comp.conf.saml.issuer }}"
+          - name: SAML_CALLBACK
+            value: "{{ $c.comp.conf.saml.callback }}"
+          - name: SAML_TRUSTED_DOMAINS
+            value: {{ $c.comp.conf.saml.trustedDomains | quote }}
+          - name: DEFAULT_OWNERS
+            value: {{ $c.comp.conf.defaultOwners | quote }}
+          - name: SCANENGINE_URL
+            value: "{{ $c.comp.conf.scanengineUrl | default ( printf "%s/v1/" (include "scanengineUrl" .) ) }}"
+          - name: SCHEDULER_URL
+            value: "{{ $c.comp.conf.schedulerUrl | default (include "crontinuousUrl" .) }}"
+          - name: SQS_QUEUE_ARN
+            value: "{{ $c.comp.conf.queueArn }}"
+          - name: REPORTS_SNS_ARN
+            value: "{{ $c.comp.conf.reports.snsArn }}"
+          - name: REPORTS_API_URL
+            value: "{{ $c.comp.conf.reports.apiUrl | default (include "reportsgeneratorUrl" .) }}"
+          - name: SCAN_REDIRECT_URL
+            value: "{{ $c.comp.conf.reports.redirectUrl }}"
+          - name: VULCAN_UI_URL
+            value: "{{ $c.comp.conf.reports.vulcanUIUrl }}"
           - name: PERSISTENCE_HOST
             value: "{{ $c.comp.conf.persistenceHost | default  (include "persistenceHost" .) }}"
-          - name: CHECKS_SQS_ARN
-            value: "{{ $c.comp.conf.queueArn }}"
-          - name: "SCANS_SNS_ARN"
-            value: "{{ $c.comp.conf.scansSNS.topicArn }}"
-          - name: "CHECKS_SNS_ARN"
-            value: "{{ $c.comp.conf.checksSNS.topicArn }}"
-          - name: "STREAM_URL"
-            value: "{{ $c.comp.conf.streamUrl | default  (include "streamUrl" .) }}"
-          - name: "CHECKS_CREATOR_WORKERS"
-            value: "{{ $c.comp.conf.checkCreator.numOfWorkers }}"
-          - name: "CHECKS_CREATOR_PERIOD"
-            value: "{{ $c.comp.conf.checkCreator.period }}"
-          - name: "QUEUES_DEFAULT_ARN"
-            value: "{{ $c.comp.conf.queues.default.arn }}"
-          - name: "QUEUES_NESSUS_ARN"
-            value: "{{ $c.comp.conf.queues.nessus.arn }}"
-          - name: "QUEUES_NESSUS_CHECKTYPES"
-            value: {{ $c.comp.conf.queues.nessus.checktypes | quote }}
+          - name: VULNERABILITYDB_URL
+            value: "{{ $c.comp.conf.vulndbapiUrl | default  (include "vulndbapiUrl" .) }}"
+          - name: AWSCATALOGUE_KIND
+            value: "{{ $c.comp.conf.awscatalogue.kind }}"
+          - name: AWSCATALOGUE_URL
+            value: "{{ $c.comp.conf.awscatalogue.url }}"
+          - name: AWSCATALOGUE_RETRIES
+            value: "{{ $c.comp.conf.awscatalogue.retries }}"
+          - name: AWSCATALOGUE_RETRY_INTERVAL
+            value: "{{ $c.comp.conf.awscatalogue.retry_interval}}"
         {{- include "comp-common-envs" $c | nindent 10 }}
         {{- range $name, $value := $c.comp.extraEnv }}
           - name: {{ $name }}
@@ -96,7 +114,7 @@ spec:
         {{- end }}
           envFrom:
           - secretRef:
-              name: {{ include "scanengine.name" . }}
+              name: {{ include "api.name" . }}
           ports:
             - name: {{ include "comp-common-appPortName" $c }}
               containerPort: {{ $c.comp.containerPort }}
