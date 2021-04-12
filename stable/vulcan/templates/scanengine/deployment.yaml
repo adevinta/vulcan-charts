@@ -1,26 +1,26 @@
-{{- $c := (dict "comp" .Values.persistence "context" $) -}}
+{{- $c := (dict "comp" .Values.scanengine "context" $) -}}
 {{- if $c.comp.enabled }}
 {{- include "comp-common-manifests" $c }}
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "persistence.name" . }}
+  name: {{ include "scanengine.name" . }}
   labels: {{- include "vulcan.labels" . | nindent 4 }}
-    app.kubernetes.io/component: persistence
+    app.kubernetes.io/component: scanengine
 spec:
   {{- if kindIs "int64" $c.comp.replicaCount }}
   replicas: {{ $c.comp.replicaCount }}
   {{- end }}
   selector:
     matchLabels: {{- include "vulcan.selectorLabels" . | nindent 6 }}
-      app.kubernetes.io/component: persistence
+      app.kubernetes.io/component: scanengine
   template:
     metadata:
       labels: {{- include "vulcan.selectorLabels" . | nindent 8 }}
-        app.kubernetes.io/component: persistence
+        app.kubernetes.io/component: scanengine
       annotations:
-        checksum/secrets: {{ include (print $.Template.BasePath "/persistence/secrets.yaml") . | sha256sum }}
+        checksum/secrets: {{ include (print $.Template.BasePath "/scanengine/secrets.yaml") . | sha256sum }}
         {{- include "comp-common-annotations" $c | nindent 8 }}
         {{- with $c.comp.annotations }}
           {{- toYaml . | nindent 8 }}
@@ -50,47 +50,45 @@ spec:
             {{- toYaml $c.comp.securityContext | nindent 12 }}
           image: "{{ $c.comp.image.repository }}:{{ $c.comp.image.tag }}"
           imagePullPolicy: {{ $c.comp.image.pullPolicy }}
-        {{- if $c.comp.conf.loadSQL }}
-          command: ["/app/run.sh"]
-          args: ["/conf/load.sql"]
-        {{- end }}
           env:
           - name: PORT
             value: "{{ $c.comp.containerPort }}"
-          - name: POSTGRES_DB
-            value: "{{ $c.comp.db.name }}"
-          - name: POSTGRES_HOST
+          - name: PG_HOST
             value: "{{ $c.comp.db.host | default (include "postgresqlHost" .) }}"
-          - name: POSTGRES_PORT
-            value: "{{ $c.comp.db.port }}"
-          - name: POSTGRES_USER
+          - name: PG_NAME
+            value: "{{ $c.comp.db.name }}"
+          - name: PG_USER
             value: "{{ $c.comp.db.user }}"
-          - name: POSTGRES_SSLMODE
+          - name: PG_PORT
+            value: "{{ $c.comp.db.port }}"
+          - name: PG_SSLMODE
             value: "{{ $c.comp.db.sslMode }}"
           {{- if $c.comp.db.ca }}
-          - name: POSTGRES_CA_B64
+          - name: PG_CA_B64
             value: "{{ $c.comp.db.ca | b64enc }}"
           {{- end }}
           - name: LOG_LEVEL
             value: "{{ $c.comp.conf.logLevel }}"
-          - name: STREAM_CHANNEL
-            value: "{{ $c.comp.conf.channel }}"
-          - name: REGION
-            value: "{{ $c.comp.conf.region | default (include "region" .) }}"
-          - name: SCANS_BUCKET
-            value: "{{ $c.comp.conf.s3Scans }}"
-          - name: SNS_TOPIC_ARN
-            value: "{{ $c.comp.conf.snsTopic }}"
-          - name: AWS_REGION
-            value: "{{ $c.comp.conf.region | default (include "region" .) }}"
-          - name: NESSUS_CHECK_QUEUE
-            value: "{{ $c.comp.conf.nessusCheckQueue }}"
-          - name: RAILS_MAX_THREADS
-            value: "{{ $c.comp.conf.railsMaxThreads }}"
-          - name: AWS_CREATE_CHECKS_SQS_URL
-            value: "{{ $c.comp.conf.awsCreateChecksSqsUrl | default (printf "%s/%s" (include "sqsEndpoint" .) $c.comp.conf.awsCreateChecksSqsName) }}"
-          - name: AWS_CREATE_CHECKS_WORKERS
-            value: "{{ $c.comp.conf.awsCreateChecksWorkers }}"
+          - name: PERSISTENCE_HOST
+            value: "{{ $c.comp.conf.persistenceHost | default  (include "persistenceHost" .) }}"
+          - name: CHECKS_SQS_ARN
+            value: "{{ $c.comp.conf.queueArn }}"
+          - name: "SCANS_SNS_ARN"
+            value: "{{ $c.comp.conf.scansSNS.topicArn }}"
+          - name: "CHECKS_SNS_ARN"
+            value: "{{ $c.comp.conf.checksSNS.topicArn }}"
+          - name: "STREAM_URL"
+            value: "{{ $c.comp.conf.streamUrl | default  (include "streamUrl" .) }}"
+          - name: "CHECKS_CREATOR_WORKERS"
+            value: "{{ $c.comp.conf.checkCreator.numOfWorkers }}"
+          - name: "CHECKS_CREATOR_PERIOD"
+            value: "{{ $c.comp.conf.checkCreator.period }}"
+          - name: "QUEUES_DEFAULT_ARN"
+            value: "{{ $c.comp.conf.queues.default.arn }}"
+          - name: "QUEUES_NESSUS_ARN"
+            value: "{{ $c.comp.conf.queues.nessus.arn }}"
+          - name: "QUEUES_NESSUS_CHECKTYPES"
+            value: {{ $c.comp.conf.queues.nessus.checktypes | quote }}
         {{- include "comp-common-envs" $c | nindent 10 }}
         {{- range $name, $value := $c.comp.extraEnv }}
           - name: {{ $name }}
@@ -98,16 +96,11 @@ spec:
         {{- end }}
           envFrom:
           - secretRef:
-              name: {{ include "persistence.name" . }}
+              name: {{ include "scanengine.name" . }}
           ports:
             - name: {{ include "comp-common-appPortName" $c }}
               containerPort: {{ $c.comp.containerPort }}
               protocol: TCP
-      {{- if $c.comp.conf.loadSQL }}
-          volumeMounts:
-          - name: load
-            mountPath: /conf
-      {{- end }}
           {{- include "comp-common-lifecycle" $c | nindent 10 }}
           resources:
             {{- toYaml $c.comp.resources | nindent 12 }}
@@ -116,7 +109,7 @@ spec:
       {{- if $c.comp.conf.loadSQL }}
       - name: "load"
         configMap:
-          name: {{ include "persistence.name" . }}-load
+          name: {{ include "scanengine.name" . }}-load
       {{- end }}
       {{- with $c.comp.nodeSelector }}
       nodeSelector:

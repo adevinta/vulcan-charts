@@ -34,7 +34,7 @@ spec:
         {{- toYaml $c.comp.podSecurityContext | nindent 8 }}
       containers:
         {{- include "comp-common-containers" $c | nindent 8}}
-        - name: {{ .Chart.Name }}
+        - name: {{ $c.comp.name }}
           securityContext:
             {{- toYaml $c.comp.securityContext | nindent 12 }}
           image: "{{ $c.comp.image.repository }}:{{ $c.comp.image.tag }}"

@@ -35,15 +35,11 @@ spec:
         {{- toYaml $c.comp.podSecurityContext | nindent 8 }}
       containers:
         {{- include "comp-common-containers" $c | nindent 8}}
-        - name: {{ .Chart.Name }}
+        - name: {{ $c.comp.name }}
           securityContext:
             {{- toYaml $c.comp.securityContext | nindent 12 }}
           image: "{{ $c.comp.image.repository }}:{{ $c.comp.image.tag }}"
           imagePullPolicy: {{ $c.comp.image.pullPolicy }}
-        {{- if $c.comp.conf.loadSQL }}
-          command: ["/app/run.sh"]
-          args: ["/conf/load.sql"]
-        {{- end }}
           env:
           - name: PORT
             value: "{{ $c.comp.containerPort }}"

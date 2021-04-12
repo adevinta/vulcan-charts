@@ -31,10 +31,6 @@ dependencies:
   version: 0.2.0
   repository: "file://../crontinuous"
   condition: crontinuous.enabled
-- name: scanengine
-  version: 0.2.0
-  repository: "file://../scanengine"
-  condition: scanengine.enabled
 - name: insights
   version: 0.2.0
   repository: "file://../insights"

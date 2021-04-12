@@ -367,12 +367,35 @@ crontinuous:
     crontinuousBucket: crontinuous
 
 scanengine:
-  <<: *common
+  enabled: true
+  name: scanengine
+  <<: *comp
+
+  image:
+    repository: adevinta/vulcan-scan-engine
+    tag: latest
+    pullPolicy: Always
+
+  waitfordb:
+    image:
+      repository: postgres
+      tag: 9.6-alpine
+
   lifecycle:
     preStopSleep: 30
+
+  livenessProbe:
+    <<: *comp-livenessProbe
+    path: /v1/healthcheck
+
+  readinessProbe:
+    <<: *comp-readynessProbe
+    path: /v1/healthcheck
+
   infra:
     sqs: true
     sns: true
+
   conf:
     logLevel: "error"
     queueArn: arn:aws:sqs:local:012345678900:VulcanK8SScanEngineChecks
@@ -387,10 +410,16 @@ scanengine:
       nessus:
         arn: VulcanK8SChecksTenable
         checktypes: '["vulcan-nessus"]'
+    persistenceHost:
+    streamUrl:
+    checkCreator:
+      numOfWorkers: 2
+      period: 20
 
   db:
     <<: *db
     name: scanengine
+
 
 ui:
   <<: *common
