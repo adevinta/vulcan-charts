@@ -1,15 +1,4 @@
 ---
-# Source: vulcan/charts/crontinuous/templates/secrets.yaml
-apiVersion: v1
-kind: Secret
-metadata:
-  labels:
-    name: myrelease-crontinuous
-  name: myrelease-crontinuous
-type: Opaque
-data:
-  VULCAN_TOKEN: "VEJEVEJEVEJE"
----
 # Source: vulcan/charts/metrics/templates/secrets.yaml
 apiVersion: v1
 kind: Secret
@@ -104,6 +93,22 @@ data:
   SECRET_KEY: "VEJEVEJE"
   AWSCATALOGUE_KEY: "a2V5"
 ---
+# Source: vulcan/templates/crontinuous/secrets.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: myrelease-vulcan-crontinuous
+  labels:
+    helm.sh/chart: vulcan-0.2.0
+    app.kubernetes.io/name: vulcan
+    app.kubernetes.io/instance: myrelease
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: crontinuous
+type: Opaque
+data:
+  VULCAN_TOKEN: "VEJEVEJEVEJE"
+---
 # Source: vulcan/templates/dogstatsd-secret.yaml
 apiVersion: v1
 kind: Secret
@@ -168,46 +173,6 @@ metadata:
 type: Opaque
 data:
   REDIS_PWD: "VEJE"
----
-# Source: vulcan/charts/crontinuous/templates/deployment.yaml
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  labels:
-    name: myrelease-crontinuous-proxy
-  name: myrelease-crontinuous-proxy
-data:
-  haproxy.cfg: |
-    global
-      daemon
-      maxconn 64
-      log stdout format raw daemon
-
-    defaults
-      mode http
-      timeout connect 5s
-      timeout client 25s
-      timeout server 25s
-      timeout tunnel 3600s
-      option  http-server-close
-
-    frontend http
-      bind *:9090
-      log global
-      option httplog clf
-      http-request capture req.hdr(Host) len 50
-      http-request capture req.hdr(User-Agent) len 100
-
-      default_backend app
-
-    backend app
-      server app 127.0.0.1:8080
-
-    frontend stats
-      bind *:9101
-      option http-use-htx
-      http-request use-service prometheus-exporter if { path /metrics }
-      monitor-uri /healthz
 ---
 # Source: vulcan/charts/goaws/templates/config.yaml
 apiVersion: v1
@@ -494,6 +459,51 @@ data:
       http-request use-service prometheus-exporter if { path /metrics }
       monitor-uri /healthz
 ---
+# Source: vulcan/templates/crontinuous/deployment.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: myrelease-vulcan-crontinuous-proxy
+  labels:
+    helm.sh/chart: vulcan-0.2.0
+    app.kubernetes.io/name: vulcan
+    app.kubernetes.io/instance: myrelease
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: crontinuous-proxy
+data:
+  haproxy.cfg: |
+    global
+      daemon
+      maxconn 64
+      log stdout format raw daemon
+
+    defaults
+      mode http
+      timeout connect 5s
+      timeout client 25s
+      timeout server 25s
+      timeout tunnel 3600s
+      option  http-server-close
+
+    frontend http
+      bind *:9090
+      log global
+      option httplog clf
+      http-request capture req.hdr(Host) len 50
+      http-request capture req.hdr(User-Agent) len 100
+
+      default_backend app
+
+    backend app
+      server app 127.0.0.1:8080
+
+    frontend stats
+      bind *:9101
+      option http-use-htx
+      http-request use-service prometheus-exporter if { path /metrics }
+      monitor-uri /healthz
+---
 # Source: vulcan/templates/persistence/deployment.yaml
 apiVersion: v1
 kind: ConfigMap
@@ -673,28 +683,6 @@ data:
       option http-use-htx
       http-request use-service prometheus-exporter if { path /metrics }
       monitor-uri /healthz
----
-# Source: vulcan/charts/crontinuous/templates/service.yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: myrelease-crontinuous
-  labels:
-    helm.sh/chart: crontinuous-0.2.0
-    app.kubernetes.io/name: crontinuous
-    app.kubernetes.io/instance: myrelease
-    app.kubernetes.io/version: "1.16.0"
-    app.kubernetes.io/managed-by: Helm
-spec:
-  type: ClusterIP
-  ports:
-    - port: 80
-      targetPort: http
-      protocol: TCP
-      name: http
-  selector:
-    app.kubernetes.io/name: crontinuous
-    app.kubernetes.io/instance: myrelease
 ---
 # Source: vulcan/charts/goaws/templates/service.yaml
 apiVersion: v1
@@ -932,6 +920,30 @@ spec:
       app.kubernetes.io/instance: myrelease
       app.kubernetes.io/component: api
 ---
+# Source: vulcan/templates/crontinuous/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: myrelease-vulcan-crontinuous
+  labels:
+    helm.sh/chart: vulcan-0.2.0
+    app.kubernetes.io/name: vulcan
+    app.kubernetes.io/instance: myrelease
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: crontinuous
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+      app.kubernetes.io/name: vulcan
+      app.kubernetes.io/instance: myrelease
+      app.kubernetes.io/component: crontinuous
+---
 # Source: vulcan/templates/persistence/service.yaml
 apiVersion: v1
 kind: Service
@@ -1027,135 +1039,6 @@ spec:
       app.kubernetes.io/name: vulcan
       app.kubernetes.io/instance: myrelease
       app.kubernetes.io/component: stream
----
-# Source: vulcan/charts/crontinuous/templates/deployment.yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: myrelease-crontinuous
-  labels:
-    helm.sh/chart: crontinuous-0.2.0
-    app.kubernetes.io/name: crontinuous
-    app.kubernetes.io/instance: myrelease
-    app.kubernetes.io/version: "1.16.0"
-    app.kubernetes.io/managed-by: Helm
-spec:
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: crontinuous
-      app.kubernetes.io/instance: myrelease
-  template:
-    metadata:
-      labels:
-        app.kubernetes.io/name: crontinuous
-        app.kubernetes.io/instance: myrelease
-      annotations:
-        checksum/secrets: 21116898df8432d4b458738e20e437c6b843e04e98b38b51591c0c4f5cd7d595
-        checksum/config-proxy: 0385b7eb0dc1257ae8b7ab7e7745db671aa9362fcfa9d36caf182e66ddc5de3c
-        prometheus.io/scrape: 'true'
-        prometheus.io/port: '9101'
-    spec:
-      
-      serviceAccountName: default
-      securityContext:
-        {}
-      containers:
-        
-        - name: proxy
-          image: "haproxy:2.2-alpine"
-          imagePullPolicy: Always
-          ports:
-            - name: http
-              containerPort: 9090
-            - name: metrics
-              containerPort: 9101
-          volumeMounts:
-          - mountPath: /usr/local/etc/haproxy
-            readOnly: true
-            name: config-proxy
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh","-c","sleep 30;"]
-          resources:
-            {}
-        - name: crontinuous
-          securityContext:
-            {}
-          image: "adevinta/vulcan-crontinuous:latest"
-          imagePullPolicy: Always
-          env:
-          - name: PORT
-            value: "8080"
-          - name: AWS_REGION
-            value: local
-          - name: CRONTINUOUS_BUCKET
-            value: crontinuous
-          - name: VULCAN_API
-            value: http://myrelease-api/api
-          - name: VULCAN_USER
-            value: tbd
-          - name: ENABLE_TEAMS_WHITELIST_SCAN
-            value: "false"
-          - name: TEAMS_WHITELIST_SCAN
-            value: "[\"team1\", \"team2\"]"
-          - name: ENABLE_TEAMS_WHITELIST_REPORT
-            value: "false"
-          - name: TEAMS_WHITELIST_REPORT
-            value: "[\"team3\"]"
-          
-          - name: AWS_S3_ENDPOINT
-            value: "http://myrelease-minio"
-          - name: PATH_STYLE
-            value: "true"
-          - name: AWS_S3_REGION
-            value: "local"
-          - name: AWS_ACCESS_KEY_ID
-            valueFrom:
-              secretKeyRef:
-                name: "myrelease-minio"
-                key: access-key
-          - name: AWS_SECRET_ACCESS_KEY
-            valueFrom:
-              secretKeyRef:
-                name: "myrelease-minio"
-                key: secret-key
-          
-          envFrom:
-          - secretRef:
-              name: myrelease-crontinuous
-          ports:
-            - name: app
-              containerPort: 8080
-              protocol: TCP
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh","-c","sleep 30;"]
-          livenessProbe:
-            httpGet:
-              path: /healthcheck
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 10
-          readinessProbe:
-            httpGet:
-              path: /healthcheck
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 5
-          resources:
-            {}
-      volumes:
-      - name: config-proxy
-        configMap:
-          name: myrelease-crontinuous-proxy
 ---
 # Source: vulcan/charts/goaws/templates/deployment.yaml
 apiVersion: apps/v1
@@ -2241,6 +2124,137 @@ spec:
       - name: config-proxy
         configMap:
           name: myrelease-vulcan-api-proxy
+---
+# Source: vulcan/templates/crontinuous/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myrelease-vulcan-crontinuous
+  labels:
+    helm.sh/chart: vulcan-0.2.0
+    app.kubernetes.io/name: vulcan
+    app.kubernetes.io/instance: myrelease
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: crontinuous
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: vulcan
+      app.kubernetes.io/instance: myrelease
+      app.kubernetes.io/component: crontinuous
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: vulcan
+        app.kubernetes.io/instance: myrelease
+        app.kubernetes.io/component: crontinuous
+      annotations:
+        checksum/secrets: 07522db445e2b46d05f8bb5e5ea8503b719801b1a78e400834ddef8e39744d7b
+        checksum/config-proxy: d9a903eab3d5f4fbc07d33c446f0d7a9810b41553590c8593d68f7095a2dfd0a
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '9101'
+    spec:
+      
+      securityContext:
+        {}
+      containers:
+        
+        - name: proxy
+          image: "haproxy:2.2-alpine"
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 9090
+            - name: metrics
+              containerPort: 9101
+          volumeMounts:
+          - mountPath: /usr/local/etc/haproxy
+            readOnly: true
+            name: config-proxy
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","sleep 30;"]
+          resources:
+            {}
+        - name: crontinuous
+          securityContext:
+            {}
+          image: "adevinta/vulcan-crontinuous:latest"
+          imagePullPolicy: Always
+          env:
+          - name: PORT
+            value: "8080"
+          - name: AWS_REGION
+            value: local
+          - name: CRONTINUOUS_BUCKET
+            value: crontinuous
+          - name: VULCAN_API
+            value: http://myrelease-api/api
+          - name: VULCAN_USER
+            value: tbd
+          - name: ENABLE_TEAMS_WHITELIST_SCAN
+            value: "false"
+          - name: TEAMS_WHITELIST_SCAN
+            value: "[\"team1\", \"team2\"]"
+          - name: ENABLE_TEAMS_WHITELIST_REPORT
+            value: "false"
+          - name: TEAMS_WHITELIST_REPORT
+            value: "[\"team3\"]"
+          
+          - name: AWS_S3_ENDPOINT
+            value: "http://myrelease-minio"
+          - name: PATH_STYLE
+            value: "true"
+          - name: AWS_S3_REGION
+            value: "local"
+          - name: AWS_ACCESS_KEY_ID
+            valueFrom:
+              secretKeyRef:
+                name: "myrelease-minio"
+                key: access-key
+          - name: AWS_SECRET_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: "myrelease-minio"
+                key: secret-key
+          
+          envFrom:
+          - secretRef:
+              name: myrelease-vulcan-crontinuous
+          ports:
+            - name: app
+              containerPort: 8080
+              protocol: TCP
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","sleep 30;"]
+          livenessProbe:
+            httpGet:
+              path: /healthcheck
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 10
+          readinessProbe:
+            httpGet:
+              path: /healthcheck
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 5
+          resources:
+            {}
+      volumes:
+      - name: config-proxy
+        configMap:
+          name: myrelease-vulcan-crontinuous-proxy
 ---
 # Source: vulcan/templates/persistence/deployment.yaml
 apiVersion: apps/v1

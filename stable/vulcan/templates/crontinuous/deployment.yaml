@@ -1,0 +1,91 @@
+{{- $c := (dict "comp" .Values.crontinuous "context" $) -}}
+{{- if $c.comp.enabled }}
+{{- include "comp-common-manifests" $c }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "crontinuous.name" . }}
+  labels: {{- include "vulcan.labels" . | nindent 4 }}
+    app.kubernetes.io/component: crontinuous
+spec:
+  {{- if kindIs "int64" $c.comp.replicaCount }}
+  replicas: {{ $c.comp.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels: {{- include "vulcan.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: crontinuous
+  template:
+    metadata:
+      labels: {{- include "vulcan.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: crontinuous
+      annotations:
+        checksum/secrets: {{ include (print $.Template.BasePath "/crontinuous/secrets.yaml") . | sha256sum }}
+        {{- include "comp-common-annotations" $c | nindent 8 }}
+        {{- with $c.comp.annotations }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+    {{- include "comp-common-spec" $c | nindent 6 }}
+    {{- with $c.comp.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      securityContext:
+        {{- toYaml $c.comp.podSecurityContext | nindent 8 }}
+      containers:
+        {{- include "comp-common-containers" $c | nindent 8}}
+        - name: {{ $c.comp.name }}
+          securityContext:
+            {{- toYaml $c.comp.securityContext | nindent 12 }}
+          image: "{{ $c.comp.image.repository }}:{{ $c.comp.image.tag }}"
+          imagePullPolicy: {{ $c.comp.image.pullPolicy }}
+          env:
+          - name: PORT
+            value: "{{ $c.comp.containerPort }}"
+          - name: AWS_REGION
+            value: {{ $c.comp.conf.region | default (include "region" .) }}
+          - name: CRONTINUOUS_BUCKET
+            value: {{ $c.comp.conf.crontinuousBucket }}
+          - name: VULCAN_API
+            value: {{ $c.comp.conf.vulcanApi | default (include "vulcanApi" .) }}
+          - name: VULCAN_USER
+            value: {{ $c.comp.conf.vulcanUser }}
+          - name: ENABLE_TEAMS_WHITELIST_SCAN
+            value: {{ $c.comp.conf.enableTeamsWhitelistScan | quote }}
+          - name: TEAMS_WHITELIST_SCAN
+            value: {{ $c.comp.conf.teamsWhitelistScan | quote}}
+          - name: ENABLE_TEAMS_WHITELIST_REPORT
+            value: {{ $c.comp.conf.enableTeamsWhitelistReport | quote }}
+          - name: TEAMS_WHITELIST_REPORT
+            value: {{ $c.comp.conf.teamsWhitelistReport | quote }}
+        {{- include "comp-common-envs" $c | nindent 10 }}
+        {{- range $name, $value := $c.comp.extraEnv }}
+          - name: {{ $name }}
+            value: {{ $value | quote }}
+        {{- end }}
+          envFrom:
+          - secretRef:
+              name: {{ include "crontinuous.name" . }}
+          ports:
+            - name: {{ include "comp-common-appPortName" $c }}
+              containerPort: {{ $c.comp.containerPort }}
+              protocol: TCP
+          {{- include "comp-common-lifecycle" $c | nindent 10 }}
+          resources:
+            {{- toYaml $c.comp.resources | nindent 12 }}
+      volumes:
+      {{- include "comp-common-volumes" $c | nindent 6}}
+      {{- with $c.comp.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with $c.comp.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with $c.comp.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+{{- end }}

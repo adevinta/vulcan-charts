@@ -23,10 +23,6 @@ version: 0.2.0
 appVersion: 1.16.0
 
 dependencies:
-- name: crontinuous
-  version: 0.2.0
-  repository: "file://../crontinuous"
-  condition: crontinuous.enabled
 - name: insights
   version: 0.2.0
   repository: "file://../insights"

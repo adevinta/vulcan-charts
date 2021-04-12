@@ -412,13 +412,42 @@ api:
 
 
 crontinuous:
-  <<: *common
+  enabled: true
+  name: crontinuous
+  <<: *comp
+
+  image:
+    repository: adevinta/vulcan-crontinuous
+    tag: latest
+    pullPolicy: Always
+
   infra:
     s3: true
+
   lifecycle:
     preStopSleep: 30
+
+  livenessProbe:
+    <<: *comp-livenessProbe
+    path: /healthcheck
+
+  readinessProbe:
+    <<: *comp-readynessProbe
+    path: /healthcheck
+
   conf:
+    region:
+    vulcanToken: TBDTBDTBD
     crontinuousBucket: crontinuous
+    vulcanUser: tbd
+    vulcanApi:  # http://host/api
+    enableTeamsWhitelistScan: "false"
+    teamsWhitelistScan: '[]'
+    enableTeamsWhitelistReport: "false"
+    teamsWhitelistReport: '[]'
+
+  # extraEnv:
+  #   FOO: BAR
 
 scanengine:
   enabled: true
