@@ -295,9 +295,31 @@ persistence:
 
 
 stream:
-  <<: *common
+  enabled: true
+  name: stream
+  <<: *comp
+
+  image:
+    repository: adevinta/vulcan-stream
+    tag: latest
+    pullPolicy: Always
+
+  waitfordb:
+    image:
+      repository: postgres
+      tag: 9.6-alpine
+
   lifecycle:
     preStopSleep: 30
+
+  livenessProbe:
+    <<: *comp-livenessProbe
+    path: /status
+
+  readinessProbe:
+    <<: *comp-readynessProbe
+    path: /status
+
   conf:
     logLevel: "DEBUG"
     redis:
@@ -307,6 +329,10 @@ stream:
       pwd: TBD
       db: 0   # default
       ttl: 0  # default
+
+  # extraEnv:
+  #   FOO: BAR
+
 
 api:
   <<: *common

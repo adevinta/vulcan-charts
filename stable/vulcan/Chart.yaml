@@ -23,10 +23,6 @@ version: 0.2.0
 appVersion: 1.16.0
 
 dependencies:
-- name: stream
-  version: 0.2.0
-  repository: "file://../stream"
-  condition: stream.enabled
 - name: api
   version: 0.2.0
   repository: "file://../api"

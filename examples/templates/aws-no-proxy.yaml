@@ -58,17 +58,6 @@ type: Opaque
 data:
   PG_PASSWORD: "cGFzc3dvcmRzY2FuZW5naW5l"
 ---
-# Source: vulcan/charts/stream/templates/secrets.yaml
-apiVersion: v1
-kind: Secret
-metadata:
-  labels:
-    name: myrelease-stream
-  name: myrelease-stream
-type: Opaque
-data:
-  REDIS_PWD: ""
----
 # Source: vulcan/charts/vulndb/templates/secrets.yaml
 apiVersion: v1
 kind: Secret
@@ -123,6 +112,22 @@ type: Opaque
 data:
   POSTGRES_PASSWORD: "cGFzc3dvcmRwZXJzaXN0ZW5jZQ=="
   SECRET_KEY_BASE: "c2VjcmV0a2V5"
+---
+# Source: vulcan/templates/stream/secrets.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: myrelease-vulcan-stream
+  labels:
+    helm.sh/chart: vulcan-0.2.0
+    app.kubernetes.io/name: vulcan
+    app.kubernetes.io/instance: myrelease
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: stream
+type: Opaque
+data:
+  REDIS_PWD: ""
 ---
 # Source: vulcan/charts/insights/templates/config-proxy.yaml
 apiVersion: v1
@@ -306,28 +311,6 @@ spec:
     app.kubernetes.io/name: scanengine
     app.kubernetes.io/instance: myrelease
 ---
-# Source: vulcan/charts/stream/templates/service.yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: myrelease-stream
-  labels:
-    app.kubernetes.io/name: stream
-    helm.sh/chart: stream-0.2.0
-    app.kubernetes.io/instance: myrelease
-    app.kubernetes.io/version: "1.0"
-    app.kubernetes.io/managed-by: Helm
-spec:
-  type: ClusterIP
-  ports:
-    - port: 80
-      targetPort: http
-      protocol: TCP
-      name: http
-  selector:
-    app.kubernetes.io/name: stream
-    app.kubernetes.io/instance: myrelease
----
 # Source: vulcan/charts/ui/templates/service.yaml
 apiVersion: v1
 kind: Service
@@ -419,6 +402,30 @@ spec:
       app.kubernetes.io/name: vulcan
       app.kubernetes.io/instance: myrelease
       app.kubernetes.io/component: results
+---
+# Source: vulcan/templates/stream/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: myrelease-vulcan-stream
+  labels:
+    helm.sh/chart: vulcan-0.2.0
+    app.kubernetes.io/name: vulcan
+    app.kubernetes.io/instance: myrelease
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: stream
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+      app.kubernetes.io/name: vulcan
+      app.kubernetes.io/instance: myrelease
+      app.kubernetes.io/component: stream
 ---
 # Source: vulcan/charts/api/templates/deployment.yaml
 apiVersion: apps/v1
@@ -1232,111 +1239,6 @@ spec:
             {}
       volumes:
 ---
-# Source: vulcan/charts/stream/templates/deployment.yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: myrelease-stream
-  labels:
-    app.kubernetes.io/name: stream
-    helm.sh/chart: stream-0.2.0
-    app.kubernetes.io/instance: myrelease
-    app.kubernetes.io/version: "1.0"
-    app.kubernetes.io/managed-by: Helm
-spec:
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: stream
-      app.kubernetes.io/instance: myrelease
-  template:
-    metadata:
-      labels:
-        app.kubernetes.io/name: stream
-        app.kubernetes.io/instance: myrelease
-      annotations:
-        checksum/secrets: 6d33bc2c3d0b7667177a3d66572784135b64d5c2c8671c32e87312701ad0dfee
-        
-        iam.amazonaws.com/role: arn:aws:iam::000000000000:role/StreamRole
-    spec:
-      
-      imagePullSecrets:
-        - name: pullsecretname
-      serviceAccountName: default
-      securityContext:
-        {}
-      containers:
-        
-        - name: dogstatsd
-          image: "datadog/dogstatsd:7.25.1"
-          envFrom:
-          - secretRef:
-              name: myrelease-dogstatsd
-          ports:
-            - containerPort: 8125
-              name: dogstatsd
-              protocol: UDP
-          resources:
-                    null
-        - name: stream
-          securityContext:
-            {}
-          image: "adevinta/vulcan-stream:tag-stream"
-          imagePullPolicy: Always
-          env:
-          - name: PORT
-            value: "8080"
-          - name: LOG_LEVEL
-            value: "DEBUG"
-          - name: REDIS_HOST
-            value: "redishost"
-          - name: REDIS_PORT
-            value: "6379"
-          - name: REDIS_USR
-            value: ""
-          - name: REDIS_DB
-            value: "0"
-          - name: REDIS_TTL
-            value: "0"
-          
-          - name: DOGSTATSD_ENABLED
-            value: "true"
-          - name: DOGSTATSD_HOST
-            value: "localhost"
-          - name: DOGSTATSD_PORT
-            value: "8125"
-          envFrom:
-          - secretRef:
-              name: myrelease-stream
-          ports:
-            - name: http
-              containerPort: 8080
-              protocol: TCP
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh","-c","sleep 30;"]
-          livenessProbe:
-            httpGet:
-              path: /status
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 10
-          readinessProbe:
-            httpGet:
-              path: /status
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 5
-          resources:
-            {}
-      volumes:
----
 # Source: vulcan/charts/ui/templates/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -1888,6 +1790,113 @@ spec:
           resources:
             {}
 ---
+# Source: vulcan/templates/stream/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myrelease-vulcan-stream
+  labels:
+    helm.sh/chart: vulcan-0.2.0
+    app.kubernetes.io/name: vulcan
+    app.kubernetes.io/instance: myrelease
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: stream
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: vulcan
+      app.kubernetes.io/instance: myrelease
+      app.kubernetes.io/component: stream
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: vulcan
+        app.kubernetes.io/instance: myrelease
+        app.kubernetes.io/component: stream
+      annotations:
+        checksum/secrets: 198b41daf085af2deea5f171019d79eafd3bf0e8e2199a7b54486f40b3f04214
+        
+        iam.amazonaws.com/role: arn:aws:iam::000000000000:role/StreamRole
+    spec:
+      
+      imagePullSecrets:
+        - name: pullsecretname
+      securityContext:
+        {}
+      containers:
+        
+        - name: dogstatsd
+          image: "datadog/dogstatsd:7.25.1"
+          envFrom:
+          - secretRef:
+              name: "myrelease-vulcan-dogstatsd"
+          ports:
+            - containerPort: 8125
+              name: dogstatsd
+              protocol: UDP
+          resources:
+                    null
+        - name: vulcan
+          securityContext:
+            {}
+          image: "adevinta/vulcan-stream:tag-stream"
+          imagePullPolicy: Always
+          env:
+          - name: PORT
+            value: "8080"
+          - name: LOG_LEVEL
+            value: "DEBUG"
+          - name: REDIS_HOST
+            value: "redishost"
+          - name: REDIS_PORT
+            value: "6379"
+          - name: REDIS_USR
+            value: ""
+          - name: REDIS_DB
+            value: "0"
+          - name: REDIS_TTL
+            value: "0"
+          
+          - name: DOGSTATSD_ENABLED
+            value: "true"
+          - name: DOGSTATSD_HOST
+            value: "localhost"
+          - name: DOGSTATSD_PORT
+            value: "8125"
+          envFrom:
+          - secretRef:
+              name: myrelease-vulcan-stream
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","sleep 30;"]
+          livenessProbe:
+            httpGet:
+              path: /status
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 10
+          readinessProbe:
+            httpGet:
+              path: /status
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 5
+          resources:
+            {}
+      volumes:
+---
 # Source: vulcan/charts/api/templates/hpa.yaml
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
@@ -2046,43 +2055,6 @@ spec:
               serviceName: myrelease-insights
               servicePort: 80
 ---
-# Source: vulcan/charts/stream/templates/ingress.yaml
-apiVersion: networking.k8s.io/v1beta1
-kind: Ingress
-metadata:
-  name: myrelease-stream
-  labels:
-    app.kubernetes.io/name: stream
-    helm.sh/chart: stream-0.2.0
-    app.kubernetes.io/instance: myrelease
-    app.kubernetes.io/version: "1.0"
-    app.kubernetes.io/managed-by: Helm
-  annotations:
-    certmanager.k8s.io/cluster-issuer: letsencrypt
-    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
-    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
-spec:
-  tls:
-    - hosts:
-        - "stream.vulcan.com"
-        - "vulcan-stream.team.cluster.com"
-      secretName: vulcan-stream-tls
-  rules:
-    - host: "stream.vulcan.com"
-      http:
-        paths:
-          - path: /
-            backend:
-              serviceName: myrelease-stream
-              servicePort: 80
-    - host: "vulcan-stream.team.cluster.com"
-      http:
-        paths:
-          - path: /
-            backend:
-              serviceName: myrelease-stream
-              servicePort: 80
----
 # Source: vulcan/charts/ui/templates/ingress.yaml
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
@@ -2190,4 +2162,42 @@ spec:
           - path: /
             backend:
               serviceName: myrelease-vulcan-results
+              servicePort: 80
+---
+# Source: vulcan/templates/stream/hpa.yaml
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: myrelease-vulcan-stream
+  labels:
+    helm.sh/chart: vulcan-0.2.0
+    app.kubernetes.io/name: vulcan
+    app.kubernetes.io/instance: myrelease
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: stream
+  annotations:
+    certmanager.k8s.io/cluster-issuer: letsencrypt
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+spec:
+  tls:
+    - hosts:
+        - "stream.vulcan.com"
+        - "vulcan-stream.team.cluster.com"
+      secretName: vulcan-stream-tls
+  rules:
+    - host: "stream.vulcan.com"
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: myrelease-vulcan-stream
+              servicePort: 80
+    - host: "vulcan-stream.team.cluster.com"
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: myrelease-vulcan-stream
               servicePort: 80
