@@ -36,18 +36,6 @@ data:
   REDIS_PASSWORD: "cmVkaXNwYXNzd29yZA=="
   VULCAN_API_TOKEN: "c3VwZXJzZWNyZXR2dWxjYW50b2tlbg=="
 ---
-# Source: vulcan/charts/persistence/templates/secrets.yaml
-apiVersion: v1
-kind: Secret
-metadata:
-  labels:
-    name: myrelease-persistence
-  name: myrelease-persistence
-type: Opaque
-data:
-  POSTGRES_PASSWORD: "cGFzc3dvcmRwZXJzaXN0ZW5jZQ=="
-  SECRET_KEY_BASE: "c2VjcmV0a2V5"
----
 # Source: vulcan/charts/reportsgenerator/templates/secrets.yaml
 apiVersion: v1
 kind: Secret
@@ -118,6 +106,23 @@ metadata:
 type: Opaque
 data:
   DD_API_KEY: "eHh4eHh4eHh4eHh4eHh4eHh4eHh4"
+---
+# Source: vulcan/templates/persistence/secrets.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: myrelease-vulcan-persistence
+  labels:
+    helm.sh/chart: vulcan-0.2.0
+    app.kubernetes.io/name: vulcan
+    app.kubernetes.io/instance: myrelease
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: persistence
+type: Opaque
+data:
+  POSTGRES_PASSWORD: "cGFzc3dvcmRwZXJzaXN0ZW5jZQ=="
+  SECRET_KEY_BASE: "c2VjcmV0a2V5"
 ---
 # Source: vulcan/charts/api/templates/deployment.yaml
 apiVersion: v1
@@ -235,46 +240,6 @@ data:
 
     backend public
       server app 127.0.0.1:8081
-
-    frontend stats
-      bind *:9101
-      option http-use-htx
-      http-request use-service prometheus-exporter if { path /metrics }
-      monitor-uri /healthz
----
-# Source: vulcan/charts/persistence/templates/deployment.yaml
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  labels:
-    name: myrelease-persistence-proxy
-  name: myrelease-persistence-proxy
-data:
-  haproxy.cfg: |
-    global
-      daemon
-      maxconn 64
-      log stdout format raw daemon
-
-    defaults
-      mode http
-      timeout connect 5s
-      timeout client 25s
-      timeout server 25s
-      timeout tunnel 3600s
-      option  http-server-close
-
-    frontend http
-      bind *:9090
-      log global
-      option httplog clf
-      http-request capture req.hdr(Host) len 50
-      http-request capture req.hdr(User-Agent) len 100
-
-      default_backend app
-
-    backend app
-      server app 127.0.0.1:8080
 
     frontend stats
       bind *:9101
@@ -502,6 +467,51 @@ data:
   custom.cfg: |
     Example file
 ---
+# Source: vulcan/templates/persistence/deployment.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: myrelease-vulcan-persistence-proxy
+  labels:
+    helm.sh/chart: vulcan-0.2.0
+    app.kubernetes.io/name: vulcan
+    app.kubernetes.io/instance: myrelease
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: persistence-proxy
+data:
+  haproxy.cfg: |
+    global
+      daemon
+      maxconn 64
+      log stdout format raw daemon
+
+    defaults
+      mode http
+      timeout connect 5s
+      timeout client 25s
+      timeout server 25s
+      timeout tunnel 3600s
+      option  http-server-close
+
+    frontend http
+      bind *:9090
+      log global
+      option httplog clf
+      http-request capture req.hdr(Host) len 50
+      http-request capture req.hdr(User-Agent) len 100
+
+      default_backend app
+
+    backend app
+      server app 127.0.0.1:8080
+
+    frontend stats
+      bind *:9101
+      option http-use-htx
+      http-request use-service prometheus-exporter if { path /metrics }
+      monitor-uri /healthz
+---
 # Source: vulcan/templates/results/deployment.yaml
 apiVersion: v1
 kind: ConfigMap
@@ -627,28 +637,6 @@ spec:
     app.kubernetes.io/name: metrics-redis
     app.kubernetes.io/instance: myrelease
 ---
-# Source: vulcan/charts/persistence/templates/service.yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: myrelease-persistence
-  labels:
-    app.kubernetes.io/name: persistence
-    helm.sh/chart: persistence-0.2.0
-    app.kubernetes.io/instance: myrelease
-    app.kubernetes.io/version: "1.0"
-    app.kubernetes.io/managed-by: Helm
-spec:
-  type: ClusterIP
-  ports:
-    - port: 80
-      targetPort: http
-      protocol: TCP
-      name: http
-  selector:
-    app.kubernetes.io/name: persistence
-    app.kubernetes.io/instance: myrelease
----
 # Source: vulcan/charts/reportsgenerator/templates/service.yaml
 apiVersion: v1
 kind: Service
@@ -758,6 +746,30 @@ spec:
   selector:
     app.kubernetes.io/name: vulndbapi
     app.kubernetes.io/instance: myrelease
+---
+# Source: vulcan/templates/persistence/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: myrelease-vulcan-persistence
+  labels:
+    helm.sh/chart: vulcan-0.2.0
+    app.kubernetes.io/name: vulcan
+    app.kubernetes.io/instance: myrelease
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: persistence
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+      app.kubernetes.io/name: vulcan
+      app.kubernetes.io/instance: myrelease
+      app.kubernetes.io/component: persistence
 ---
 # Source: vulcan/templates/results/service.yaml
 apiVersion: v1
@@ -1352,164 +1364,6 @@ spec:
         ports:
           - containerPort: 6379
             name: redis
----
-# Source: vulcan/charts/persistence/templates/deployment.yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: myrelease-persistence
-  labels:
-    app.kubernetes.io/name: persistence
-    helm.sh/chart: persistence-0.2.0
-    app.kubernetes.io/instance: myrelease
-    app.kubernetes.io/version: "1.0"
-    app.kubernetes.io/managed-by: Helm
-spec:
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: persistence
-      app.kubernetes.io/instance: myrelease
-  template:
-    metadata:
-      labels:
-        app.kubernetes.io/name: persistence
-        app.kubernetes.io/instance: myrelease
-      annotations:
-        checksum/secrets: e5380636880d32f8ed58ec54a5e94dc878414bc9ac86023db815d3456f8a618a
-        checksum/config-proxy: 660d8d20f8fb2bc0a9bb948f48554638272ed1056c58721040d9fb380976928b
-        prometheus.io/scrape: 'true'
-        prometheus.io/port: '9101'
-        iam.amazonaws.com/role: arn:aws:iam::000000000000:role/PersistenceRole
-    spec:
-      terminationGracePeriodSeconds: 60
-      imagePullSecrets:
-        - name: pullsecretname
-      serviceAccountName: default
-      securityContext:
-        {}
-      initContainers:
-        - name: waitfordb
-          image: "postgres:9.6-alpine"
-          imagePullPolicy: Always
-          command: ['sh', '-c', 'until pg_isready -t 5; do echo WaitingDB; done;']
-          env:
-          - name: PGHOST
-            value: "persistence.postgres.host"
-          - name: PGPORT
-            value: "5432"
-      containers:
-        
-        - name: dogstatsd
-          image: "datadog/dogstatsd:7.25.1"
-          envFrom:
-          - secretRef:
-              name: myrelease-dogstatsd
-          ports:
-            - containerPort: 8125
-              name: dogstatsd
-              protocol: UDP
-          resources:
-                    null
-        - name: proxy
-          image: "haproxy:2.2-alpine"
-          imagePullPolicy: Always
-          ports:
-            - name: http
-              containerPort: 9090
-            - name: metrics
-              containerPort: 9101
-          volumeMounts:
-          - mountPath: /usr/local/etc/haproxy
-            readOnly: true
-            name: config-proxy
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh","-c","sleep 30;"]
-          resources:
-            {}
-        - name: persistence
-          securityContext:
-            {}
-          image: "adevinta/vulcan-persistence:tag-persistence"
-          imagePullPolicy: Always
-          env:
-          - name: PORT
-            value: "8080"
-          - name: POSTGRES_DB
-            value: "vulcanpersistence"
-          - name: POSTGRES_HOST
-            value: "persistence.postgres.host"
-          - name: POSTGRES_PORT
-            value: "5432"
-          - name: POSTGRES_USER
-            value: "vulcan"
-          - name: POSTGRES_SSLMODE
-            value: "verify-full"
-          - name: POSTGRES_CA_B64
-            value: "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUVCakNDQXU2Z0F3SUJBZ0lKQU1jMFp6YVNVSzUxTUEwR0NTcUdTSWIzRFFFQkN3VUFNSUdQTVFzd0NRWUQKVlFRR0V3SlZVekVRTUE0R0ExVUVCd3dIVTJWaGRIUnNaVEVUTUJFR0ExVUVDQXdLVjJGemFHbHVaM1J2YmpFaQpNQ0FHQTFVRUNnd1pRVzFoZW05dUlGZGxZaUJUWlhKMmFXTmxjeXdnU1c1akxqRVRNQkVHQTFVRUN3d0tRVzFoCmVtOXVJRkpFVXpFZ01CNEdBMVVFQXd3WFFXMWhlbTl1SUZKRVV5QlNiMjkwSURJd01Ua2dRMEV3SGhjTk1Ua3cKT0RJeU1UY3dPRFV3V2hjTk1qUXdPREl5TVRjd09EVXdXakNCanpFTE1Ba0dBMVVFQmhNQ1ZWTXhFREFPQmdOVgpCQWNNQjFObFlYUjBiR1V4RXpBUkJnTlZCQWdNQ2xkaGMyaHBibWQwYjI0eElqQWdCZ05WQkFvTUdVRnRZWHB2CmJpQlhaV0lnVTJWeWRtbGpaWE1zSUVsdVl5NHhFekFSQmdOVkJBc01Da0Z0WVhwdmJpQlNSRk14SURBZUJnTlYKQkFNTUYwRnRZWHB2YmlCU1JGTWdVbTl2ZENBeU1ERTVJRU5CTUlJQklqQU5CZ2txaGtpRzl3MEJBUUVGQUFPQwpBUThBTUlJQkNnS0NBUUVBclhuRi9FNi9RaCtrdTNoUVRTS1BNaFFRbENwb1d2bkl0aHpYNk1LM3A1YTBlWEtaCm9XSWpZY05ORzZVd0pqcDRmVVhsNmdscDUzSm9ibit0V05YODhkTkgybjhEVmJwcFN3U2NWRTJMcHVMKzk0dlkKMEVZRS9YeE43c3ZLZWE4WXZscnFrVUJLeXhMeFRqaCtVL0tyR09hSHh6OXYwbDZaTmxEYnVhWnczcUlXZEQvSQo2YU5iR2VSVVZ0cE02UCtiV0lveFZsL2NhUXlsUVM2Q0VZVWsrQ3BWeUpTa29wd0pselhUMDd0TW9ETDVXZ1g5Ck8wOEtWZ0ROejlxUC9JR3RBY1JkdVJjTmlvSDNFOXY5ODFRTzF6dC9HcGIyZjhOcUFqVVVDVVp6T25pajZteDkKTWNaKzljV1g4OENSelIwdlFPRFd1WnNjZ0kwOE52TTY5Rm4yU1FJREFRQUJvMk13WVRBT0JnTlZIUThCQWY4RQpCQU1DQVFZd0R3WURWUjBUQVFIL0JBVXdBd0VCL3pBZEJnTlZIUTRFRmdRVWMxOWcyTHpMQTVqMEt4YzBMalphCnBtRC92Qjh3SHdZRFZSMGpCQmd3Rm9BVWMxOWcyTHpMQTVqMEt4YzBMalphcG1EL3ZCOHdEUVlKS29aSWh2Y04KQVFFTEJRQURnZ0VCQUhBRzdXVG15anpQUklNODVyVmorZldIc0xJdnFwdzZET2JJak1Xb2twbGlDZU1JTlpGVgp5bmZnQktzZjFFeHdidkpOellGWFc2ZGlobmd1REc5Vk1QcGkydXAvY3RRVE44dG05bkRLT3kwOHVOWm9vZk1jCk5VWnhLQ0VrVktaditJTDRvSG9lYXl0OGVndHYzdWpKTTZWMTRBc3RNUTZTd3Z3dkE5M0VQL1VnMmU0V0FYSHUKY2JJMU5BYlVnVkRxcCtEUmRmdlprZ1lLcnlqVFdkLzArMWZTOFgxYkJaVld6bDdlaXJOVm5IYlNIMlpEcE51WQowU0JkOGRqNUY2bGQzdDU4eWRaYnJUSHplN0pKT2Q4aWp5U0FwNC9raXU5VWZaV3VUUEFCekRhL0RTZHo5RGsvCnpQVzRDWFh2aExtRTAyVEE5L0hlQ3czS0VISXdpY051RWZ3PQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg=="
-          - name: LOG_LEVEL
-            value: "info"
-          - name: STREAM_CHANNEL
-            value: "events"
-          - name: REGION
-            value: "eu-west-1"
-          - name: SCANS_BUCKET
-            value: "s3-vulcan-scans"
-          - name: SNS_TOPIC_ARN
-            value: "arn:aws:sns:eu-west-1:000000000000:Checks"
-          - name: AWS_REGION
-            value: "eu-west-1"
-          - name: NESSUS_CHECK_QUEUE
-            value: "ChecksTenable"
-          - name: RAILS_MAX_THREADS
-            value: "16"
-          - name: AWS_CREATE_CHECKS_SQS_URL
-            value: "https://sqs.eu-west-1.amazonaws.com/000000000000/PersistenceChecks"
-          - name: AWS_CREATE_CHECKS_WORKERS
-            value: "10"
-          
-          - name: DOGSTATSD_ENABLED
-            value: "true"
-          - name: DOGSTATSD_HOST
-            value: "localhost"
-          - name: DOGSTATSD_PORT
-            value: "8125"
-          envFrom:
-          - secretRef:
-              name: myrelease-persistence
-          ports:
-            - name: app
-              containerPort: 8080
-              protocol: TCP
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh","-c","sleep 30;"]
-          livenessProbe:
-            httpGet:
-              path: /status
-              port: 8080
-            initialDelaySeconds: 10
-            periodSeconds: 10
-            timeoutSeconds: 5
-            successThreshold: 1
-            failureThreshold: 10
-          readinessProbe:
-            httpGet:
-              path: /status
-              port: 8080
-            initialDelaySeconds: 10
-            periodSeconds: 10
-            timeoutSeconds: 5
-            successThreshold: 1
-            failureThreshold: 5
-          resources:
-            {}
-      volumes:
-      - name: config-proxy
-        configMap:
-          name: myrelease-persistence-proxy
 ---
 # Source: vulcan/charts/reportsgenerator/templates/deployment.yaml
 apiVersion: apps/v1
@@ -2308,6 +2162,166 @@ spec:
         configMap:
           name: myrelease-vulndbapi-proxy
 ---
+# Source: vulcan/templates/persistence/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myrelease-vulcan-persistence
+  labels:
+    helm.sh/chart: vulcan-0.2.0
+    app.kubernetes.io/name: vulcan
+    app.kubernetes.io/instance: myrelease
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: persistence
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: vulcan
+      app.kubernetes.io/instance: myrelease
+      app.kubernetes.io/component: persistence
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: vulcan
+        app.kubernetes.io/instance: myrelease
+        app.kubernetes.io/component: persistence
+      annotations:
+        checksum/secrets: 49b5d652fc6f0c192dfec73a201b25e7ab20575cefa2b9510b12ae1ed8df90d4
+        checksum/config-proxy: 89a9d446cd461e0016345d9c5f6b04178fd7e14dc741c7d016d2b89fe5725e28
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '9101'
+        iam.amazonaws.com/role: arn:aws:iam::000000000000:role/PersistenceRole
+    spec:
+      terminationGracePeriodSeconds: 60
+      imagePullSecrets:
+        - name: pullsecretname
+      securityContext:
+        {}
+      initContainers:
+        - name: waitfordb
+          image: "postgres:9.6-alpine"
+          imagePullPolicy: Always
+          command: ['sh', '-c', 'until pg_isready -t 5; do echo WaitingDB; done;']
+          env:
+          - name: PGHOST
+            value: "persistence.postgres.host"
+          - name: PGPORT
+            value: "5432"
+      containers:
+        
+        - name: dogstatsd
+          image: "datadog/dogstatsd:7.25.1"
+          envFrom:
+          - secretRef:
+              name: "myrelease-vulcan-dogstatsd"
+          ports:
+            - containerPort: 8125
+              name: dogstatsd
+              protocol: UDP
+          resources:
+                    null
+        - name: proxy
+          image: "haproxy:2.2-alpine"
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 9090
+            - name: metrics
+              containerPort: 9101
+          volumeMounts:
+          - mountPath: /usr/local/etc/haproxy
+            readOnly: true
+            name: config-proxy
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","sleep 30;"]
+          resources:
+            {}
+        - name: vulcan
+          securityContext:
+            {}
+          image: "adevinta/vulcan-persistence:tag-persistence"
+          imagePullPolicy: Always
+          env:
+          - name: PORT
+            value: "8080"
+          - name: POSTGRES_DB
+            value: "vulcanpersistence"
+          - name: POSTGRES_HOST
+            value: "persistence.postgres.host"
+          - name: POSTGRES_PORT
+            value: "5432"
+          - name: POSTGRES_USER
+            value: "vulcan"
+          - name: POSTGRES_SSLMODE
+            value: "verify-full"
+          - name: POSTGRES_CA_B64
+            value: "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUVCakNDQXU2Z0F3SUJBZ0lKQU1jMFp6YVNVSzUxTUEwR0NTcUdTSWIzRFFFQkN3VUFNSUdQTVFzd0NRWUQKVlFRR0V3SlZVekVRTUE0R0ExVUVCd3dIVTJWaGRIUnNaVEVUTUJFR0ExVUVDQXdLVjJGemFHbHVaM1J2YmpFaQpNQ0FHQTFVRUNnd1pRVzFoZW05dUlGZGxZaUJUWlhKMmFXTmxjeXdnU1c1akxqRVRNQkVHQTFVRUN3d0tRVzFoCmVtOXVJRkpFVXpFZ01CNEdBMVVFQXd3WFFXMWhlbTl1SUZKRVV5QlNiMjkwSURJd01Ua2dRMEV3SGhjTk1Ua3cKT0RJeU1UY3dPRFV3V2hjTk1qUXdPREl5TVRjd09EVXdXakNCanpFTE1Ba0dBMVVFQmhNQ1ZWTXhFREFPQmdOVgpCQWNNQjFObFlYUjBiR1V4RXpBUkJnTlZCQWdNQ2xkaGMyaHBibWQwYjI0eElqQWdCZ05WQkFvTUdVRnRZWHB2CmJpQlhaV0lnVTJWeWRtbGpaWE1zSUVsdVl5NHhFekFSQmdOVkJBc01Da0Z0WVhwdmJpQlNSRk14SURBZUJnTlYKQkFNTUYwRnRZWHB2YmlCU1JGTWdVbTl2ZENBeU1ERTVJRU5CTUlJQklqQU5CZ2txaGtpRzl3MEJBUUVGQUFPQwpBUThBTUlJQkNnS0NBUUVBclhuRi9FNi9RaCtrdTNoUVRTS1BNaFFRbENwb1d2bkl0aHpYNk1LM3A1YTBlWEtaCm9XSWpZY05ORzZVd0pqcDRmVVhsNmdscDUzSm9ibit0V05YODhkTkgybjhEVmJwcFN3U2NWRTJMcHVMKzk0dlkKMEVZRS9YeE43c3ZLZWE4WXZscnFrVUJLeXhMeFRqaCtVL0tyR09hSHh6OXYwbDZaTmxEYnVhWnczcUlXZEQvSQo2YU5iR2VSVVZ0cE02UCtiV0lveFZsL2NhUXlsUVM2Q0VZVWsrQ3BWeUpTa29wd0pselhUMDd0TW9ETDVXZ1g5Ck8wOEtWZ0ROejlxUC9JR3RBY1JkdVJjTmlvSDNFOXY5ODFRTzF6dC9HcGIyZjhOcUFqVVVDVVp6T25pajZteDkKTWNaKzljV1g4OENSelIwdlFPRFd1WnNjZ0kwOE52TTY5Rm4yU1FJREFRQUJvMk13WVRBT0JnTlZIUThCQWY4RQpCQU1DQVFZd0R3WURWUjBUQVFIL0JBVXdBd0VCL3pBZEJnTlZIUTRFRmdRVWMxOWcyTHpMQTVqMEt4YzBMalphCnBtRC92Qjh3SHdZRFZSMGpCQmd3Rm9BVWMxOWcyTHpMQTVqMEt4YzBMalphcG1EL3ZCOHdEUVlKS29aSWh2Y04KQVFFTEJRQURnZ0VCQUhBRzdXVG15anpQUklNODVyVmorZldIc0xJdnFwdzZET2JJak1Xb2twbGlDZU1JTlpGVgp5bmZnQktzZjFFeHdidkpOellGWFc2ZGlobmd1REc5Vk1QcGkydXAvY3RRVE44dG05bkRLT3kwOHVOWm9vZk1jCk5VWnhLQ0VrVktaditJTDRvSG9lYXl0OGVndHYzdWpKTTZWMTRBc3RNUTZTd3Z3dkE5M0VQL1VnMmU0V0FYSHUKY2JJMU5BYlVnVkRxcCtEUmRmdlprZ1lLcnlqVFdkLzArMWZTOFgxYkJaVld6bDdlaXJOVm5IYlNIMlpEcE51WQowU0JkOGRqNUY2bGQzdDU4eWRaYnJUSHplN0pKT2Q4aWp5U0FwNC9raXU5VWZaV3VUUEFCekRhL0RTZHo5RGsvCnpQVzRDWFh2aExtRTAyVEE5L0hlQ3czS0VISXdpY051RWZ3PQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg=="
+          - name: LOG_LEVEL
+            value: "info"
+          - name: STREAM_CHANNEL
+            value: "events"
+          - name: REGION
+            value: "eu-west-1"
+          - name: SCANS_BUCKET
+            value: "s3-vulcan-scans"
+          - name: SNS_TOPIC_ARN
+            value: "arn:aws:sns:eu-west-1:000000000000:Checks"
+          - name: AWS_REGION
+            value: "eu-west-1"
+          - name: NESSUS_CHECK_QUEUE
+            value: "ChecksTenable"
+          - name: RAILS_MAX_THREADS
+            value: "16"
+          - name: AWS_CREATE_CHECKS_SQS_URL
+            value: "https://sqs.eu-west-1.amazonaws.com/000000000000/PersistenceChecks"
+          - name: AWS_CREATE_CHECKS_WORKERS
+            value: "10"
+          
+          - name: DOGSTATSD_ENABLED
+            value: "true"
+          - name: DOGSTATSD_HOST
+            value: "localhost"
+          - name: DOGSTATSD_PORT
+            value: "8125"
+          envFrom:
+          - secretRef:
+              name: myrelease-vulcan-persistence
+          ports:
+            - name: app
+              containerPort: 8080
+              protocol: TCP
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","sleep 30;"]
+          livenessProbe:
+            httpGet:
+              path: /status
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 10
+          readinessProbe:
+            httpGet:
+              path: /status
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 5
+          resources:
+            {}
+      volumes:
+      - name: config-proxy
+        configMap:
+          name: myrelease-vulcan-persistence-proxy
+---
 # Source: vulcan/templates/results/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -2496,23 +2510,6 @@ spec:
   maxReplicas: 5
   targetCPUUtilizationPercentage: 50
 ---
-# Source: vulcan/charts/persistence/templates/hpa.yaml
-apiVersion: autoscaling/v1
-kind: HorizontalPodAutoscaler
-metadata:
-  labels:
-    app.kubernetes.io/name: persistence
-    app.kubernetes.io/instance: myrelease
-  name: myrelease-persistence
-spec:
-  scaleTargetRef:
-    apiVersion: extensions/v1beta1
-    kind: Deployment
-    name: myrelease-persistence
-  minReplicas: 1
-  maxReplicas: 5
-  targetCPUUtilizationPercentage: 50
----
 # Source: vulcan/charts/scanengine/templates/hpa.yaml
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
@@ -2526,6 +2523,27 @@ spec:
     apiVersion: extensions/v1beta1
     kind: Deployment
     name: myrelease-scanengine
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 50
+---
+# Source: vulcan/templates/persistence/ingress.yaml
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: myrelease-vulcan-persistence
+  labels:
+    helm.sh/chart: vulcan-0.2.0
+    app.kubernetes.io/name: vulcan
+    app.kubernetes.io/instance: myrelease
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: persistence
+spec:
+  scaleTargetRef:
+    apiVersion: extensions/v1beta1
+    kind: Deployment
+    name: vulcan-persistence
   minReplicas: 1
   maxReplicas: 5
   targetCPUUtilizationPercentage: 50
@@ -2633,42 +2651,6 @@ spec:
               serviceName: myrelease-insights
               servicePort: 80
 ---
-# Source: vulcan/charts/persistence/templates/ingress.yaml
-apiVersion: networking.k8s.io/v1beta1
-kind: Ingress
-metadata:
-  name: myrelease-persistence
-  labels:
-    app.kubernetes.io/name: persistence
-    helm.sh/chart: persistence-0.2.0
-    app.kubernetes.io/instance: myrelease
-    app.kubernetes.io/version: "1.0"
-    app.kubernetes.io/managed-by: Helm
-  annotations:
-    certmanager.k8s.io/cluster-issuer: letsencrypt
-    nginx.ingress.kubernetes.io/proxy-body-size: 8m
-spec:
-  tls:
-    - hosts:
-        - "persistence.vulcan.com"
-        - "vulcan-persistence.team.cluster.com"
-      secretName: vulcan-persistence-tls
-  rules:
-    - host: "persistence.vulcan.com"
-      http:
-        paths:
-          - path: /
-            backend:
-              serviceName: myrelease-persistence
-              servicePort: 80
-    - host: "vulcan-persistence.team.cluster.com"
-      http:
-        paths:
-          - path: /
-            backend:
-              serviceName: myrelease-persistence
-              servicePort: 80
----
 # Source: vulcan/charts/stream/templates/ingress.yaml
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
@@ -2739,6 +2721,43 @@ spec:
           - path: /
             backend:
               serviceName: myrelease-ui
+              servicePort: 80
+---
+# Source: vulcan/templates/persistence/hpa.yaml
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: myrelease-vulcan-persistence
+  labels:
+    helm.sh/chart: vulcan-0.2.0
+    app.kubernetes.io/name: vulcan
+    app.kubernetes.io/instance: myrelease
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: persistence
+  annotations:
+    certmanager.k8s.io/cluster-issuer: letsencrypt
+    nginx.ingress.kubernetes.io/proxy-body-size: 8m
+spec:
+  tls:
+    - hosts:
+        - "persistence.vulcan.com"
+        - "vulcan-persistence.team.cluster.com"
+      secretName: vulcan-persistence-tls
+  rules:
+    - host: "persistence.vulcan.com"
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: myrelease-vulcan-persistence
+              servicePort: 80
+    - host: "vulcan-persistence.team.cluster.com"
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: myrelease-vulcan-persistence
               servicePort: 80
 ---
 # Source: vulcan/templates/results/hpa.yaml

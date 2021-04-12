@@ -3,12 +3,12 @@
 {{- if .comp.infra -}}
 {{- if and  .comp.infra.sns .context.Values.global.sns.enabled -}}
 - name: AWS_SNS_ENDPOINT
-  value: "{{ include "snsEndpoint" . }}"
+  value: "{{ include "snsEndpoint" .context }}"
 {{- $auth = 1 -}}
 {{- end -}}
 {{- if and .comp.infra.sqs .context.Values.global.sqs.enabled }}
 - name: AWS_SQS_ENDPOINT
-  value: "{{ include "sqsEndpoint" . }}"
+  value: "{{ include "sqsEndpoint" .context }}"
 {{- $auth = 1 -}}
 {{- end -}}
 {{- if and .comp.infra.s3 .context.Values.global.minio.enabled }}

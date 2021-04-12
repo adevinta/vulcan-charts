@@ -242,18 +242,42 @@ results:
 
 
 persistence:
-  <<: *common
+  enabled: true
+  name: persistence
+  <<: *comp
+
+  image:
+    repository: adevinta/vulcan-persistence
+    tag: latest
+    pullPolicy: Always
+
+  waitfordb:
+    image:
+      repository: postgres
+      tag: 9.6-alpine
+
   lifecycle:
     preStopSleep: 30
     # preStopCommand:  '["/bin/sh", "-c", "/app/stop.sh 30"]'
   terminationGracePeriodSeconds: 60
+
+  livenessProbe:
+    <<: *comp-livenessProbe
+    path: /status
+
+  readinessProbe:
+    <<: *comp-readynessProbe
+    path: /status
+
   infra:
     s3: true
     sns: true
     sqs: true
+
   db:
     <<: *db
     name: persistence
+
   conf:
     logLevel: warn
     snsTopic: arn:aws:sns:local:012345678900:VulcanK8SChecks
@@ -261,6 +285,14 @@ persistence:
     s3Scans: scans
     # awsCreateChecksSqsUrl: https://localhost/012345678900/VulcanK8SPersistenceChecks
     awsCreateChecksSqsName: VulcanK8SPersistenceChecks
+    secretKeyBase: TBDTBD
+    channel: events
+    railsMaxThreads: 4
+    awsCreateChecksWorkers: 4
+
+  # extraEnv:
+  #   FOO: BAR
+
 
 stream:
   <<: *common

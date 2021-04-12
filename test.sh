@@ -2,6 +2,7 @@
 
 if [ -n "$1" ]
 then
+  rm -f ./stable/vulcan/charts/*.tgz
   find ./stable -not -name vulcan -maxdepth 1 -mindepth 1 -type d -print -exec helm dep update --skip-refresh {} \;
   helm dep update --skip-refresh ./stable/vulcan
 fi
