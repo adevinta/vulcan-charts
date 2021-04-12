@@ -291,46 +291,6 @@ data:
       http-request use-service prometheus-exporter if { path /metrics }
       monitor-uri /healthz
 ---
-# Source: vulcan/charts/ui/templates/deployment.yaml
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  labels:
-    name: myrelease-ui-proxy
-  name: myrelease-ui-proxy
-data:
-  haproxy.cfg: |
-    global
-      daemon
-      maxconn 64
-      log stdout format raw daemon
-
-    defaults
-      mode http
-      timeout connect 5s
-      timeout client 25s
-      timeout server 25s
-      timeout tunnel 3600s
-      option  http-server-close
-
-    frontend http
-      bind *:9090
-      log global
-      option httplog clf
-      http-request capture req.hdr(Host) len 50
-      http-request capture req.hdr(User-Agent) len 100
-
-      default_backend app
-
-    backend app
-      server app 127.0.0.1:8080
-
-    frontend stats
-      bind *:9101
-      option http-use-htx
-      http-request use-service prometheus-exporter if { path /metrics }
-      monitor-uri /healthz
----
 # Source: vulcan/charts/vulndbapi/templates/deployment.yaml
 apiVersion: v1
 kind: ConfigMap
@@ -461,7 +421,7 @@ data:
       http-request use-service prometheus-exporter if { path /metrics }
       monitor-uri /healthz
 ---
-# Source: vulcan/templates/insights/config.yaml
+# Source: vulcan/templates/insights/config-proxy.yaml
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -694,6 +654,51 @@ data:
       http-request use-service prometheus-exporter if { path /metrics }
       monitor-uri /healthz
 ---
+# Source: vulcan/templates/ui/deployment.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: myrelease-vulcan-ui-proxy
+  labels:
+    helm.sh/chart: vulcan-0.2.0
+    app.kubernetes.io/name: vulcan
+    app.kubernetes.io/instance: myrelease
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: ui-proxy
+data:
+  haproxy.cfg: |
+    global
+      daemon
+      maxconn 64
+      log stdout format raw daemon
+
+    defaults
+      mode http
+      timeout connect 5s
+      timeout client 25s
+      timeout server 25s
+      timeout tunnel 3600s
+      option  http-server-close
+
+    frontend http
+      bind *:9090
+      log global
+      option httplog clf
+      http-request capture req.hdr(Host) len 50
+      http-request capture req.hdr(User-Agent) len 100
+
+      default_backend app
+
+    backend app
+      server app 127.0.0.1:8080
+
+    frontend stats
+      bind *:9101
+      option http-use-htx
+      http-request use-service prometheus-exporter if { path /metrics }
+      monitor-uri /healthz
+---
 # Source: vulcan/charts/goaws/templates/service.yaml
 apiVersion: v1
 kind: Service
@@ -838,28 +843,6 @@ spec:
       name: http
   selector:
     app.kubernetes.io/name: reportsgenerator
-    app.kubernetes.io/instance: myrelease
----
-# Source: vulcan/charts/ui/templates/service.yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: myrelease-ui
-  labels:
-    helm.sh/chart: ui-0.2.0
-    app.kubernetes.io/name: ui
-    app.kubernetes.io/instance: myrelease
-    app.kubernetes.io/version: "1.16.0"
-    app.kubernetes.io/managed-by: Helm
-spec:
-  type: ClusterIP
-  ports:
-    - port: 80
-      targetPort: http
-      protocol: TCP
-      name: http
-  selector:
-    app.kubernetes.io/name: ui
     app.kubernetes.io/instance: myrelease
 ---
 # Source: vulcan/charts/vulndbapi/templates/service.yaml
@@ -1051,6 +1034,30 @@ spec:
       app.kubernetes.io/name: vulcan
       app.kubernetes.io/instance: myrelease
       app.kubernetes.io/component: stream
+---
+# Source: vulcan/templates/ui/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: myrelease-vulcan-ui
+  labels:
+    helm.sh/chart: vulcan-0.2.0
+    app.kubernetes.io/name: vulcan
+    app.kubernetes.io/instance: myrelease
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: ui
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+      app.kubernetes.io/name: vulcan
+      app.kubernetes.io/instance: myrelease
+      app.kubernetes.io/component: ui
 ---
 # Source: vulcan/charts/goaws/templates/deployment.yaml
 apiVersion: apps/v1
@@ -1479,113 +1486,6 @@ spec:
       - name: config-proxy
         configMap:
           name: myrelease-reportsgenerator-proxy
----
-# Source: vulcan/charts/ui/templates/deployment.yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: myrelease-ui
-  labels:
-    helm.sh/chart: ui-0.2.0
-    app.kubernetes.io/name: ui
-    app.kubernetes.io/instance: myrelease
-    app.kubernetes.io/version: "1.16.0"
-    app.kubernetes.io/managed-by: Helm
-spec:
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: ui
-      app.kubernetes.io/instance: myrelease
-  template:
-    metadata:
-      labels:
-        app.kubernetes.io/name: ui
-        app.kubernetes.io/instance: myrelease
-      annotations:
-        checksum/config-proxy: c53d71bcc1b2842765040759f1c76e63e39ace632e4b8fd99a545f07953ca850
-        prometheus.io/scrape: 'true'
-        prometheus.io/port: '9101'
-    spec:
-      
-      serviceAccountName: default
-      securityContext:
-        {}
-      containers:
-        
-        - name: proxy
-          image: "haproxy:2.2-alpine"
-          imagePullPolicy: Always
-          ports:
-            - name: http
-              containerPort: 9090
-            - name: metrics
-              containerPort: 9101
-          volumeMounts:
-          - mountPath: /usr/local/etc/haproxy
-            readOnly: true
-            name: config-proxy
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh","-c","sleep 30;"]
-          resources:
-            {}
-        - name: ui
-          securityContext:
-            {}
-          image: "adevinta/vulcan-ui:latest"
-          imagePullPolicy: Always
-          env:
-          - name: API_URL
-            value: "https://www.vulcan.local/api/v1/"
-          - name: PORT
-            value: "8080"
-          - name: UI_DOCS_API_LINK
-            value: ""
-          - name: UI_DOCS_WHITELISTING_LINK
-            value: ""
-          - name: UI_DOCS_DISCOVERY_LINK
-            value: ""
-          - name: UI_DOCS_AUDITROLE_LINK
-            value: ""
-          - name: UI_CONTACT_EMAIL
-            value: ""
-          - name: UI_CONTACT_SLACK
-            value: ""
-          
-          
-          ports:
-            - name: app
-              containerPort: 8080
-              protocol: TCP
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh","-c","sleep 30;"]
-          livenessProbe:
-            httpGet:
-              path: /index.html
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 10
-          readinessProbe:
-            httpGet:
-              path: /index.html
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 5
-          resources:
-            {}
-      volumes:
-      - name: config-proxy
-        configMap:
-          name: myrelease-ui-proxy
 ---
 # Source: vulcan/charts/vulndb/templates/deployment.yaml
 apiVersion: apps/v1
@@ -2834,6 +2734,115 @@ spec:
         configMap:
           name: myrelease-vulcan-stream-proxy
 ---
+# Source: vulcan/templates/ui/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myrelease-vulcan-ui
+  labels:
+    helm.sh/chart: vulcan-0.2.0
+    app.kubernetes.io/name: vulcan
+    app.kubernetes.io/instance: myrelease
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: ui
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: vulcan
+      app.kubernetes.io/instance: myrelease
+      app.kubernetes.io/component: ui
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: vulcan
+        app.kubernetes.io/instance: myrelease
+        app.kubernetes.io/component: ui
+      annotations:
+        checksum/config-proxy: f430060ff108940f95e941745ece3d45afedfc1b9c9c5c9f0e6e340d4770da83
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '9101'
+    spec:
+      
+      securityContext:
+        {}
+      containers:
+        
+        - name: proxy
+          image: "haproxy:2.2-alpine"
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 9090
+            - name: metrics
+              containerPort: 9101
+          volumeMounts:
+          - mountPath: /usr/local/etc/haproxy
+            readOnly: true
+            name: config-proxy
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","sleep 30;"]
+          resources:
+            {}
+        - name: ui
+          securityContext:
+            {}
+          image: "adevinta/vulcan-ui:latest"
+          imagePullPolicy: Always
+          env:
+          - name: PORT
+            value: "8080"
+          - name: API_URL
+            value: "https://www.vulcan.local/api/v1/"
+          - name: UI_DOCS_API_LINK
+            value: ""
+          - name: UI_DOCS_WHITELISTING_LINK
+            value: ""
+          - name: UI_DOCS_DISCOVERY_LINK
+            value: ""
+          - name: UI_DOCS_AUDITROLE_LINK
+            value: ""
+          - name: UI_CONTACT_EMAIL
+            value: ""
+          - name: UI_CONTACT_SLACK
+            value: ""
+          
+          
+          ports:
+            - name: app
+              containerPort: 8080
+              protocol: TCP
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","sleep 30;"]
+          livenessProbe:
+            httpGet:
+              path: /index.html
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 10
+          readinessProbe:
+            httpGet:
+              path: /index.html
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 5
+          resources:
+            {}
+      volumes:
+      - name: config-proxy
+        configMap:
+          name: myrelease-vulcan-ui-proxy
+---
 # Source: vulcan/charts/postgresql/templates/statefulset.yaml
 apiVersion: apps/v1
 kind: StatefulSet
@@ -2975,31 +2984,6 @@ spec:
             sizeLimit: 1Gi
         - name: data
           emptyDir: {}
----
-# Source: vulcan/charts/ui/templates/ingress.yaml
-apiVersion: networking.k8s.io/v1beta1
-kind: Ingress
-metadata:
-  name: myrelease-ui
-  labels:
-    helm.sh/chart: ui-0.2.0
-    app.kubernetes.io/name: ui
-    app.kubernetes.io/instance: myrelease
-    app.kubernetes.io/version: "1.16.0"
-    app.kubernetes.io/managed-by: Helm
-spec:
-  tls:
-    - hosts:
-        - "www.vulcan.local"
-      secretName: vulcan-ui-tls
-  rules:
-    - host: "www.vulcan.local"
-      http:
-        paths:
-          - path: /
-            backend:
-              serviceName: myrelease-ui
-              servicePort: 80
 ---
 # Source: vulcan/charts/vulndbapi/templates/ingress.yaml
 apiVersion: networking.k8s.io/v1beta1
@@ -3167,4 +3151,30 @@ spec:
           - path: /
             backend:
               serviceName: myrelease-vulcan-stream
+              servicePort: 80
+---
+# Source: vulcan/templates/ui/hpa.yaml
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: myrelease-vulcan-ui
+  labels:
+    helm.sh/chart: vulcan-0.2.0
+    app.kubernetes.io/name: vulcan
+    app.kubernetes.io/instance: myrelease
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: ui
+spec:
+  tls:
+    - hosts:
+        - "www.vulcan.local"
+      secretName: vulcan-ui-tls
+  rules:
+    - host: "www.vulcan.local"
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: myrelease-vulcan-ui
               servicePort: 80

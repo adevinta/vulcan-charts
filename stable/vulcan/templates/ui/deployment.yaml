@@ -1,0 +1,85 @@
+{{- $c := (dict "comp" .Values.ui "context" $) -}}
+{{- if $c.comp.enabled }}
+{{- include "comp-common-manifests" $c }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "ui.name" . }}
+  labels: {{- include "vulcan.labels" . | nindent 4 }}
+    app.kubernetes.io/component: ui
+spec:
+  {{- if kindIs "int64" $c.comp.replicaCount }}
+  replicas: {{ $c.comp.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels: {{- include "vulcan.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: ui
+  template:
+    metadata:
+      labels: {{- include "vulcan.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: ui
+      annotations:
+        {{- include "comp-common-annotations" $c | nindent 8 }}
+        {{- with $c.comp.annotations }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+    {{- include "comp-common-spec" $c | nindent 6 }}
+    {{- with $c.comp.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      securityContext:
+        {{- toYaml $c.comp.podSecurityContext | nindent 8 }}
+      containers:
+        {{- include "comp-common-containers" $c | nindent 8}}
+        - name: {{ $c.comp.name }}
+          securityContext:
+            {{- toYaml $c.comp.securityContext | nindent 12 }}
+          image: "{{ $c.comp.image.repository }}:{{ $c.comp.image.tag }}"
+          imagePullPolicy: {{ $c.comp.image.pullPolicy }}
+          env:
+          - name: PORT
+            value: "{{ $c.comp.containerPort }}"
+          - name: API_URL
+            value: "{{ $c.comp.conf.apiUrl }}"
+          - name: UI_DOCS_API_LINK
+            value: "{{ $c.comp.conf.docs.apiLink }}"
+          - name: UI_DOCS_WHITELISTING_LINK
+            value: "{{ $c.comp.conf.docs.whitelistingLink }}"
+          - name: UI_DOCS_DISCOVERY_LINK
+            value: "{{ $c.comp.conf.docs.discoveryLink }}"
+          - name: UI_DOCS_AUDITROLE_LINK
+            value: "{{ $c.comp.conf.docs.auditRoleLink }}"
+          - name: UI_CONTACT_EMAIL
+            value: "{{ $c.comp.conf.contact.email }}"
+          - name: UI_CONTACT_SLACK
+            value: "{{ $c.comp.conf.contact.slack }}"
+        {{- include "comp-common-envs" $c | nindent 10 }}
+        {{- range $name, $value := $c.comp.extraEnv }}
+          - name: {{ $name }}
+            value: {{ $value | quote }}
+        {{- end }}
+          ports:
+            - name: {{ include "comp-common-appPortName" $c }}
+              containerPort: {{ $c.comp.containerPort }}
+              protocol: TCP
+          {{- include "comp-common-lifecycle" $c | nindent 10 }}
+          resources:
+            {{- toYaml $c.comp.resources | nindent 12 }}
+      volumes:
+      {{- include "comp-common-volumes" $c | nindent 6}}
+      {{- with $c.comp.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with $c.comp.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with $c.comp.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+{{- end }}
