@@ -1,0 +1,21 @@
+{{/*
+Override names
+*/}}
+{{- define "comp-hpa" -}}
+{{- if and .comp.enabled .comp.autoscaling.enabled -}}
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ template "vulcan.fullname" .context }}-{{ .comp.name }}
+  labels: {{- include "vulcan.labels" .context | nindent 4 }}
+    app.kubernetes.io/component: {{ .comp.name }}
+spec:
+  scaleTargetRef:
+    apiVersion: extensions/v1beta1
+    kind: Deployment
+    name: {{ template "vulcan.name" .context }}-{{ .comp.name }}
+  minReplicas: {{ .comp.autoscaling.minReplicas }}
+  maxReplicas: {{ .comp.autoscaling.maxReplicas }}
+  targetCPUUtilizationPercentage: {{ .comp.autoscaling.targetCPUUtilizationPercentage }}
+{{- end -}}
+{{- end -}}
