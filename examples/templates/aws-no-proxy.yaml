@@ -1,15 +1,4 @@
 ---
-# Source: vulcan/charts/reportsgenerator/templates/secrets.yaml
-apiVersion: v1
-kind: Secret
-metadata:
-  labels:
-    name: myrelease-reportsgenerator
-  name: myrelease-reportsgenerator
-type: Opaque
-data:
-  PG_PASSWORD: "cGFzc3dvcmRyZXBvcnRnZW5lcmF0b3I="
----
 # Source: vulcan/charts/vulndb/templates/secrets.yaml
 apiVersion: v1
 kind: Secret
@@ -132,6 +121,22 @@ type: Opaque
 data:
   REDIS_PASSWORD: "VEJE"
 ---
+# Source: vulcan/templates/reportsgenerator/secrets.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: myrelease-vulcan-reportsgenerator
+  labels:
+    helm.sh/chart: vulcan-0.2.0
+    app.kubernetes.io/name: vulcan
+    app.kubernetes.io/instance: myrelease
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: reportsgenerator
+type: Opaque
+data:
+  PG_PASSWORD: "cGFzc3dvcmRyZXBvcnRnZW5lcmF0b3I="
+---
 # Source: vulcan/templates/scanengine/secrets.yaml
 apiVersion: v1
 kind: Secret
@@ -231,28 +236,6 @@ data:
       option http-use-htx
       http-request use-service prometheus-exporter if { path /metrics }
       monitor-uri /healthz
----
-# Source: vulcan/charts/reportsgenerator/templates/service.yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: myrelease-reportsgenerator
-  labels:
-    helm.sh/chart: reportsgenerator-0.2.0
-    app.kubernetes.io/name: reportsgenerator
-    app.kubernetes.io/instance: myrelease
-    app.kubernetes.io/version: "1.16.0"
-    app.kubernetes.io/managed-by: Helm
-spec:
-  type: ClusterIP
-  ports:
-    - port: 80
-      targetPort: http
-      protocol: TCP
-      name: http
-  selector:
-    app.kubernetes.io/name: reportsgenerator
-    app.kubernetes.io/instance: myrelease
 ---
 # Source: vulcan/charts/vulndbapi/templates/service.yaml
 apiVersion: v1
@@ -420,6 +403,30 @@ spec:
       app.kubernetes.io/instance: myrelease
       app.kubernetes.io/component: redis
 ---
+# Source: vulcan/templates/reportsgenerator/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: myrelease-vulcan-reportsgenerator
+  labels:
+    helm.sh/chart: vulcan-0.2.0
+    app.kubernetes.io/name: vulcan
+    app.kubernetes.io/instance: myrelease
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: reportsgenerator
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+      app.kubernetes.io/name: vulcan
+      app.kubernetes.io/instance: myrelease
+      app.kubernetes.io/component: reportsgenerator
+---
 # Source: vulcan/templates/results/service.yaml
 apiVersion: v1
 kind: Service
@@ -515,175 +522,6 @@ spec:
       app.kubernetes.io/name: vulcan
       app.kubernetes.io/instance: myrelease
       app.kubernetes.io/component: ui
----
-# Source: vulcan/charts/reportsgenerator/templates/deployment.yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: myrelease-reportsgenerator
-  labels:
-    helm.sh/chart: reportsgenerator-0.2.0
-    app.kubernetes.io/name: reportsgenerator
-    app.kubernetes.io/instance: myrelease
-    app.kubernetes.io/version: "1.16.0"
-    app.kubernetes.io/managed-by: Helm
-spec:
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: reportsgenerator
-      app.kubernetes.io/instance: myrelease
-  template:
-    metadata:
-      labels:
-        app.kubernetes.io/name: reportsgenerator
-        app.kubernetes.io/instance: myrelease
-      annotations:
-        checksum/secrets: a96b3febe876a5791611ea7015b6b8ecf6c65984689568e0a68ff322745adda5
-        
-        iam.amazonaws.com/role: arn:aws:iam::000000000000:role/ReportsGeneratorRole
-    spec:
-      
-      imagePullSecrets:
-        - name: pullsecretname
-      serviceAccountName: default
-      securityContext:
-        {}
-      initContainers:
-        - name: waitfordb
-          image: "postgres:9.6-alpine"
-          imagePullPolicy: Always
-          command: ['sh', '-c', 'until pg_isready -t 5; do echo WaitingDB; done;']
-          env:
-          - name: PGHOST
-            value: "reportsgenerator.postgres.host"
-          - name: PGPORT
-            value: "5432"
-      containers:
-        
-        - name: dogstatsd
-          image: "datadog/dogstatsd:7.25.1"
-          envFrom:
-          - secretRef:
-              name: myrelease-dogstatsd
-          ports:
-            - containerPort: 8125
-              name: dogstatsd
-              protocol: UDP
-          resources:
-                    limits:
-                      cpu: 100m
-                      memory: 128Mi
-                    requests:
-                      cpu: 100m
-                      memory: 128Mi
-        - name: reportsgenerator
-          securityContext:
-            {}
-          image: "adevinta/vulcan-reports-generator:tag-reports"
-          imagePullPolicy: Always
-          env:
-          - name: PORT
-            value: "8080"
-          - name: PG_HOST
-            value: "reportsgenerator.postgres.host"
-          - name: PG_NAME
-            value: "reportsgenerator"
-          - name: PG_USER
-            value: "vulcan"
-          - name: PG_PORT
-            value: "5432"
-          - name: PG_SSLMODE
-            value: "verify-full"
-          - name: PG_CA_B64
-            value: "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUVCakNDQXU2Z0F3SUJBZ0lKQU1jMFp6YVNVSzUxTUEwR0NTcUdTSWIzRFFFQkN3VUFNSUdQTVFzd0NRWUQKVlFRR0V3SlZVekVRTUE0R0ExVUVCd3dIVTJWaGRIUnNaVEVUTUJFR0ExVUVDQXdLVjJGemFHbHVaM1J2YmpFaQpNQ0FHQTFVRUNnd1pRVzFoZW05dUlGZGxZaUJUWlhKMmFXTmxjeXdnU1c1akxqRVRNQkVHQTFVRUN3d0tRVzFoCmVtOXVJRkpFVXpFZ01CNEdBMVVFQXd3WFFXMWhlbTl1SUZKRVV5QlNiMjkwSURJd01Ua2dRMEV3SGhjTk1Ua3cKT0RJeU1UY3dPRFV3V2hjTk1qUXdPREl5TVRjd09EVXdXakNCanpFTE1Ba0dBMVVFQmhNQ1ZWTXhFREFPQmdOVgpCQWNNQjFObFlYUjBiR1V4RXpBUkJnTlZCQWdNQ2xkaGMyaHBibWQwYjI0eElqQWdCZ05WQkFvTUdVRnRZWHB2CmJpQlhaV0lnVTJWeWRtbGpaWE1zSUVsdVl5NHhFekFSQmdOVkJBc01Da0Z0WVhwdmJpQlNSRk14SURBZUJnTlYKQkFNTUYwRnRZWHB2YmlCU1JGTWdVbTl2ZENBeU1ERTVJRU5CTUlJQklqQU5CZ2txaGtpRzl3MEJBUUVGQUFPQwpBUThBTUlJQkNnS0NBUUVBclhuRi9FNi9RaCtrdTNoUVRTS1BNaFFRbENwb1d2bkl0aHpYNk1LM3A1YTBlWEtaCm9XSWpZY05ORzZVd0pqcDRmVVhsNmdscDUzSm9ibit0V05YODhkTkgybjhEVmJwcFN3U2NWRTJMcHVMKzk0dlkKMEVZRS9YeE43c3ZLZWE4WXZscnFrVUJLeXhMeFRqaCtVL0tyR09hSHh6OXYwbDZaTmxEYnVhWnczcUlXZEQvSQo2YU5iR2VSVVZ0cE02UCtiV0lveFZsL2NhUXlsUVM2Q0VZVWsrQ3BWeUpTa29wd0pselhUMDd0TW9ETDVXZ1g5Ck8wOEtWZ0ROejlxUC9JR3RBY1JkdVJjTmlvSDNFOXY5ODFRTzF6dC9HcGIyZjhOcUFqVVVDVVp6T25pajZteDkKTWNaKzljV1g4OENSelIwdlFPRFd1WnNjZ0kwOE52TTY5Rm4yU1FJREFRQUJvMk13WVRBT0JnTlZIUThCQWY4RQpCQU1DQVFZd0R3WURWUjBUQVFIL0JBVXdBd0VCL3pBZEJnTlZIUTRFRmdRVWMxOWcyTHpMQTVqMEt4YzBMalphCnBtRC92Qjh3SHdZRFZSMGpCQmd3Rm9BVWMxOWcyTHpMQTVqMEt4YzBMalphcG1EL3ZCOHdEUVlKS29aSWh2Y04KQVFFTEJRQURnZ0VCQUhBRzdXVG15anpQUklNODVyVmorZldIc0xJdnFwdzZET2JJak1Xb2twbGlDZU1JTlpGVgp5bmZnQktzZjFFeHdidkpOellGWFc2ZGlobmd1REc5Vk1QcGkydXAvY3RRVE44dG05bkRLT3kwOHVOWm9vZk1jCk5VWnhLQ0VrVktaditJTDRvSG9lYXl0OGVndHYzdWpKTTZWMTRBc3RNUTZTd3Z3dkE5M0VQL1VnMmU0V0FYSHUKY2JJMU5BYlVnVkRxcCtEUmRmdlprZ1lLcnlqVFdkLzArMWZTOFgxYkJaVld6bDdlaXJOVm5IYlNIMlpEcE51WQowU0JkOGRqNUY2bGQzdDU4eWRaYnJUSHplN0pKT2Q4aWp5U0FwNC9raXU5VWZaV3VUUEFCekRhL0RTZHo5RGsvCnpQVzRDWFh2aExtRTAyVEE5L0hlQ3czS0VISXdpY051RWZ3PQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg=="
-          - name: LOG_LEVEL
-            value: "error"
-          - name: SQS_QUEUE_ARN
-            value: "arn:aws:sqs:eu-west-1:000000000000:ReportsGenerator"
-          - name: SES_REGION
-            value: "eu-west-1"
-          - name: SES_FROM
-            value: "vulcan@example.com"
-          - name: SES_CC
-            value: "['vulcan@example.com']"
-          - name: SCAN_EMAIL_SUBJECT
-            value: "Security Overview"
-          - name: SCAN_S3_PUBLIC_BUCKET
-            value: "s3-vulcan-public-insights"
-          - name: SCAN_S3_PRIVATE_BUCKET
-            value: "s3-vulcan-insights"
-          - name: SCAN_GA_ID
-            value: "UA-109338366-3"
-          - name: SCAN_COMPANY_NAME
-            value: "Example"
-          - name: SCAN_SUPPORT_EMAIL
-            value: "vulcan@example.com"
-          - name: SCAN_CONTACT_EMAIL
-            value: "vulcan@example.com"
-          - name: SCAN_CONTACT_CHANNEL
-            value: "https://www.slack.com/archives/XXXXX"
-          - name: SCAN_CONTACT_JIRA
-            value: "https://jira.com/"
-          - name: SCAN_DOCS_API_LINK
-            value: "https://www.domain.com/org/vulcan-api/examples/#how-do-i-list-the-members-of-a-team"
-          - name: SCAN_DOCS_ROADMAP_LINK
-            value: "https://docs.google.com/spreadsheets/d/xxxxxxxxxxxxxxx/edit?usp=sharing"
-          - name: PERSISTENCE_ENDPOINT  # We keep this PERSISTENCE variable for compatibility
-            value: "http://myrelease-scanengine"
-          - name: RESULTS_ENDPOINT
-            value: "http://myrelease-results"
-          - name: SCAN_PROXY_ENDPOINT
-            value: "https://insights.vulcan.com"
-          - name: VULCAN_UI
-            value: "https://www.vulcan.com/"
-          - name: SCAN_VIEW_REPORT
-            value: "https://www.vulcan.com/api/v1/report?team_id=%s&scan_id=%s"
-          - name: LIVEREPORT_EMAIL_SUBJECT
-            value: "Vulcan Digest"
-          
-          - name: DOGSTATSD_ENABLED
-            value: "true"
-          - name: DOGSTATSD_HOST
-            value: "localhost"
-          - name: DOGSTATSD_PORT
-            value: "8125"
-          envFrom:
-          - secretRef:
-              name: myrelease-reportsgenerator
-          ports:
-            - name: http
-              containerPort: 8080
-              protocol: TCP
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh","-c","sleep 30;"]
-          livenessProbe:
-            httpGet:
-              path: /healthcheck
-              port: 8080
-            initialDelaySeconds: 10
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 10
-          readinessProbe:
-            httpGet:
-              path: /healthcheck
-              port: 8080
-            initialDelaySeconds: 10
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 5
-          resources:
-            limits:
-              cpu: 250m
-              memory: 2Gi
-            requests:
-              cpu: 250m
-              memory: 2Gi
-      volumes:
 ---
 # Source: vulcan/charts/vulndb/templates/deployment.yaml
 apiVersion: apps/v1
@@ -1547,6 +1385,177 @@ spec:
             protocol: TCP
         resources:
             {}
+      volumes:
+---
+# Source: vulcan/templates/reportsgenerator/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myrelease-vulcan-reportsgenerator
+  labels:
+    helm.sh/chart: vulcan-0.2.0
+    app.kubernetes.io/name: vulcan
+    app.kubernetes.io/instance: myrelease
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: reportsgenerator
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: vulcan
+      app.kubernetes.io/instance: myrelease
+      app.kubernetes.io/component: reportsgenerator
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: vulcan
+        app.kubernetes.io/instance: myrelease
+        app.kubernetes.io/component: reportsgenerator
+      annotations:
+        checksum/secrets: 532db1f40488486cf974f48c783b993db5418fc1ef0a0a10bba2e85cfbbebdee
+        
+        iam.amazonaws.com/role: arn:aws:iam::000000000000:role/ReportsGeneratorRole
+    spec:
+      
+      imagePullSecrets:
+        - name: pullsecretname
+      securityContext:
+        {}
+      initContainers:
+        - name: waitfordb
+          image: "postgres:9.6-alpine"
+          imagePullPolicy: Always
+          command: ['sh', '-c', 'until pg_isready -t 5; do echo WaitingDB; done;']
+          env:
+          - name: PGHOST
+            value: "reportsgenerator.postgres.host"
+          - name: PGPORT
+            value: "5432"
+      containers:
+        
+        - name: dogstatsd
+          image: "datadog/dogstatsd:7.25.1"
+          envFrom:
+          - secretRef:
+              name: "myrelease-vulcan-dogstatsd"
+          ports:
+            - containerPort: 8125
+              name: dogstatsd
+              protocol: UDP
+          resources:
+                    limits:
+                      cpu: 100m
+                      memory: 128Mi
+                    requests:
+                      cpu: 100m
+                      memory: 128Mi
+        - name: reportsgenerator
+          securityContext:
+            {}
+          image: "adevinta/vulcan-reports-generator:tag-reports"
+          imagePullPolicy: Always
+          env:
+          - name: PORT
+            value: "8080"
+          - name: PG_HOST
+            value: "reportsgenerator.postgres.host"
+          - name: PG_NAME
+            value: "reportsgenerator"
+          - name: PG_USER
+            value: "vulcan"
+          - name: PG_PORT
+            value: "5432"
+          - name: PG_SSLMODE
+            value: "verify-full"
+          - name: PG_CA_B64
+            value: "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUVCakNDQXU2Z0F3SUJBZ0lKQU1jMFp6YVNVSzUxTUEwR0NTcUdTSWIzRFFFQkN3VUFNSUdQTVFzd0NRWUQKVlFRR0V3SlZVekVRTUE0R0ExVUVCd3dIVTJWaGRIUnNaVEVUTUJFR0ExVUVDQXdLVjJGemFHbHVaM1J2YmpFaQpNQ0FHQTFVRUNnd1pRVzFoZW05dUlGZGxZaUJUWlhKMmFXTmxjeXdnU1c1akxqRVRNQkVHQTFVRUN3d0tRVzFoCmVtOXVJRkpFVXpFZ01CNEdBMVVFQXd3WFFXMWhlbTl1SUZKRVV5QlNiMjkwSURJd01Ua2dRMEV3SGhjTk1Ua3cKT0RJeU1UY3dPRFV3V2hjTk1qUXdPREl5TVRjd09EVXdXakNCanpFTE1Ba0dBMVVFQmhNQ1ZWTXhFREFPQmdOVgpCQWNNQjFObFlYUjBiR1V4RXpBUkJnTlZCQWdNQ2xkaGMyaHBibWQwYjI0eElqQWdCZ05WQkFvTUdVRnRZWHB2CmJpQlhaV0lnVTJWeWRtbGpaWE1zSUVsdVl5NHhFekFSQmdOVkJBc01Da0Z0WVhwdmJpQlNSRk14SURBZUJnTlYKQkFNTUYwRnRZWHB2YmlCU1JGTWdVbTl2ZENBeU1ERTVJRU5CTUlJQklqQU5CZ2txaGtpRzl3MEJBUUVGQUFPQwpBUThBTUlJQkNnS0NBUUVBclhuRi9FNi9RaCtrdTNoUVRTS1BNaFFRbENwb1d2bkl0aHpYNk1LM3A1YTBlWEtaCm9XSWpZY05ORzZVd0pqcDRmVVhsNmdscDUzSm9ibit0V05YODhkTkgybjhEVmJwcFN3U2NWRTJMcHVMKzk0dlkKMEVZRS9YeE43c3ZLZWE4WXZscnFrVUJLeXhMeFRqaCtVL0tyR09hSHh6OXYwbDZaTmxEYnVhWnczcUlXZEQvSQo2YU5iR2VSVVZ0cE02UCtiV0lveFZsL2NhUXlsUVM2Q0VZVWsrQ3BWeUpTa29wd0pselhUMDd0TW9ETDVXZ1g5Ck8wOEtWZ0ROejlxUC9JR3RBY1JkdVJjTmlvSDNFOXY5ODFRTzF6dC9HcGIyZjhOcUFqVVVDVVp6T25pajZteDkKTWNaKzljV1g4OENSelIwdlFPRFd1WnNjZ0kwOE52TTY5Rm4yU1FJREFRQUJvMk13WVRBT0JnTlZIUThCQWY4RQpCQU1DQVFZd0R3WURWUjBUQVFIL0JBVXdBd0VCL3pBZEJnTlZIUTRFRmdRVWMxOWcyTHpMQTVqMEt4YzBMalphCnBtRC92Qjh3SHdZRFZSMGpCQmd3Rm9BVWMxOWcyTHpMQTVqMEt4YzBMalphcG1EL3ZCOHdEUVlKS29aSWh2Y04KQVFFTEJRQURnZ0VCQUhBRzdXVG15anpQUklNODVyVmorZldIc0xJdnFwdzZET2JJak1Xb2twbGlDZU1JTlpGVgp5bmZnQktzZjFFeHdidkpOellGWFc2ZGlobmd1REc5Vk1QcGkydXAvY3RRVE44dG05bkRLT3kwOHVOWm9vZk1jCk5VWnhLQ0VrVktaditJTDRvSG9lYXl0OGVndHYzdWpKTTZWMTRBc3RNUTZTd3Z3dkE5M0VQL1VnMmU0V0FYSHUKY2JJMU5BYlVnVkRxcCtEUmRmdlprZ1lLcnlqVFdkLzArMWZTOFgxYkJaVld6bDdlaXJOVm5IYlNIMlpEcE51WQowU0JkOGRqNUY2bGQzdDU4eWRaYnJUSHplN0pKT2Q4aWp5U0FwNC9raXU5VWZaV3VUUEFCekRhL0RTZHo5RGsvCnpQVzRDWFh2aExtRTAyVEE5L0hlQ3czS0VISXdpY051RWZ3PQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg=="
+          - name: LOG_LEVEL
+            value: "error"
+          - name: SQS_QUEUE_ARN
+            value: "arn:aws:sqs:eu-west-1:000000000000:ReportsGenerator"
+          - name: SES_REGION
+            value: "eu-west-1"
+          - name: SES_FROM
+            value: "vulcan@example.com"
+          - name: SES_CC
+            value: "['vulcan@example.com']"
+          - name: SCAN_EMAIL_SUBJECT
+            value: "Security Overview"
+          - name: SCAN_S3_PUBLIC_BUCKET
+            value: "s3-vulcan-public-insights"
+          - name: SCAN_S3_PRIVATE_BUCKET
+            value: "s3-vulcan-insights"
+          - name: SCAN_GA_ID
+            value: "UA-109338366-3"
+          - name: SCAN_COMPANY_NAME
+            value: "Example"
+          - name: SCAN_SUPPORT_EMAIL
+            value: "vulcan@example.com"
+          - name: SCAN_CONTACT_EMAIL
+            value: "vulcan@example.com"
+          - name: SCAN_CONTACT_CHANNEL
+            value: "https://www.slack.com/archives/XXXXX"
+          - name: SCAN_CONTACT_JIRA
+            value: "https://jira.com/"
+          - name: SCAN_DOCS_API_LINK
+            value: "https://www.domain.com/org/vulcan-api/examples/#how-do-i-list-the-members-of-a-team"
+          - name: SCAN_DOCS_ROADMAP_LINK
+            value: "https://docs.google.com/spreadsheets/d/xxxxxxxxxxxxxxx/edit?usp=sharing"
+          - name: PERSISTENCE_ENDPOINT  # We keep this PERSISTENCE variable for compatibility
+            value: "http://myrelease-scanengine"
+          - name: RESULTS_ENDPOINT
+            value: "http://myrelease-results"
+          - name: SCAN_PROXY_ENDPOINT
+            value: "https://insights.vulcan.com"
+          - name: VULCAN_UI
+            value: "https://www.vulcan.com/"
+          - name: SCAN_VIEW_REPORT
+            value: "https://www.vulcan.com/api/v1/report?team_id=%s&scan_id=%s"
+          - name: LIVEREPORT_EMAIL_SUBJECT
+            value: "Vulcan Digest"
+          
+          - name: DOGSTATSD_ENABLED
+            value: "true"
+          - name: DOGSTATSD_HOST
+            value: "localhost"
+          - name: DOGSTATSD_PORT
+            value: "8125"
+          envFrom:
+          - secretRef:
+              name: myrelease-vulcan-reportsgenerator
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","sleep 30;"]
+          livenessProbe:
+            httpGet:
+              path: /healthcheck
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 10
+          readinessProbe:
+            httpGet:
+              path: /healthcheck
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 5
+          resources:
+            limits:
+              cpu: 250m
+              memory: 2Gi
+            requests:
+              cpu: 250m
+              memory: 2Gi
       volumes:
 ---
 # Source: vulcan/templates/results/deployment.yaml

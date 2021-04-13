@@ -588,22 +588,73 @@ insights:
         prefix: "/public"
 
 reportsgenerator:
-  <<: *common
+  enabled: true
+  name: reportsgenerator
+  <<: *comp
+
+  image:
+    repository: adevinta/vulcan-reports-generator
+    tag: latest
+    pullPolicy: Always
+
+  waitfordb:
+    image:
+      repository: postgres
+      tag: 9.6-alpine
+
   lifecycle:
     preStopSleep: 30
+
+  livenessProbe:
+    <<: *comp-livenessProbe
+    path: /healthcheck
+
+  readinessProbe:
+    <<: *comp-readynessProbe
+    path: /healthcheck
+
   infra:
     sqs: true
+
   conf:
     logLevel: "error"
     queueArn: arn:aws:sqs:local:012345678900:VulcanK8SReportsGenerator
     queueName: VulcanK8SReportsGenerator
+    scanengineUrl:
+    resultsUrl:
     generators:
       scan:
+        emailSubject: "Security Overview"
         publicBucket: public-insights
         privateBucket: insights
+        gaId: UA-000000000-0
+        proxyEndpoint: # https://vulcan-insights
+        contact:
+          companyName:
+          supportEmail:
+          email:
+          slackChannel:
+          jira: # vulcan Jira project
+        docs:
+          apiDocLink: # vulcan-api doc link
+          roadmapLink: # vulcan roadmap link
+        vulcanUi: # https://vulcan-www
+        viewReport: # vulcan-api/api/v1/report?team_id=%s&scan_id=%s
+        redirectUrl: # https://public-redirect/index.html?reportUrl=
+      livereport:
+        emailSubject: #Vulcan Digest
+    ses:
+      region:
+      from: tbd@tbd.com
+      cc: '["tbd@tbd.com"]'
+
+  # extraEnv:
+  #   FOO: BAR
+
   db:
     <<: *db
     name: reportsgenerator
+
 
 redis:
   enabled: true
@@ -653,8 +704,8 @@ metrics:
     devHoseTenant: tbd
     devHoseMetricsSource: tbd
     devHoseFindingsSource: tbd
-    redisPassword: TBD
     redisAddr:
+    redisPassword:
     resultsHost:
     vulcanApi: # http://host/api
     vulcanAPIToken: token

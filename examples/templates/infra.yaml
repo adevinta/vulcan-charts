@@ -29,17 +29,6 @@ type: Opaque
 data:
   postgresql-password: "VEJE"
 ---
-# Source: vulcan/charts/reportsgenerator/templates/secrets.yaml
-apiVersion: v1
-kind: Secret
-metadata:
-  labels:
-    name: myrelease-reportsgenerator
-  name: myrelease-reportsgenerator
-type: Opaque
-data:
-  PG_PASSWORD: "VEJE"
----
 # Source: vulcan/charts/vulndb/templates/secrets.yaml
 apiVersion: v1
 kind: Secret
@@ -162,6 +151,22 @@ type: Opaque
 data:
   REDIS_PASSWORD: "VEJE"
 ---
+# Source: vulcan/templates/reportsgenerator/secrets.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: myrelease-vulcan-reportsgenerator
+  labels:
+    helm.sh/chart: vulcan-0.2.0
+    app.kubernetes.io/name: vulcan
+    app.kubernetes.io/instance: myrelease
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: reportsgenerator
+type: Opaque
+data:
+  PG_PASSWORD: "VEJE"
+---
 # Source: vulcan/templates/scanengine/secrets.yaml
 apiVersion: v1
 kind: Secret
@@ -270,46 +275,6 @@ data:
     CREATE DATABASE scanengine;
     CREATE DATABASE reportsgenerator;
     CREATE DATABASE vulnerabilitydb;
----
-# Source: vulcan/charts/reportsgenerator/templates/deployment.yaml
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  labels:
-    name: myrelease-reportsgenerator-proxy
-  name: myrelease-reportsgenerator-proxy
-data:
-  haproxy.cfg: |
-    global
-      daemon
-      maxconn 64
-      log stdout format raw daemon
-
-    defaults
-      mode http
-      timeout connect 5s
-      timeout client 25s
-      timeout server 25s
-      timeout tunnel 3600s
-      option  http-server-close
-
-    frontend http
-      bind *:9090
-      log global
-      option httplog clf
-      http-request capture req.hdr(Host) len 50
-      http-request capture req.hdr(User-Agent) len 100
-
-      default_backend app
-
-    backend app
-      server app 127.0.0.1:8080
-
-    frontend stats
-      bind *:9101
-      option http-use-htx
-      http-request use-service prometheus-exporter if { path /metrics }
-      monitor-uri /healthz
 ---
 # Source: vulcan/charts/vulndbapi/templates/deployment.yaml
 apiVersion: v1
@@ -506,6 +471,51 @@ metadata:
     app.kubernetes.io/version: "1.16.0"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/component: persistence-proxy
+data:
+  haproxy.cfg: |
+    global
+      daemon
+      maxconn 64
+      log stdout format raw daemon
+
+    defaults
+      mode http
+      timeout connect 5s
+      timeout client 25s
+      timeout server 25s
+      timeout tunnel 3600s
+      option  http-server-close
+
+    frontend http
+      bind *:9090
+      log global
+      option httplog clf
+      http-request capture req.hdr(Host) len 50
+      http-request capture req.hdr(User-Agent) len 100
+
+      default_backend app
+
+    backend app
+      server app 127.0.0.1:8080
+
+    frontend stats
+      bind *:9101
+      option http-use-htx
+      http-request use-service prometheus-exporter if { path /metrics }
+      monitor-uri /healthz
+---
+# Source: vulcan/templates/reportsgenerator/deployment.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: myrelease-vulcan-reportsgenerator-proxy
+  labels:
+    helm.sh/chart: vulcan-0.2.0
+    app.kubernetes.io/name: vulcan
+    app.kubernetes.io/instance: myrelease
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: reportsgenerator-proxy
 data:
   haproxy.cfg: |
     global
@@ -829,28 +839,6 @@ spec:
     release: "myrelease"
     role: master
 ---
-# Source: vulcan/charts/reportsgenerator/templates/service.yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: myrelease-reportsgenerator
-  labels:
-    helm.sh/chart: reportsgenerator-0.2.0
-    app.kubernetes.io/name: reportsgenerator
-    app.kubernetes.io/instance: myrelease
-    app.kubernetes.io/version: "1.16.0"
-    app.kubernetes.io/managed-by: Helm
-spec:
-  type: ClusterIP
-  ports:
-    - port: 80
-      targetPort: http
-      protocol: TCP
-      name: http
-  selector:
-    app.kubernetes.io/name: reportsgenerator
-    app.kubernetes.io/instance: myrelease
----
 # Source: vulcan/charts/vulndbapi/templates/service.yaml
 apiVersion: v1
 kind: Service
@@ -1016,6 +1004,30 @@ spec:
       app.kubernetes.io/name: vulcan
       app.kubernetes.io/instance: myrelease
       app.kubernetes.io/component: redis
+---
+# Source: vulcan/templates/reportsgenerator/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: myrelease-vulcan-reportsgenerator
+  labels:
+    helm.sh/chart: vulcan-0.2.0
+    app.kubernetes.io/name: vulcan
+    app.kubernetes.io/instance: myrelease
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: reportsgenerator
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+      app.kubernetes.io/name: vulcan
+      app.kubernetes.io/instance: myrelease
+      app.kubernetes.io/component: reportsgenerator
 ---
 # Source: vulcan/templates/results/service.yaml
 apiVersion: v1
@@ -1246,173 +1258,6 @@ spec:
       volumes:
         - name: data
           emptyDir: {}
----
-# Source: vulcan/charts/reportsgenerator/templates/deployment.yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: myrelease-reportsgenerator
-  labels:
-    helm.sh/chart: reportsgenerator-0.2.0
-    app.kubernetes.io/name: reportsgenerator
-    app.kubernetes.io/instance: myrelease
-    app.kubernetes.io/version: "1.16.0"
-    app.kubernetes.io/managed-by: Helm
-spec:
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: reportsgenerator
-      app.kubernetes.io/instance: myrelease
-  template:
-    metadata:
-      labels:
-        app.kubernetes.io/name: reportsgenerator
-        app.kubernetes.io/instance: myrelease
-      annotations:
-        checksum/secrets: a1af92b0d0eae18dc144b50e5d5422b985601813c1408ae66c46ee2a0103b017
-        checksum/config-proxy: 53e8a4092f14fc687e9b6a39de6757257c47264c4b1fa67fd774f08a733f75f0
-        prometheus.io/scrape: 'true'
-        prometheus.io/port: '9101'
-    spec:
-      
-      serviceAccountName: default
-      securityContext:
-        {}
-      initContainers:
-        - name: waitfordb
-          image: "postgres:9.6-alpine"
-          imagePullPolicy: Always
-          command: ['sh', '-c', 'until pg_isready -t 5; do echo WaitingDB; done;']
-          env:
-          - name: PGHOST
-            value: "myrelease-postgresql"
-          - name: PGPORT
-            value: "5432"
-      containers:
-        
-        - name: proxy
-          image: "haproxy:2.2-alpine"
-          imagePullPolicy: Always
-          ports:
-            - name: http
-              containerPort: 9090
-            - name: metrics
-              containerPort: 9101
-          volumeMounts:
-          - mountPath: /usr/local/etc/haproxy
-            readOnly: true
-            name: config-proxy
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh","-c","sleep 30;"]
-          resources:
-            {}
-        - name: reportsgenerator
-          securityContext:
-            {}
-          image: "adevinta/vulcan-reports-generator:latest"
-          imagePullPolicy: Always
-          env:
-          - name: PORT
-            value: "8080"
-          - name: PG_HOST
-            value: "myrelease-postgresql"
-          - name: PG_NAME
-            value: "reportsgenerator"
-          - name: PG_USER
-            value: "postgres"
-          - name: PG_PORT
-            value: "5432"
-          - name: PG_SSLMODE
-            value: "disable"
-          - name: LOG_LEVEL
-            value: "error"
-          - name: SQS_QUEUE_ARN
-            value: "arn:aws:sqs:local:012345678900:VulcanK8SReportsGenerator"
-          - name: SES_REGION
-            value: "local"
-          - name: SES_FROM
-            value: "tbd@tbd.com"
-          - name: SES_CC
-            value: "[\"tbd@tbd.com\"]"
-          - name: SCAN_EMAIL_SUBJECT
-            value: "Security Overview"
-          - name: SCAN_S3_PUBLIC_BUCKET
-            value: "public-insights"
-          - name: SCAN_S3_PRIVATE_BUCKET
-            value: "insights"
-          - name: SCAN_GA_ID
-            value: "UA-000000000-0"
-          - name: SCAN_COMPANY_NAME
-            value: ""
-          - name: SCAN_SUPPORT_EMAIL
-            value: ""
-          - name: SCAN_CONTACT_EMAIL
-            value: ""
-          - name: SCAN_CONTACT_CHANNEL
-            value: ""
-          - name: SCAN_CONTACT_JIRA
-            value: ""
-          - name: SCAN_DOCS_API_LINK
-            value: ""
-          - name: SCAN_DOCS_ROADMAP_LINK
-            value: ""
-          - name: PERSISTENCE_ENDPOINT  # We keep this PERSISTENCE variable for compatibility
-            value: "http://myrelease-scanengine"
-          - name: RESULTS_ENDPOINT
-            value: "http://myrelease-results"
-          - name: SCAN_PROXY_ENDPOINT
-            value: "http://insights.vulcan.local"
-          - name: VULCAN_UI
-            value: "http://www.vulcan.local/"
-          - name: SCAN_VIEW_REPORT
-            value: "http://www.vulcan.local/api/v1/report?team_id=%s&scan_id=%s"
-          - name: LIVEREPORT_EMAIL_SUBJECT
-            value: ""
-          
-          - name: AWS_SQS_ENDPOINT
-            value: "http://myrelease-goaws"
-          - name: AWS_ACCESS_KEY_ID
-            value: ANYVALUE
-          - name: AWS_SECRET_ACCESS_KEY
-            value: ANYVALUE
-          
-          envFrom:
-          - secretRef:
-              name: myrelease-reportsgenerator
-          ports:
-            - name: app
-              containerPort: 8080
-              protocol: TCP
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh","-c","sleep 30;"]
-          livenessProbe:
-            httpGet:
-              path: /healthcheck
-              port: 8080
-            initialDelaySeconds: 10
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 10
-          readinessProbe:
-            httpGet:
-              path: /healthcheck
-              port: 8080
-            initialDelaySeconds: 10
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 5
-          resources:
-            {}
-      volumes:
-      - name: config-proxy
-        configMap:
-          name: myrelease-reportsgenerator-proxy
 ---
 # Source: vulcan/charts/vulndb/templates/deployment.yaml
 apiVersion: apps/v1
@@ -2397,6 +2242,175 @@ spec:
         resources:
             {}
       volumes:
+---
+# Source: vulcan/templates/reportsgenerator/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myrelease-vulcan-reportsgenerator
+  labels:
+    helm.sh/chart: vulcan-0.2.0
+    app.kubernetes.io/name: vulcan
+    app.kubernetes.io/instance: myrelease
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: reportsgenerator
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: vulcan
+      app.kubernetes.io/instance: myrelease
+      app.kubernetes.io/component: reportsgenerator
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: vulcan
+        app.kubernetes.io/instance: myrelease
+        app.kubernetes.io/component: reportsgenerator
+      annotations:
+        checksum/secrets: d6e7e18832e14cc8ddfc9f682ebd9b210645256960cd1601db76a5afbaf189d3
+        checksum/config-proxy: 787dda0541252fb2817d03ed786815e3c967c8bd622d1959280082e7faa57385
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '9101'
+    spec:
+      
+      securityContext:
+        {}
+      initContainers:
+        - name: waitfordb
+          image: "postgres:9.6-alpine"
+          imagePullPolicy: Always
+          command: ['sh', '-c', 'until pg_isready -t 5; do echo WaitingDB; done;']
+          env:
+          - name: PGHOST
+            value: "myrelease-postgresql"
+          - name: PGPORT
+            value: ""
+      containers:
+        
+        - name: proxy
+          image: "haproxy:2.2-alpine"
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 9090
+            - name: metrics
+              containerPort: 9101
+          volumeMounts:
+          - mountPath: /usr/local/etc/haproxy
+            readOnly: true
+            name: config-proxy
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","sleep 30;"]
+          resources:
+            {}
+        - name: reportsgenerator
+          securityContext:
+            {}
+          image: "adevinta/vulcan-reports-generator:latest"
+          imagePullPolicy: Always
+          env:
+          - name: PORT
+            value: "8080"
+          - name: PG_HOST
+            value: "myrelease-postgresql"
+          - name: PG_NAME
+            value: "reportsgenerator"
+          - name: PG_USER
+            value: "postgres"
+          - name: PG_PORT
+            value: ""
+          - name: PG_SSLMODE
+            value: "disable"
+          - name: LOG_LEVEL
+            value: "error"
+          - name: SQS_QUEUE_ARN
+            value: "arn:aws:sqs:local:012345678900:VulcanK8SReportsGenerator"
+          - name: SES_REGION
+            value: "local"
+          - name: SES_FROM
+            value: "tbd@tbd.com"
+          - name: SES_CC
+            value: "[\"tbd@tbd.com\"]"
+          - name: SCAN_EMAIL_SUBJECT
+            value: "Security Overview"
+          - name: SCAN_S3_PUBLIC_BUCKET
+            value: "public-insights"
+          - name: SCAN_S3_PRIVATE_BUCKET
+            value: "insights"
+          - name: SCAN_GA_ID
+            value: "UA-000000000-0"
+          - name: SCAN_COMPANY_NAME
+            value: ""
+          - name: SCAN_SUPPORT_EMAIL
+            value: ""
+          - name: SCAN_CONTACT_EMAIL
+            value: ""
+          - name: SCAN_CONTACT_CHANNEL
+            value: ""
+          - name: SCAN_CONTACT_JIRA
+            value: ""
+          - name: SCAN_DOCS_API_LINK
+            value: ""
+          - name: SCAN_DOCS_ROADMAP_LINK
+            value: ""
+          - name: PERSISTENCE_ENDPOINT  # We keep this PERSISTENCE variable for compatibility
+            value: "http://myrelease-scanengine"
+          - name: RESULTS_ENDPOINT
+            value: "http://myrelease-results"
+          - name: SCAN_PROXY_ENDPOINT
+            value: "http://insights.vulcan.local"
+          - name: VULCAN_UI
+            value: "http://www.vulcan.local/"
+          - name: SCAN_VIEW_REPORT
+            value: "http://www.vulcan.local/api/v1/report?team_id=%s&scan_id=%s"
+          - name: LIVEREPORT_EMAIL_SUBJECT
+            value: ""
+          
+          - name: AWS_SQS_ENDPOINT
+            value: "http://myrelease-goaws"
+          - name: AWS_ACCESS_KEY_ID
+            value: ANYVALUE
+          - name: AWS_SECRET_ACCESS_KEY
+            value: ANYVALUE
+          
+          envFrom:
+          - secretRef:
+              name: myrelease-vulcan-reportsgenerator
+          ports:
+            - name: app
+              containerPort: 8080
+              protocol: TCP
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","sleep 30;"]
+          livenessProbe:
+            httpGet:
+              path: /healthcheck
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 10
+          readinessProbe:
+            httpGet:
+              path: /healthcheck
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 5
+          resources:
+            {}
+      volumes:
+      - name: config-proxy
+        configMap:
+          name: myrelease-vulcan-reportsgenerator-proxy
 ---
 # Source: vulcan/templates/results/deployment.yaml
 apiVersion: apps/v1
