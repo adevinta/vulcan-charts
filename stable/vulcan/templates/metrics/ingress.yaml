@@ -1,0 +1,1 @@
+{{- include "comp-hpa" (dict "comp" .Values.metrics "context" $) }}

@@ -1,17 +1,4 @@
 ---
-# Source: vulcan/charts/metrics/templates/secrets.yaml
-apiVersion: v1
-kind: Secret
-metadata:
-  labels:
-    name: myrelease-metrics
-  name: myrelease-metrics
-type: Opaque
-data:
-  DEVHOSE_TOKEN: "c2VjcmV0ZGV2aG9zZXRva2Vu"
-  REDIS_PASSWORD: "cmVkaXNwYXNzd29yZA=="
-  VULCAN_API_TOKEN: "c3VwZXJzZWNyZXR2dWxjYW50b2tlbg=="
----
 # Source: vulcan/charts/reportsgenerator/templates/secrets.yaml
 apiVersion: v1
 kind: Secret
@@ -95,6 +82,23 @@ type: Opaque
 data:
   DD_API_KEY: "eHh4eHh4eHh4eHh4eHh4eHh4eHh4"
 ---
+# Source: vulcan/templates/metrics/secrets.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: myrelease-vulcan-metrics
+  labels:
+    helm.sh/chart: vulcan-0.2.0
+    app.kubernetes.io/name: vulcan
+    app.kubernetes.io/instance: myrelease
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: metrics
+type: Opaque
+data:
+  DEVHOSE_TOKEN: "c2VjcmV0ZGV2aG9zZXRva2Vu"
+  VULCAN_API_TOKEN: "c3VwZXJzZWNyZXR2dWxjYW50b2tlbg=="
+---
 # Source: vulcan/templates/persistence/secrets.yaml
 apiVersion: v1
 kind: Secret
@@ -111,6 +115,22 @@ type: Opaque
 data:
   POSTGRES_PASSWORD: "cGFzc3dvcmRwZXJzaXN0ZW5jZQ=="
   SECRET_KEY_BASE: "c2VjcmV0a2V5"
+---
+# Source: vulcan/templates/redis/secrets.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: myrelease-vulcan-redis
+  labels:
+    helm.sh/chart: vulcan-0.2.0
+    app.kubernetes.io/name: vulcan
+    app.kubernetes.io/instance: myrelease
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: redis
+type: Opaque
+data:
+  REDIS_PASSWORD: "VEJE"
 ---
 # Source: vulcan/templates/scanengine/secrets.yaml
 apiVersion: v1
@@ -612,20 +632,6 @@ data:
       http-request use-service prometheus-exporter if { path /metrics }
       monitor-uri /healthz
 ---
-# Source: vulcan/charts/metrics/templates/redis.yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: myrelease-metrics-redis
-  labels:
-    app: myrelease-metrics-redis
-spec:
-  ports:
-    - port: 6379
-  selector:
-    app.kubernetes.io/name: metrics-redis
-    app.kubernetes.io/instance: myrelease
----
 # Source: vulcan/charts/reportsgenerator/templates/service.yaml
 apiVersion: v1
 kind: Service
@@ -742,6 +748,30 @@ spec:
       app.kubernetes.io/instance: myrelease
       app.kubernetes.io/component: insights
 ---
+# Source: vulcan/templates/metrics/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: myrelease-vulcan-metrics
+  labels:
+    helm.sh/chart: vulcan-0.2.0
+    app.kubernetes.io/name: vulcan
+    app.kubernetes.io/instance: myrelease
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: metrics
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+      app.kubernetes.io/name: vulcan
+      app.kubernetes.io/instance: myrelease
+      app.kubernetes.io/component: metrics
+---
 # Source: vulcan/templates/persistence/service.yaml
 apiVersion: v1
 kind: Service
@@ -765,6 +795,30 @@ spec:
       app.kubernetes.io/name: vulcan
       app.kubernetes.io/instance: myrelease
       app.kubernetes.io/component: persistence
+---
+# Source: vulcan/templates/redis/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: myrelease-vulcan-redis
+  labels:
+    helm.sh/chart: vulcan-0.2.0
+    app.kubernetes.io/name: vulcan
+    app.kubernetes.io/instance: myrelease
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: redis
+spec:
+  type: 
+  ports:
+    - port: 6317
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+      app.kubernetes.io/name: vulcan
+      app.kubernetes.io/instance: myrelease
+      app.kubernetes.io/component: redis
 ---
 # Source: vulcan/templates/results/service.yaml
 apiVersion: v1
@@ -861,132 +915,6 @@ spec:
       app.kubernetes.io/name: vulcan
       app.kubernetes.io/instance: myrelease
       app.kubernetes.io/component: ui
----
-# Source: vulcan/charts/metrics/templates/deployment.yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: myrelease-metrics
-  labels:
-    helm.sh/chart: metrics-0.2.0
-    app.kubernetes.io/name: metrics
-    app.kubernetes.io/instance: myrelease
-    app.kubernetes.io/version: "1.0"
-    app.kubernetes.io/managed-by: Helm
-spec:
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: metrics
-      app.kubernetes.io/instance: myrelease
-  template:
-    metadata:
-      labels:
-        app.kubernetes.io/name: metrics
-        app.kubernetes.io/instance: myrelease
-      annotations:
-        checksum/secrets: f08c7d42427cdd2858be8d9018ae7bba9abcc6621f5f3056ab79fd5e360e4c7e
-        iam.amazonaws.com/role: arn:aws:iam::000000000000:role/MetricsRole
-    spec:
-      imagePullSecrets:
-        - name: pullsecretname
-      serviceAccountName: default
-      securityContext:
-        {}
-      containers:
-        
-        - name: dogstatsd
-          image: "datadog/dogstatsd:7.25.1"
-          envFrom:
-          - secretRef:
-              name: myrelease-dogstatsd
-          ports:
-            - containerPort: 8125
-              name: dogstatsd
-              protocol: UDP
-          resources:
-                    null
-        - name: metrics
-          securityContext:
-            {}
-          image: "containers.mpi-internal.com/spt-security/vulcan-metrics:tag-metrics"
-          imagePullPolicy: Always
-          env:
-          - name: LOG_LEVEL
-            value: "warn"
-          - name: SQS_POLLING_INTERVAL
-            value: "10"
-          - name: CHECKS_SQS_QUEUE_ARN
-            value: "arn:aws:sqs:eu-west-1:000000000000:MetricsChecks"
-          - name: SCANS_SQS_QUEUE_ARN
-            value: "arn:aws:sqs:eu-west-1:000000000000:MetricsScans"
-          - name: FINDINGS_SQS_QUEUE_ARN
-            value: "arn:aws:sqs:eu-west-1:000000000000:MetricsFindings"
-          - name: RESULTS_HOST
-            value: "myrelease-results"
-          - name: RESULTS_SCHEME
-            value: "http"
-          - name: DEVHOSE_URL
-            value: "http://devhosehost.com/devhose"
-          - name: DEVHOSE_TENANT
-            value: "purple"
-          - name: DEVHOSE_METRICS_SOURCE
-            value: "usage"
-          - name: DEVHOSE_FINDINGS_SOURCE
-            value: "vulcan-findings"
-          - name: REDIS_ADDR
-            value: "myrelease-metrics-redis:6379"
-          - name: VULCAN_API
-            value: http://myrelease-api/api
-          - name: VULCAN_API_EXTERNAL
-            value: "https://www.vulcan.com/api"
-          
-          - name: DOGSTATSD_ENABLED
-            value: "true"
-          - name: DOGSTATSD_HOST
-            value: "localhost"
-          - name: DOGSTATSD_PORT
-            value: "8125"
-          envFrom:
-          - secretRef:
-              name: myrelease-metrics
-          resources:
-            {}
----
-# Source: vulcan/charts/metrics/templates/redis.yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: myrelease-metrics-redis
-  labels:
-    app: myrelease-metrics-redis
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: metrics-redis
-      app.kubernetes.io/instance: myrelease
-  template:
-    metadata:
-      labels:
-        app.kubernetes.io/name: metrics-redis
-        app.kubernetes.io/instance: myrelease
-    spec:
-      imagePullSecrets:
-        - name: pullsecretname
-      containers:
-      - name: redis
-        image: "redis:6.0-alpine"
-        imagePullPolicy: Always
-        args: ["--requirepass", "$(REDIS_PASSWORD)"]
-        env:
-          - name: REDIS_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: myrelease-metrics
-                key: REDIS_PASSWORD
-        ports:
-          - containerPort: 6379
-            name: redis
 ---
 # Source: vulcan/charts/reportsgenerator/templates/deployment.yaml
 apiVersion: apps/v1
@@ -1838,6 +1766,124 @@ spec:
         configMap:
           name: myrelease-vulcan-insights-proxy
 ---
+# Source: vulcan/templates/metrics/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myrelease-vulcan-metrics
+  labels:
+    helm.sh/chart: vulcan-0.2.0
+    app.kubernetes.io/name: vulcan
+    app.kubernetes.io/instance: myrelease
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: metrics
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: vulcan
+      app.kubernetes.io/instance: myrelease
+      app.kubernetes.io/component: metrics
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: vulcan
+        app.kubernetes.io/instance: myrelease
+        app.kubernetes.io/component: metrics
+      annotations:
+        
+        iam.amazonaws.com/role: arn:aws:iam::000000000000:role/MetricsRole
+    spec:
+      
+      imagePullSecrets:
+        - name: pullsecretname
+      securityContext:
+        {}
+      containers:
+        
+        - name: dogstatsd
+          image: "datadog/dogstatsd:7.25.1"
+          envFrom:
+          - secretRef:
+              name: "myrelease-vulcan-dogstatsd"
+          ports:
+            - containerPort: 8125
+              name: dogstatsd
+              protocol: UDP
+          resources:
+                    null
+        - name: metrics
+          securityContext:
+            {}
+          image: "containers.mpi-internal.com/spt-security/vulcan-metrics:tag-metrics"
+          imagePullPolicy: Always
+          env:
+          - name: LOG_LEVEL
+            value: "warn"
+          - name: SQS_POLLING_INTERVAL
+            value: "10"
+          - name: CHECKS_SQS_QUEUE_ARN
+            value: "arn:aws:sqs:eu-west-1:000000000000:MetricsChecks"
+          - name: SCANS_SQS_QUEUE_ARN
+            value: "arn:aws:sqs:eu-west-1:000000000000:MetricsScans"
+          - name: FINDINGS_SQS_QUEUE_ARN
+            value: "arn:aws:sqs:eu-west-1:000000000000:MetricsFindings"
+          - name: RESULTS_HOST
+            value: "myrelease-results"
+          - name: RESULTS_SCHEME
+            value: "http"
+          - name: DEVHOSE_URL
+            value: "http://devhosehost.com/devhose"
+          - name: DEVHOSE_TENANT
+            value: "purple"
+          - name: DEVHOSE_METRICS_SOURCE
+            value: "usage"
+          - name: DEVHOSE_FINDINGS_SOURCE
+            value: "vulcan-findings"
+          - name: REDIS_ADDR
+            value: "myrelease-redis:6379"
+          - name: VULCAN_API
+            value: http://myrelease-api/api
+          - name: VULCAN_API_EXTERNAL
+            value: "https://www.vulcan.com/api"
+          
+          - name: DOGSTATSD_ENABLED
+            value: "true"
+          - name: DOGSTATSD_HOST
+            value: "localhost"
+          - name: DOGSTATSD_PORT
+            value: "8125"
+          envFrom:
+          - secretRef:
+              name: myrelease-vulcan-metrics
+          - secretRef:
+              name: myrelease-vulcan-redis
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","sleep 10;"]
+          livenessProbe:
+            httpGet:
+              path: /healthcheck
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 10
+          readinessProbe:
+            httpGet:
+              path: /healthcheck
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 5
+          resources:
+            {}
+      volumes:
+---
 # Source: vulcan/templates/persistence/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -1997,6 +2043,52 @@ spec:
       - name: config-proxy
         configMap:
           name: myrelease-vulcan-persistence-proxy
+---
+# Source: vulcan/templates/redis/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myrelease-vulcan-redis
+  labels:
+    helm.sh/chart: vulcan-0.2.0
+    app.kubernetes.io/name: vulcan
+    app.kubernetes.io/instance: myrelease
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: redis
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: vulcan
+      app.kubernetes.io/instance: myrelease
+      app.kubernetes.io/component: redis
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: vulcan
+        app.kubernetes.io/instance: myrelease
+        app.kubernetes.io/component: redis
+      annotations:
+    spec:
+      securityContext:
+        {}
+      containers:
+      - name: redis
+        securityContext:
+            {}
+        image: "redis:6.0-alpine"
+        imagePullPolicy: Always
+        args: ["--requirepass", "$(REDIS_PASSWORD)"]
+        envFrom:
+          - secretRef:
+              name: myrelease-vulcan-redis
+        ports:
+          - name: app
+            containerPort: 6317
+            protocol: TCP
+        resources:
+            {}
+      volumes:
 ---
 # Source: vulcan/templates/results/deployment.yaml
 apiVersion: apps/v1

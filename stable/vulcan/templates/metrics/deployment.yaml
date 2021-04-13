@@ -1,0 +1,98 @@
+{{- $c := (dict "comp" .Values.metrics "context" $) -}}
+{{- if $c.comp.enabled }}
+{{- include "comp-common-manifests" $c }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "metrics.name" . }}
+  labels: {{- include "vulcan.labels" . | nindent 4 }}
+    app.kubernetes.io/component: metrics
+spec:
+  {{- if kindIs "int64" $c.comp.replicaCount }}
+  replicas: {{ $c.comp.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels: {{- include "vulcan.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: metrics
+  template:
+    metadata:
+      labels: {{- include "vulcan.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: metrics
+      annotations:
+        {{- include "comp-common-annotations" $c | nindent 8 }}
+        {{- with $c.comp.annotations }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+    {{- include "comp-common-spec" $c | nindent 6 }}
+    {{- with $c.comp.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      securityContext:
+        {{- toYaml $c.comp.podSecurityContext | nindent 8 }}
+      containers:
+        {{- include "comp-common-containers" $c | nindent 8}}
+        - name: {{ $c.comp.name }}
+          securityContext:
+            {{- toYaml $c.comp.securityContext | nindent 12 }}
+          image: "{{ $c.comp.image.repository }}:{{ $c.comp.image.tag }}"
+          imagePullPolicy: {{ $c.comp.image.pullPolicy }}
+          env:
+          - name: LOG_LEVEL
+            value: "{{ $c.comp.conf.logLevel }}"
+          - name: SQS_POLLING_INTERVAL
+            value: "{{ $c.comp.conf.sqsPollingInterval }}"
+          - name: CHECKS_SQS_QUEUE_ARN
+            value: "{{ $c.comp.conf.checksQueueArn }}"
+          - name: SCANS_SQS_QUEUE_ARN
+            value: "{{ $c.comp.conf.scansQueueArn }}"
+          - name: FINDINGS_SQS_QUEUE_ARN
+            value: "{{ $c.comp.conf.findingsQueueArn }}"
+          - name: RESULTS_HOST
+            value: "{{ $c.comp.conf.resultsHost | default (include "resultsHost" .)}}"
+          - name: RESULTS_SCHEME
+            value: "{{ $c.comp.conf.resultsScheme }}"
+          - name: DEVHOSE_URL
+            value: "{{ $c.comp.conf.devHoseURL }}"
+          - name: DEVHOSE_TENANT
+            value: "{{ $c.comp.conf.devHoseTenant }}"
+          - name: DEVHOSE_METRICS_SOURCE
+            value: "{{ $c.comp.conf.devHoseMetricsSource }}"
+          - name: DEVHOSE_FINDINGS_SOURCE
+            value: "{{ $c.comp.conf.devHoseFindingsSource }}"
+          - name: REDIS_ADDR
+            value: "{{ $c.comp.conf.redisAddr | default (include "redisAddr" .)}}"
+          - name: VULCAN_API
+            value: {{ $c.comp.conf.vulcanApi | default (include "vulcanApi" .) }}
+          - name: VULCAN_API_EXTERNAL
+            value: "{{ $c.comp.conf.vulcanAPIExternal }}"
+        {{- include "comp-common-envs" $c | nindent 10 }}
+        {{- range $name, $value := $c.comp.extraEnv }}
+          - name: {{ $name }}
+            value: {{ $value | quote }}
+        {{- end }}
+          envFrom:
+          - secretRef:
+              name: {{ include "metrics.name" . }}
+          - secretRef:
+              name: {{ include "redis.name" . }}
+          {{- include "comp-common-lifecycle" $c | nindent 10 }}
+          resources:
+            {{- toYaml $c.comp.resources | nindent 12 }}
+      volumes:
+      {{- include "comp-common-volumes" $c | nindent 6}}
+      {{- with $c.comp.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with $c.comp.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with $c.comp.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+{{- end }}

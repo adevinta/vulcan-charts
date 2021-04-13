@@ -605,18 +605,71 @@ reportsgenerator:
     <<: *db
     name: reportsgenerator
 
+redis:
+  enabled: true
+  name: redis
+  <<: *comp
+
+  image:
+    repository: redis
+    tag: 6.0-alpine
+    pullPolicy: Always
+
+  containerPort: 6317
+
+  conf:
+    redisPassword: TBD 
+
+  service:
+    port: 6317
+
+
 metrics:
+  enabled: true
+  name: metrics
+  <<: *comp
+
+  image:
+    repository: containers.mpi-internal.com/spt-security/vulcan-metrics
+    tag: latest
+    pullPolicy: Always
+
   proxy:
     enabled: false
-  infra:
-    sqs: true
-  dogstatsd:
-    <<: *dogstatsd
-    enabled: true
+
+  lifecycle:
+    preStopSleep: 10
+
   conf:
+    region:
+    logLevel: warn
+    sqsPollingInterval: 10
     checksQueueArn: arn:aws:sqs:local:012345678900:VulcanK8SMetricsChecks
     scansQueueArn: arn:aws:sqs:local:012345678900:VulcanK8SMetricsScans
     findingsQueueArn: arn:aws:sqs:local:012345678900:VulcanK8SMetricsFindings
+    resultsScheme: http
+    devHoseURL: http://devhose/devhose
+    devHoseToken: token
+    devHoseTenant: tbd
+    devHoseMetricsSource: tbd
+    devHoseFindingsSource: tbd
+    redisPassword: TBD
+    redisAddr:
+    resultsHost:
+    vulcanApi: # http://host/api
+    vulcanAPIToken: token
+    vulcanAPIExternal: # https://external/api
+
+  # extraEnv:
+  #   FOO: BAR
+
+  infra:
+    sqs: true
+
+  dogstatsd:
+    <<: *dogstatsd
+    enabled: true
+
 
 vulndbapi:
   <<: *common

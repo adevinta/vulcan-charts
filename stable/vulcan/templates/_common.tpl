@@ -137,8 +137,8 @@ Override names
 {{- printf "http://%s-stream" .Release.Name -}}
 {{- end -}}
 
-{{- define "metricsRedisAddr" -}}
-{{- printf "%s-metrics-redis:6379" .Release.Name -}}
+{{- define "redisAddr" -}}
+{{- printf "%s-redis:6379" .Release.Name -}}
 {{- end -}}
 
 {{- define "minioEndpoint" -}}
