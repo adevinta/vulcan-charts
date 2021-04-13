@@ -87,11 +87,3 @@ terminationGracePeriodSeconds: {{ .comp.terminationGracePeriodSeconds }}
 http
 {{- end -}}
 {{- end -}}
-
-{{- define "region" -}}
-{{- .context.global.region -}}
-{{- end -}}
-
-{{- define "domain" -}}
-{{- .context.global.domain -}}
-{{- end -}}

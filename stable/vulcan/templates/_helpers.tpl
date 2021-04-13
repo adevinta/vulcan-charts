@@ -117,3 +117,12 @@ Create the name of the service account to use
 {{- define "vulndbapi.fullname" -}}
 {{- printf "%s-%s" (include "vulcan.fullname" .) .Values.vulndbapi.name -}}
 {{- end -}}
+
+{{- define "region" -}}
+{{- .Values.global.region -}}
+{{- end -}}
+
+{{- define "domain" -}}
+{{- .Values.global.domain -}}
+{{- end -}}
+

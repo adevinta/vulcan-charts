@@ -1,11 +1,3 @@
-{{- define "region" -}}
-{{- .Values.global.region -}}
-{{- end -}}
-
-{{- define "domain" -}}
-{{- .Values.global.domain -}}
-{{- end -}}
-
 {{/*
 Override names
 */}}
