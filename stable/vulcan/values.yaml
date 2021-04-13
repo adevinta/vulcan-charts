@@ -723,14 +723,38 @@ metrics:
 
 
 vulndbapi:
-  <<: *common
+  enabled: true
+  name: vulndbapi
+  <<: *comp
+
+  image:
+    repository: adevinta/vulnerability-db-api
+    tag: latest
+    pullPolicy: Always
+
+  waitfordb:
+    image:
+      repository: postgres
+      tag: 9.6-alpine
+
   lifecycle:
     preStopSleep: 30
+
+  livenessProbe:
+    <<: *comp-livenessProbe
+    path: /healthcheck
+
+  readinessProbe:
+    <<: *comp-readynessProbe
+    path: /healthcheck
+
   conf:
-    logLevel: "error"
+    logLevel: info
+
   db:
     <<: *db
     name: vulnerabilitydb
+
 
 vulndb:
   enabled: true

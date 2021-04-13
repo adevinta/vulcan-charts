@@ -29,17 +29,6 @@ type: Opaque
 data:
   postgresql-password: "VEJE"
 ---
-# Source: vulcan/charts/vulndbapi/templates/secrets.yaml
-apiVersion: v1
-kind: Secret
-metadata:
-  labels:
-    name: myrelease-vulndbapi
-  name: myrelease-vulndbapi
-type: Opaque
-data:
-  PG_PASSWORD: "VEJE"
----
 # Source: vulcan/templates/api/secrets.yaml
 apiVersion: v1
 kind: Secret
@@ -204,6 +193,22 @@ type: Opaque
 data:
   PG_PASSWORD: "VEJE"
 ---
+# Source: vulcan/templates/vulndbapi/secrets.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: myrelease-vulcan-vulndbapi
+  labels:
+    helm.sh/chart: vulcan-0.2.0
+    app.kubernetes.io/name: vulcan
+    app.kubernetes.io/instance: myrelease
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: vulndbapi
+type: Opaque
+data:
+  PG_PASSWORD: "VEJE"
+---
 # Source: vulcan/charts/goaws/templates/config.yaml
 apiVersion: v1
 kind: ConfigMap
@@ -280,46 +285,6 @@ data:
     CREATE DATABASE scanengine;
     CREATE DATABASE reportsgenerator;
     CREATE DATABASE vulnerabilitydb;
----
-# Source: vulcan/charts/vulndbapi/templates/deployment.yaml
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  labels:
-    name: myrelease-vulndbapi-proxy
-  name: myrelease-vulndbapi-proxy
-data:
-  haproxy.cfg: |
-    global
-      daemon
-      maxconn 64
-      log stdout format raw daemon
-
-    defaults
-      mode http
-      timeout connect 5s
-      timeout client 25s
-      timeout server 25s
-      timeout tunnel 3600s
-      option  http-server-close
-
-    frontend http
-      bind *:9090
-      log global
-      option httplog clf
-      http-request capture req.hdr(Host) len 50
-      http-request capture req.hdr(User-Agent) len 100
-
-      default_backend app
-
-    backend app
-      server app 127.0.0.1:8080
-
-    frontend stats
-      bind *:9101
-      option http-use-htx
-      http-request use-service prometheus-exporter if { path /metrics }
-      monitor-uri /healthz
 ---
 # Source: vulcan/templates/api/deployment.yaml
 apiVersion: v1
@@ -734,6 +699,51 @@ data:
       http-request use-service prometheus-exporter if { path /metrics }
       monitor-uri /healthz
 ---
+# Source: vulcan/templates/vulndbapi/deployment.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: myrelease-vulcan-vulndbapi-proxy
+  labels:
+    helm.sh/chart: vulcan-0.2.0
+    app.kubernetes.io/name: vulcan
+    app.kubernetes.io/instance: myrelease
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: vulndbapi-proxy
+data:
+  haproxy.cfg: |
+    global
+      daemon
+      maxconn 64
+      log stdout format raw daemon
+
+    defaults
+      mode http
+      timeout connect 5s
+      timeout client 25s
+      timeout server 25s
+      timeout tunnel 3600s
+      option  http-server-close
+
+    frontend http
+      bind *:9090
+      log global
+      option httplog clf
+      http-request capture req.hdr(Host) len 50
+      http-request capture req.hdr(User-Agent) len 100
+
+      default_backend app
+
+    backend app
+      server app 127.0.0.1:8080
+
+    frontend stats
+      bind *:9101
+      option http-use-htx
+      http-request use-service prometheus-exporter if { path /metrics }
+      monitor-uri /healthz
+---
 # Source: vulcan/charts/goaws/templates/service.yaml
 apiVersion: v1
 kind: Service
@@ -843,28 +853,6 @@ spec:
     app: postgresql
     release: "myrelease"
     role: master
----
-# Source: vulcan/charts/vulndbapi/templates/service.yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: myrelease-vulndbapi
-  labels:
-    helm.sh/chart: vulndbapi-0.2.0
-    app.kubernetes.io/name: vulndbapi
-    app.kubernetes.io/instance: myrelease
-    app.kubernetes.io/version: "1.16.0"
-    app.kubernetes.io/managed-by: Helm
-spec:
-  type: ClusterIP
-  ports:
-    - port: 80
-      targetPort: http
-      protocol: TCP
-      name: http
-  selector:
-    app.kubernetes.io/name: vulndbapi
-    app.kubernetes.io/instance: myrelease
 ---
 # Source: vulcan/templates/api/service.yaml
 apiVersion: v1
@@ -1154,6 +1142,30 @@ spec:
       app.kubernetes.io/instance: myrelease
       app.kubernetes.io/component: vulndb
 ---
+# Source: vulcan/templates/vulndbapi/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: myrelease-vulcan-vulndbapi
+  labels:
+    helm.sh/chart: vulcan-0.2.0
+    app.kubernetes.io/name: vulcan
+    app.kubernetes.io/instance: myrelease
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: vulndbapi
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+      app.kubernetes.io/name: vulcan
+      app.kubernetes.io/instance: myrelease
+      app.kubernetes.io/component: vulndbapi
+---
 # Source: vulcan/charts/goaws/templates/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -1287,123 +1299,6 @@ spec:
       volumes:
         - name: data
           emptyDir: {}
----
-# Source: vulcan/charts/vulndbapi/templates/deployment.yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: myrelease-vulndbapi
-  labels:
-    helm.sh/chart: vulndbapi-0.2.0
-    app.kubernetes.io/name: vulndbapi
-    app.kubernetes.io/instance: myrelease
-    app.kubernetes.io/version: "1.16.0"
-    app.kubernetes.io/managed-by: Helm
-spec:
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: vulndbapi
-      app.kubernetes.io/instance: myrelease
-  template:
-    metadata:
-      labels:
-        app.kubernetes.io/name: vulndbapi
-        app.kubernetes.io/instance: myrelease
-      annotations:
-        checksum/secrets: fafc1a8ee4dc0872c1fca3282dbb5f183ef61d1322985ab558ecef14e4ec0581
-        checksum/config-proxy: 44c989d15d6b83fe1f30d4814459a5023ee64e2c1e954f2b3132762832989afe
-        prometheus.io/scrape: 'true'
-        prometheus.io/port: '9101'
-    spec:
-      
-      serviceAccountName: default
-      securityContext:
-        {}
-      initContainers:
-        - name: waitfordb
-          image: "postgres:9.6-alpine"
-          imagePullPolicy: Always
-          command: ['sh', '-c', 'until pg_isready -t 5; do echo WaitingDB; done;']
-          env:
-          - name: PGHOST
-            value: "myrelease-postgresql"
-          - name: PGPORT
-            value: "5432"
-      containers:
-        
-        - name: proxy
-          image: "haproxy:2.2-alpine"
-          imagePullPolicy: Always
-          ports:
-            - name: http
-              containerPort: 9090
-            - name: metrics
-              containerPort: 9101
-          volumeMounts:
-          - mountPath: /usr/local/etc/haproxy
-            readOnly: true
-            name: config-proxy
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh","-c","sleep 30;"]
-          resources:
-            {}
-        - name: vulndbapi
-          securityContext:
-            {}
-          image: "adevinta/vulnerability-db-api:latest"
-          imagePullPolicy: Always
-          env:
-          - name: PG_HOST
-            value: "myrelease-postgresql"
-          - name: PG_NAME
-            value: "vulnerabilitydb"
-          - name: PG_USER
-            value: "postgres"
-          - name: PG_PORT
-            value: "5432"
-          - name: PG_SSLMODE
-            value: "disable"
-          - name: LOG_LEVEL
-            value: "error"
-          
-          
-          envFrom:
-          - secretRef:
-              name: myrelease-vulndbapi
-          ports:
-            - name: app
-              containerPort: 8080
-              protocol: TCP
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh","-c","sleep 30;"]
-          livenessProbe:
-            httpGet:
-              path: /healthcheck
-              port: 8080
-            initialDelaySeconds: 10
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 10
-          readinessProbe:
-            httpGet:
-              path: /healthcheck
-              port: 8080
-            initialDelaySeconds: 10
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 5
-          resources:
-            {}
-      volumes:
-      - name: config-proxy
-        configMap:
-          name: myrelease-vulndbapi-proxy
 ---
 # Source: vulcan/templates/api/deployment.yaml
 apiVersion: apps/v1
@@ -2966,6 +2861,127 @@ spec:
             {}
       volumes:
 ---
+# Source: vulcan/templates/vulndbapi/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myrelease-vulcan-vulndbapi
+  labels:
+    helm.sh/chart: vulcan-0.2.0
+    app.kubernetes.io/name: vulcan
+    app.kubernetes.io/instance: myrelease
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: vulndbapi
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: vulcan
+      app.kubernetes.io/instance: myrelease
+      app.kubernetes.io/component: vulndbapi
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: vulcan
+        app.kubernetes.io/instance: myrelease
+        app.kubernetes.io/component: vulndbapi
+      annotations:
+        checksum/secrets: b1d3b6a9d3ccc1d826f104c66d55f4121930060fdfcb44837cb5767b4eba516f
+        checksum/config-proxy: 00a25e0167d360d48dfd1fe3a8a9011a6e7aa9e72a46e5797bf7d562bf2405f1
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '9101'
+    spec:
+      
+      securityContext:
+        {}
+      initContainers:
+        - name: waitfordb
+          image: "postgres:9.6-alpine"
+          imagePullPolicy: Always
+          command: ['sh', '-c', 'until pg_isready -t 5; do echo WaitingDB; done;']
+          env:
+          - name: PGHOST
+            value: "myrelease-postgresql"
+          - name: PGPORT
+            value: ""
+      containers:
+        
+        - name: proxy
+          image: "haproxy:2.2-alpine"
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 9090
+            - name: metrics
+              containerPort: 9101
+          volumeMounts:
+          - mountPath: /usr/local/etc/haproxy
+            readOnly: true
+            name: config-proxy
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","sleep 30;"]
+          resources:
+            {}
+        - name: vulndbapi
+          securityContext:
+            {}
+          image: "adevinta/vulnerability-db-api:latest"
+          imagePullPolicy: Always
+          env:
+          - name: PORT
+            value: "8080"
+          - name: PG_HOST
+            value: "myrelease-postgresql"
+          - name: PG_NAME
+            value: "vulnerabilitydb"
+          - name: PG_USER
+            value: "postgres"
+          - name: PG_PORT
+            value: ""
+          - name: PG_SSLMODE
+            value: "disable"
+          - name: LOG_LEVEL
+            value: "info"
+          
+          
+          envFrom:
+          - secretRef:
+              name: myrelease-vulcan-vulndbapi
+          ports:
+            - name: app
+              containerPort: 8080
+              protocol: TCP
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","sleep 30;"]
+          livenessProbe:
+            httpGet:
+              path: /healthcheck
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 10
+          readinessProbe:
+            httpGet:
+              path: /healthcheck
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 5
+          resources:
+            {}
+      volumes:
+      - name: config-proxy
+        configMap:
+          name: myrelease-vulcan-vulndbapi-proxy
+---
 # Source: vulcan/charts/postgresql/templates/statefulset.yaml
 apiVersion: apps/v1
 kind: StatefulSet
@@ -3107,31 +3123,6 @@ spec:
             sizeLimit: 1Gi
         - name: data
           emptyDir: {}
----
-# Source: vulcan/charts/vulndbapi/templates/ingress.yaml
-apiVersion: networking.k8s.io/v1beta1
-kind: Ingress
-metadata:
-  name: myrelease-vulndbapi
-  labels:
-    helm.sh/chart: vulndbapi-0.2.0
-    app.kubernetes.io/name: vulndbapi
-    app.kubernetes.io/instance: myrelease
-    app.kubernetes.io/version: "1.16.0"
-    app.kubernetes.io/managed-by: Helm
-spec:
-  tls:
-    - hosts:
-        - "vulndbapi.vulcan.local"
-      secretName: vulcan-vulndbapi-tls
-  rules:
-    - host: "vulndbapi.vulcan.local"
-      http:
-        paths:
-          - path: /
-            backend:
-              serviceName: myrelease-vulndbapi
-              servicePort: 80
 ---
 # Source: vulcan/templates/api/hpa.yaml
 apiVersion: networking.k8s.io/v1beta1
@@ -3300,4 +3291,30 @@ spec:
           - path: /
             backend:
               serviceName: myrelease-vulcan-ui
+              servicePort: 80
+---
+# Source: vulcan/templates/vulndbapi/hpa.yaml
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: myrelease-vulcan-vulndbapi
+  labels:
+    helm.sh/chart: vulcan-0.2.0
+    app.kubernetes.io/name: vulcan
+    app.kubernetes.io/instance: myrelease
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: vulndbapi
+spec:
+  tls:
+    - hosts:
+        - "vulndbapi.vulcan.local"
+      secretName: vulcan-vulndbapi-tls
+  rules:
+    - host: "vulndbapi.vulcan.local"
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: myrelease-vulcan-vulndbapi
               servicePort: 80
