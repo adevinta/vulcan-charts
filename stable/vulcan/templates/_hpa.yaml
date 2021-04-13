@@ -13,7 +13,7 @@ spec:
   scaleTargetRef:
     apiVersion: extensions/v1beta1
     kind: Deployment
-    name: {{ template "vulcan.name" .context }}-{{ .comp.name }}
+    name: {{ template "vulcan.fullname" .context }}-{{ .comp.name }}
   minReplicas: {{ .comp.autoscaling.minReplicas }}
   maxReplicas: {{ .comp.autoscaling.maxReplicas }}
   targetCPUUtilizationPercentage: {{ .comp.autoscaling.targetCPUUtilizationPercentage }}

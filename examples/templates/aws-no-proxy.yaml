@@ -1782,13 +1782,15 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app.kubernetes.io/name: vulcan-sqsexporter
+      app.kubernetes.io/name: vulcan
       app.kubernetes.io/instance: myrelease
+      app.kubernetes.io/component: sqsexporter
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: vulcan-sqsexporter
+        app.kubernetes.io/name: vulcan
         app.kubernetes.io/instance: myrelease
+        app.kubernetes.io/component: sqsexporter
       annotations:
         prometheus.io/scrape: 'true'
         prometheus.io/port: '9384'
@@ -2214,7 +2216,7 @@ spec:
   scaleTargetRef:
     apiVersion: extensions/v1beta1
     kind: Deployment
-    name: vulcan-api
+    name: myrelease-vulcan-api
   minReplicas: 1
   maxReplicas: 5
   targetCPUUtilizationPercentage: 50
@@ -2235,7 +2237,7 @@ spec:
   scaleTargetRef:
     apiVersion: extensions/v1beta1
     kind: Deployment
-    name: vulcan-insights
+    name: myrelease-vulcan-insights
   minReplicas: 1
   maxReplicas: 5
   targetCPUUtilizationPercentage: 50
@@ -2256,7 +2258,7 @@ spec:
   scaleTargetRef:
     apiVersion: extensions/v1beta1
     kind: Deployment
-    name: vulcan-persistence
+    name: myrelease-vulcan-persistence
   minReplicas: 1
   maxReplicas: 5
   targetCPUUtilizationPercentage: 50
@@ -2277,7 +2279,7 @@ spec:
   scaleTargetRef:
     apiVersion: extensions/v1beta1
     kind: Deployment
-    name: vulcan-results
+    name: myrelease-vulcan-results
   minReplicas: 1
   maxReplicas: 5
   targetCPUUtilizationPercentage: 50
@@ -2298,7 +2300,7 @@ spec:
   scaleTargetRef:
     apiVersion: extensions/v1beta1
     kind: Deployment
-    name: vulcan-scanengine
+    name: myrelease-vulcan-scanengine
   minReplicas: 1
   maxReplicas: 5
   targetCPUUtilizationPercentage: 50

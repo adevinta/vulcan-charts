@@ -5,7 +5,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "reportsgenerator.name" . }}
+  name: {{ include "reportsgenerator.fullname" . }}
   labels: {{- include "vulcan.labels" . | nindent 4 }}
     app.kubernetes.io/component: reportsgenerator
 spec:
@@ -122,7 +122,7 @@ spec:
         {{- end }}
           envFrom:
           - secretRef:
-              name: {{ include "reportsgenerator.name" . }}
+              name: {{ include "reportsgenerator.fullname" . }}
           ports:
             - name: {{ include "comp-common-appPortName" $c }}
               containerPort: {{ $c.comp.containerPort }}

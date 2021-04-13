@@ -5,7 +5,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "crontinuous.name" . }}
+  name: {{ include "crontinuous.fullname" . }}
   labels: {{- include "vulcan.labels" . | nindent 4 }}
     app.kubernetes.io/component: crontinuous
 spec:
@@ -66,7 +66,7 @@ spec:
         {{- end }}
           envFrom:
           - secretRef:
-              name: {{ include "crontinuous.name" . }}
+              name: {{ include "crontinuous.fullname" . }}
           ports:
             - name: {{ include "comp-common-appPortName" $c }}
               containerPort: {{ $c.comp.containerPort }}

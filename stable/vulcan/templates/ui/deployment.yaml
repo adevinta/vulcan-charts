@@ -5,7 +5,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "ui.name" . }}
+  name: {{ include "ui.fullname" . }}
   labels: {{- include "vulcan.labels" . | nindent 4 }}
     app.kubernetes.io/component: ui
 spec:

@@ -7,14 +7,12 @@ metadata:
     {{- include "vulcan.labels" . | nindent 4 }}
 spec:
   selector:
-    matchLabels:
-      app.kubernetes.io/name: {{ include "vulcan.name" . }}-sqsexporter
-      app.kubernetes.io/instance: {{ .Release.Name }}
+    matchLabels: {{- include "vulcan.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: sqsexporter
   template:
     metadata:
-      labels:
-        app.kubernetes.io/name: {{ include "vulcan.name" . }}-sqsexporter
-        app.kubernetes.io/instance: {{ .Release.Name }}
+      labels: {{- include "vulcan.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: sqsexporter
       annotations:
         prometheus.io/scrape: 'true'
         prometheus.io/port: '9384'

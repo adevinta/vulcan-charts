@@ -5,7 +5,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "vulndbapi.name" . }}
+  name: {{ include "vulndbapi.fullname" . }}
   labels: {{- include "vulcan.labels" . | nindent 4 }}
     app.kubernetes.io/component: vulndbapi
 spec:
@@ -76,7 +76,7 @@ spec:
         {{- end }}
           envFrom:
           - secretRef:
-              name: {{ include "vulndbapi.name" . }}
+              name: {{ include "vulndbapi.fullname" . }}
           ports:
             - name: {{ include "comp-common-appPortName" $c }}
               containerPort: {{ $c.comp.containerPort }}

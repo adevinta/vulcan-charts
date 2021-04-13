@@ -5,7 +5,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "vulndb.name" . }}
+  name: {{ include "vulndb.fullname" . }}
   labels: {{- include "vulcan.labels" . | nindent 4 }}
     app.kubernetes.io/component: vulndb
 spec:
@@ -84,7 +84,7 @@ spec:
         {{- end }}
           envFrom:
           - secretRef:
-              name: {{ include "vulndb.name" . }}
+              name: {{ include "vulndb.fullname" . }}
           {{- include "comp-common-lifecycle" $c | nindent 10 }}
           resources:
             {{- toYaml $c.comp.resources | nindent 12 }}

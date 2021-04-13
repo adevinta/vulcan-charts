@@ -3,7 +3,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "redis.name" . }}
+  name: {{ include "redis.fullname" . }}
   labels: {{- include "vulcan.labels" . | nindent 4 }}
     app.kubernetes.io/component: redis
 spec:
@@ -37,7 +37,7 @@ spec:
         args: ["--requirepass", "$(REDIS_PASSWORD)"]
         envFrom:
           - secretRef:
-              name: {{ include "redis.name" . }}
+              name: {{ include "redis.fullname" . }}
         {{- range $name, $value := $c.comp.extraEnv }}
         - name: {{ $name }}
           value: {{ $value | quote }}

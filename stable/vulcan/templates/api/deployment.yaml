@@ -5,7 +5,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "api.name" . }}
+  name: {{ include "api.fullname" . }}
   labels: {{- include "vulcan.labels" . | nindent 4 }}
     app.kubernetes.io/component: api
 spec:
@@ -114,7 +114,7 @@ spec:
         {{- end }}
           envFrom:
           - secretRef:
-              name: {{ include "api.name" . }}
+              name: {{ include "api.fullname" . }}
           ports:
             - name: {{ include "comp-common-appPortName" $c }}
               containerPort: {{ $c.comp.containerPort }}

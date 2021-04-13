@@ -5,7 +5,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "metrics.name" . }}
+  name: {{ include "metrics.fullname" . }}
   labels: {{- include "vulcan.labels" . | nindent 4 }}
     app.kubernetes.io/component: metrics
 spec:
@@ -75,9 +75,9 @@ spec:
         {{- end }}
           envFrom:
           - secretRef:
-              name: {{ include "metrics.name" . }}
+              name: {{ include "metrics.fullname" . }}
           - secretRef:
-              name: {{ include "redis.name" . }}
+              name: {{ include "redis.fullname" . }}
           {{- include "comp-common-lifecycle" $c | nindent 10 }}
           resources:
             {{- toYaml $c.comp.resources | nindent 12 }}

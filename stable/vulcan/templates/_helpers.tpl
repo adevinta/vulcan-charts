@@ -62,58 +62,58 @@ Create the name of the service account to use
 {{- end -}}
 {{- end -}}
 
-{{- define "api.name" -}}
+{{- define "api.fullname" -}}
 {{- printf "%s-%s" (include "vulcan.fullname" .) .Values.api.name -}}
 {{- end -}}
 
-{{- define "crontinuous.name" -}}
+{{- define "crontinuous.fullname" -}}
 {{- printf "%s-%s" (include "vulcan.fullname" .) .Values.crontinuous.name -}}
 {{- end -}}
 
-{{- define "goaws.name" -}}
+{{- define "goaws.fullname" -}}
 {{- printf "%s-%s" (include "vulcan.fullname" .) .Values.goaws.name -}}
 {{- end -}}
 
-{{- define "insights.name" -}}
+{{- define "insights.fullname" -}}
 {{- printf "%s-%s" (include "vulcan.fullname" .) .Values.insights.name -}}
 {{- end -}}
 
-{{- define "metrics.name" -}}
+{{- define "metrics.fullname" -}}
 {{- printf "%s-%s" (include "vulcan.fullname" .) .Values.metrics.name -}}
 {{- end -}}
 
-{{- define "persistence.name" -}}
+{{- define "persistence.fullname" -}}
 {{- printf "%s-%s" (include "vulcan.fullname" .) .Values.persistence.name -}}
 {{- end -}}
 
-{{- define "redis.name" -}}
+{{- define "redis.fullname" -}}
 {{- printf "%s-%s" (include "vulcan.fullname" .) .Values.redis.name -}}
 {{- end -}}
 
-{{- define "reportsgenerator.name" -}}
+{{- define "reportsgenerator.fullname" -}}
 {{- printf "%s-%s" (include "vulcan.fullname" .) .Values.reportsgenerator.name -}}
 {{- end -}}
 
-{{- define "results.name" -}}
+{{- define "results.fullname" -}}
 {{- printf "%s-%s" (include "vulcan.fullname" .) .Values.results.name -}}
 {{- end -}}
 
-{{- define "scanengine.name" -}}
+{{- define "scanengine.fullname" -}}
 {{- printf "%s-%s" (include "vulcan.fullname" .) .Values.scanengine.name -}}
 {{- end -}}
 
-{{- define "stream.name" -}}
+{{- define "stream.fullname" -}}
 {{- printf "%s-%s" (include "vulcan.fullname" .) .Values.stream.name -}}
 {{- end -}}
 
-{{- define "ui.name" -}}
+{{- define "ui.fullname" -}}
 {{- printf "%s-%s" (include "vulcan.fullname" .) .Values.ui.name -}}
 {{- end -}}
 
-{{- define "vulndb.name" -}}
+{{- define "vulndb.fullname" -}}
 {{- printf "%s-%s" (include "vulcan.fullname" .) .Values.vulndb.name -}}
 {{- end -}}
 
-{{- define "vulndbapi.name" -}}
+{{- define "vulndbapi.fullname" -}}
 {{- printf "%s-%s" (include "vulcan.fullname" .) .Values.vulndbapi.name -}}
 {{- end -}}
