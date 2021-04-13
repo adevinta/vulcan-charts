@@ -27,10 +27,6 @@ dependencies:
   version: 8.9.4
   repository: https://charts.bitnami.com/bitnami
   condition: global.postgresql.enabled
-- name: goaws
-  version: 0.2.0
-  repository: "file://../goaws"
-  condition: global.sns.enabled,global.sqs.enabled
 - name: minio
   version: 3.3.6
   repository: https://charts.bitnami.com/bitnami

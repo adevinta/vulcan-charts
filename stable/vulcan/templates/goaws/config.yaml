@@ -1,0 +1,11 @@
+{{- $c := (dict "comp" .Values.goaws "context" $) -}}
+{{- if and $c.comp.enabled $c.comp.config }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "goaws.name" . }}
+  labels: {{- include "vulcan.labels" . | nindent 4 }}
+    app.kubernetes.io/component: goaws
+data:
+{{ tpl ( toYaml $c.comp.config ) . | indent 2 }}
+{{- end }}

@@ -15,6 +15,104 @@ global:
   postgresql:
     enabled: true
 
+defaults:
+
+  db: &db
+    user: postgres
+    password: TBD
+    sslMode: disable
+
+  # Default values for all the components
+  comp: &comp
+
+    replicaCount:
+    image:
+      pullPolicy: Always
+
+    proxy: &proxy
+      enabled: true
+      image:
+        repository: haproxy
+        tag: 2.2-alpine
+      port: 9090  # We use non 80 port to prevent prometheus trying to access metrics on port 80
+      cache:
+        enabled: false
+        maxSize: 64 # mb
+        maxAge: 240 # seconds
+      probe: false
+      probePath: /healthz
+      probeInitialDelay: 5
+      probeTimeoutSeconds: 3
+      # timeoutConnect: 5s
+      # timeoutClient: 25s
+      # timeoutServer: 25s
+      # timeoutTunnel: 3600s
+      lifecycle:
+        preStopSleep: 30
+      resources: {}
+
+    dogstatsd: &dogstatsd
+      image: 
+        repository: datadog/dogstatsd
+        tag: 7.25.1
+
+    podSecurityContext: {}
+
+    securityContext: {}
+
+    autoscaling:
+      enabled: false
+      minReplicas: 1
+      maxReplicas: 5
+      targetCPUUtilizationPercentage: 50
+      targetMemoryUtilizationPercentage: 50
+
+    imagePullSecrets: []
+    nameOverride: ""
+    fullnameOverride: ""
+    containerPort: 8080
+
+    livenessProbe: &comp-livenessProbe
+      enabled: true
+      path:
+      initialDelaySeconds: 5
+      periodSeconds: 10
+      timeoutSeconds: 3
+      successThreshold: 1
+      failureThreshold: 10
+
+    readinessProbe: &comp-readynessProbe
+      enabled: true
+      path:
+      initialDelaySeconds: 5
+      periodSeconds: 10
+      timeoutSeconds: 3
+      successThreshold: 1
+      failureThreshold: 5
+
+    service:
+      type: ClusterIP
+      port: 80
+
+    ingress:
+      enabled: false
+      annotations: {}
+        # kubernetes.io/ingress.class: nginx
+        # kubernetes.io/tls-acme: "true"
+      hosts:
+        - host: chart-example.local
+          paths: []
+      tls: []
+      #  - secretName: chart-example-tls
+      #    hosts:
+      #      - chart-example.local
+
+    resources: {}
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
+
+
 postgresql:
   enabled: true
   postgresqlUsername: postgres
@@ -40,6 +138,15 @@ postgresql:
     enabled: true
 
 goaws:
+  enabled: true
+  name: goaws
+  <<: *comp
+
+  image:
+    repository: pafortin/goaws
+    tag: v0.3.1
+    pullPolicy: Always
+
   containerPort: 8080
   config:
     goaws.yaml: |
@@ -109,102 +216,6 @@ minio:
   extraEnv:
     - name: MINIO_REGION_NAME
       value: local
-
-defaults:
-  db: &db
-    user: postgres
-    password: TBD
-    sslMode: disable
-  common:  &common
-    proxy: &proxy
-      enabled: true
-      image:
-        repository: haproxy
-        tag: 2.2-alpine
-      port: 9090  # We use non 80 port to prevent prometheus trying to access metrics on port 80
-      cache:
-        enabled: false
-        maxSize: 64 # mb
-        maxAge: 240 # seconds
-      probe: false
-      probePath: /healthz
-      probeInitialDelay: 5
-      probeTimeoutSeconds: 3
-      # timeoutConnect: 5s
-      # timeoutClient: 25s
-      # timeoutServer: 25s
-      # timeoutTunnel: 3600s
-      lifecycle:
-        preStopSleep: 30
-      resources: {}
-    dogstatsd: &dogstatsd
-      image: 
-        repository: datadog/dogstatsd
-        tag: 7.25.1
-
-  # Default values for all the components
-  comp: &comp
-
-    <<: *common
-    replicaCount:
-    image:
-      pullPolicy: Always
-
-    podSecurityContext: {}
-
-    securityContext: {}
-
-    autoscaling:
-      enabled: false
-      minReplicas: 1
-      maxReplicas: 5
-      targetCPUUtilizationPercentage: 50
-      targetMemoryUtilizationPercentage: 50
-
-    imagePullSecrets: []
-    nameOverride: ""
-    fullnameOverride: ""
-    containerPort: 8080
-
-    livenessProbe: &comp-livenessProbe
-      enabled: true
-      path:
-      initialDelaySeconds: 5
-      periodSeconds: 10
-      timeoutSeconds: 3
-      successThreshold: 1
-      failureThreshold: 10
-
-    readinessProbe: &comp-readynessProbe
-      enabled: true
-      path:
-      initialDelaySeconds: 5
-      periodSeconds: 10
-      timeoutSeconds: 3
-      successThreshold: 1
-      failureThreshold: 5
-
-    service:
-      type: ClusterIP
-      port: 80
-
-    ingress:
-      enabled: false
-      annotations: {}
-        # kubernetes.io/ingress.class: nginx
-        # kubernetes.io/tls-acme: "true"
-      hosts:
-        - host: chart-example.local
-          paths: []
-      tls: []
-      #  - secretName: chart-example-tls
-      #    hosts:
-      #      - chart-example.local
-
-    resources: {}
-    nodeSelector: {}
-    tolerations: []
-    affinity: {}
 
 
 results:

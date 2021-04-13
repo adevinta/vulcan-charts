@@ -1,0 +1,66 @@
+{{- $c := (dict "comp" .Values.goaws "context" $) -}}
+{{- if $c.comp.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "goaws.name" . }}
+  labels: {{- include "vulcan.labels" . | nindent 4 }}
+    app.kubernetes.io/component: goaws
+spec:
+  {{- if kindIs "int64" $c.comp.replicaCount }}
+  replicas: {{ $c.comp.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels: {{- include "vulcan.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: goaws
+  template:
+    metadata:
+      labels: {{- include "vulcan.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: goaws
+      annotations:
+        {{- with $c.comp.annotations }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+    {{- with $c.comp.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      securityContext:
+        {{- toYaml $c.comp.podSecurityContext | nindent 8 }}
+      containers:
+      - name: {{ $c.comp.name }}
+        securityContext:
+          {{- toYaml $c.comp.securityContext | nindent 12 }}
+        image: "{{ $c.comp.image.repository }}:{{ $c.comp.image.tag }}"
+        imagePullPolicy: {{ $c.comp.image.pullPolicy }}
+        ports:
+          - name: http
+            containerPort: {{ $c.comp.containerPort }}
+            protocol: TCP
+        resources:
+          {{- toYaml $c.comp.resources | nindent 12 }}
+        volumeMounts:
+        {{- if .Values.config }}
+        - name: goaws-config
+          mountPath: /conf
+        {{- end }}
+      volumes:
+      {{- if $c.comp.config }}
+      - name: goaws-config
+        configMap:
+          name: {{ template "goaws.name" . }}
+      {{- end }}
+      {{- with $c.comp.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with $c.comp.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with $c.comp.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+{{- end }}
