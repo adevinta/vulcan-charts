@@ -72,6 +72,9 @@ defaults:
     fullnameOverride: ""
     containerPort: 8080
 
+    lifecycle:
+      preStopSleep: 30
+
     livenessProbe: &comp-livenessProbe
       enabled: true
       path:
@@ -235,9 +238,6 @@ results:
     bucketLogs: logs
     linkBase: http://chart-example.local
 
-  lifecycle:
-    preStopSleep: 30
-
   livenessProbe:
     <<: *comp-livenessProbe
     path: /healthcheck
@@ -267,11 +267,6 @@ persistence:
     image:
       repository: postgres
       tag: 9.6-alpine
-
-  lifecycle:
-    preStopSleep: 30
-    # preStopCommand:  '["/bin/sh", "-c", "/app/stop.sh 30"]'
-  terminationGracePeriodSeconds: 60
 
   livenessProbe:
     <<: *comp-livenessProbe
@@ -321,9 +316,6 @@ stream:
       repository: postgres
       tag: 9.6-alpine
 
-  lifecycle:
-    preStopSleep: 30
-
   livenessProbe:
     <<: *comp-livenessProbe
     path: /status
@@ -365,9 +357,6 @@ api:
     sqs: true
     sns: true
     s3: true
-
-  lifecycle:
-    preStopSleep: 30
 
   livenessProbe:
     <<: *comp-livenessProbe
@@ -436,9 +425,6 @@ crontinuous:
   infra:
     s3: true
 
-  lifecycle:
-    preStopSleep: 30
-
   livenessProbe:
     <<: *comp-livenessProbe
     path: /healthcheck
@@ -475,9 +461,6 @@ scanengine:
     image:
       repository: postgres
       tag: 9.6-alpine
-
-  lifecycle:
-    preStopSleep: 30
 
   livenessProbe:
     <<: *comp-livenessProbe
@@ -526,9 +509,6 @@ ui:
     tag: latest
     pullPolicy: Always
 
-  lifecycle:
-    preStopSleep: 30
-
   livenessProbe:
     <<: *comp-livenessProbe
     path: /index.html
@@ -569,9 +549,6 @@ insights:
     tag: "2.0"
     pullPolicy: Always
 
-  lifecycle:
-    preStopSleep: 30
-
   livenessProbe:
     <<: *comp-livenessProbe
     path: /healthcheck
@@ -598,6 +575,7 @@ insights:
         s3Bucket: public-insights
         prefix: "/public"
 
+
 reportsgenerator:
   enabled: true
   name: reportsgenerator
@@ -612,9 +590,6 @@ reportsgenerator:
     image:
       repository: postgres
       tag: 9.6-alpine
-
-  lifecycle:
-    preStopSleep: 30
 
   livenessProbe:
     <<: *comp-livenessProbe
@@ -699,9 +674,6 @@ metrics:
   proxy:
     enabled: false
 
-  lifecycle:
-    preStopSleep: 10
-
   conf:
     region:
     logLevel: warn
@@ -747,9 +719,6 @@ vulndbapi:
     image:
       repository: postgres
       tag: 9.6-alpine
-
-  lifecycle:
-    preStopSleep: 30
 
   livenessProbe:
     <<: *comp-livenessProbe
@@ -815,49 +784,3 @@ sqsExporter:
 
 dogstatsd:
   apiKey: TBD
-
-# customTplManifests: |
-#     apiVersion: v1
-#     kind: ConfigMap
-#     metadata:
-#       labels:
-#         {{- include "vulcan.labels" . | nindent 4 }}
-#       name: {{ .Release.Name }}-extra
-#     data:
-#       FOO: var
-
-serviceAccount:
-  # Specifies whether a service account should be created
-  create: false
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
-  name:
-
-podSecurityContext: {}
-  # fsGroup: 2000
-
-securityContext: {}
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
-
-resources: {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
-
-nodeSelector: {}
-
-tolerations: []
-
-affinity: {}

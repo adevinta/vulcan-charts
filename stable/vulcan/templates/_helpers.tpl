@@ -51,17 +51,6 @@ app.kubernetes.io/name: {{ include "vulcan.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
 
-{{/*
-Create the name of the service account to use
-*/}}
-{{- define "vulcan.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create -}}
-    {{ default (include "vulcan.fullname" .) .Values.serviceAccount.name }}
-{{- else -}}
-    {{ default "default" .Values.serviceAccount.name }}
-{{- end -}}
-{{- end -}}
-
 {{- define "api.fullname" -}}
 {{- printf "%s-%s" (include "vulcan.fullname" .) .Values.api.name -}}
 {{- end -}}

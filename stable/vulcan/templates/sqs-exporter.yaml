@@ -24,13 +24,8 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-      serviceAccountName: {{ template "vulcan.serviceAccountName" . }}
-      securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: sqs-exporter
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.sqsExporter.image.repository }}:{{ .Values.sqsExporter.image.tag }}"
           imagePullPolicy: {{ .Values.sqsExporter.image.pullPolicy }}
           ports:

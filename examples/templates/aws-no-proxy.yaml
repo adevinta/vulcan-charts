@@ -1169,7 +1169,7 @@ spec:
           lifecycle:
             preStop:
               exec:
-                command: ["/bin/sh","-c","sleep 10;"]
+                command: ["/bin/sh","-c","sleep 30;"]
           resources:
             {}
       volumes:
@@ -1203,7 +1203,7 @@ spec:
         
         iam.amazonaws.com/role: arn:aws:iam::000000000000:role/PersistenceRole
     spec:
-      terminationGracePeriodSeconds: 60
+      
       imagePullSecrets:
         - name: pullsecretname
       securityContext:
@@ -1798,13 +1798,8 @@ spec:
     spec:
       imagePullSecrets:
         - name: pullsecretname
-      serviceAccountName: default
-      securityContext:
-        {}
       containers:
         - name: sqs-exporter
-          securityContext:
-            {}
           image: "jesusfcr/sqs-exporter:custom-endpoint"
           imagePullPolicy: 
           ports:
@@ -2093,7 +2088,10 @@ spec:
           envFrom:
           - secretRef:
               name: myrelease-vulcan-vulndb
-          
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","sleep 30;"]
           resources:
             {}
       volumes:
