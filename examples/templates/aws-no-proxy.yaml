@@ -751,7 +751,7 @@ spec:
           - name: VULCAN_UI_URL
             value: "https://www.vulcan.com"
           - name: PERSISTENCE_HOST
-            value: "myrelease-persistence"
+            value: "myrelease-vulcan-persistence"
           - name: VULNERABILITYDB_URL
             value: "http://myrelease-vulndbapi/"
           - name: AWSCATALOGUE_KIND
@@ -1137,7 +1137,7 @@ spec:
           - name: FINDINGS_SQS_QUEUE_ARN
             value: "arn:aws:sqs:eu-west-1:000000000000:MetricsFindings"
           - name: RESULTS_HOST
-            value: "myrelease-results"
+            value: "myrelease-vulcan-results"
           - name: RESULTS_SCHEME
             value: "http"
           - name: DEVHOSE_URL
@@ -1709,7 +1709,7 @@ spec:
           - name: LOG_LEVEL
             value: "error"
           - name: PERSISTENCE_HOST
-            value: "myrelease-persistence"
+            value: "myrelease-vulcan-persistence"
           - name: CHECKS_SQS_ARN
             value: "arn:aws:sqs:eu-west-1:000000000000:ScanEngineCheckStatus"
           - name: "SCANS_SNS_ARN"

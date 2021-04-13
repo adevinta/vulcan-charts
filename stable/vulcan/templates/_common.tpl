@@ -1,10 +1,6 @@
 {{/*
 Override names
 */}}
-{{- define "persistenceHost" -}}
-{{- printf "%s-persistence" .Release.Name -}}
-{{- end -}}
-
 {{- define "vulcanApi" -}}
 {{- printf "http://%s-api/api" .Release.Name -}}
 {{- end -}}
@@ -23,10 +19,6 @@ Override names
 
 {{- define "resultsUrl" -}}
 {{- printf "http://%s-results" .Release.Name -}}
-{{- end -}}
-
-{{- define "resultsHost" -}}
-{{- printf "%s-results" .Release.Name -}}
 {{- end -}}
 
 {{- define "reportsgeneratorUrl" -}}

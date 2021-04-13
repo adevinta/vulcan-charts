@@ -70,7 +70,7 @@ spec:
           - name: LOG_LEVEL
             value: "{{ $c.comp.conf.logLevel }}"
           - name: PERSISTENCE_HOST
-            value: "{{ $c.comp.conf.persistenceHost | default  (include "persistenceHost" .) }}"
+            value: "{{ $c.comp.conf.persistenceHost | default  (include "persistence.fullname" .) }}"
           - name: CHECKS_SQS_ARN
             value: "{{ $c.comp.conf.queueArn }}"
           - name: "SCANS_SNS_ARN"

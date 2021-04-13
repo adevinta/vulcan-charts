@@ -96,7 +96,7 @@ spec:
           - name: VULCAN_UI_URL
             value: "{{ $c.comp.conf.reports.vulcanUIUrl }}"
           - name: PERSISTENCE_HOST
-            value: "{{ $c.comp.conf.persistenceHost | default  (include "persistenceHost" .) }}"
+            value: "{{ $c.comp.conf.persistenceHost | default  (include "persistence.fullname" .) }}"
           - name: VULNERABILITYDB_URL
             value: "{{ $c.comp.conf.vulndbapiUrl | default  (include "vulndbapiUrl" .) }}"
           - name: AWSCATALOGUE_KIND

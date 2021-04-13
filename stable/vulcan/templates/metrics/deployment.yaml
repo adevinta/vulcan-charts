@@ -51,7 +51,7 @@ spec:
           - name: FINDINGS_SQS_QUEUE_ARN
             value: "{{ $c.comp.conf.findingsQueueArn }}"
           - name: RESULTS_HOST
-            value: "{{ $c.comp.conf.resultsHost | default (include "resultsHost" .)}}"
+            value: "{{ $c.comp.conf.resultsHost | default (include "results.fullname" .)}}"
           - name: RESULTS_SCHEME
             value: "{{ $c.comp.conf.resultsScheme }}"
           - name: DEVHOSE_URL
