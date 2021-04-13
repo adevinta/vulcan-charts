@@ -61,3 +61,59 @@ Create the name of the service account to use
     {{ default "default" .Values.serviceAccount.name }}
 {{- end -}}
 {{- end -}}
+
+{{- define "api.name" -}}
+{{- printf "%s-%s" (include "vulcan.fullname" .) .Values.api.name -}}
+{{- end -}}
+
+{{- define "crontinuous.name" -}}
+{{- printf "%s-%s" (include "vulcan.fullname" .) .Values.crontinuous.name -}}
+{{- end -}}
+
+{{- define "goaws.name" -}}
+{{- printf "%s-%s" (include "vulcan.fullname" .) .Values.goaws.name -}}
+{{- end -}}
+
+{{- define "insights.name" -}}
+{{- printf "%s-%s" (include "vulcan.fullname" .) .Values.insights.name -}}
+{{- end -}}
+
+{{- define "metrics.name" -}}
+{{- printf "%s-%s" (include "vulcan.fullname" .) .Values.metrics.name -}}
+{{- end -}}
+
+{{- define "persistence.name" -}}
+{{- printf "%s-%s" (include "vulcan.fullname" .) .Values.persistence.name -}}
+{{- end -}}
+
+{{- define "redis.name" -}}
+{{- printf "%s-%s" (include "vulcan.fullname" .) .Values.redis.name -}}
+{{- end -}}
+
+{{- define "reportsgenerator.name" -}}
+{{- printf "%s-%s" (include "vulcan.fullname" .) .Values.reportsgenerator.name -}}
+{{- end -}}
+
+{{- define "results.name" -}}
+{{- printf "%s-%s" (include "vulcan.fullname" .) .Values.results.name -}}
+{{- end -}}
+
+{{- define "scanengine.name" -}}
+{{- printf "%s-%s" (include "vulcan.fullname" .) .Values.scanengine.name -}}
+{{- end -}}
+
+{{- define "stream.name" -}}
+{{- printf "%s-%s" (include "vulcan.fullname" .) .Values.stream.name -}}
+{{- end -}}
+
+{{- define "ui.name" -}}
+{{- printf "%s-%s" (include "vulcan.fullname" .) .Values.ui.name -}}
+{{- end -}}
+
+{{- define "vulndb.name" -}}
+{{- printf "%s-%s" (include "vulcan.fullname" .) .Values.vulndb.name -}}
+{{- end -}}
+
+{{- define "vulndbapi.name" -}}
+{{- printf "%s-%s" (include "vulcan.fullname" .) .Values.vulndbapi.name -}}
+{{- end -}}
