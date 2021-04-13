@@ -65,7 +65,7 @@ spec:
           - name: REDIS_ADDR
             value: "{{ $c.comp.conf.redisAddr | default (include "redisAddr" .)}}"
           - name: VULCAN_API
-            value: {{ $c.comp.conf.vulcanApi | default (include "vulcanApi" .) }}
+            value: {{ $c.comp.conf.vulcanApi | default (include "apiUrl" .) }}
           - name: VULCAN_API_EXTERNAL
             value: "{{ $c.comp.conf.vulcanAPIExternal }}"
         {{- include "comp-common-envs" $c | nindent 10 }}

@@ -48,7 +48,7 @@ spec:
           - name: CRONTINUOUS_BUCKET
             value: {{ $c.comp.conf.crontinuousBucket }}
           - name: VULCAN_API
-            value: {{ $c.comp.conf.vulcanApi | default (include "vulcanApi" .) }}
+            value: {{ $c.comp.conf.vulcanApi | default (include "apiUrl" .) }}
           - name: VULCAN_USER
             value: {{ $c.comp.conf.vulcanUser }}
           - name: ENABLE_TEAMS_WHITELIST_SCAN

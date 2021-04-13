@@ -737,15 +737,15 @@ spec:
           - name: DEFAULT_OWNERS
             value: "[\"aaaaaaaa-xxxx-yyyy-zzzz-bbbbbbbbbbbb\"]"
           - name: SCANENGINE_URL
-            value: "http://myrelease-scanengine/v1/"
+            value: "http://myrelease-vulcan-scanengine/v1/"
           - name: SCHEDULER_URL
-            value: "http://myrelease-crontinuous/"
+            value: "http://myrelease-vulcan-crontinuous/"
           - name: SQS_QUEUE_ARN
             value: "arn:aws:sqs:eu-west-1:000000000000:APIScans"
           - name: REPORTS_SNS_ARN
             value: "arn:aws:sns:eu-west-1:000000000000:ReportsGen"
           - name: REPORTS_API_URL
-            value: "http://myrelease-reportsgenerator/"
+            value: "http://myrelease-vulcan-reportsgenerator/"
           - name: SCAN_REDIRECT_URL
             value: ""
           - name: VULCAN_UI_URL
@@ -753,7 +753,7 @@ spec:
           - name: PERSISTENCE_HOST
             value: "myrelease-vulcan-persistence"
           - name: VULNERABILITYDB_URL
-            value: "http://myrelease-vulndbapi/"
+            value: "http://myrelease-vulcan-vulndbapi/"
           - name: AWSCATALOGUE_KIND
             value: "CloudGovernance"
           - name: AWSCATALOGUE_URL
@@ -851,7 +851,7 @@ spec:
           - name: CRONTINUOUS_BUCKET
             value: s3-vulcan-crontinuous
           - name: VULCAN_API
-            value: http://myrelease-api/api
+            value: http://myrelease-vulcan-api/api
           - name: VULCAN_USER
             value: vulcanuser
           - name: ENABLE_TEAMS_WHITELIST_SCAN
@@ -1149,9 +1149,9 @@ spec:
           - name: DEVHOSE_FINDINGS_SOURCE
             value: "vulcan-findings"
           - name: REDIS_ADDR
-            value: "myrelease-redis:6379"
+            value: "myrelease-vulcan-redis:6379"
           - name: VULCAN_API
-            value: http://myrelease-api/api
+            value: http://myrelease-vulcan-api/api
           - name: VULCAN_API_EXTERNAL
             value: "https://www.vulcan.com/api"
           
@@ -1472,9 +1472,9 @@ spec:
           - name: SCAN_DOCS_ROADMAP_LINK
             value: "https://docs.google.com/spreadsheets/d/xxxxxxxxxxxxxxx/edit?usp=sharing"
           - name: PERSISTENCE_ENDPOINT  # We keep this PERSISTENCE variable for compatibility
-            value: "http://myrelease-scanengine"
+            value: "http://myrelease-vulcan-scanengine"
           - name: RESULTS_ENDPOINT
-            value: "http://myrelease-results"
+            value: "http://myrelease-vulcan-results"
           - name: SCAN_PROXY_ENDPOINT
             value: "https://insights.vulcan.com"
           - name: VULCAN_UI
@@ -1717,7 +1717,7 @@ spec:
           - name: "CHECKS_SNS_ARN"
             value: "arn:aws:sns:eu-west-1:000000000000:Checks"
           - name: "STREAM_URL"
-            value: "http://myrelease-stream"
+            value: "http://myrelease-vulcan-stream"
           - name: "CHECKS_CREATOR_WORKERS"
             value: "3"
           - name: "CHECKS_CREATOR_PERIOD"
@@ -2087,7 +2087,7 @@ spec:
           - name: RESULTS_URL
             value: https://results.vulcan.com
           - name: RESULTS_INTERNAL_URL
-            value: "http://myrelease-results"
+            value: "http://myrelease-vulcan-results"
           
           
           envFrom:

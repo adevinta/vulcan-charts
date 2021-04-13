@@ -1,44 +1,44 @@
 {{/*
 Override names
 */}}
-{{- define "vulcanApi" -}}
-{{- printf "http://%s-api/api" .Release.Name -}}
+{{- define "apiUrl" -}}
+{{- printf "http://%s/api" (include "api.fullname" .) -}}
 {{- end -}}
 
 {{- define "scanengineUrl" -}}
-{{- printf "http://%s-scanengine" .Release.Name -}}
+{{- printf "http://%s" (include "scanengine.fullname" .) -}}
 {{- end -}}
 
 {{- define "crontinuousUrl" -}}
-{{- printf "http://%s-crontinuous/" .Release.Name -}}
+{{- printf "http://%s/" (include "crontinuous.fullname" .) -}}
 {{- end -}}
 
 {{- define "persistenceUrl" -}}
-{{- printf "http://%s-persistence" .Release.Name -}}
+{{- printf "http://%s" (include "persistence.fullname" .) -}}
 {{- end -}}
 
 {{- define "resultsUrl" -}}
-{{- printf "http://%s-results" .Release.Name -}}
+{{- printf "http://%s" (include "results.fullname" .) -}}
 {{- end -}}
 
 {{- define "reportsgeneratorUrl" -}}
-{{- printf "http://%s-reportsgenerator/" .Release.Name -}}
+{{- printf "http://%s/" (include "reportsgenerator.fullname" .) -}}
 {{- end -}}
 
 {{- define "vulndbapiUrl" -}}
-{{- printf "http://%s-vulndbapi/" .Release.Name -}}
+{{- printf "http://%s/" (include "vulndbapi.fullname" .) -}}
 {{- end -}}
 
 {{- define "vulndbUrl" -}}
-{{- printf "http://%s-vulndb/" .Release.Name -}}
+{{- printf "http://%s/" (include "vulndb.fullname" .) -}}
 {{- end -}}
 
 {{- define "streamUrl" -}}
-{{- printf "http://%s-stream" .Release.Name -}}
+{{- printf "http://%s" (include "stream.fullname" .) -}}
 {{- end -}}
 
 {{- define "redisAddr" -}}
-{{- printf "%s-redis:6379" .Release.Name -}}
+{{- printf "%s:6379" (include "redis.fullname" .) -}}
 {{- end -}}
 
 {{- define "minioEndpoint" -}}
@@ -46,11 +46,11 @@ Override names
 {{- end -}}
 
 {{- define "sqsEndpoint" -}}
-{{- printf "http://%s-goaws" .Release.Name -}}
+{{- printf "http://%s" (include "goaws.fullname" .) -}}
 {{- end -}}
 
 {{- define "snsEndpoint" -}}
-{{- printf "http://%s-goaws" .Release.Name -}}
+{{- printf "http://%s" (include "goaws.fullname" .) -}}
 {{- end -}}
 
 {{- define "postgresqlHost" -}}
