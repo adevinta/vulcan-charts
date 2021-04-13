@@ -168,7 +168,7 @@ defaults:
 
     livenessProbe: &comp-livenessProbe
       enabled: true
-      path: /healthcheck
+      path:
       initialDelaySeconds: 5
       periodSeconds: 10
       timeoutSeconds: 3
@@ -177,7 +177,7 @@ defaults:
 
     readinessProbe: &comp-readynessProbe
       enabled: true
-      path: /healthcheck
+      path:
       initialDelaySeconds: 5
       periodSeconds: 10
       timeoutSeconds: 3
@@ -733,19 +733,42 @@ vulndbapi:
     name: vulnerabilitydb
 
 vulndb:
-  <<: *common
-  proxy:
-    enabled: false
-  infra:
-    sqs: true
-    sns: true
+  enabled: true
+  name: vulndb
+  <<: *comp
+
+  image:
+    repository: adevinta/vulnerability-db
+    tag: latest
+    pullPolicy: Always
+
+  waitfordb:
+    image:
+      repository: postgres
+      tag: 9.6-alpine
+
   conf:
     logLevel: "error"
     checksQueueArn: arn:aws:sqs:local:012345678900:VulcanK8SVulnDBChecks
     vulnsTopicArn: arn:aws:sns:local:012345678900:VulcanK8SVulnDBVulns
+    maxEventAge: 365
+    resultsUrl: http://vulcan-results.vulcan.com
+    resultsInternalUrl: # http://vulcan-results
+
+  # extraEnv:
+  #   FOO: BAR
+
+  proxy:
+    enabled: false
+
+  infra:
+    sqs: true
+    sns: true
+
   db:
     <<: *db
     name: vulnerabilitydb
+
 
 sqsExporter:
   enabled: true

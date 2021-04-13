@@ -29,17 +29,6 @@ type: Opaque
 data:
   postgresql-password: "VEJE"
 ---
-# Source: vulcan/charts/vulndb/templates/secrets.yaml
-apiVersion: v1
-kind: Secret
-metadata:
-  labels:
-    name: myrelease-vulndb
-  name: myrelease-vulndb
-type: Opaque
-data:
-  PG_PASSWORD: "VEJE"
----
 # Source: vulcan/charts/vulndbapi/templates/secrets.yaml
 apiVersion: v1
 kind: Secret
@@ -198,6 +187,22 @@ metadata:
 type: Opaque
 data:
   REDIS_PWD: "VEJE"
+---
+# Source: vulcan/templates/vulndb/secrets.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: myrelease-vulcan-vulndb
+  labels:
+    helm.sh/chart: vulcan-0.2.0
+    app.kubernetes.io/name: vulcan
+    app.kubernetes.io/instance: myrelease
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: vulndb
+type: Opaque
+data:
+  PG_PASSWORD: "VEJE"
 ---
 # Source: vulcan/charts/goaws/templates/config.yaml
 apiVersion: v1
@@ -1125,6 +1130,30 @@ spec:
       app.kubernetes.io/instance: myrelease
       app.kubernetes.io/component: ui
 ---
+# Source: vulcan/templates/vulndb/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: myrelease-vulcan-vulndb
+  labels:
+    helm.sh/chart: vulcan-0.2.0
+    app.kubernetes.io/name: vulcan
+    app.kubernetes.io/instance: myrelease
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: vulndb
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+      app.kubernetes.io/name: vulcan
+      app.kubernetes.io/instance: myrelease
+      app.kubernetes.io/component: vulndb
+---
 # Source: vulcan/charts/goaws/templates/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -1258,90 +1287,6 @@ spec:
       volumes:
         - name: data
           emptyDir: {}
----
-# Source: vulcan/charts/vulndb/templates/deployment.yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: myrelease-vulndb
-  labels:
-    helm.sh/chart: vulndb-0.2.0
-    app.kubernetes.io/name: vulndb
-    app.kubernetes.io/instance: myrelease
-    app.kubernetes.io/version: "1.0"
-    app.kubernetes.io/managed-by: Helm
-spec:
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: vulndb
-      app.kubernetes.io/instance: myrelease
-  template:
-    metadata:
-      labels:
-        app.kubernetes.io/name: vulndb
-        app.kubernetes.io/instance: myrelease
-      annotations:
-        checksum/secrets: a8cf3d403b79bab5de610fc9680d4728abde8e5d4ca6feaad6a5b191ed778af0
-        
-    spec:
-      
-      serviceAccountName: default
-      securityContext:
-        {}
-      initContainers:
-        - name: waitfordb
-          image: "postgres:9.6-alpine"
-          imagePullPolicy: Always
-          command: ['sh', '-c', 'until pg_isready -t 5; do echo WaitingDB; done;']
-          env:
-          - name: PGHOST
-            value: "myrelease-postgresql"
-          - name: PGPORT
-            value: "5432"
-      containers:
-        
-        - name: vulndb
-          securityContext:
-            {}
-          image: "adevinta/vulnerability-db:latest"
-          imagePullPolicy: Always
-          env:
-          - name: MAX_EVENT_AGE
-            value: "365"
-          - name: LOG_LEVEL
-            value: "error"
-          - name: SQS_QUEUE_ARN
-            value: "arn:aws:sqs:local:012345678900:VulcanK8SVulnDBChecks"
-          - name: SNS_TOPIC_ARN
-            value: "arn:aws:sns:local:012345678900:VulcanK8SVulnDBVulns"
-          - name: RESULTS_URL
-            value: http://vulcan-results.vulcan.com
-          - name: RESULTS_INTERNAL_URL
-            value: "http://myrelease-results"
-          - name: PG_HOST
-            value: "myrelease-postgresql"
-          - name: PG_NAME
-            value: "vulnerabilitydb"
-          - name: PG_USER
-            value: "postgres"
-          - name: PG_PORT
-            value: "5432"
-          - name: PG_SSLMODE
-            value: "disable"
-          - name: AWS_SNS_ENDPOINT
-            value: "http://myrelease-goaws"
-          - name: AWS_SQS_ENDPOINT
-            value: "http://myrelease-goaws"
-          - name: AWS_ACCESS_KEY_ID
-            value: ANYVALUE
-          - name: AWS_SECRET_ACCESS_KEY
-            value: ANYVALUE
-          
-          envFrom:
-          - secretRef:
-              name: myrelease-vulndb
-          resources:
-            {}
 ---
 # Source: vulcan/charts/vulndbapi/templates/deployment.yaml
 apiVersion: apps/v1
@@ -2017,24 +1962,6 @@ spec:
             preStop:
               exec:
                 command: ["/bin/sh","-c","sleep 10;"]
-          livenessProbe:
-            httpGet:
-              path: /healthcheck
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 10
-          readinessProbe:
-            httpGet:
-              path: /healthcheck
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 5
           resources:
             {}
       volumes:
@@ -2950,6 +2877,94 @@ spec:
       - name: config-proxy
         configMap:
           name: myrelease-vulcan-ui-proxy
+---
+# Source: vulcan/templates/vulndb/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myrelease-vulcan-vulndb
+  labels:
+    helm.sh/chart: vulcan-0.2.0
+    app.kubernetes.io/name: vulcan
+    app.kubernetes.io/instance: myrelease
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: vulndb
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: vulcan
+      app.kubernetes.io/instance: myrelease
+      app.kubernetes.io/component: vulndb
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: vulcan
+        app.kubernetes.io/instance: myrelease
+        app.kubernetes.io/component: vulndb
+      annotations:
+        checksum/secrets: 4cf87c6a313da41eb2785bae0b72f493fb5b85d1ce793c3d7083cf18de4105f6
+        
+    spec:
+      
+      securityContext:
+        {}
+      initContainers:
+        - name: waitfordb
+          image: "postgres:9.6-alpine"
+          imagePullPolicy: Always
+          command: ['sh', '-c', 'until pg_isready -t 5; do echo WaitingDB; done;']
+          env:
+          - name: PGHOST
+            value: "myrelease-postgresql"
+          - name: PGPORT
+            value: ""
+      containers:
+        
+        - name: vulndb
+          securityContext:
+            {}
+          image: "adevinta/vulnerability-db:latest"
+          imagePullPolicy: Always
+          env:
+          - name: PG_HOST
+            value: "myrelease-postgresql"
+          - name: PG_NAME
+            value: "vulnerabilitydb"
+          - name: PG_USER
+            value: "postgres"
+          - name: PG_PORT
+            value: ""
+          - name: PG_SSLMODE
+            value: "disable"
+          - name: LOG_LEVEL
+            value: "error"
+          - name: MAX_EVENT_AGE
+            value: "365"
+          - name: SQS_QUEUE_ARN
+            value: "arn:aws:sqs:local:012345678900:VulcanK8SVulnDBChecks"
+          - name: SNS_TOPIC_ARN
+            value: "arn:aws:sns:local:012345678900:VulcanK8SVulnDBVulns"
+          - name: RESULTS_URL
+            value: http://vulcan-results.vulcan.com
+          - name: RESULTS_INTERNAL_URL
+            value: "http://myrelease-results"
+          - name: AWS_SNS_ENDPOINT
+            value: "http://myrelease-goaws"
+          - name: AWS_SQS_ENDPOINT
+            value: "http://myrelease-goaws"
+          - name: AWS_ACCESS_KEY_ID
+            value: ANYVALUE
+          - name: AWS_SECRET_ACCESS_KEY
+            value: ANYVALUE
+          
+          envFrom:
+          - secretRef:
+              name: myrelease-vulcan-vulndb
+          
+          resources:
+            {}
+      volumes:
 ---
 # Source: vulcan/charts/postgresql/templates/statefulset.yaml
 apiVersion: apps/v1

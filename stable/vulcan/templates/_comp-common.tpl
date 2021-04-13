@@ -10,6 +10,7 @@
 Lifecycle common preStop
 */}}
 {{- define "comp-common-lifecycle" -}}
+{{- if .comp.lifecycle -}}
 {{- if or .comp.lifecycle.preStopCommand .comp.lifecycle.preStopSleep -}}
 lifecycle:
   preStop:
@@ -20,7 +21,9 @@ lifecycle:
       command: ["/bin/sh","-c","sleep {{ .comp.lifecycle.preStopSleep }};"]
 {{- end -}}
 {{- end -}}
-{{- if .comp.livenessProbe.enabled }}
+{{- end -}}
+{{- if .comp.livenessProbe -}}
+{{- if and .comp.livenessProbe.enabled (or .comp.livenessProbe.command .comp.livenessProbe.path )}}
 livenessProbe:
 {{- if .comp.livenessProbe.command }}
   exec:
@@ -36,7 +39,9 @@ livenessProbe:
   successThreshold: {{ .comp.livenessProbe.successThreshold }}
   failureThreshold: {{ .comp.livenessProbe.failureThreshold }}
 {{- end }}
-{{- if .comp.readinessProbe.enabled }}
+{{- end }}
+{{- if .comp.readinessProbe -}}
+{{- if and .comp.readinessProbe.enabled (or .comp.readinessProbe.command .comp.readinessProbe.path )}}
 readinessProbe:
 {{- if .comp.readinessProbe.command }}
   exec:
@@ -51,7 +56,8 @@ readinessProbe:
   timeoutSeconds: {{ .comp.readinessProbe.timeoutSeconds }}
   successThreshold: {{ .comp.readinessProbe.successThreshold }}
   failureThreshold: {{ .comp.readinessProbe.failureThreshold }}
-{{- end }}
+{{- end -}}
+{{- end -}}
 {{- end -}}
 
 {{- define "comp-common-spec" -}}

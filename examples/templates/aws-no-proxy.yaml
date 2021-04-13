@@ -1,15 +1,4 @@
 ---
-# Source: vulcan/charts/vulndb/templates/secrets.yaml
-apiVersion: v1
-kind: Secret
-metadata:
-  labels:
-    name: myrelease-vulndb
-  name: myrelease-vulndb
-type: Opaque
-data:
-  PG_PASSWORD: "eHh4eHh4eHh4eA=="
----
 # Source: vulcan/charts/vulndbapi/templates/secrets.yaml
 apiVersion: v1
 kind: Secret
@@ -168,6 +157,22 @@ metadata:
 type: Opaque
 data:
   REDIS_PWD: ""
+---
+# Source: vulcan/templates/vulndb/secrets.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: myrelease-vulcan-vulndb
+  labels:
+    helm.sh/chart: vulcan-0.2.0
+    app.kubernetes.io/name: vulcan
+    app.kubernetes.io/instance: myrelease
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: vulndb
+type: Opaque
+data:
+  PG_PASSWORD: "eHh4eHh4eHh4eA=="
 ---
 # Source: vulcan/templates/custom-manifests.yaml
 apiVersion: v1
@@ -523,87 +528,29 @@ spec:
       app.kubernetes.io/instance: myrelease
       app.kubernetes.io/component: ui
 ---
-# Source: vulcan/charts/vulndb/templates/deployment.yaml
-apiVersion: apps/v1
-kind: Deployment
+# Source: vulcan/templates/vulndb/service.yaml
+apiVersion: v1
+kind: Service
 metadata:
-  name: myrelease-vulndb
+  name: myrelease-vulcan-vulndb
   labels:
-    helm.sh/chart: vulndb-0.2.0
-    app.kubernetes.io/name: vulndb
+    helm.sh/chart: vulcan-0.2.0
+    app.kubernetes.io/name: vulcan
     app.kubernetes.io/instance: myrelease
-    app.kubernetes.io/version: "1.0"
+    app.kubernetes.io/version: "1.16.0"
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: vulndb
 spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
   selector:
-    matchLabels:
-      app.kubernetes.io/name: vulndb
+      app.kubernetes.io/name: vulcan
       app.kubernetes.io/instance: myrelease
-  template:
-    metadata:
-      labels:
-        app.kubernetes.io/name: vulndb
-        app.kubernetes.io/instance: myrelease
-      annotations:
-        checksum/secrets: 22c1a8fd59029ea3c7d5841a63744b817f027a9883f46c60541893fbf9249198
-        
-        iam.amazonaws.com/role: arn:aws:iam::000000000000:role/VulnDBRole
-    spec:
-      
-      imagePullSecrets:
-        - name: pullsecretname
-      serviceAccountName: default
-      securityContext:
-        {}
-      initContainers:
-        - name: waitfordb
-          image: "postgres:9.6-alpine"
-          imagePullPolicy: Always
-          command: ['sh', '-c', 'until pg_isready -t 5; do echo WaitingDB; done;']
-          env:
-          - name: PGHOST
-            value: "vulnerabilitydb.postgres.host"
-          - name: PGPORT
-            value: "5432"
-      containers:
-        
-        - name: vulndb
-          securityContext:
-            {}
-          image: "adevinta/vulnerability-db:tag-vulndb"
-          imagePullPolicy: Always
-          env:
-          - name: MAX_EVENT_AGE
-            value: "365"
-          - name: LOG_LEVEL
-            value: "info"
-          - name: SQS_QUEUE_ARN
-            value: "arn:aws:sqs:eu-west-1:000000000000:VulnDBChecks"
-          - name: SNS_TOPIC_ARN
-            value: "arn:aws:sns:eu-west-1:000000000000:VulnDBVulns"
-          - name: RESULTS_URL
-            value: https://results.vulcan.com
-          - name: RESULTS_INTERNAL_URL
-            value: "http://myrelease-results"
-          - name: PG_HOST
-            value: "vulnerabilitydb.postgres.host"
-          - name: PG_NAME
-            value: "vulnerabilitydb"
-          - name: PG_USER
-            value: "vulnerabilitydb"
-          - name: PG_PORT
-            value: "5432"
-          - name: PG_SSLMODE
-            value: "verify-full"
-          - name: PG_CA_B64
-            value: "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUVCakNDQXU2Z0F3SUJBZ0lKQU1jMFp6YVNVSzUxTUEwR0NTcUdTSWIzRFFFQkN3VUFNSUdQTVFzd0NRWUQKVlFRR0V3SlZVekVRTUE0R0ExVUVCd3dIVTJWaGRIUnNaVEVUTUJFR0ExVUVDQXdLVjJGemFHbHVaM1J2YmpFaQpNQ0FHQTFVRUNnd1pRVzFoZW05dUlGZGxZaUJUWlhKMmFXTmxjeXdnU1c1akxqRVRNQkVHQTFVRUN3d0tRVzFoCmVtOXVJRkpFVXpFZ01CNEdBMVVFQXd3WFFXMWhlbTl1SUZKRVV5QlNiMjkwSURJd01Ua2dRMEV3SGhjTk1Ua3cKT0RJeU1UY3dPRFV3V2hjTk1qUXdPREl5TVRjd09EVXdXakNCanpFTE1Ba0dBMVVFQmhNQ1ZWTXhFREFPQmdOVgpCQWNNQjFObFlYUjBiR1V4RXpBUkJnTlZCQWdNQ2xkaGMyaHBibWQwYjI0eElqQWdCZ05WQkFvTUdVRnRZWHB2CmJpQlhaV0lnVTJWeWRtbGpaWE1zSUVsdVl5NHhFekFSQmdOVkJBc01Da0Z0WVhwdmJpQlNSRk14SURBZUJnTlYKQkFNTUYwRnRZWHB2YmlCU1JGTWdVbTl2ZENBeU1ERTVJRU5CTUlJQklqQU5CZ2txaGtpRzl3MEJBUUVGQUFPQwpBUThBTUlJQkNnS0NBUUVBclhuRi9FNi9RaCtrdTNoUVRTS1BNaFFRbENwb1d2bkl0aHpYNk1LM3A1YTBlWEtaCm9XSWpZY05ORzZVd0pqcDRmVVhsNmdscDUzSm9ibit0V05YODhkTkgybjhEVmJwcFN3U2NWRTJMcHVMKzk0dlkKMEVZRS9YeE43c3ZLZWE4WXZscnFrVUJLeXhMeFRqaCtVL0tyR09hSHh6OXYwbDZaTmxEYnVhWnczcUlXZEQvSQo2YU5iR2VSVVZ0cE02UCtiV0lveFZsL2NhUXlsUVM2Q0VZVWsrQ3BWeUpTa29wd0pselhUMDd0TW9ETDVXZ1g5Ck8wOEtWZ0ROejlxUC9JR3RBY1JkdVJjTmlvSDNFOXY5ODFRTzF6dC9HcGIyZjhOcUFqVVVDVVp6T25pajZteDkKTWNaKzljV1g4OENSelIwdlFPRFd1WnNjZ0kwOE52TTY5Rm4yU1FJREFRQUJvMk13WVRBT0JnTlZIUThCQWY4RQpCQU1DQVFZd0R3WURWUjBUQVFIL0JBVXdBd0VCL3pBZEJnTlZIUTRFRmdRVWMxOWcyTHpMQTVqMEt4YzBMalphCnBtRC92Qjh3SHdZRFZSMGpCQmd3Rm9BVWMxOWcyTHpMQTVqMEt4YzBMalphcG1EL3ZCOHdEUVlKS29aSWh2Y04KQVFFTEJRQURnZ0VCQUhBRzdXVG15anpQUklNODVyVmorZldIc0xJdnFwdzZET2JJak1Xb2twbGlDZU1JTlpGVgp5bmZnQktzZjFFeHdidkpOellGWFc2ZGlobmd1REc5Vk1QcGkydXAvY3RRVE44dG05bkRLT3kwOHVOWm9vZk1jCk5VWnhLQ0VrVktaditJTDRvSG9lYXl0OGVndHYzdWpKTTZWMTRBc3RNUTZTd3Z3dkE5M0VQL1VnMmU0V0FYSHUKY2JJMU5BYlVnVkRxcCtEUmRmdlprZ1lLcnlqVFdkLzArMWZTOFgxYkJaVld6bDdlaXJOVm5IYlNIMlpEcE51WQowU0JkOGRqNUY2bGQzdDU4eWRaYnJUSHplN0pKT2Q4aWp5U0FwNC9raXU5VWZaV3VUUEFCekRhL0RTZHo5RGsvCnpQVzRDWFh2aExtRTAyVEE5L0hlQ3czS0VISXdpY051RWZ3PQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg=="
-          
-          
-          envFrom:
-          - secretRef:
-              name: myrelease-vulndb
-          resources:
-            {}
+      app.kubernetes.io/component: vulndb
 ---
 # Source: vulcan/charts/vulndbapi/templates/deployment.yaml
 apiVersion: apps/v1
@@ -1182,24 +1129,6 @@ spec:
             preStop:
               exec:
                 command: ["/bin/sh","-c","sleep 10;"]
-          livenessProbe:
-            httpGet:
-              path: /healthcheck
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 10
-          readinessProbe:
-            httpGet:
-              path: /healthcheck
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 5
           resources:
             {}
       volumes:
@@ -2036,6 +1965,92 @@ spec:
             timeoutSeconds: 3
             successThreshold: 1
             failureThreshold: 5
+          resources:
+            {}
+      volumes:
+---
+# Source: vulcan/templates/vulndb/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myrelease-vulcan-vulndb
+  labels:
+    helm.sh/chart: vulcan-0.2.0
+    app.kubernetes.io/name: vulcan
+    app.kubernetes.io/instance: myrelease
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: vulndb
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: vulcan
+      app.kubernetes.io/instance: myrelease
+      app.kubernetes.io/component: vulndb
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: vulcan
+        app.kubernetes.io/instance: myrelease
+        app.kubernetes.io/component: vulndb
+      annotations:
+        checksum/secrets: 129b7705583a2f9f8f8c91fe9954937e6aab488dd004570bb24000d27aea8574
+        
+        iam.amazonaws.com/role: arn:aws:iam::000000000000:role/VulnDBRole
+    spec:
+      
+      imagePullSecrets:
+        - name: pullsecretname
+      securityContext:
+        {}
+      initContainers:
+        - name: waitfordb
+          image: "postgres:9.6-alpine"
+          imagePullPolicy: Always
+          command: ['sh', '-c', 'until pg_isready -t 5; do echo WaitingDB; done;']
+          env:
+          - name: PGHOST
+            value: "vulnerabilitydb.postgres.host"
+          - name: PGPORT
+            value: "5432"
+      containers:
+        
+        - name: vulndb
+          securityContext:
+            {}
+          image: "adevinta/vulnerability-db:tag-vulndb"
+          imagePullPolicy: Always
+          env:
+          - name: PG_HOST
+            value: "vulnerabilitydb.postgres.host"
+          - name: PG_NAME
+            value: "vulnerabilitydb"
+          - name: PG_USER
+            value: "vulnerabilitydb"
+          - name: PG_PORT
+            value: "5432"
+          - name: PG_SSLMODE
+            value: "verify-full"
+          - name: PG_CA_B64
+            value: "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUVCakNDQXU2Z0F3SUJBZ0lKQU1jMFp6YVNVSzUxTUEwR0NTcUdTSWIzRFFFQkN3VUFNSUdQTVFzd0NRWUQKVlFRR0V3SlZVekVRTUE0R0ExVUVCd3dIVTJWaGRIUnNaVEVUTUJFR0ExVUVDQXdLVjJGemFHbHVaM1J2YmpFaQpNQ0FHQTFVRUNnd1pRVzFoZW05dUlGZGxZaUJUWlhKMmFXTmxjeXdnU1c1akxqRVRNQkVHQTFVRUN3d0tRVzFoCmVtOXVJRkpFVXpFZ01CNEdBMVVFQXd3WFFXMWhlbTl1SUZKRVV5QlNiMjkwSURJd01Ua2dRMEV3SGhjTk1Ua3cKT0RJeU1UY3dPRFV3V2hjTk1qUXdPREl5TVRjd09EVXdXakNCanpFTE1Ba0dBMVVFQmhNQ1ZWTXhFREFPQmdOVgpCQWNNQjFObFlYUjBiR1V4RXpBUkJnTlZCQWdNQ2xkaGMyaHBibWQwYjI0eElqQWdCZ05WQkFvTUdVRnRZWHB2CmJpQlhaV0lnVTJWeWRtbGpaWE1zSUVsdVl5NHhFekFSQmdOVkJBc01Da0Z0WVhwdmJpQlNSRk14SURBZUJnTlYKQkFNTUYwRnRZWHB2YmlCU1JGTWdVbTl2ZENBeU1ERTVJRU5CTUlJQklqQU5CZ2txaGtpRzl3MEJBUUVGQUFPQwpBUThBTUlJQkNnS0NBUUVBclhuRi9FNi9RaCtrdTNoUVRTS1BNaFFRbENwb1d2bkl0aHpYNk1LM3A1YTBlWEtaCm9XSWpZY05ORzZVd0pqcDRmVVhsNmdscDUzSm9ibit0V05YODhkTkgybjhEVmJwcFN3U2NWRTJMcHVMKzk0dlkKMEVZRS9YeE43c3ZLZWE4WXZscnFrVUJLeXhMeFRqaCtVL0tyR09hSHh6OXYwbDZaTmxEYnVhWnczcUlXZEQvSQo2YU5iR2VSVVZ0cE02UCtiV0lveFZsL2NhUXlsUVM2Q0VZVWsrQ3BWeUpTa29wd0pselhUMDd0TW9ETDVXZ1g5Ck8wOEtWZ0ROejlxUC9JR3RBY1JkdVJjTmlvSDNFOXY5ODFRTzF6dC9HcGIyZjhOcUFqVVVDVVp6T25pajZteDkKTWNaKzljV1g4OENSelIwdlFPRFd1WnNjZ0kwOE52TTY5Rm4yU1FJREFRQUJvMk13WVRBT0JnTlZIUThCQWY4RQpCQU1DQVFZd0R3WURWUjBUQVFIL0JBVXdBd0VCL3pBZEJnTlZIUTRFRmdRVWMxOWcyTHpMQTVqMEt4YzBMalphCnBtRC92Qjh3SHdZRFZSMGpCQmd3Rm9BVWMxOWcyTHpMQTVqMEt4YzBMalphcG1EL3ZCOHdEUVlKS29aSWh2Y04KQVFFTEJRQURnZ0VCQUhBRzdXVG15anpQUklNODVyVmorZldIc0xJdnFwdzZET2JJak1Xb2twbGlDZU1JTlpGVgp5bmZnQktzZjFFeHdidkpOellGWFc2ZGlobmd1REc5Vk1QcGkydXAvY3RRVE44dG05bkRLT3kwOHVOWm9vZk1jCk5VWnhLQ0VrVktaditJTDRvSG9lYXl0OGVndHYzdWpKTTZWMTRBc3RNUTZTd3Z3dkE5M0VQL1VnMmU0V0FYSHUKY2JJMU5BYlVnVkRxcCtEUmRmdlprZ1lLcnlqVFdkLzArMWZTOFgxYkJaVld6bDdlaXJOVm5IYlNIMlpEcE51WQowU0JkOGRqNUY2bGQzdDU4eWRaYnJUSHplN0pKT2Q4aWp5U0FwNC9raXU5VWZaV3VUUEFCekRhL0RTZHo5RGsvCnpQVzRDWFh2aExtRTAyVEE5L0hlQ3czS0VISXdpY051RWZ3PQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg=="
+          - name: LOG_LEVEL
+            value: "info"
+          - name: MAX_EVENT_AGE
+            value: "365"
+          - name: SQS_QUEUE_ARN
+            value: "arn:aws:sqs:eu-west-1:000000000000:VulnDBChecks"
+          - name: SNS_TOPIC_ARN
+            value: "arn:aws:sns:eu-west-1:000000000000:VulnDBVulns"
+          - name: RESULTS_URL
+            value: https://results.vulcan.com
+          - name: RESULTS_INTERNAL_URL
+            value: "http://myrelease-results"
+          
+          
+          envFrom:
+          - secretRef:
+              name: myrelease-vulcan-vulndb
+          
           resources:
             {}
       volumes:

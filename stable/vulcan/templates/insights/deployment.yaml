@@ -82,7 +82,7 @@ spec:
                 command: ["/bin/sh","-c","sleep {{ $c.comp.lifecycle.preStopSleep }};"]
           {{- end -}}
           {{- end -}}
-          {{- if $c.comp.readinessProbe.enabled }}
+          {{- if and $c.comp.readinessProbe.enabled $c.comp.readinessProbe.path }}
           livenessProbe:
             httpGet:
               path: {{ $c.comp.livenessProbe.path }}
@@ -93,7 +93,7 @@ spec:
             successThreshold: {{ $c.comp.livenessProbe.successThreshold }}
             failureThreshold: {{ $c.comp.livenessProbe.failureThreshold }}
           {{- end }}
-          {{- if $c.comp.readinessProbe.enabled }}
+          {{- if and $c.comp.readinessProbe.enabled  $c.comp.readinessProbe.path }}
           readinessProbe:
             httpGet:
               path: {{ $c.comp.readinessProbe.path }}
