@@ -54,9 +54,9 @@ spec:
               value: "/healthcheck"
             - name: APP_PORT
               value: "{{ $port }}"
-            {{- if $c.comp.global.minio.enabled }}
+            {{- if $c.context.Values.minio.enabled }}
             - name: AWS_API_ENDPOINT
-              value: "{{ include "minioEndpoint" $c.comp }}"
+              value: "{{ include "minioEndpoint" $c.context }}"
             - name: AWS_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef:

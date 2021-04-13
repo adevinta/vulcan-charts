@@ -26,9 +26,9 @@ dependencies:
 - name: postgresql
   version: 8.9.4
   repository: https://charts.bitnami.com/bitnami
-  condition: global.postgresql.enabled
+  condition: postgresql.enabled
 - name: minio
   version: 3.3.6
   repository: https://charts.bitnami.com/bitnami
   alias: minio
-  condition: global.minio.enabled
+  condition: minio.enabled

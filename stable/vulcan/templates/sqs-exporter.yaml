@@ -35,7 +35,7 @@ spec:
           env:
           - name: SQS_QUEUE_NAME_PREFIX
             value: {{ .Values.sqsExporter.queueNamePrefix }}
-          {{- if .Values.global.sqs.enabled }}
+          {{- if .Values.goaws.enabled }}
           - name: SQS_ENDPOINT
             value: "{{ include "sqsEndpoint" . }}"
           - name: AWS_ACCESS_KEY_ID

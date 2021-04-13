@@ -1,7 +1,12 @@
-default:
-  ingress: &ingress
-    enabled: false
-    tls: false
+minio:
+  enabled: true
+
+goaws:
+  enabled: true
+
+postgresql:
+  enabled: true
+
 
 results:
   conf:
@@ -64,11 +69,11 @@ crontinuous:
     teamsWhitelistScan: '["team1", "team2"]'
     teamsWhitelistReport: '["team3"]'
   ingress:
-    <<: *ingress
+    enabled: false
 
 scanengine:
   ingress:
-    <<: *ingress
+    enabled: false
 
 ui:
   conf:
@@ -111,7 +116,7 @@ reportsgenerator:
     ses:
       cc: '["tbd@tbd.com"]'
   ingress:
-    <<: *ingress
+    enabled: false
 
 vulndbapi:
   ingress:

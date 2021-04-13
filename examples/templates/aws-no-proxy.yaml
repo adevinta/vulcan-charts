@@ -194,68 +194,6 @@ data:
   custom.cfg: |
     Example file
 ---
-# Source: vulcan/templates/goaws/config.yaml
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: myrelease-vulcan-goaws
-  labels:
-    helm.sh/chart: vulcan-0.2.0
-    app.kubernetes.io/name: vulcan
-    app.kubernetes.io/instance: myrelease
-    app.kubernetes.io/version: "1.16.0"
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/component: goaws
-data:
-  goaws.yaml: |
-    Local:
-      Host: myrelease-goaws
-      Port: 
-      AccountId: "012345678900"
-      LogToFile: false
-      QueueAttributeDefaults:
-        VisibilityTimeout: 30
-        ReceiveMessageWaitTimeSeconds: 0
-      Queues:
-        - Name: VulcanK8SAPIScans
-        - Name: VulcanK8SChecksGeneric
-        - Name: VulcanK8SChecksTenable
-        - Name: VulcanK8SMetricsChecks
-        - Name: VulcanK8SMetricsScans
-        - Name: VulcanK8SMetricsFindings
-        - Name: VulcanK8SScanEngineChecks
-        - Name: VulcanK8SReportsGenerator
-        - Name: VulcanK8SPersistenceChecks
-        - Name: VulcanK8SVulnDBChecks
-      Topics:
-        - Name: VulcanK8SChecks
-          Subscriptions:
-            - QueueName: VulcanK8SMetricsChecks
-              Raw: true
-            - QueueName: VulcanK8SScanEngineChecks
-              Raw: true
-              #FilterPolicy: '{"foo": ["bar"]}'
-        - Name: VulcanK8SScans
-          Subscriptions:
-            - QueueName: VulcanK8SAPIScans
-              Raw: true
-            - QueueName: VulcanK8SMetricsScans
-              Raw: true
-        - Name: VulcanK8SReportsGen
-          Subscriptions:
-            - QueueName: VulcanK8SReportsGenerator
-              Raw: true
-        - Name: VulcanK8SScanEngineChecks
-          Subscriptions:
-            - QueueName: VulcanK8SPersistenceChecks
-              Raw: true
-        - Name: VulcanK8SVulnDBVulns
-            - QueueName: VulcanK8SMetricsFindings
-              Raw: true
-      RandomLatency:
-        Min: 0
-        Max: 0
----
 # Source: vulcan/templates/insights/config-proxy.yaml
 apiVersion: v1
 kind: ConfigMap
@@ -356,30 +294,6 @@ spec:
       app.kubernetes.io/name: vulcan
       app.kubernetes.io/instance: myrelease
       app.kubernetes.io/component: crontinuous
----
-# Source: vulcan/templates/goaws/service.yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: myrelease-vulcan-goaws
-  labels:
-    helm.sh/chart: vulcan-0.2.0
-    app.kubernetes.io/name: vulcan
-    app.kubernetes.io/instance: myrelease
-    app.kubernetes.io/version: "1.16.0"
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/component: goaws
-spec:
-  type: ClusterIP
-  ports:
-    - port: 80
-      targetPort: http
-      protocol: TCP
-      name: http
-  selector:
-      app.kubernetes.io/name: vulcan
-      app.kubernetes.io/instance: myrelease
-      app.kubernetes.io/component: goaws
 ---
 # Source: vulcan/templates/insights/service.yaml
 apiVersion: v1
@@ -896,52 +810,6 @@ spec:
           resources:
             {}
       volumes:
----
-# Source: vulcan/templates/goaws/deployment.yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: myrelease-vulcan-goaws
-  labels:
-    helm.sh/chart: vulcan-0.2.0
-    app.kubernetes.io/name: vulcan
-    app.kubernetes.io/instance: myrelease
-    app.kubernetes.io/version: "1.16.0"
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/component: goaws
-spec:
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: vulcan
-      app.kubernetes.io/instance: myrelease
-      app.kubernetes.io/component: goaws
-  template:
-    metadata:
-      labels:
-        app.kubernetes.io/name: vulcan
-        app.kubernetes.io/instance: myrelease
-        app.kubernetes.io/component: goaws
-      annotations:
-    spec:
-      securityContext:
-        {}
-      containers:
-      - name: goaws
-        securityContext:
-            {}
-        image: "pafortin/goaws:v0.3.1"
-        imagePullPolicy: Always
-        ports:
-          - name: http
-            containerPort: 8080
-            protocol: TCP
-        resources:
-            {}
-        volumeMounts:
-      volumes:
-      - name: goaws-config
-        configMap:
-          name: myrelease-vulcan-goaws
 ---
 # Source: vulcan/templates/insights/deployment.yaml
 apiVersion: apps/v1

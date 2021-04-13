@@ -1,3 +1,7 @@
+global:
+  domain: vulcan.com
+  region: eu-west-1
+
 api:
   annotations:
     iam.amazonaws.com/role: arn:aws:iam::000000000000:role/APIRole
@@ -127,17 +131,6 @@ customTplManifests: |
       Example file
 dogstatsd:
   apiKey: xxxxxxxxxxxxxxxxxxxxx
-global:
-  domain: vulcan.com
-  minio:
-    enabled: false
-  postgresql:
-    enabled: false
-  region: eu-west-1
-  sns:
-    enabled: false
-  sqs:
-    enabled: false
 insights:
   annotations:
     iam.amazonaws.com/role: arn:aws:iam::000000000000:role/InsightsRole

@@ -4,16 +4,6 @@
 global:
   domain: vulcan.local
   region: local
-  minio:
-    enabled: true
-  goaws:
-    accountId: "012345678900"
-  sns:
-    enabled: true
-  sqs:
-    enabled: true
-  postgresql:
-    enabled: true
 
 defaults:
 
@@ -117,7 +107,7 @@ defaults:
 
 
 postgresql:
-  enabled: true
+  enabled: false
   postgresqlUsername: postgres
   postgresqlPassword: TBD
   postgresqlDatabase: persistence
@@ -140,8 +130,9 @@ postgresql:
   metrics:
     enabled: true
 
+
 goaws:
-  enabled: true
+  enabled: false
   name: goaws
   <<: *comp
 
@@ -156,7 +147,7 @@ goaws:
       Local:
         Host: {{ .Release.Name }}-goaws
         Port: {{ .Values.containerPort }}
-        AccountId: "{{ .Values.global.goaws.accountId }}"
+        AccountId: "012345678900"
         LogToFile: false
         QueueAttributeDefaults:
           VisibilityTimeout: 30
@@ -202,7 +193,7 @@ goaws:
           Max: 0
 
 minio:
-  enabled: true
+  enabled: false
   mode: standalone
   defaultBuckets: "reports,logs,scans,insights,public-insights,crontinuous"
   serviceAccount:
@@ -539,10 +530,6 @@ insights:
   enabled: true
   name: insights
   <<: *comp
-
-  global:
-    minio:
-      enabled: false
 
   image:
     repository: pottava/s3-proxy

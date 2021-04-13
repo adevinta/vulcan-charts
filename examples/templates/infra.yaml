@@ -1682,6 +1682,18 @@ spec:
               value: "/healthcheck"
             - name: APP_PORT
               value: "8080"
+            - name: AWS_API_ENDPOINT
+              value: "http://myrelease-minio"
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: "myrelease-minio"
+                  key: access-key
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: "myrelease-minio"
+                  key: secret-key
           ports:
             - name: private
               containerPort: 8080
@@ -1728,6 +1740,18 @@ spec:
               value: "/healthcheck"
             - name: APP_PORT
               value: "8081"
+            - name: AWS_API_ENDPOINT
+              value: "http://myrelease-minio"
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: "myrelease-minio"
+                  key: access-key
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: "myrelease-minio"
+                  key: secret-key
           ports:
             - name: public
               containerPort: 8081
