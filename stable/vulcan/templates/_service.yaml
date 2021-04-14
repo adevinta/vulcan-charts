@@ -13,9 +13,9 @@ spec:
   type: {{ .comp.service.type }}
   ports:
     - port: {{ .comp.service.port }}
-      targetPort: http
-      protocol: TCP
-      name: http
+      targetPort: {{ .comp.service.targetPort | default "http" }}
+      protocol: {{ .comp.service.protocol | default "TCP" }}
+      name: {{ .comp.service.portName | default "http" }}
   selector: {{- include "vulcan.selectorLabels" .context | nindent 6 }}
       app.kubernetes.io/component: {{ .comp.name }}
 {{- end -}}

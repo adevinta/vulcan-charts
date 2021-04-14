@@ -86,6 +86,9 @@ defaults:
     service:
       type: ClusterIP
       port: 80
+      portName:
+      protocol: TCP
+      targetPort:
 
     ingress:
       enabled: false
@@ -633,13 +636,17 @@ redis:
     tag: 6.0-alpine
     pullPolicy: Always
 
-  containerPort: 6317
+  containerPort: 6379
 
   conf:
     redisPassword: TBD 
 
   service:
-    port: 6317
+    type: ClusterIP
+    port: 6379
+    protocol: TCP
+    targetPort: 6379
+    portName: redis
 
 
 metrics:

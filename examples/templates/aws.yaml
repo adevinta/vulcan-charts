@@ -729,30 +729,6 @@ spec:
       app.kubernetes.io/instance: myrelease
       app.kubernetes.io/component: insights
 ---
-# Source: vulcan/templates/metrics/service.yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: myrelease-vulcan-metrics
-  labels:
-    helm.sh/chart: vulcan-0.2.0
-    app.kubernetes.io/name: vulcan
-    app.kubernetes.io/instance: myrelease
-    app.kubernetes.io/version: "1.16.0"
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/component: metrics
-spec:
-  type: ClusterIP
-  ports:
-    - port: 80
-      targetPort: http
-      protocol: TCP
-      name: http
-  selector:
-      app.kubernetes.io/name: vulcan
-      app.kubernetes.io/instance: myrelease
-      app.kubernetes.io/component: metrics
----
 # Source: vulcan/templates/persistence/service.yaml
 apiVersion: v1
 kind: Service
@@ -790,12 +766,12 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/component: redis
 spec:
-  type: 
+  type: ClusterIP
   ports:
-    - port: 6317
-      targetPort: http
+    - port: 6379
+      targetPort: 6379
       protocol: TCP
-      name: http
+      name: redis
   selector:
       app.kubernetes.io/name: vulcan
       app.kubernetes.io/instance: myrelease
@@ -1703,7 +1679,7 @@ spec:
               name: myrelease-vulcan-redis
         ports:
           - name: app
-            containerPort: 6317
+            containerPort: 6379
             protocol: TCP
         resources:
             {}
