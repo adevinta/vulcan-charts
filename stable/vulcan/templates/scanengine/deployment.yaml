@@ -78,7 +78,7 @@ spec:
           - name: "CHECKS_SNS_ARN"
             value: "{{ $c.comp.conf.checksSNS.topicArn }}"
           - name: "STREAM_URL"
-            value: "{{ $c.comp.conf.streamUrl | default  (include "streamUrl" .) }}"
+            value: "{{ $c.comp.conf.streamUrl | default  (include "stream.url" .) }}"
           - name: "CHECKS_CREATOR_WORKERS"
             value: "{{ $c.comp.conf.checkCreator.numOfWorkers }}"
           - name: "CHECKS_CREATOR_PERIOD"

@@ -82,15 +82,15 @@ spec:
           - name: DEFAULT_OWNERS
             value: {{ $c.comp.conf.defaultOwners | quote }}
           - name: SCANENGINE_URL
-            value: "{{ $c.comp.conf.scanengineUrl | default ( printf "%s/v1/" (include "scanengineUrl" .) ) }}"
+            value: "{{ $c.comp.conf.scanengineUrl | default ( printf "%s/v1/" (include "scanengine.url" .) ) }}"
           - name: SCHEDULER_URL
-            value: "{{ $c.comp.conf.schedulerUrl | default (include "crontinuousUrl" .) }}"
+            value: "{{ $c.comp.conf.schedulerUrl | default (include "crontinuous.url" .) }}"
           - name: SQS_QUEUE_ARN
             value: "{{ $c.comp.conf.queueArn }}"
           - name: REPORTS_SNS_ARN
             value: "{{ $c.comp.conf.reports.snsArn }}"
           - name: REPORTS_API_URL
-            value: "{{ $c.comp.conf.reports.apiUrl | default (include "reportsgeneratorUrl" .) }}"
+            value: "{{ $c.comp.conf.reports.apiUrl | default (include "reportsgenerator.url" .) }}"
           - name: SCAN_REDIRECT_URL
             value: "{{ $c.comp.conf.reports.redirectUrl }}"
           - name: VULCAN_UI_URL
@@ -98,7 +98,7 @@ spec:
           - name: PERSISTENCE_HOST
             value: "{{ $c.comp.conf.persistenceHost | default  (include "persistence.fullname" .) }}"
           - name: VULNERABILITYDB_URL
-            value: "{{ $c.comp.conf.vulndbapiUrl | default  (include "vulndbapiUrl" .) }}"
+            value: "{{ $c.comp.conf.vulndbapiUrl | default  (include "vulndbapi.url" .) }}"
           - name: AWSCATALOGUE_KIND
             value: "{{ $c.comp.conf.awscatalogue.kind }}"
           - name: AWSCATALOGUE_URL

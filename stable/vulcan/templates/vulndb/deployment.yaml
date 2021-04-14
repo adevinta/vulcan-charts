@@ -76,7 +76,7 @@ spec:
           - name: RESULTS_URL
             value: {{ $c.comp.conf.resultsUrl | default ( printf "https://%s" (include "results.fullname" .))}}
           - name: RESULTS_INTERNAL_URL
-            value: "{{ $c.comp.conf.resultsInternalUrl | default (include "resultsUrl" .)}}"
+            value: "{{ $c.comp.conf.resultsInternalUrl | default (include "results.url" .)}}"
         {{- include "comp-common-envs" $c | nindent 10 }}
         {{- range $name, $value := $c.comp.extraEnv }}
           - name: {{ $name }}

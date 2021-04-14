@@ -63,9 +63,9 @@ spec:
           - name: DEVHOSE_FINDINGS_SOURCE
             value: "{{ $c.comp.conf.devHoseFindingsSource }}"
           - name: REDIS_ADDR
-            value: "{{ $c.comp.conf.redisAddr | default (include "redisAddr" .)}}"
+            value: "{{ $c.comp.conf.redisAddr | default (include "redis.url" .)}}"
           - name: VULCAN_API
-            value: {{ $c.comp.conf.vulcanApi | default (include "apiUrl" .) }}
+            value: {{ $c.comp.conf.vulcanApi | default (include "api.url" .) }}
           - name: VULCAN_API_EXTERNAL
             value: "{{ $c.comp.conf.vulcanAPIExternal }}"
         {{- include "comp-common-envs" $c | nindent 10 }}

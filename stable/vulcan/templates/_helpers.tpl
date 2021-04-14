@@ -107,6 +107,11 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- printf "%s-%s" (include "vulcan.fullname" .) .Values.vulndbapi.name -}}
 {{- end -}}
 
+{{- define "minio.fullname" -}}
+{{- printf "%s-%s" (include "vulcan.fullname" .) "s3" -}}
+{{- end -}}
+
+
 {{- define "region" -}}
 {{- .Values.global.region -}}
 {{- end -}}
@@ -115,55 +120,47 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- .Values.global.domain -}}
 {{- end -}}
 
-{{- define "apiUrl" -}}
+{{- define "api.url" -}}
 {{- printf "http://%s/api" (include "api.fullname" .) -}}
 {{- end -}}
 
-{{- define "scanengineUrl" -}}
+{{- define "scanengine.url" -}}
 {{- printf "http://%s" (include "scanengine.fullname" .) -}}
 {{- end -}}
 
-{{- define "crontinuousUrl" -}}
+{{- define "crontinuous.url" -}}
 {{- printf "http://%s/" (include "crontinuous.fullname" .) -}}
 {{- end -}}
 
-{{- define "persistenceUrl" -}}
-{{- printf "http://%s" (include "persistence.fullname" .) -}}
-{{- end -}}
-
-{{- define "resultsUrl" -}}
+{{- define "results.url" -}}
 {{- printf "http://%s" (include "results.fullname" .) -}}
 {{- end -}}
 
-{{- define "reportsgeneratorUrl" -}}
+{{- define "reportsgenerator.url" -}}
 {{- printf "http://%s/" (include "reportsgenerator.fullname" .) -}}
 {{- end -}}
 
-{{- define "vulndbapiUrl" -}}
+{{- define "vulndbapi.url" -}}
 {{- printf "http://%s/" (include "vulndbapi.fullname" .) -}}
 {{- end -}}
 
-{{- define "vulndbUrl" -}}
-{{- printf "http://%s/" (include "vulndb.fullname" .) -}}
-{{- end -}}
-
-{{- define "streamUrl" -}}
+{{- define "stream.url" -}}
 {{- printf "http://%s" (include "stream.fullname" .) -}}
 {{- end -}}
 
-{{- define "redisAddr" -}}
+{{- define "redis.url" -}}
 {{- printf "%s:6379" (include "redis.fullname" .) -}}
 {{- end -}}
 
-{{- define "minioEndpoint" -}}
-{{- printf "http://%s-minio" .Release.Name -}}
+{{- define "minio.url" -}}
+{{- printf "http://%s" (include "minio.fullname" .) -}}
 {{- end -}}
 
-{{- define "sqsEndpoint" -}}
+{{- define "sqs.url" -}}
 {{- printf "http://%s" (include "goaws.fullname" .) -}}
 {{- end -}}
 
-{{- define "snsEndpoint" -}}
+{{- define "sns.url" -}}
 {{- printf "http://%s" (include "goaws.fullname" .) -}}
 {{- end -}}
 

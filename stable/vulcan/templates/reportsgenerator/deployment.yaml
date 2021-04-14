@@ -100,9 +100,9 @@ spec:
           - name: SCAN_DOCS_ROADMAP_LINK
             value: "{{ $c.comp.conf.generators.scan.docs.roadmapLink }}"
           - name: PERSISTENCE_ENDPOINT  # We keep this PERSISTENCE variable for compatibility
-            value: "{{ $c.comp.conf.scanengineUrl | default (include "scanengineUrl" .) }}"
+            value: "{{ $c.comp.conf.scanengineUrl | default (include "scanengine.url" .) }}"
           - name: RESULTS_ENDPOINT
-            value: "{{ $c.comp.conf.resultsUrl | default (include "resultsUrl" .) }}"
+            value: "{{ $c.comp.conf.resultsUrl | default (include "results.url" .) }}"
           - name: SCAN_PROXY_ENDPOINT
             value: "{{ $c.comp.conf.generators.scan.proxyEndpoint }}"
           - name: VULCAN_UI

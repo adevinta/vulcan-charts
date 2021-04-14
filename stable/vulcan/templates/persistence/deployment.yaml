@@ -88,7 +88,7 @@ spec:
           - name: RAILS_MAX_THREADS
             value: "{{ $c.comp.conf.railsMaxThreads }}"
           - name: AWS_CREATE_CHECKS_SQS_URL
-            value: "{{ $c.comp.conf.awsCreateChecksSqsUrl | default (printf "%s/%s" (include "sqsEndpoint" .) $c.comp.conf.awsCreateChecksSqsName) }}"
+            value: "{{ $c.comp.conf.awsCreateChecksSqsUrl | default (printf "%s/%s" (include "sqs.url" .) $c.comp.conf.awsCreateChecksSqsName) }}"
           - name: AWS_CREATE_CHECKS_WORKERS
             value: "{{ $c.comp.conf.awsCreateChecksWorkers }}"
         {{- include "comp-common-envs" $c | nindent 10 }}
