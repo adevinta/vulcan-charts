@@ -23,10 +23,6 @@
 http
 {{- end -}}
 
-{{- define "region" -}}
-{{- .Values.conf.region -}}
-{{- end -}}
-
 {{- define "postgresqlHost" -}}
 {{ .Values.db.host }}
 {{- end -}}

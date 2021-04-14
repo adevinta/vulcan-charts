@@ -46,15 +46,9 @@ readinessProbe:
 
 conf:
   logLevel:
-  snsTopic: "arn:aws:sns:local:TBD:TBD"
-  s3Scans: TBD
   secretKeyBase: TBDTBD
-  channel: events
   nessusCheckQueue: TBD
   railsMaxThreads: 4
-  # awsCreateChecksSqsUrl: http://localhost/VulcanK8SPersistenceChecks
-  awsCreateChecksSqsName: VulcanK8SPersistenceChecks
-  awsCreateChecksWorkers: 4
 
 db:
   internal: false
