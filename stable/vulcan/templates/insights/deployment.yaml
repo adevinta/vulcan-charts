@@ -56,7 +56,7 @@ spec:
               value: "{{ $port }}"
             {{- if $c.context.Values.minio.enabled }}
             - name: AWS_API_ENDPOINT
-              value: "{{ include "minioEndpoint" $c.context }}"
+              value: "{{ include "minio.url" $c.context }}"
             - name: AWS_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef:

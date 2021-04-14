@@ -107,10 +107,6 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- printf "%s-%s" (include "vulcan.fullname" .) .Values.vulndbapi.name -}}
 {{- end -}}
 
-{{- define "minio.fullname" -}}
-{{- printf "%s-%s" (include "vulcan.fullname" .) "s3" -}}
-{{- end -}}
-
 
 {{- define "region" -}}
 {{- .Values.global.region -}}
@@ -153,7 +149,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
 
 {{- define "minio.url" -}}
-{{- printf "http://%s" (include "minio.fullname" .) -}}
+{{- printf "http://%s-vulcans3" .Release.Name -}}
 {{- end -}}
 
 {{- define "sqs.url" -}}

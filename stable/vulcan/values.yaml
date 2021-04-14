@@ -194,6 +194,7 @@ goaws:
 
 minio:
   enabled: false
+  nameOverride: vulcans3
   mode: standalone
   defaultBuckets: "reports,logs,scans,insights,public-insights,crontinuous"
   serviceAccount:
