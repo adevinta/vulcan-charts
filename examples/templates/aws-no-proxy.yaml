@@ -1960,7 +1960,7 @@ metadata:
     app.kubernetes.io/name: api
 spec:
   scaleTargetRef:
-    apiVersion: extensions/v1beta1
+    apiVersion: apps/v1
     kind: Deployment
     name: myrelease-vulcan-api
   minReplicas: 1
@@ -1980,7 +1980,7 @@ metadata:
     app.kubernetes.io/name: insights
 spec:
   scaleTargetRef:
-    apiVersion: extensions/v1beta1
+    apiVersion: apps/v1
     kind: Deployment
     name: myrelease-vulcan-insights
   minReplicas: 1
@@ -2000,7 +2000,7 @@ metadata:
     app.kubernetes.io/name: persistence
 spec:
   scaleTargetRef:
-    apiVersion: extensions/v1beta1
+    apiVersion: apps/v1
     kind: Deployment
     name: myrelease-vulcan-persistence
   minReplicas: 1
@@ -2020,7 +2020,7 @@ metadata:
     app.kubernetes.io/name: results
 spec:
   scaleTargetRef:
-    apiVersion: extensions/v1beta1
+    apiVersion: apps/v1
     kind: Deployment
     name: myrelease-vulcan-results
   minReplicas: 1
@@ -2040,7 +2040,7 @@ metadata:
     app.kubernetes.io/name: scanengine
 spec:
   scaleTargetRef:
-    apiVersion: extensions/v1beta1
+    apiVersion: apps/v1
     kind: Deployment
     name: myrelease-vulcan-scanengine
   minReplicas: 1
