@@ -7,18 +7,18 @@ kind: Deployment
 metadata:
   name: {{ include "crontinuous.fullname" . }}
   labels: {{- include "vulcan.labels" . | nindent 4 }}
-    app.kubernetes.io/component: crontinuous
+    app.kubernetes.io/name: crontinuous
 spec:
   {{- if kindIs "int64" $c.comp.replicaCount }}
   replicas: {{ $c.comp.replicaCount }}
   {{- end }}
   selector:
     matchLabels: {{- include "vulcan.selectorLabels" . | nindent 6 }}
-      app.kubernetes.io/component: crontinuous
+      app.kubernetes.io/name: crontinuous
   template:
     metadata:
       labels: {{- include "vulcan.selectorLabels" . | nindent 8 }}
-        app.kubernetes.io/component: crontinuous
+        app.kubernetes.io/name: crontinuous
       annotations:
         checksum/secrets: {{ include (print $.Template.BasePath "/crontinuous/secrets.yaml") . | sha256sum }}
         {{- include "comp-common-annotations" $c | nindent 8 }}

@@ -16,7 +16,7 @@ kind: ConfigMap
 metadata:
   name: {{ include "vulcan.fullname" .context }}-{{ .comp.name }}-proxy
   labels: {{- include "vulcan.labels" .context | nindent 4 }}
-    app.kubernetes.io/component: {{ .comp.name }}-proxy
+    app.kubernetes.io/name: {{ .comp.name }}-proxy
 data:
   haproxy.cfg: |
     global

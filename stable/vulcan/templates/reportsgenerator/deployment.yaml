@@ -7,18 +7,18 @@ kind: Deployment
 metadata:
   name: {{ include "reportsgenerator.fullname" . }}
   labels: {{- include "vulcan.labels" . | nindent 4 }}
-    app.kubernetes.io/component: reportsgenerator
+    app.kubernetes.io/name: reportsgenerator
 spec:
   {{- if kindIs "int64" $c.comp.replicaCount }}
   replicas: {{ $c.comp.replicaCount }}
   {{- end }}
   selector:
     matchLabels: {{- include "vulcan.selectorLabels" . | nindent 6 }}
-      app.kubernetes.io/component: reportsgenerator
+      app.kubernetes.io/name: reportsgenerator
   template:
     metadata:
       labels: {{- include "vulcan.selectorLabels" . | nindent 8 }}
-        app.kubernetes.io/component: reportsgenerator
+        app.kubernetes.io/name: reportsgenerator
       annotations:
         checksum/secrets: {{ include (print $.Template.BasePath "/reportsgenerator/secrets.yaml") . | sha256sum }}
         {{- include "comp-common-annotations" $c | nindent 8 }}

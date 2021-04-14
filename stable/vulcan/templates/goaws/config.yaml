@@ -5,7 +5,7 @@ kind: ConfigMap
 metadata:
   name: {{ include "goaws.fullname" . }}
   labels: {{- include "vulcan.labels" . | nindent 4 }}
-    app.kubernetes.io/component: goaws
+    app.kubernetes.io/name: goaws
 data:
 {{ tpl ( toYaml $c.comp.config ) . | indent 2 }}
 {{- end }}

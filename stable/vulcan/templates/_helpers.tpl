@@ -47,8 +47,7 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 Selector labels
 */}}
 {{- define "vulcan.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "vulcan.name" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
+app.kubernetes.io/instance: {{ include "vulcan.name" . }}
 {{- end -}}
 
 {{- define "api.fullname" -}}

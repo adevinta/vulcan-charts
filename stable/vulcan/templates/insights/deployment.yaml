@@ -5,18 +5,18 @@ kind: Deployment
 metadata:
   name: {{ include "insights.fullname" . }}
   labels: {{- include "vulcan.labels" . | nindent 4 }}
-    app.kubernetes.io/component: insights
+    app.kubernetes.io/name: insights
 spec:
   {{- if kindIs "int64" $c.comp.replicaCount }}
   replicas: {{ $c.comp.replicaCount }}
   {{- end }}
   selector:
     matchLabels: {{- include "vulcan.selectorLabels" . | nindent 6 }}
-      app.kubernetes.io/component: insights
+      app.kubernetes.io/name: insights
   template:
     metadata:
       labels: {{- include "vulcan.selectorLabels" . | nindent 8 }}
-        app.kubernetes.io/component: insights
+        app.kubernetes.io/name: insights
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/insights/config-proxy.yaml") . | sha256sum }}
         prometheus.io/scrape: 'true'

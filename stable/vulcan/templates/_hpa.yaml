@@ -8,7 +8,7 @@ kind: HorizontalPodAutoscaler
 metadata:
   name: {{ template "vulcan.fullname" .context }}-{{ .comp.name }}
   labels: {{- include "vulcan.labels" .context | nindent 4 }}
-    app.kubernetes.io/component: {{ .comp.name }}
+    app.kubernetes.io/name: {{ .comp.name }}
 spec:
   scaleTargetRef:
     apiVersion: extensions/v1beta1

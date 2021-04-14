@@ -14,7 +14,7 @@ kind: Ingress
 metadata:
   name: {{ $fullName }}
   labels: {{- include "vulcan.labels" .context | nindent 4 }}
-    app.kubernetes.io/component: {{ .comp.name }}
+    app.kubernetes.io/name: {{ .comp.name }}
   {{- with .comp.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}

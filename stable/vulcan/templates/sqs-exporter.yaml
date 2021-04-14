@@ -8,11 +8,11 @@ metadata:
 spec:
   selector:
     matchLabels: {{- include "vulcan.selectorLabels" . | nindent 6 }}
-      app.kubernetes.io/component: sqsexporter
+      app.kubernetes.io/name: sqsexporter
   template:
     metadata:
       labels: {{- include "vulcan.selectorLabels" . | nindent 8 }}
-        app.kubernetes.io/component: sqsexporter
+        app.kubernetes.io/name: sqsexporter
       annotations:
         prometheus.io/scrape: 'true'
         prometheus.io/port: '9384'

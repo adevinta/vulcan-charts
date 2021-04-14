@@ -7,18 +7,18 @@ kind: Deployment
 metadata:
   name: {{ include "scanengine.fullname" . }}
   labels: {{- include "vulcan.labels" . | nindent 4 }}
-    app.kubernetes.io/component: scanengine
+    app.kubernetes.io/name: scanengine
 spec:
   {{- if kindIs "int64" $c.comp.replicaCount }}
   replicas: {{ $c.comp.replicaCount }}
   {{- end }}
   selector:
     matchLabels: {{- include "vulcan.selectorLabels" . | nindent 6 }}
-      app.kubernetes.io/component: scanengine
+      app.kubernetes.io/name: scanengine
   template:
     metadata:
       labels: {{- include "vulcan.selectorLabels" . | nindent 8 }}
-        app.kubernetes.io/component: scanengine
+        app.kubernetes.io/name: scanengine
       annotations:
         checksum/secrets: {{ include (print $.Template.BasePath "/scanengine/secrets.yaml") . | sha256sum }}
         {{- include "comp-common-annotations" $c | nindent 8 }}

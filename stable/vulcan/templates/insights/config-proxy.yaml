@@ -5,7 +5,7 @@ kind: ConfigMap
 metadata:
   name: {{ include "insights.fullname" . }}-proxy
   labels: {{- include "vulcan.labels" . | nindent 4 }}
-    app.kubernetes.io/component: insights
+    app.kubernetes.io/name: insights
 data:
   haproxy.cfg: |
     global

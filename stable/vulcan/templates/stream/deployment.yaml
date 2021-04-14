@@ -7,18 +7,18 @@ kind: Deployment
 metadata:
   name: {{ include "stream.fullname" . }}
   labels: {{- include "vulcan.labels" . | nindent 4 }}
-    app.kubernetes.io/component: stream
+    app.kubernetes.io/name: stream
 spec:
   {{- if kindIs "int64" $c.comp.replicaCount }}
   replicas: {{ $c.comp.replicaCount }}
   {{- end }}
   selector:
     matchLabels: {{- include "vulcan.selectorLabels" . | nindent 6 }}
-      app.kubernetes.io/component: stream
+      app.kubernetes.io/name: stream
   template:
     metadata:
       labels: {{- include "vulcan.selectorLabels" . | nindent 8 }}
-        app.kubernetes.io/component: stream
+        app.kubernetes.io/name: stream
       annotations:
         checksum/secrets: {{ include (print $.Template.BasePath "/stream/secrets.yaml") . | sha256sum }}
         {{- include "comp-common-annotations" $c | nindent 8 }}

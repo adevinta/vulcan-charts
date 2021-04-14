@@ -8,7 +8,7 @@ kind: Service
 metadata:
   name: {{ template "vulcan.fullname" .context }}-{{ .comp.name }}
   labels: {{- include "vulcan.labels" .context | nindent 4 }}
-    app.kubernetes.io/component: {{ .comp.name }}
+    app.kubernetes.io/name: {{ .comp.name }}
 spec:
   type: {{ .comp.service.type }}
   ports:
@@ -17,6 +17,6 @@ spec:
       protocol: {{ .comp.service.protocol | default "TCP" }}
       name: {{ .comp.service.portName | default "http" }}
   selector: {{- include "vulcan.selectorLabels" .context | nindent 6 }}
-      app.kubernetes.io/component: {{ .comp.name }}
+      app.kubernetes.io/name: {{ .comp.name }}
 {{- end -}}
 {{- end -}}
