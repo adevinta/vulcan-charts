@@ -40,9 +40,9 @@ spec:
           command: ['sh', '-c', 'until pg_isready -t 5; do echo WaitingDB; done;']
           env:
           - name: PGHOST
-            value: "{{ $c.comp.db.host | default (include "postgresqlHost" .) }}"
+            value: {{ $c.comp.db.host | default (include "postgresqlHost" .) | quote }}
           - name: PGPORT
-            value: "{{ $c.comp.db.port }}"
+            value: {{ $c.comp.db.port | quote }}
       containers:
         {{- include "comp-common-containers" $c | nindent 8}}
         - name: {{ $c.comp.name }}
@@ -52,31 +52,31 @@ spec:
           imagePullPolicy: {{ $c.comp.image.pullPolicy }}
           env:
           - name: PG_HOST
-            value: "{{ $c.comp.db.host | default (include "postgresqlHost" .) }}"
+            value: {{ $c.comp.db.host | default (include "postgresqlHost" .) | quote }}
           - name: PG_NAME
-            value: "{{ $c.comp.db.name }}"
+            value: {{ $c.comp.db.name | quote }}
           - name: PG_USER
-            value: "{{ $c.comp.db.user }}"
+            value: {{ $c.comp.db.user | quote }}
           - name: PG_PORT
-            value: "{{ $c.comp.db.port }}"
+            value: {{ $c.comp.db.port | quote }}
           - name: PG_SSLMODE
-            value: "{{ $c.comp.db.sslMode }}"
+            value: {{ $c.comp.db.sslMode | quote }}
           {{- if $c.comp.db.ca }}
           - name: PG_CA_B64
-            value: "{{ $c.comp.db.ca | b64enc }}"
+            value: {{ $c.comp.db.ca | b64enc | quote }}
           {{- end }}
           - name: LOG_LEVEL
-            value: "{{ $c.comp.conf.logLevel }}"
+            value: {{ $c.comp.conf.logLevel | quote }}
           - name: MAX_EVENT_AGE
-            value: "{{ $c.comp.conf.maxEventAge }}"
+            value: {{ $c.comp.conf.maxEventAge | quote }}
           - name: SQS_QUEUE_ARN
-            value: "{{ $c.comp.conf.checksQueueArn }}"
+            value: {{ $c.comp.conf.checksQueueArn | quote }}
           - name: SNS_TOPIC_ARN
-            value: "{{ $c.comp.conf.vulnsTopicArn }}"
+            value: {{ $c.comp.conf.vulnsTopicArn | quote }}
           - name: RESULTS_URL
             value: {{ $c.comp.conf.resultsUrl | default ( printf "https://%s" (include "results.fullname" .))}}
           - name: RESULTS_INTERNAL_URL
-            value: "{{ $c.comp.conf.resultsInternalUrl | default (include "results.url" .)}}"
+            value: {{ $c.comp.conf.resultsInternalUrl | default (include "results.url" .)| quote }}
         {{- include "comp-common-envs" $c | nindent 10 }}
         {{- range $name, $value := $c.comp.extraEnv }}
           - name: {{ $name }}

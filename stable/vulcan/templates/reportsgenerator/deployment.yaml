@@ -40,9 +40,9 @@ spec:
           command: ['sh', '-c', 'until pg_isready -t 5; do echo WaitingDB; done;']
           env:
           - name: PGHOST
-            value: "{{ $c.comp.db.host | default (include "postgresqlHost" .) }}"
+            value: {{ $c.comp.db.host | default (include "postgresqlHost" .) | quote }}
           - name: PGPORT
-            value: "{{ $c.comp.db.port }}"
+            value: {{ $c.comp.db.port | quote }}
       containers:
         {{- include "comp-common-containers" $c | nindent 8}}
         - name: {{ $c.comp.name }}
@@ -52,69 +52,69 @@ spec:
           imagePullPolicy: {{ $c.comp.image.pullPolicy }}
           env:
           - name: PORT
-            value: "{{ $c.comp.containerPort }}"
+            value: {{ $c.comp.containerPort | quote }}
           - name: PG_HOST
-            value: "{{ $c.comp.db.host | default (include "postgresqlHost" .) }}"
+            value: {{ $c.comp.db.host | default (include "postgresqlHost" .) | quote }}
           - name: PG_NAME
-            value: "{{ $c.comp.db.name }}"
+            value: {{ $c.comp.db.name | quote }}
           - name: PG_USER
-            value: "{{ $c.comp.db.user }}"
+            value: {{ $c.comp.db.user | quote }}
           - name: PG_PORT
-            value: "{{ $c.comp.db.port }}"
+            value: {{ $c.comp.db.port | quote }}
           - name: PG_SSLMODE
-            value: "{{ $c.comp.db.sslMode }}"
+            value: {{ $c.comp.db.sslMode | quote }}
           {{- if $c.comp.db.ca }}
           - name: PG_CA_B64
-            value: "{{ $c.comp.db.ca | b64enc }}"
+            value: {{ $c.comp.db.ca | b64enc | quote }}
           {{- end }}
           - name: LOG_LEVEL
-            value: "{{ $c.comp.conf.logLevel }}"
+            value: {{ $c.comp.conf.logLevel | quote }}
           - name: SQS_QUEUE_ARN
-            value: "{{ $c.comp.conf.queueArn }}"
+            value: {{ $c.comp.conf.queueArn | quote }}
           - name: SES_REGION
-            value: "{{ $c.comp.conf.ses.region | default (include "region" .) }}"
+            value: {{ $c.comp.conf.ses.region | default (include "region" .) | quote }}
           - name: SES_FROM
-            value: "{{ $c.comp.conf.ses.from }}"
+            value: {{ $c.comp.conf.ses.from | quote }}
           - name: SES_CC
             value: {{ $c.comp.conf.ses.cc | quote }}
           - name: SCAN_EMAIL_SUBJECT
-            value: "{{ $c.comp.conf.generators.scan.emailSubject }}"
+            value: {{ $c.comp.conf.generators.scan.emailSubject | quote }}
           - name: SCAN_S3_PUBLIC_BUCKET
-            value: "{{ $c.comp.conf.generators.scan.publicBucket }}"
+            value: {{ $c.comp.conf.generators.scan.publicBucket | quote }}
           - name: SCAN_S3_PRIVATE_BUCKET
-            value: "{{ $c.comp.conf.generators.scan.privateBucket }}"
+            value: {{ $c.comp.conf.generators.scan.privateBucket | quote }}
           - name: SCAN_GA_ID
-            value: "{{ $c.comp.conf.generators.scan.gaId }}"
+            value: {{ $c.comp.conf.generators.scan.gaId | quote }}
           - name: SCAN_COMPANY_NAME
-            value: "{{ $c.comp.conf.generators.scan.contact.companyName }}"
+            value: {{ $c.comp.conf.generators.scan.contact.companyName | quote }}
           - name: SCAN_SUPPORT_EMAIL
-            value: "{{ $c.comp.conf.generators.scan.contact.supportEmail }}"
+            value: {{ $c.comp.conf.generators.scan.contact.supportEmail | quote }}
           - name: SCAN_CONTACT_EMAIL
-            value: "{{ $c.comp.conf.generators.scan.contact.email }}"
+            value: {{ $c.comp.conf.generators.scan.contact.email | quote }}
           - name: SCAN_CONTACT_CHANNEL
-            value: "{{ $c.comp.conf.generators.scan.contact.slackChannel }}"
+            value: {{ $c.comp.conf.generators.scan.contact.slackChannel | quote }}
           - name: SCAN_CONTACT_JIRA
-            value: "{{ $c.comp.conf.generators.scan.contact.jira }}"
+            value: {{ $c.comp.conf.generators.scan.contact.jira | quote }}
           - name: SCAN_DOCS_API_LINK
-            value: "{{ $c.comp.conf.generators.scan.docs.apiDocLink }}"
+            value: {{ $c.comp.conf.generators.scan.docs.apiDocLink | quote }}
           - name: SCAN_DOCS_ROADMAP_LINK
-            value: "{{ $c.comp.conf.generators.scan.docs.roadmapLink }}"
+            value: {{ $c.comp.conf.generators.scan.docs.roadmapLink | quote }}
           - name: PERSISTENCE_ENDPOINT  # We keep this PERSISTENCE variable for compatibility
-            value: "{{ $c.comp.conf.scanengineUrl | default (include "scanengine.url" .) }}"
+            value: {{ $c.comp.conf.scanengineUrl | default (include "scanengine.url" .) | quote }}
           - name: RESULTS_ENDPOINT
-            value: "{{ $c.comp.conf.resultsUrl | default (include "results.url" .) }}"
+            value: {{ $c.comp.conf.resultsUrl | default (include "results.url" .) | quote }}
           - name: SCAN_PROXY_ENDPOINT
-            value: "{{ $c.comp.conf.generators.scan.proxyEndpoint }}"
+            value: {{ $c.comp.conf.generators.scan.proxyEndpoint | quote }}
           - name: VULCAN_UI
-            value: "{{ $c.comp.conf.generators.scan.vulcanUi }}"
+            value: {{ $c.comp.conf.generators.scan.vulcanUi | quote }}
           - name: SCAN_VIEW_REPORT
-            value: "{{ printf "%sapi/v1/report?team_id=%s&scan_id=%s" $c.comp.conf.generators.scan.vulcanUi "%s" "%s" }}"
+            value: {{ printf "%sapi/v1/report?team_id=%s&scan_id=%s" $c.comp.conf.generators.scan.vulcanUi "%s" "%s" | quote }}
           {{- if $c.comp.conf.generators.scan.redirectUrl }}
           - name: SCAN_REDIRECT_URL
-            value: "{{ $c.comp.conf.generators.scan.redirectUrl }}"
+            value: {{ $c.comp.conf.generators.scan.redirectUrl | quote }}
           {{- end }}
           - name: LIVEREPORT_EMAIL_SUBJECT
-            value: "{{ $c.comp.conf.generators.livereport.emailSubject }}"
+            value: {{ $c.comp.conf.generators.livereport.emailSubject | quote }}
         {{- include "comp-common-envs" $c | nindent 10 }}
         {{- range $name, $value := $c.comp.extraEnv }}
           - name: {{ $name }}

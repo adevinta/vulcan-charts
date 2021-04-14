@@ -40,9 +40,9 @@ spec:
           command: ['sh', '-c', 'until pg_isready -t 5; do echo WaitingDB; done;']
           env:
           - name: PGHOST
-            value: "{{ $c.comp.db.host | default (include "postgresqlHost" .) }}"
+            value: {{ $c.comp.db.host | default (include "postgresqlHost" .) | quote }}
           - name: PGPORT
-            value: "{{ $c.comp.db.port }}"
+            value: {{ $c.comp.db.port | quote }}
       containers:
         {{- include "comp-common-containers" $c | nindent 8}}
         - name: {{ $c.comp.name }}
@@ -56,41 +56,41 @@ spec:
         {{- end }}
           env:
           - name: PORT
-            value: "{{ $c.comp.containerPort }}"
+            value: {{ $c.comp.containerPort | quote }}
           - name: POSTGRES_DB
-            value: "{{ $c.comp.db.name }}"
+            value: {{ $c.comp.db.name | quote }}
           - name: POSTGRES_HOST
-            value: "{{ $c.comp.db.host | default (include "postgresqlHost" .) }}"
+            value: {{ $c.comp.db.host | default (include "postgresqlHost" .) | quote }}
           - name: POSTGRES_PORT
-            value: "{{ $c.comp.db.port }}"
+            value: {{ $c.comp.db.port | quote }}
           - name: POSTGRES_USER
-            value: "{{ $c.comp.db.user }}"
+            value: {{ $c.comp.db.user | quote }}
           - name: POSTGRES_SSLMODE
-            value: "{{ $c.comp.db.sslMode }}"
+            value: {{ $c.comp.db.sslMode | quote }}
           {{- if $c.comp.db.ca }}
           - name: POSTGRES_CA_B64
-            value: "{{ $c.comp.db.ca | b64enc }}"
+            value: {{ $c.comp.db.ca | b64enc | quote }}
           {{- end }}
           - name: LOG_LEVEL
-            value: "{{ $c.comp.conf.logLevel }}"
+            value: {{ $c.comp.conf.logLevel | quote }}
           - name: STREAM_CHANNEL
-            value: "{{ $c.comp.conf.channel }}"
+            value: {{ $c.comp.conf.channel | quote }}
           - name: REGION
-            value: "{{ $c.comp.conf.region | default (include "region" .) }}"
+            value: {{ $c.comp.conf.region | default (include "region" .) | quote }}
           - name: SCANS_BUCKET
-            value: "{{ $c.comp.conf.s3Scans }}"
+            value: {{ $c.comp.conf.s3Scans | quote }}
           - name: SNS_TOPIC_ARN
-            value: "{{ $c.comp.conf.snsTopic }}"
+            value: {{ $c.comp.conf.snsTopic | quote }}
           - name: AWS_REGION
-            value: "{{ $c.comp.conf.region | default (include "region" .) }}"
+            value: {{ $c.comp.conf.region | default (include "region" .) | quote }}
           - name: NESSUS_CHECK_QUEUE
-            value: "{{ $c.comp.conf.nessusCheckQueue }}"
+            value: {{ $c.comp.conf.nessusCheckQueue | quote }}
           - name: RAILS_MAX_THREADS
-            value: "{{ $c.comp.conf.railsMaxThreads }}"
+            value: {{ $c.comp.conf.railsMaxThreads | quote }}
           - name: AWS_CREATE_CHECKS_SQS_URL
-            value: "{{ $c.comp.conf.awsCreateChecksSqsUrl | default (printf "%s/%s" (include "sqs.url" .) $c.comp.conf.awsCreateChecksSqsName) }}"
+            value: {{ $c.comp.conf.awsCreateChecksSqsUrl | default (printf "%s/%s" (include "sqs.url" .) $c.comp.conf.awsCreateChecksSqsName) | quote }}
           - name: AWS_CREATE_CHECKS_WORKERS
-            value: "{{ $c.comp.conf.awsCreateChecksWorkers }}"
+            value: {{ $c.comp.conf.awsCreateChecksWorkers | quote }}
         {{- include "comp-common-envs" $c | nindent 10 }}
         {{- range $name, $value := $c.comp.extraEnv }}
           - name: {{ $name }}

@@ -41,21 +41,21 @@ spec:
           imagePullPolicy: {{ $c.comp.image.pullPolicy }}
           env:
           - name: PORT
-            value: "{{ $c.comp.containerPort }}"
+            value: {{ $c.comp.containerPort | quote }}
           - name: API_URL
-            value: "{{ $c.comp.conf.apiUrl }}"
+            value: {{ $c.comp.conf.apiUrl | quote }}
           - name: UI_DOCS_API_LINK
-            value: "{{ $c.comp.conf.docs.apiLink }}"
+            value: {{ $c.comp.conf.docs.apiLink | quote }}
           - name: UI_DOCS_WHITELISTING_LINK
-            value: "{{ $c.comp.conf.docs.whitelistingLink }}"
+            value: {{ $c.comp.conf.docs.whitelistingLink | quote }}
           - name: UI_DOCS_DISCOVERY_LINK
-            value: "{{ $c.comp.conf.docs.discoveryLink }}"
+            value: {{ $c.comp.conf.docs.discoveryLink | quote }}
           - name: UI_DOCS_AUDITROLE_LINK
-            value: "{{ $c.comp.conf.docs.auditRoleLink }}"
+            value: {{ $c.comp.conf.docs.auditRoleLink | quote }}
           - name: UI_CONTACT_EMAIL
-            value: "{{ $c.comp.conf.contact.email }}"
+            value: {{ $c.comp.conf.contact.email | quote }}
           - name: UI_CONTACT_SLACK
-            value: "{{ $c.comp.conf.contact.slack }}"
+            value: {{ $c.comp.conf.contact.slack | quote }}
         {{- include "comp-common-envs" $c | nindent 10 }}
         {{- range $name, $value := $c.comp.extraEnv }}
           - name: {{ $name }}

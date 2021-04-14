@@ -1299,7 +1299,7 @@ spec:
           - name: PGHOST
             value: "myrelease-postgresql"
           - name: PGPORT
-            value: ""
+            value: 
       containers:
         
         - name: proxy
@@ -1335,11 +1335,11 @@ spec:
           - name: PG_USER
             value: "postgres"
           - name: PG_PORT
-            value: ""
+            value: 
           - name: PG_SSLMODE
             value: "disable"
           - name: LOG_LEVEL
-            value: ""
+            value: 
           - name: COOKIE_DOMAIN
             value: "vulcan.local"
           - name: SAML_MEATADATA
@@ -1363,9 +1363,9 @@ spec:
           - name: REPORTS_API_URL
             value: "http://myrelease-vulcan-reportsgenerator/"
           - name: SCAN_REDIRECT_URL
-            value: ""
+            value: 
           - name: VULCAN_UI_URL
-            value: ""
+            value: 
           - name: PERSISTENCE_HOST
             value: "myrelease-vulcan-persistence"
           - name: VULNERABILITYDB_URL
@@ -1861,7 +1861,7 @@ spec:
           - name: VULCAN_API
             value: http://myrelease-vulcan-api/api
           - name: VULCAN_API_EXTERNAL
-            value: ""
+            value: 
           
           - name: AWS_SQS_ENDPOINT
             value: "http://myrelease-vulcan-goaws"
@@ -1930,7 +1930,7 @@ spec:
           - name: PGHOST
             value: "myrelease-postgresql"
           - name: PGPORT
-            value: ""
+            value: 
       containers:
         
         - name: proxy
@@ -1964,7 +1964,7 @@ spec:
           - name: POSTGRES_HOST
             value: "myrelease-postgresql"
           - name: POSTGRES_PORT
-            value: ""
+            value: 
           - name: POSTGRES_USER
             value: "postgres"
           - name: POSTGRES_SSLMODE
@@ -2134,7 +2134,7 @@ spec:
           - name: PGHOST
             value: "myrelease-postgresql"
           - name: PGPORT
-            value: ""
+            value: 
       containers:
         
         - name: proxy
@@ -2170,7 +2170,7 @@ spec:
           - name: PG_USER
             value: "postgres"
           - name: PG_PORT
-            value: ""
+            value: 
           - name: PG_SSLMODE
             value: "disable"
           - name: LOG_LEVEL
@@ -2192,19 +2192,19 @@ spec:
           - name: SCAN_GA_ID
             value: "UA-000000000-0"
           - name: SCAN_COMPANY_NAME
-            value: ""
+            value: 
           - name: SCAN_SUPPORT_EMAIL
-            value: ""
+            value: 
           - name: SCAN_CONTACT_EMAIL
-            value: ""
+            value: 
           - name: SCAN_CONTACT_CHANNEL
-            value: ""
+            value: 
           - name: SCAN_CONTACT_JIRA
-            value: ""
+            value: 
           - name: SCAN_DOCS_API_LINK
-            value: ""
+            value: 
           - name: SCAN_DOCS_ROADMAP_LINK
-            value: ""
+            value: 
           - name: PERSISTENCE_ENDPOINT  # We keep this PERSISTENCE variable for compatibility
             value: "http://myrelease-vulcan-scanengine"
           - name: RESULTS_ENDPOINT
@@ -2216,7 +2216,7 @@ spec:
           - name: SCAN_VIEW_REPORT
             value: "http://www.vulcan.local/api/v1/report?team_id=%s&scan_id=%s"
           - name: LIVEREPORT_EMAIL_SUBJECT
-            value: ""
+            value: 
           
           - name: AWS_SQS_ENDPOINT
             value: "http://myrelease-vulcan-goaws"
@@ -2424,7 +2424,7 @@ spec:
           - name: PGHOST
             value: "myrelease-postgresql"
           - name: PGPORT
-            value: ""
+            value: 
       containers:
         
         - name: proxy
@@ -2460,7 +2460,7 @@ spec:
           - name: PG_USER
             value: "postgres"
           - name: PG_PORT
-            value: ""
+            value: 
           - name: PG_SSLMODE
             value: "disable"
           - name: LOG_LEVEL
@@ -2751,17 +2751,17 @@ spec:
           - name: API_URL
             value: "https://www.vulcan.local/api/v1/"
           - name: UI_DOCS_API_LINK
-            value: ""
+            value: 
           - name: UI_DOCS_WHITELISTING_LINK
-            value: ""
+            value: 
           - name: UI_DOCS_DISCOVERY_LINK
-            value: ""
+            value: 
           - name: UI_DOCS_AUDITROLE_LINK
-            value: ""
+            value: 
           - name: UI_CONTACT_EMAIL
-            value: ""
+            value: 
           - name: UI_CONTACT_SLACK
-            value: ""
+            value: 
           
           
           ports:
@@ -2837,7 +2837,7 @@ spec:
           - name: PGHOST
             value: "myrelease-postgresql"
           - name: PGPORT
-            value: ""
+            value: 
       containers:
         
         - name: vulndb
@@ -2853,7 +2853,7 @@ spec:
           - name: PG_USER
             value: "postgres"
           - name: PG_PORT
-            value: ""
+            value: 
           - name: PG_SSLMODE
             value: "disable"
           - name: LOG_LEVEL
@@ -2930,7 +2930,7 @@ spec:
           - name: PGHOST
             value: "myrelease-postgresql"
           - name: PGPORT
-            value: ""
+            value: 
       containers:
         
         - name: proxy
@@ -2966,7 +2966,7 @@ spec:
           - name: PG_USER
             value: "postgres"
           - name: PG_PORT
-            value: ""
+            value: 
           - name: PG_SSLMODE
             value: "disable"
           - name: LOG_LEVEL

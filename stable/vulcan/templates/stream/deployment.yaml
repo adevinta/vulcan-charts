@@ -42,19 +42,19 @@ spec:
           imagePullPolicy: {{ $c.comp.image.pullPolicy }}
           env:
           - name: PORT
-            value: "{{ $c.comp.containerPort }}"
+            value: {{ $c.comp.containerPort | quote }}
           - name: LOG_LEVEL
-            value: "{{ $c.comp.conf.logLevel }}"
+            value: {{ $c.comp.conf.logLevel | quote }}
           - name: REDIS_HOST
-            value: "{{ $c.comp.conf.redis.host }}"
+            value: {{ $c.comp.conf.redis.host | quote }}
           - name: REDIS_PORT
-            value: "{{ $c.comp.conf.redis.port }}"
+            value: {{ $c.comp.conf.redis.port | quote }}
           - name: REDIS_USR
-            value: "{{ $c.comp.conf.redis.usr }}"
+            value: {{ $c.comp.conf.redis.usr | quote }}
           - name: REDIS_DB
-            value: "{{ $c.comp.conf.redis.db }}"
+            value: {{ $c.comp.conf.redis.db | quote }}
           - name: REDIS_TTL
-            value: "{{ $c.comp.conf.redis.ttl }}"
+            value: {{ $c.comp.conf.redis.ttl | quote }}
         {{- include "comp-common-envs" $c | nindent 10 }}
         {{- range $name, $value := $c.comp.extraEnv }}
           - name: {{ $name }}

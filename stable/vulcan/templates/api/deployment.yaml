@@ -40,9 +40,9 @@ spec:
           command: ['sh', '-c', 'until pg_isready -t 5; do echo WaitingDB; done;']
           env:
           - name: PGHOST
-            value: "{{ $c.comp.db.host | default (include "postgresqlHost" .) }}"
+            value: {{ $c.comp.db.host | default (include "postgresqlHost" .) | quote }}
           - name: PGPORT
-            value: "{{ $c.comp.db.port }}"
+            value: {{ $c.comp.db.port | quote }}
       containers:
         {{- include "comp-common-containers" $c | nindent 8}}
         - name: {{ $c.comp.name }}
@@ -52,61 +52,61 @@ spec:
           imagePullPolicy: {{ $c.comp.image.pullPolicy }}
           env:
           - name: PORT
-            value: "{{ $c.comp.containerPort }}"
+            value: {{ $c.comp.containerPort | quote }}
           - name: PG_HOST
-            value: "{{ $c.comp.db.host | default (include "postgresqlHost" .) }}"
+            value: {{ $c.comp.db.host | default (include "postgresqlHost" .) | quote }}
           - name: PG_NAME
-            value: "{{ $c.comp.db.name }}"
+            value: {{ $c.comp.db.name | quote }}
           - name: PG_USER
-            value: "{{ $c.comp.db.user }}"
+            value: {{ $c.comp.db.user | quote }}
           - name: PG_PORT
-            value: "{{ $c.comp.db.port }}"
+            value: {{ $c.comp.db.port | quote }}
           - name: PG_SSLMODE
-            value: "{{ $c.comp.db.sslMode }}"
+            value: {{ $c.comp.db.sslMode | quote }}
           {{- if $c.comp.db.ca }}
           - name: PG_CA_B64
-            value: "{{ $c.comp.db.ca | b64enc }}"
+            value: {{ $c.comp.db.ca | b64enc | quote }}
           {{- end }}
           - name: LOG_LEVEL
-            value: "{{ $c.comp.conf.logLevel }}"
+            value: {{ $c.comp.conf.logLevel | quote }}
           - name: COOKIE_DOMAIN
-            value: "{{ $c.comp.conf.cookieDomain | default (include "domain" .) }}"
+            value: {{ $c.comp.conf.cookieDomain | default (include "domain" .) | quote }}
           - name: SAML_MEATADATA
-            value: "{{ $c.comp.conf.saml.metadata }}"
+            value: {{ $c.comp.conf.saml.metadata | quote }}
           - name: SAML_ISSUER
-            value: "{{ $c.comp.conf.saml.issuer }}"
+            value: {{ $c.comp.conf.saml.issuer | quote }}
           - name: SAML_CALLBACK
-            value: "{{ $c.comp.conf.saml.callback }}"
+            value: {{ $c.comp.conf.saml.callback | quote }}
           - name: SAML_TRUSTED_DOMAINS
             value: {{ $c.comp.conf.saml.trustedDomains | quote }}
           - name: DEFAULT_OWNERS
             value: {{ $c.comp.conf.defaultOwners | quote }}
           - name: SCANENGINE_URL
-            value: "{{ $c.comp.conf.scanengineUrl | default ( printf "%s/v1/" (include "scanengine.url" .) ) }}"
+            value: {{ $c.comp.conf.scanengineUrl | default ( printf "%s/v1/" (include "scanengine.url" .) ) | quote }}
           - name: SCHEDULER_URL
-            value: "{{ $c.comp.conf.schedulerUrl | default (include "crontinuous.url" .) }}"
+            value: {{ $c.comp.conf.schedulerUrl | default (include "crontinuous.url" .) | quote }}
           - name: SQS_QUEUE_ARN
-            value: "{{ $c.comp.conf.queueArn }}"
+            value: {{ $c.comp.conf.queueArn | quote }}
           - name: REPORTS_SNS_ARN
-            value: "{{ $c.comp.conf.reports.snsArn }}"
+            value: {{ $c.comp.conf.reports.snsArn | quote }}
           - name: REPORTS_API_URL
-            value: "{{ $c.comp.conf.reports.apiUrl | default (include "reportsgenerator.url" .) }}"
+            value: {{ $c.comp.conf.reports.apiUrl | default (include "reportsgenerator.url" .) | quote }}
           - name: SCAN_REDIRECT_URL
-            value: "{{ $c.comp.conf.reports.redirectUrl }}"
+            value: {{ $c.comp.conf.reports.redirectUrl | quote }}
           - name: VULCAN_UI_URL
-            value: "{{ $c.comp.conf.reports.vulcanUIUrl }}"
+            value: {{ $c.comp.conf.reports.vulcanUIUrl | quote }}
           - name: PERSISTENCE_HOST
-            value: "{{ $c.comp.conf.persistenceHost | default  (include "persistence.fullname" .) }}"
+            value: {{ $c.comp.conf.persistenceHost | default  (include "persistence.fullname" .) | quote }}
           - name: VULNERABILITYDB_URL
-            value: "{{ $c.comp.conf.vulndbapiUrl | default  (include "vulndbapi.url" .) }}"
+            value: {{ $c.comp.conf.vulndbapiUrl | default  (include "vulndbapi.url" .) | quote }}
           - name: AWSCATALOGUE_KIND
-            value: "{{ $c.comp.conf.awscatalogue.kind }}"
+            value: {{ $c.comp.conf.awscatalogue.kind | quote }}
           - name: AWSCATALOGUE_URL
-            value: "{{ $c.comp.conf.awscatalogue.url }}"
+            value: {{ $c.comp.conf.awscatalogue.url | quote }}
           - name: AWSCATALOGUE_RETRIES
-            value: "{{ $c.comp.conf.awscatalogue.retries }}"
+            value: {{ $c.comp.conf.awscatalogue.retries | quote }}
           - name: AWSCATALOGUE_RETRY_INTERVAL
-            value: "{{ $c.comp.conf.awscatalogue.retry_interval}}"
+            value: {{ $c.comp.conf.awscatalogue.retry_interval| quote }}
         {{- include "comp-common-envs" $c | nindent 10 }}
         {{- range $name, $value := $c.comp.extraEnv }}
           - name: {{ $name }}

@@ -40,9 +40,9 @@ spec:
           command: ['sh', '-c', 'until pg_isready -t 5; do echo WaitingDB; done;']
           env:
           - name: PGHOST
-            value: "{{ $c.comp.db.host | default (include "postgresqlHost" .) }}"
+            value: {{ $c.comp.db.host | default (include "postgresqlHost" .) | quote }}
           - name: PGPORT
-            value: "{{ $c.comp.db.port }}"
+            value: {{ $c.comp.db.port | quote }}
       containers:
         {{- include "comp-common-containers" $c | nindent 8}}
         - name: {{ $c.comp.name }}
@@ -52,41 +52,41 @@ spec:
           imagePullPolicy: {{ $c.comp.image.pullPolicy }}
           env:
           - name: PORT
-            value: "{{ $c.comp.containerPort }}"
+            value: {{ $c.comp.containerPort | quote }}
           - name: PG_HOST
-            value: "{{ $c.comp.db.host | default (include "postgresqlHost" .) }}"
+            value: {{ $c.comp.db.host | default (include "postgresqlHost" .) | quote }}
           - name: PG_NAME
-            value: "{{ $c.comp.db.name }}"
+            value: {{ $c.comp.db.name | quote }}
           - name: PG_USER
-            value: "{{ $c.comp.db.user }}"
+            value: {{ $c.comp.db.user | quote }}
           - name: PG_PORT
-            value: "{{ $c.comp.db.port }}"
+            value: {{ $c.comp.db.port | quote }}
           - name: PG_SSLMODE
-            value: "{{ $c.comp.db.sslMode }}"
+            value: {{ $c.comp.db.sslMode | quote }}
           {{- if $c.comp.db.ca }}
           - name: PG_CA_B64
-            value: "{{ $c.comp.db.ca | b64enc }}"
+            value: {{ $c.comp.db.ca | b64enc | quote }}
           {{- end }}
           - name: LOG_LEVEL
-            value: "{{ $c.comp.conf.logLevel }}"
+            value: {{ $c.comp.conf.logLevel | quote }}
           - name: PERSISTENCE_HOST
-            value: "{{ $c.comp.conf.persistenceHost | default  (include "persistence.fullname" .) }}"
+            value: {{ $c.comp.conf.persistenceHost | default  (include "persistence.fullname" .) | quote }}
           - name: CHECKS_SQS_ARN
-            value: "{{ $c.comp.conf.queueArn }}"
+            value: {{ $c.comp.conf.queueArn | quote }}
           - name: "SCANS_SNS_ARN"
-            value: "{{ $c.comp.conf.scansSNS.topicArn }}"
+            value: {{ $c.comp.conf.scansSNS.topicArn | quote }}
           - name: "CHECKS_SNS_ARN"
-            value: "{{ $c.comp.conf.checksSNS.topicArn }}"
+            value: {{ $c.comp.conf.checksSNS.topicArn | quote }}
           - name: "STREAM_URL"
-            value: "{{ $c.comp.conf.streamUrl | default  (include "stream.url" .) }}"
+            value: {{ $c.comp.conf.streamUrl | default  (include "stream.url" .) | quote }}
           - name: "CHECKS_CREATOR_WORKERS"
-            value: "{{ $c.comp.conf.checkCreator.numOfWorkers }}"
+            value: {{ $c.comp.conf.checkCreator.numOfWorkers | quote }}
           - name: "CHECKS_CREATOR_PERIOD"
-            value: "{{ $c.comp.conf.checkCreator.period }}"
+            value: {{ $c.comp.conf.checkCreator.period | quote }}
           - name: "QUEUES_DEFAULT_ARN"
-            value: "{{ $c.comp.conf.queues.default.arn }}"
+            value: {{ $c.comp.conf.queues.default.arn | quote }}
           - name: "QUEUES_NESSUS_ARN"
-            value: "{{ $c.comp.conf.queues.nessus.arn }}"
+            value: {{ $c.comp.conf.queues.nessus.arn | quote }}
           - name: "QUEUES_NESSUS_CHECKTYPES"
             value: {{ $c.comp.conf.queues.nessus.checktypes | quote }}
         {{- include "comp-common-envs" $c | nindent 10 }}
