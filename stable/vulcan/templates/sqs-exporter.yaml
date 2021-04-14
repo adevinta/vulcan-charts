@@ -37,7 +37,7 @@ spec:
             value: {{ .Values.sqsExporter.queueNamePrefix }}
           {{- if .Values.goaws.enabled }}
           - name: SQS_ENDPOINT
-            value: "{{ include "sqs.url" . }}"
+            value: {{ include "sqs.url" . | quote }}
           - name: AWS_ACCESS_KEY_ID
             value: TBD
           - name: AWS_SECRET_ACCESS_KEY

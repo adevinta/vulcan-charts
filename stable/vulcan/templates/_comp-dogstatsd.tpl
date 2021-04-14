@@ -24,9 +24,9 @@
 - name: DOGSTATSD_ENABLED
   value: "true"
 - name: DOGSTATSD_HOST
-  value: "{{ .comp.dogstatsd.host | default "localhost" }}"
+  value: {{ .comp.dogstatsd.host | default "localhost" | quote }}
 - name: DOGSTATSD_PORT
-  value: "{{ .comp.dogstatsd.port | default "8125" }}"
+  value: {{ .comp.dogstatsd.port | default "8125" | quote }}
 {{- end -}}
 {{- end -}}
 {{- end -}}

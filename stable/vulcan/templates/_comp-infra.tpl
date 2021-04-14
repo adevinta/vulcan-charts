@@ -3,21 +3,21 @@
 {{- if .comp.infra -}}
 {{- if and  .comp.infra.sns .context.Values.goaws.enabled -}}
 - name: AWS_SNS_ENDPOINT
-  value: "{{ include "sns.url" .context }}"
+  value: {{ include "sns.url" .context | quote }}
 {{- $auth = 1 -}}
 {{- end -}}
 {{- if and .comp.infra.sqs .context.Values.goaws.enabled }}
 - name: AWS_SQS_ENDPOINT
-  value: "{{ include "sqs.url" .context }}"
+  value: {{ include "sqs.url" .context | quote }}
 {{- $auth = 1 -}}
 {{- end -}}
 {{- if and .comp.infra.s3 .context.Values.minio.enabled }}
 - name: AWS_S3_ENDPOINT
-  value: "{{ include "minio.url" .context }}"
+  value: {{ include "minio.url" .context | quote }}
 - name: PATH_STYLE
   value: "true"
 - name: AWS_S3_REGION
-  value: "{{ .context.Values.global.region }}"
+  value: {{ .context.Values.global.region | quote }}
 - name: AWS_ACCESS_KEY_ID
   valueFrom:
     secretKeyRef:
