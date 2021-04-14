@@ -221,14 +221,9 @@ persistence:
   autoscaling:
     enabled: true
   conf:
-    awsCreateChecksSqsUrl: https://sqs.eu-west-1.amazonaws.com/000000000000/PersistenceChecks
-    awsCreateChecksWorkers: 10
     logLevel: info
-    nessusCheckQueue: ChecksTenable
     railsMaxThreads: 16
-    s3Scans: s3-vulcan-scans
     secretKeyBase: secretkey
-    snsTopic: arn:aws:sns:eu-west-1:000000000000:Checks
   db:
     ca: |
       -----BEGIN CERTIFICATE-----

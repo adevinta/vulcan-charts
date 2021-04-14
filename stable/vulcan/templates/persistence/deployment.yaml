@@ -73,24 +73,8 @@ spec:
           {{- end }}
           - name: LOG_LEVEL
             value: {{ $c.comp.conf.logLevel | quote }}
-          - name: STREAM_CHANNEL
-            value: {{ $c.comp.conf.channel | quote }}
-          - name: REGION
-            value: {{ $c.comp.conf.region | default (include "region" .) | quote }}
-          - name: SCANS_BUCKET
-            value: {{ $c.comp.conf.s3Scans | quote }}
-          - name: SNS_TOPIC_ARN
-            value: {{ $c.comp.conf.snsTopic | quote }}
-          - name: AWS_REGION
-            value: {{ $c.comp.conf.region | default (include "region" .) | quote }}
-          - name: NESSUS_CHECK_QUEUE
-            value: {{ $c.comp.conf.nessusCheckQueue | quote }}
           - name: RAILS_MAX_THREADS
             value: {{ $c.comp.conf.railsMaxThreads | quote }}
-          - name: AWS_CREATE_CHECKS_SQS_URL
-            value: {{ $c.comp.conf.awsCreateChecksSqsUrl | default (printf "%s/%s" (include "sqs.url" .) $c.comp.conf.awsCreateChecksSqsName) | quote }}
-          - name: AWS_CREATE_CHECKS_WORKERS
-            value: {{ $c.comp.conf.awsCreateChecksWorkers | quote }}
         {{- include "comp-common-envs" $c | nindent 10 }}
         {{- range $name, $value := $c.comp.extraEnv }}
           - name: {{ $name }}

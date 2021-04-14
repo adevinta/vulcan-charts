@@ -279,15 +279,8 @@ persistence:
 
   conf:
     logLevel: warn
-    snsTopic: arn:aws:sns:local:012345678900:VulcanK8SChecks
-    nessusCheckQueue: VulcanK8SChecksTenable
-    s3Scans: scans
-    # awsCreateChecksSqsUrl: https://localhost/012345678900/VulcanK8SPersistenceChecks
-    awsCreateChecksSqsName: VulcanK8SPersistenceChecks
     secretKeyBase: TBDTBD
-    channel: events
     railsMaxThreads: 4
-    awsCreateChecksWorkers: 4
 
   # extraEnv:
   #   FOO: BAR

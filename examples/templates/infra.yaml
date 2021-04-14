@@ -1971,23 +1971,7 @@ spec:
             value: "disable"
           - name: LOG_LEVEL
             value: "warn"
-          - name: STREAM_CHANNEL
-            value: "events"
-          - name: REGION
-            value: "local"
-          - name: SCANS_BUCKET
-            value: "scans"
-          - name: SNS_TOPIC_ARN
-            value: "arn:aws:sns:local:012345678900:VulcanK8SChecks"
-          - name: AWS_REGION
-            value: "local"
-          - name: NESSUS_CHECK_QUEUE
-            value: "VulcanK8SChecksTenable"
           - name: RAILS_MAX_THREADS
-            value: "4"
-          - name: AWS_CREATE_CHECKS_SQS_URL
-            value: "http://myrelease-vulcan-goaws/VulcanK8SPersistenceChecks"
-          - name: AWS_CREATE_CHECKS_WORKERS
             value: "4"
           - name: AWS_SNS_ENDPOINT
             value: "http://myrelease-vulcan-goaws"
