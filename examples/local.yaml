@@ -16,10 +16,6 @@ results:
     hosts:
       - host: results.vulcan.local
         paths: [/]
-    tls:
-      - secretName: vulcan-results-tls
-        hosts:
-        - results.vulcan.local
 
 stream:
   ingress:
@@ -30,10 +26,6 @@ stream:
     hosts:
       - host: stream.vulcan.local
         paths: [/]
-    tls:
-      - secretName: vulcan-stream-tls
-        hosts:
-        - stream.vulcan.local
 
 persistence:
   ingress:
@@ -41,10 +33,6 @@ persistence:
     hosts:
       - host: persistence.vulcan.local
         paths: [/]
-    tls:
-      - secretName: vulcan-persistence-tls
-        hosts:
-        - persistence.vulcan.local
 
 api:
   conf:
@@ -59,10 +47,6 @@ api:
     hosts:
       - host: www.vulcan.local
         paths: [/api]
-    tls:
-      - secretName: vulcan-api-tls
-        hosts:
-        - api.vulcan.local
 
 crontinuous:
   conf:
@@ -83,10 +67,6 @@ ui:
     hosts:
       - host: www.vulcan.local
         paths: [/]
-    tls:
-      - secretName: vulcan-ui-tls
-        hosts:
-        - www.vulcan.local
 
 insights:
   ingress:
@@ -102,10 +82,6 @@ insights:
     hosts:
       - host: insights.vulcan.local
         paths: [/]
-    tls:
-      - secretName: vulcan-insights-tls
-        hosts:
-        - insights.vulcan.local
 
 reportsgenerator:
   conf:
@@ -124,7 +100,3 @@ vulndbapi:
     hosts:
       - host: vulndbapi.vulcan.local
         paths: [/]
-    tls:
-      - secretName: vulcan-vulndbapi-tls
-        hosts:
-        - vulndbapi.vulcan.local

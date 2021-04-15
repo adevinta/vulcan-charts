@@ -1,34 +1,9 @@
 global:
-  domain: vulcan.com
+  domain: example.vulcan.com
   region: eu-west-1
 
-api:
-  annotations:
-    iam.amazonaws.com/role: arn:aws:iam::000000000000:role/APIRole
-  autoscaling:
-    enabled: true
-  conf:
-    awscatalogue:
-      key: awscatalogekey
-      kind: CloudGovernance
-      retries: 4
-      retry_interval: 2
-      url: https://catalogue-api.host
-    bucketLogs: s3-vulcan-logs
-    bucketReports: s3-vulcan-reports
-    defaultOwners: '["aaaaaaaa-xxxx-yyyy-zzzz-bbbbbbbbbbbb"]'
-    queueArn: arn:aws:sqs:eu-west-1:000000000000:APIScans
-    reports:
-      snsArn: arn:aws:sns:eu-west-1:000000000000:ReportsGen
-      vulcanUIUrl: https://www.vulcan.com
-    saml:
-      callback: https://www.vulcan.com/api/v1/login/callback
-      issuer: http://www.issuer.com/appcode
-      metadata: https://org.issuer.com/app/appcode/sso/saml/metadata
-      trustedDomains: '["www.vulcan.com"]'
-    secretKey: apisecretkey
-  
-  db:
+defaults:
+  db: &db
     ca: |
       -----BEGIN CERTIFICATE-----
       MIIEBjCCAu6gAwIBAgIJAMc0ZzaSUK51MA0GCSqGSIb3DQEBCwUAMIGPMQswCQYD
@@ -54,47 +29,61 @@ api:
       0SBd8dj5F6ld3t58ydZbrTHze7JJOd8ijySAp4/kiu9UfZWuTPABzDa/DSdz9Dk/
       zPW4CXXvhLmE02TA9/HeCw3KEHIwicNuEfw=
       -----END CERTIFICATE-----
+    port: 5432
+    sslMode: verify-full
+
+api:
+  annotations:
+    iam.amazonaws.com/role: arn:aws:iam::000000000000:role/APIRole
+  autoscaling:
+    enabled: true
+  conf:
+    awscatalogue:
+      key: awscatalogekey
+      kind: CloudGovernance
+      retries: 4
+      retry_interval: 2
+      url: https://catalogue-api.host
+    bucketLogs: s3-vulcan-logs
+    bucketReports: s3-vulcan-reports
+    defaultOwners: '["aaaaaaaa-xxxx-yyyy-zzzz-bbbbbbbbbbbb"]'
+    queueArn: arn:aws:sqs:eu-west-1:000000000000:APIScans
+    reports:
+      snsArn: arn:aws:sns:eu-west-1:000000000000:ReportsGen
+      vulcanUIUrl: https://www.vulcan.example.com
+    saml:
+      callback: https://www.vulcan.example.com/api/v1/login/callback
+      issuer: http://www.issuer.com/appcode
+      metadata: https://org.issuer.com/app/appcode/sso/saml/metadata
+      trustedDomains: '["vulcan.example.com"]'
+    secretKey: apisecretkey
+  db:
+    <<: *db
     host: api.postgres.host
     name: vulcanapi
     password: passworddbapi
-    port: 5432
-    sslMode: verify-full
     user: vulcan
-  dogstatsd:
-    enabled: true
-    image:
-      repository: datadog/dogstatsd
   image:
-    repository: adevinta/vulcan-api
     tag: tag-api
   imagePullSecrets:
   - name: pullsecretname
   ingress:
     annotations:
       certmanager.k8s.io/cluster-issuer: letsencrypt
-      nginx.ingress.kubernetes.io/cors-allow-origin: https://www.vulcan.com
+      nginx.ingress.kubernetes.io/cors-allow-origin: https://www.vulcan.example.com
       nginx.ingress.kubernetes.io/enable-cors: "true"
       nginx.ingress.kubernetes.io/proxy-body-size: 8m
     enabled: true
     hosts:
-    - host: www.vulcan.com
-      paths:
-      - /api
-    - host: vulcan-api.team.cluster.com
+    - host: www.vulcan.example.com
       paths:
       - /api
     tls:
     - hosts:
-      - www.vulcan.com
-      - vulcan-api.team.cluster.com
+      - www.vulcan.example.com
       secretName: vulcan-api-tls
   proxy:
-    image:
-      repository: haproxy
     timeoutServer: 50s
-  waitfordb:
-    image:
-      repository: postgres
 crontinuous:
   annotations:
     iam.amazonaws.com/role: arn:aws:iam::000000000000:role/CrontinuousRole
@@ -106,20 +95,10 @@ crontinuous:
     teamsWhitelistScan: '[]'
     vulcanToken: supersecretvulcantoken
     vulcanUser: vulcanuser
-  dogstatsd:
-    image:
-      repository: datadog/dogstatsd
   image:
-    repository: adevinta/vulcan-crontinuous
     tag: tag-crontinuous
   imagePullSecrets:
   - name: pullsecretname
-  proxy:
-    image:
-      repository: haproxy
-  waitfordb:
-    image:
-      repository: postgres
 customTplManifests: |
   apiVersion: v1
   kind: ConfigMap
@@ -145,11 +124,6 @@ insights:
     - name: public
       prefix: /public
       s3Bucket: s3-vulcan-public-insights
-  dogstatsd:
-    image:
-      repository: datadog/dogstatsd
-  image:
-    repository: pottava/s3-proxy
   imagePullSecrets:
   - name: pullsecretname
   ingress:
@@ -161,28 +135,18 @@ insights:
         more_set_headers "X-Frame-Options: DENY";
         more_set_headers "X-Xss-Protection: 1";
         more_set_headers "Strict-Transport-Security: max-age=31536000; includeSubDomains";
-        more_set_headers "Content-Security-Policy: default-src 'none'; script-src 'self' 'unsafe-inline' https://insights.vulcan.com https://www.google-analytics.com; font-src 'self' https://insights.vulcan.com; connect-src 'self' https://insights.vulcan.com; img-src 'self' https://insights.vulcan.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://insights.vulcan.com; object-src 'none'";
+        more_set_headers "Content-Security-Policy: default-src 'none'; script-src 'self' 'unsafe-inline' https://insights.vulcan.example.com https://www.google-analytics.com; font-src 'self' https://insights.vulcan.example.com; connect-src 'self' https://insights.vulcan.example.com; img-src 'self' https://insights.vulcan.example.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://insights.vulcan.example.com; object-src 'none'";
       nginx.ingress.kubernetes.io/cors-allow-origin: '*'
       nginx.ingress.kubernetes.io/enable-cors: "true"
     enabled: true
     hosts:
-    - host: insights.vulcan.com
-      paths:
-      - /
-    - host: vulcan-insights.team.cluster.com
+    - host: insights.vulcan.example.com
       paths:
       - /
     tls:
     - hosts:
-      - insights.vulcan.com
-      - vulcan-insights.team.cluster.com
+      - insights.vulcan.example.com
       secretName: vulcan-insights-tls
-  proxy:
-    image:
-      repository: haproxy
-  waitfordb:
-    image:
-      repository: postgres
 metrics:
   annotations:
     iam.amazonaws.com/role: arn:aws:iam::000000000000:role/MetricsRole
@@ -196,25 +160,12 @@ metrics:
     findingsQueueArn: arn:aws:sqs:eu-west-1:000000000000:MetricsFindings
     redisPassword: redispassword
     scansQueueArn: arn:aws:sqs:eu-west-1:000000000000:MetricsScans
-    vulcanAPIExternal: https://www.vulcan.com/api
+    vulcanAPIExternal: https://api.vulcan.example.com/api
     vulcanAPIToken: supersecretvulcantoken
-  dogstatsd:
-    image:
-      repository: datadog/dogstatsd
   image:
-    repository: containers.mpi-internal.com/spt-security/vulcan-metrics
     tag: tag-metrics
   imagePullSecrets:
   - name: pullsecretname
-  proxy:
-    image:
-      repository: haproxy
-  redis:
-    image:
-      repository: redis
-  waitfordb:
-    image:
-      repository: postgres
 persistence:
   annotations:
     iam.amazonaws.com/role: arn:aws:iam::000000000000:role/PersistenceRole
@@ -225,43 +176,12 @@ persistence:
     railsMaxThreads: 16
     secretKeyBase: secretkey
   db:
-    ca: |
-      -----BEGIN CERTIFICATE-----
-      MIIEBjCCAu6gAwIBAgIJAMc0ZzaSUK51MA0GCSqGSIb3DQEBCwUAMIGPMQswCQYD
-      VQQGEwJVUzEQMA4GA1UEBwwHU2VhdHRsZTETMBEGA1UECAwKV2FzaGluZ3RvbjEi
-      MCAGA1UECgwZQW1hem9uIFdlYiBTZXJ2aWNlcywgSW5jLjETMBEGA1UECwwKQW1h
-      em9uIFJEUzEgMB4GA1UEAwwXQW1hem9uIFJEUyBSb290IDIwMTkgQ0EwHhcNMTkw
-      ODIyMTcwODUwWhcNMjQwODIyMTcwODUwWjCBjzELMAkGA1UEBhMCVVMxEDAOBgNV
-      BAcMB1NlYXR0bGUxEzARBgNVBAgMCldhc2hpbmd0b24xIjAgBgNVBAoMGUFtYXpv
-      biBXZWIgU2VydmljZXMsIEluYy4xEzARBgNVBAsMCkFtYXpvbiBSRFMxIDAeBgNV
-      BAMMF0FtYXpvbiBSRFMgUm9vdCAyMDE5IENBMIIBIjANBgkqhkiG9w0BAQEFAAOC
-      AQ8AMIIBCgKCAQEArXnF/E6/Qh+ku3hQTSKPMhQQlCpoWvnIthzX6MK3p5a0eXKZ
-      oWIjYcNNG6UwJjp4fUXl6glp53Jobn+tWNX88dNH2n8DVbppSwScVE2LpuL+94vY
-      0EYE/XxN7svKea8YvlrqkUBKyxLxTjh+U/KrGOaHxz9v0l6ZNlDbuaZw3qIWdD/I
-      6aNbGeRUVtpM6P+bWIoxVl/caQylQS6CEYUk+CpVyJSkopwJlzXT07tMoDL5WgX9
-      O08KVgDNz9qP/IGtAcRduRcNioH3E9v981QO1zt/Gpb2f8NqAjUUCUZzOnij6mx9
-      McZ+9cWX88CRzR0vQODWuZscgI08NvM69Fn2SQIDAQABo2MwYTAOBgNVHQ8BAf8E
-      BAMCAQYwDwYDVR0TAQH/BAUwAwEB/zAdBgNVHQ4EFgQUc19g2LzLA5j0Kxc0LjZa
-      pmD/vB8wHwYDVR0jBBgwFoAUc19g2LzLA5j0Kxc0LjZapmD/vB8wDQYJKoZIhvcN
-      AQELBQADggEBAHAG7WTmyjzPRIM85rVj+fWHsLIvqpw6DObIjMWokpliCeMINZFV
-      ynfgBKsf1ExwbvJNzYFXW6dihnguDG9VMPpi2up/ctQTN8tm9nDKOy08uNZoofMc
-      NUZxKCEkVKZv+IL4oHoeayt8egtv3ujJM6V14AstMQ6SwvwvA93EP/Ug2e4WAXHu
-      cbI1NAbUgVDqp+DRdfvZkgYKryjTWd/0+1fS8X1bBZVWzl7eirNVnHbSH2ZDpNuY
-      0SBd8dj5F6ld3t58ydZbrTHze7JJOd8ijySAp4/kiu9UfZWuTPABzDa/DSdz9Dk/
-      zPW4CXXvhLmE02TA9/HeCw3KEHIwicNuEfw=
-      -----END CERTIFICATE-----
+    <<: *db
     host: persistence.postgres.host
     name: vulcanpersistence
     password: passwordpersistence
-    port: 5432
-    sslMode: verify-full
     user: vulcan
-  dogstatsd:
-    enabled: true
-    image:
-      repository: datadog/dogstatsd
   image:
-    repository: adevinta/vulcan-persistence
     tag: tag-persistence
   imagePullSecrets:
   - name: pullsecretname
@@ -271,23 +191,13 @@ persistence:
       nginx.ingress.kubernetes.io/proxy-body-size: 8m
     enabled: true
     hosts:
-    - host: persistence.vulcan.com
-      paths:
-      - /
-    - host: vulcan-persistence.team.cluster.com
+    - host: persistence.vulcan.example.com
       paths:
       - /
     tls:
     - hosts:
-      - persistence.vulcan.com
-      - vulcan-persistence.team.cluster.com
+      - persistence.vulcan.example.com
       secretName: vulcan-persistence-tls
-  proxy:
-    image:
-      repository: haproxy
-  waitfordb:
-    image:
-      repository: postgres
 reportsgenerator:
   annotations:
     iam.amazonaws.com/role: arn:aws:iam::000000000000:role/ReportsGeneratorRole
@@ -308,49 +218,20 @@ reportsgenerator:
         emailSubject: Security Overview
         gaId: UA-109338366-3
         privateBucket: s3-vulcan-insights
-        proxyEndpoint: https://insights.vulcan.com
+        proxyEndpoint: https://insights.vulcan.example.com
         publicBucket: s3-vulcan-public-insights
-        vulcanUi: https://www.vulcan.com/
+        vulcanUi: https://www.vulcan.example.com/
     queueArn: arn:aws:sqs:eu-west-1:000000000000:ReportsGenerator
     ses:
       cc: '[''vulcan@example.com'']'
       from: vulcan@example.com
   db:
-    ca: |
-      -----BEGIN CERTIFICATE-----
-      MIIEBjCCAu6gAwIBAgIJAMc0ZzaSUK51MA0GCSqGSIb3DQEBCwUAMIGPMQswCQYD
-      VQQGEwJVUzEQMA4GA1UEBwwHU2VhdHRsZTETMBEGA1UECAwKV2FzaGluZ3RvbjEi
-      MCAGA1UECgwZQW1hem9uIFdlYiBTZXJ2aWNlcywgSW5jLjETMBEGA1UECwwKQW1h
-      em9uIFJEUzEgMB4GA1UEAwwXQW1hem9uIFJEUyBSb290IDIwMTkgQ0EwHhcNMTkw
-      ODIyMTcwODUwWhcNMjQwODIyMTcwODUwWjCBjzELMAkGA1UEBhMCVVMxEDAOBgNV
-      BAcMB1NlYXR0bGUxEzARBgNVBAgMCldhc2hpbmd0b24xIjAgBgNVBAoMGUFtYXpv
-      biBXZWIgU2VydmljZXMsIEluYy4xEzARBgNVBAsMCkFtYXpvbiBSRFMxIDAeBgNV
-      BAMMF0FtYXpvbiBSRFMgUm9vdCAyMDE5IENBMIIBIjANBgkqhkiG9w0BAQEFAAOC
-      AQ8AMIIBCgKCAQEArXnF/E6/Qh+ku3hQTSKPMhQQlCpoWvnIthzX6MK3p5a0eXKZ
-      oWIjYcNNG6UwJjp4fUXl6glp53Jobn+tWNX88dNH2n8DVbppSwScVE2LpuL+94vY
-      0EYE/XxN7svKea8YvlrqkUBKyxLxTjh+U/KrGOaHxz9v0l6ZNlDbuaZw3qIWdD/I
-      6aNbGeRUVtpM6P+bWIoxVl/caQylQS6CEYUk+CpVyJSkopwJlzXT07tMoDL5WgX9
-      O08KVgDNz9qP/IGtAcRduRcNioH3E9v981QO1zt/Gpb2f8NqAjUUCUZzOnij6mx9
-      McZ+9cWX88CRzR0vQODWuZscgI08NvM69Fn2SQIDAQABo2MwYTAOBgNVHQ8BAf8E
-      BAMCAQYwDwYDVR0TAQH/BAUwAwEB/zAdBgNVHQ4EFgQUc19g2LzLA5j0Kxc0LjZa
-      pmD/vB8wHwYDVR0jBBgwFoAUc19g2LzLA5j0Kxc0LjZapmD/vB8wDQYJKoZIhvcN
-      AQELBQADggEBAHAG7WTmyjzPRIM85rVj+fWHsLIvqpw6DObIjMWokpliCeMINZFV
-      ynfgBKsf1ExwbvJNzYFXW6dihnguDG9VMPpi2up/ctQTN8tm9nDKOy08uNZoofMc
-      NUZxKCEkVKZv+IL4oHoeayt8egtv3ujJM6V14AstMQ6SwvwvA93EP/Ug2e4WAXHu
-      cbI1NAbUgVDqp+DRdfvZkgYKryjTWd/0+1fS8X1bBZVWzl7eirNVnHbSH2ZDpNuY
-      0SBd8dj5F6ld3t58ydZbrTHze7JJOd8ijySAp4/kiu9UfZWuTPABzDa/DSdz9Dk/
-      zPW4CXXvhLmE02TA9/HeCw3KEHIwicNuEfw=
-      -----END CERTIFICATE-----
+    <<: *db
     host: reportsgenerator.postgres.host
     name: reportsgenerator
     password: passwordreportgenerator
-    port: 5432
-    sslMode: verify-full
     user: vulcan
   dogstatsd:
-    enabled: true
-    image:
-      repository: datadog/dogstatsd
     resources:
       limits:
         cpu: 100m
@@ -359,13 +240,10 @@ reportsgenerator:
         cpu: 100m
         memory: 128Mi
   image:
-    repository: adevinta/vulcan-reports-generator
     tag: tag-reports
   imagePullSecrets:
   - name: pullsecretname
   proxy:
-    image:
-      repository: haproxy
     resources:
       limits:
         cpu: 100m
@@ -380,9 +258,6 @@ reportsgenerator:
     requests:
       cpu: 250m
       memory: 2Gi
-  waitfordb:
-    image:
-      repository: postgres
 results:
   annotations:
     iam.amazonaws.com/role: arn:aws:iam::000000000000:role/ResultsRole
@@ -391,13 +266,8 @@ results:
   conf:
     bucketLogs: s3-vulcan-logs
     bucketReports: s3-vulcan-reports
-    linkBase: https://results.vulcan.com
-  dogstatsd:
-    enabled: true
-    image:
-      repository: datadog/dogstatsd
+    linkBase: https://results.vulcan.example.com
   image:
-    repository: adevinta/vulcan-results
     tag: tag-results
   imagePullSecrets:
   - name: pullsecretname
@@ -407,23 +277,13 @@ results:
       nginx.ingress.kubernetes.io/proxy-body-size: 8m
     enabled: true
     hosts:
-    - host: results.vulcan.com
-      paths:
-      - /
-    - host: vulcan-results.team.cluster.com
+    - host: results.vulcan.example.com
       paths:
       - /
     tls:
     - hosts:
-      - results.vulcan.com
-      - vulcan-results.team.cluster.com
+      - results.vulcan.example.com
       secretName: vulcan-results-tls
-  proxy:
-    image:
-      repository: haproxy
-  waitfordb:
-    image:
-      repository: postgres
 scanengine:
   annotations:
     iam.amazonaws.com/role: arn:aws:iam::000000000000:role/ScanEngineRole
@@ -446,68 +306,20 @@ scanengine:
       topicArn: arn:aws:sns:eu-west-1:000000000000:Scans
     snsArn: arn:aws:sns:eu-west-1:000000000000:Scans
   db:
-    ca: |
-      -----BEGIN CERTIFICATE-----
-      MIIEBjCCAu6gAwIBAgIJAMc0ZzaSUK51MA0GCSqGSIb3DQEBCwUAMIGPMQswCQYD
-      VQQGEwJVUzEQMA4GA1UEBwwHU2VhdHRsZTETMBEGA1UECAwKV2FzaGluZ3RvbjEi
-      MCAGA1UECgwZQW1hem9uIFdlYiBTZXJ2aWNlcywgSW5jLjETMBEGA1UECwwKQW1h
-      em9uIFJEUzEgMB4GA1UEAwwXQW1hem9uIFJEUyBSb290IDIwMTkgQ0EwHhcNMTkw
-      ODIyMTcwODUwWhcNMjQwODIyMTcwODUwWjCBjzELMAkGA1UEBhMCVVMxEDAOBgNV
-      BAcMB1NlYXR0bGUxEzARBgNVBAgMCldhc2hpbmd0b24xIjAgBgNVBAoMGUFtYXpv
-      biBXZWIgU2VydmljZXMsIEluYy4xEzARBgNVBAsMCkFtYXpvbiBSRFMxIDAeBgNV
-      BAMMF0FtYXpvbiBSRFMgUm9vdCAyMDE5IENBMIIBIjANBgkqhkiG9w0BAQEFAAOC
-      AQ8AMIIBCgKCAQEArXnF/E6/Qh+ku3hQTSKPMhQQlCpoWvnIthzX6MK3p5a0eXKZ
-      oWIjYcNNG6UwJjp4fUXl6glp53Jobn+tWNX88dNH2n8DVbppSwScVE2LpuL+94vY
-      0EYE/XxN7svKea8YvlrqkUBKyxLxTjh+U/KrGOaHxz9v0l6ZNlDbuaZw3qIWdD/I
-      6aNbGeRUVtpM6P+bWIoxVl/caQylQS6CEYUk+CpVyJSkopwJlzXT07tMoDL5WgX9
-      O08KVgDNz9qP/IGtAcRduRcNioH3E9v981QO1zt/Gpb2f8NqAjUUCUZzOnij6mx9
-      McZ+9cWX88CRzR0vQODWuZscgI08NvM69Fn2SQIDAQABo2MwYTAOBgNVHQ8BAf8E
-      BAMCAQYwDwYDVR0TAQH/BAUwAwEB/zAdBgNVHQ4EFgQUc19g2LzLA5j0Kxc0LjZa
-      pmD/vB8wHwYDVR0jBBgwFoAUc19g2LzLA5j0Kxc0LjZapmD/vB8wDQYJKoZIhvcN
-      AQELBQADggEBAHAG7WTmyjzPRIM85rVj+fWHsLIvqpw6DObIjMWokpliCeMINZFV
-      ynfgBKsf1ExwbvJNzYFXW6dihnguDG9VMPpi2up/ctQTN8tm9nDKOy08uNZoofMc
-      NUZxKCEkVKZv+IL4oHoeayt8egtv3ujJM6V14AstMQ6SwvwvA93EP/Ug2e4WAXHu
-      cbI1NAbUgVDqp+DRdfvZkgYKryjTWd/0+1fS8X1bBZVWzl7eirNVnHbSH2ZDpNuY
-      0SBd8dj5F6ld3t58ydZbrTHze7JJOd8ijySAp4/kiu9UfZWuTPABzDa/DSdz9Dk/
-      zPW4CXXvhLmE02TA9/HeCw3KEHIwicNuEfw=
-      -----END CERTIFICATE-----
+    <<: *db
     host: scanengine.postgres.host
     name: vulcanscanengine
     password: passwordscanengine
-    port: 5432
-    sslMode: verify-full
     user: vulcan
-  dogstatsd:
-    enabled: true
-    image:
-      repository: datadog/dogstatsd
   image:
-    repository: adevinta/vulcan-scan-engine
     tag: tag-scanengine
   imagePullSecrets:
   - name: pullsecretname
-  proxy:
-    image:
-      repository: haproxy
-  waitfordb:
-    image:
-      repository: postgres
 sqsExporter:
   annotations:
     iam.amazonaws.com/role: arn:aws:iam::000000000000:role/SQSExporterRole
-  dogstatsd:
-    image:
-      repository: datadog/dogstatsd
-  image:
-    repository: jesusfcr/sqs-exporter
   imagePullSecrets:
   - name: pullsecretname
-  proxy:
-    image:
-      repository: haproxy
-  waitfordb:
-    image:
-      repository: postgres
 stream:
   annotations:
     iam.amazonaws.com/role: arn:aws:iam::000000000000:role/StreamRole
@@ -517,12 +329,7 @@ stream:
       port: 6379
       pwd: ""
       usr: ""
-  dogstatsd:
-    enabled: true
-    image:
-      repository: datadog/dogstatsd
   image:
-    repository: adevinta/vulcan-stream
     tag: tag-stream
   imagePullSecrets:
   - name: pullsecretname
@@ -533,26 +340,16 @@ stream:
       nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
     enabled: true
     hosts:
-    - host: stream.vulcan.com
-      paths:
-      - /
-    - host: vulcan-stream.team.cluster.com
+    - host: stream.vulcan.example.com
       paths:
       - /
     tls:
     - hosts:
-      - stream.vulcan.com
-      - vulcan-stream.team.cluster.com
+      - stream.vulcan.example.com
       secretName: vulcan-stream-tls
-  proxy:
-    image:
-      repository: haproxy
-  waitfordb:
-    image:
-      repository: postgres
 ui:
   conf:
-    apiUrl: https://www.vulcan.com/api/v1/
+    apiUrl: https://www.vulcan.example.com/api/v1/
     contact:
       email: vulcan@example.com
       slack: https://org.slack.com/archives/XXXXXXXXXXXX
@@ -561,11 +358,7 @@ ui:
       auditRoleLink: https://confluence.example.com/x/code
       discoveryLink: https://docs.example.com/security/vulcan-docs/60-asset-auto-discovery/
       whitelistingLink: https://docs.example.com/security/vulcan-docs/network-access/
-  dogstatsd:
-    image:
-      repository: datadog/dogstatsd
   image:
-    repository: adevinta/vulcan-ui
     tag: tag-vulcan-ui
   imagePullSecrets:
   - name: pullsecretname
@@ -574,117 +367,41 @@ ui:
       certmanager.k8s.io/cluster-issuer: letsencrypt
     enabled: true
     hosts:
-    - host: www.vulcan.com
-      paths:
-      - /
-    - host: vulcan-ui.team.cluster.com
+    - host: www.vulcan.example.com
       paths:
       - /
     tls:
     - hosts:
-      - www.vulcan.com
-      - vulcan-ui.team.cluster.com
+      - www.vulcan.example.com
       secretName: vulcan-ui-tls
-  proxy:
-    image:
-      repository: haproxy
-  waitfordb:
-    image:
-      repository: postgres
 vulndb:
   annotations:
     iam.amazonaws.com/role: arn:aws:iam::000000000000:role/VulnDBRole
   conf:
     checksQueueArn: arn:aws:sqs:eu-west-1:000000000000:VulnDBChecks
     logLevel: info
-    resultsUrl: https://results.vulcan.com
+    resultsUrl: https://results.vulcan.example.com
     vulnsTopicArn: arn:aws:sns:eu-west-1:000000000000:VulnDBVulns
   db:
-    ca: |
-      -----BEGIN CERTIFICATE-----
-      MIIEBjCCAu6gAwIBAgIJAMc0ZzaSUK51MA0GCSqGSIb3DQEBCwUAMIGPMQswCQYD
-      VQQGEwJVUzEQMA4GA1UEBwwHU2VhdHRsZTETMBEGA1UECAwKV2FzaGluZ3RvbjEi
-      MCAGA1UECgwZQW1hem9uIFdlYiBTZXJ2aWNlcywgSW5jLjETMBEGA1UECwwKQW1h
-      em9uIFJEUzEgMB4GA1UEAwwXQW1hem9uIFJEUyBSb290IDIwMTkgQ0EwHhcNMTkw
-      ODIyMTcwODUwWhcNMjQwODIyMTcwODUwWjCBjzELMAkGA1UEBhMCVVMxEDAOBgNV
-      BAcMB1NlYXR0bGUxEzARBgNVBAgMCldhc2hpbmd0b24xIjAgBgNVBAoMGUFtYXpv
-      biBXZWIgU2VydmljZXMsIEluYy4xEzARBgNVBAsMCkFtYXpvbiBSRFMxIDAeBgNV
-      BAMMF0FtYXpvbiBSRFMgUm9vdCAyMDE5IENBMIIBIjANBgkqhkiG9w0BAQEFAAOC
-      AQ8AMIIBCgKCAQEArXnF/E6/Qh+ku3hQTSKPMhQQlCpoWvnIthzX6MK3p5a0eXKZ
-      oWIjYcNNG6UwJjp4fUXl6glp53Jobn+tWNX88dNH2n8DVbppSwScVE2LpuL+94vY
-      0EYE/XxN7svKea8YvlrqkUBKyxLxTjh+U/KrGOaHxz9v0l6ZNlDbuaZw3qIWdD/I
-      6aNbGeRUVtpM6P+bWIoxVl/caQylQS6CEYUk+CpVyJSkopwJlzXT07tMoDL5WgX9
-      O08KVgDNz9qP/IGtAcRduRcNioH3E9v981QO1zt/Gpb2f8NqAjUUCUZzOnij6mx9
-      McZ+9cWX88CRzR0vQODWuZscgI08NvM69Fn2SQIDAQABo2MwYTAOBgNVHQ8BAf8E
-      BAMCAQYwDwYDVR0TAQH/BAUwAwEB/zAdBgNVHQ4EFgQUc19g2LzLA5j0Kxc0LjZa
-      pmD/vB8wHwYDVR0jBBgwFoAUc19g2LzLA5j0Kxc0LjZapmD/vB8wDQYJKoZIhvcN
-      AQELBQADggEBAHAG7WTmyjzPRIM85rVj+fWHsLIvqpw6DObIjMWokpliCeMINZFV
-      ynfgBKsf1ExwbvJNzYFXW6dihnguDG9VMPpi2up/ctQTN8tm9nDKOy08uNZoofMc
-      NUZxKCEkVKZv+IL4oHoeayt8egtv3ujJM6V14AstMQ6SwvwvA93EP/Ug2e4WAXHu
-      cbI1NAbUgVDqp+DRdfvZkgYKryjTWd/0+1fS8X1bBZVWzl7eirNVnHbSH2ZDpNuY
-      0SBd8dj5F6ld3t58ydZbrTHze7JJOd8ijySAp4/kiu9UfZWuTPABzDa/DSdz9Dk/
-      zPW4CXXvhLmE02TA9/HeCw3KEHIwicNuEfw=
-      -----END CERTIFICATE-----
+    <<: *db
     host: vulnerabilitydb.postgres.host
     name: vulnerabilitydb
     password: xxxxxxxxxx
-    port: 5432
-    sslMode: verify-full
     user: vulnerabilitydb
-  dogstatsd:
-    image:
-      repository: datadog/dogstatsd
   image:
-    repository: adevinta/vulnerability-db
     tag: tag-vulndb
   imagePullSecrets:
   - name: pullsecretname
-  proxy:
-    image:
-      repository: haproxy
-  waitfordb:
-    image:
-      repository: postgres
 vulndbapi:
   conf:
     logLevel: info
   db:
-    ca: |
-      -----BEGIN CERTIFICATE-----
-      MIIEBjCCAu6gAwIBAgIJAMc0ZzaSUK51MA0GCSqGSIb3DQEBCwUAMIGPMQswCQYD
-      VQQGEwJVUzEQMA4GA1UEBwwHU2VhdHRsZTETMBEGA1UECAwKV2FzaGluZ3RvbjEi
-      MCAGA1UECgwZQW1hem9uIFdlYiBTZXJ2aWNlcywgSW5jLjETMBEGA1UECwwKQW1h
-      em9uIFJEUzEgMB4GA1UEAwwXQW1hem9uIFJEUyBSb290IDIwMTkgQ0EwHhcNMTkw
-      ODIyMTcwODUwWhcNMjQwODIyMTcwODUwWjCBjzELMAkGA1UEBhMCVVMxEDAOBgNV
-      BAcMB1NlYXR0bGUxEzARBgNVBAgMCldhc2hpbmd0b24xIjAgBgNVBAoMGUFtYXpv
-      biBXZWIgU2VydmljZXMsIEluYy4xEzARBgNVBAsMCkFtYXpvbiBSRFMxIDAeBgNV
-      BAMMF0FtYXpvbiBSRFMgUm9vdCAyMDE5IENBMIIBIjANBgkqhkiG9w0BAQEFAAOC
-      AQ8AMIIBCgKCAQEArXnF/E6/Qh+ku3hQTSKPMhQQlCpoWvnIthzX6MK3p5a0eXKZ
-      oWIjYcNNG6UwJjp4fUXl6glp53Jobn+tWNX88dNH2n8DVbppSwScVE2LpuL+94vY
-      0EYE/XxN7svKea8YvlrqkUBKyxLxTjh+U/KrGOaHxz9v0l6ZNlDbuaZw3qIWdD/I
-      6aNbGeRUVtpM6P+bWIoxVl/caQylQS6CEYUk+CpVyJSkopwJlzXT07tMoDL5WgX9
-      O08KVgDNz9qP/IGtAcRduRcNioH3E9v981QO1zt/Gpb2f8NqAjUUCUZzOnij6mx9
-      McZ+9cWX88CRzR0vQODWuZscgI08NvM69Fn2SQIDAQABo2MwYTAOBgNVHQ8BAf8E
-      BAMCAQYwDwYDVR0TAQH/BAUwAwEB/zAdBgNVHQ4EFgQUc19g2LzLA5j0Kxc0LjZa
-      pmD/vB8wHwYDVR0jBBgwFoAUc19g2LzLA5j0Kxc0LjZapmD/vB8wDQYJKoZIhvcN
-      AQELBQADggEBAHAG7WTmyjzPRIM85rVj+fWHsLIvqpw6DObIjMWokpliCeMINZFV
-      ynfgBKsf1ExwbvJNzYFXW6dihnguDG9VMPpi2up/ctQTN8tm9nDKOy08uNZoofMc
-      NUZxKCEkVKZv+IL4oHoeayt8egtv3ujJM6V14AstMQ6SwvwvA93EP/Ug2e4WAXHu
-      cbI1NAbUgVDqp+DRdfvZkgYKryjTWd/0+1fS8X1bBZVWzl7eirNVnHbSH2ZDpNuY
-      0SBd8dj5F6ld3t58ydZbrTHze7JJOd8ijySAp4/kiu9UfZWuTPABzDa/DSdz9Dk/
-      zPW4CXXvhLmE02TA9/HeCw3KEHIwicNuEfw=
-      -----END CERTIFICATE-----
+    <<: *db
     host: vulnerabilitydb.postgres.host
     name: vulnerabilitydb
     password: xxxxxxxxxx
-    port: 5432
-    sslMode: verify-full
     user: vulnerabilitydb
-  dogstatsd:
-    image:
-      repository: datadog/dogstatsd
   image:
-    repository: adevinta/vulnerability-db-api
     tag: tag-vulndb-api
   imagePullSecrets:
   - name: pullsecretname
@@ -692,8 +409,3 @@ vulndbapi:
     cache:
       enabled: true
       maxAge: 600
-    image:
-      repository: haproxy
-  waitfordb:
-    image:
-      repository: postgres

@@ -12,6 +12,12 @@ defaults:
     password: TBD
     sslMode: disable
 
+  dogstatsd: &dogstatsd
+    image: 
+      repository: datadog/dogstatsd
+      tag: 7.25.1
+    enabled: true
+
   # Default values for all the components
   comp: &comp
 
@@ -40,11 +46,6 @@ defaults:
       lifecycle:
         preStopSleep: 30
       resources: {}
-
-    dogstatsd: &dogstatsd
-      image: 
-        repository: datadog/dogstatsd
-        tag: 7.25.1
 
     podSecurityContext: {}
 
@@ -241,6 +242,8 @@ results:
     <<: *comp-readynessProbe
     path: /healthcheck
 
+  dogstatsd: *dogstatsd
+
   infra:
     s3: true
 
@@ -288,6 +291,8 @@ persistence:
   # extraEnv:
   #   FOO: BAR
 
+  dogstatsd: *dogstatsd
+
 
 stream:
   enabled: true
@@ -324,6 +329,8 @@ stream:
 
   # extraEnv:
   #   FOO: BAR
+
+  dogstatsd: *dogstatsd
 
 
 api:
@@ -396,6 +403,8 @@ api:
   # extraEnv:
   #   FOO: BAR
 
+  dogstatsd: *dogstatsd
+
   ingress:
     path: /api
 
@@ -435,6 +444,7 @@ crontinuous:
   # extraEnv:
   #   FOO: BAR
 
+  
 scanengine:
   enabled: true
   name: scanengine
@@ -485,6 +495,8 @@ scanengine:
   db:
     <<: *db
     name: scanengine
+
+  dogstatsd: *dogstatsd
 
 
 ui:
@@ -625,6 +637,7 @@ reportsgenerator:
     <<: *db
     name: reportsgenerator
 
+  dogstatsd: *dogstatsd
 
 redis:
   enabled: true
@@ -688,9 +701,7 @@ metrics:
   infra:
     sqs: true
 
-  dogstatsd:
-    <<: *dogstatsd
-    enabled: true
+  dogstatsd: *dogstatsd
 
 
 vulndbapi:

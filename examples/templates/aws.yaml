@@ -988,15 +988,15 @@ spec:
           - name: LOG_LEVEL
             value: 
           - name: COOKIE_DOMAIN
-            value: "vulcan.com"
+            value: "example.vulcan.com"
           - name: SAML_MEATADATA
             value: "https://org.issuer.com/app/appcode/sso/saml/metadata"
           - name: SAML_ISSUER
             value: "http://www.issuer.com/appcode"
           - name: SAML_CALLBACK
-            value: "https://www.vulcan.com/api/v1/login/callback"
+            value: "https://www.vulcan.example.com/api/v1/login/callback"
           - name: SAML_TRUSTED_DOMAINS
-            value: "[\"www.vulcan.com\"]"
+            value: "[\"vulcan.example.com\"]"
           - name: DEFAULT_OWNERS
             value: "[\"aaaaaaaa-xxxx-yyyy-zzzz-bbbbbbbbbbbb\"]"
           - name: SCANENGINE_URL
@@ -1012,7 +1012,7 @@ spec:
           - name: SCAN_REDIRECT_URL
             value: 
           - name: VULCAN_UI_URL
-            value: "https://www.vulcan.com"
+            value: "https://www.vulcan.example.com"
           - name: PERSISTENCE_HOST
             value: "myrelease-vulcan-persistence"
           - name: VULNERABILITYDB_URL
@@ -1380,7 +1380,7 @@ spec:
           - name: VULCAN_API
             value: http://myrelease-vulcan-api/api
           - name: VULCAN_API_EXTERNAL
-            value: "https://www.vulcan.com/api"
+            value: "https://api.vulcan.example.com/api"
           
           - name: DOGSTATSD_ENABLED
             value: "true"
@@ -1704,11 +1704,11 @@ spec:
           - name: RESULTS_ENDPOINT
             value: "http://myrelease-vulcan-results"
           - name: SCAN_PROXY_ENDPOINT
-            value: "https://insights.vulcan.com"
+            value: "https://insights.vulcan.example.com"
           - name: VULCAN_UI
-            value: "https://www.vulcan.com/"
+            value: "https://www.vulcan.example.com/"
           - name: SCAN_VIEW_REPORT
-            value: "https://www.vulcan.com/api/v1/report?team_id=%s&scan_id=%s"
+            value: "https://www.vulcan.example.com/api/v1/report?team_id=%s&scan_id=%s"
           - name: LIVEREPORT_EMAIL_SUBJECT
             value: "Vulcan Digest"
           
@@ -1831,7 +1831,7 @@ spec:
           - name: BUCKET_LOGS
             value: "s3-vulcan-logs"
           - name: LINK_BASE
-            value: "https://results.vulcan.com/v1"
+            value: "https://results.vulcan.example.com/v1"
           
           - name: DOGSTATSD_ENABLED
             value: "true"
@@ -2229,7 +2229,7 @@ spec:
           - name: PORT
             value: "8080"
           - name: API_URL
-            value: "https://www.vulcan.com/api/v1/"
+            value: "https://www.vulcan.example.com/api/v1/"
           - name: UI_DOCS_API_LINK
             value: "https://docs.erxample.com/security/vulcan-api/"
           - name: UI_DOCS_WHITELISTING_LINK
@@ -2341,7 +2341,7 @@ spec:
           - name: SNS_TOPIC_ARN
             value: "arn:aws:sns:eu-west-1:000000000000:VulnDBVulns"
           - name: RESULTS_URL
-            value: https://results.vulcan.com
+            value: https://results.vulcan.example.com
           - name: RESULTS_INTERNAL_URL
             value: "http://myrelease-vulcan-results"
           
@@ -2582,24 +2582,16 @@ metadata:
     app.kubernetes.io/name: api
   annotations:
     certmanager.k8s.io/cluster-issuer: letsencrypt
-    nginx.ingress.kubernetes.io/cors-allow-origin: https://www.vulcan.com
+    nginx.ingress.kubernetes.io/cors-allow-origin: https://www.vulcan.example.com
     nginx.ingress.kubernetes.io/enable-cors: "true"
     nginx.ingress.kubernetes.io/proxy-body-size: 8m
 spec:
   tls:
     - hosts:
-        - "www.vulcan.com"
-        - "vulcan-api.team.cluster.com"
+        - "www.vulcan.example.com"
       secretName: vulcan-api-tls
   rules:
-    - host: "www.vulcan.com"
-      http:
-        paths:
-          - path: /api
-            backend:
-              serviceName: myrelease-vulcan-api
-              servicePort: 80
-    - host: "vulcan-api.team.cluster.com"
+    - host: "www.vulcan.example.com"
       http:
         paths:
           - path: /api
@@ -2626,24 +2618,16 @@ metadata:
       more_set_headers "X-Frame-Options: DENY";
       more_set_headers "X-Xss-Protection: 1";
       more_set_headers "Strict-Transport-Security: max-age=31536000; includeSubDomains";
-      more_set_headers "Content-Security-Policy: default-src 'none'; script-src 'self' 'unsafe-inline' https://insights.vulcan.com https://www.google-analytics.com; font-src 'self' https://insights.vulcan.com; connect-src 'self' https://insights.vulcan.com; img-src 'self' https://insights.vulcan.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://insights.vulcan.com; object-src 'none'";
+      more_set_headers "Content-Security-Policy: default-src 'none'; script-src 'self' 'unsafe-inline' https://insights.vulcan.example.com https://www.google-analytics.com; font-src 'self' https://insights.vulcan.example.com; connect-src 'self' https://insights.vulcan.example.com; img-src 'self' https://insights.vulcan.example.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://insights.vulcan.example.com; object-src 'none'";
     nginx.ingress.kubernetes.io/cors-allow-origin: '*'
     nginx.ingress.kubernetes.io/enable-cors: "true"
 spec:
   tls:
     - hosts:
-        - "insights.vulcan.com"
-        - "vulcan-insights.team.cluster.com"
+        - "insights.vulcan.example.com"
       secretName: vulcan-insights-tls
   rules:
-    - host: "insights.vulcan.com"
-      http:
-        paths:
-          - path: /
-            backend:
-              serviceName: myrelease-vulcan-insights
-              servicePort: 80
-    - host: "vulcan-insights.team.cluster.com"
+    - host: "insights.vulcan.example.com"
       http:
         paths:
           - path: /
@@ -2668,18 +2652,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - "persistence.vulcan.com"
-        - "vulcan-persistence.team.cluster.com"
+        - "persistence.vulcan.example.com"
       secretName: vulcan-persistence-tls
   rules:
-    - host: "persistence.vulcan.com"
-      http:
-        paths:
-          - path: /
-            backend:
-              serviceName: myrelease-vulcan-persistence
-              servicePort: 80
-    - host: "vulcan-persistence.team.cluster.com"
+    - host: "persistence.vulcan.example.com"
       http:
         paths:
           - path: /
@@ -2704,18 +2680,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - "results.vulcan.com"
-        - "vulcan-results.team.cluster.com"
+        - "results.vulcan.example.com"
       secretName: vulcan-results-tls
   rules:
-    - host: "results.vulcan.com"
-      http:
-        paths:
-          - path: /
-            backend:
-              serviceName: myrelease-vulcan-results
-              servicePort: 80
-    - host: "vulcan-results.team.cluster.com"
+    - host: "results.vulcan.example.com"
       http:
         paths:
           - path: /
@@ -2741,18 +2709,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - "stream.vulcan.com"
-        - "vulcan-stream.team.cluster.com"
+        - "stream.vulcan.example.com"
       secretName: vulcan-stream-tls
   rules:
-    - host: "stream.vulcan.com"
-      http:
-        paths:
-          - path: /
-            backend:
-              serviceName: myrelease-vulcan-stream
-              servicePort: 80
-    - host: "vulcan-stream.team.cluster.com"
+    - host: "stream.vulcan.example.com"
       http:
         paths:
           - path: /
@@ -2776,18 +2736,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - "www.vulcan.com"
-        - "vulcan-ui.team.cluster.com"
+        - "www.vulcan.example.com"
       secretName: vulcan-ui-tls
   rules:
-    - host: "www.vulcan.com"
-      http:
-        paths:
-          - path: /
-            backend:
-              serviceName: myrelease-vulcan-ui
-              servicePort: 80
-    - host: "vulcan-ui.team.cluster.com"
+    - host: "www.vulcan.example.com"
       http:
         paths:
           - path: /

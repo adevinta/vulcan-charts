@@ -1225,6 +1225,15 @@ spec:
             value: 
       containers:
         
+        - name: dogstatsd
+          image: "datadog/dogstatsd:7.25.1"
+          envFrom:
+          - secretRef:
+              name: "myrelease-vulcan-dogstatsd"
+          ports:
+            - containerPort: 8125
+              name: dogstatsd
+              protocol: UDP
         - name: proxy
           image: "haproxy:2.2-alpine"
           imagePullPolicy: Always
@@ -1317,7 +1326,12 @@ spec:
               secretKeyRef:
                 name: "myrelease-minio"
                 key: secret-key
-          
+          - name: DOGSTATSD_ENABLED
+            value: "true"
+          - name: DOGSTATSD_HOST
+            value: "localhost"
+          - name: DOGSTATSD_PORT
+            value: "8125"
           envFrom:
           - secretRef:
               name: myrelease-vulcan-api
@@ -1799,6 +1813,15 @@ spec:
             value: 
       containers:
         
+        - name: dogstatsd
+          image: "datadog/dogstatsd:7.25.1"
+          envFrom:
+          - secretRef:
+              name: "myrelease-vulcan-dogstatsd"
+          ports:
+            - containerPort: 8125
+              name: dogstatsd
+              protocol: UDP
         - name: proxy
           image: "haproxy:2.2-alpine"
           imagePullPolicy: Always
@@ -1855,7 +1878,12 @@ spec:
               secretKeyRef:
                 name: "myrelease-minio"
                 key: secret-key
-          
+          - name: DOGSTATSD_ENABLED
+            value: "true"
+          - name: DOGSTATSD_HOST
+            value: "localhost"
+          - name: DOGSTATSD_PORT
+            value: "8125"
           envFrom:
           - secretRef:
               name: myrelease-vulcan-persistence
@@ -1967,6 +1995,15 @@ spec:
             value: 
       containers:
         
+        - name: dogstatsd
+          image: "datadog/dogstatsd:7.25.1"
+          envFrom:
+          - secretRef:
+              name: "myrelease-vulcan-dogstatsd"
+          ports:
+            - containerPort: 8125
+              name: dogstatsd
+              protocol: UDP
         - name: proxy
           image: "haproxy:2.2-alpine"
           imagePullPolicy: Always
@@ -2050,7 +2087,12 @@ spec:
             value: ANYVALUE
           - name: AWS_SECRET_ACCESS_KEY
             value: ANYVALUE
-          
+          - name: DOGSTATSD_ENABLED
+            value: "true"
+          - name: DOGSTATSD_HOST
+            value: "localhost"
+          - name: DOGSTATSD_PORT
+            value: "8125"
           envFrom:
           - secretRef:
               name: myrelease-vulcan-reportsgenerator
@@ -2114,6 +2156,15 @@ spec:
       
       containers:
         
+        - name: dogstatsd
+          image: "datadog/dogstatsd:7.25.1"
+          envFrom:
+          - secretRef:
+              name: "myrelease-vulcan-dogstatsd"
+          ports:
+            - containerPort: 8125
+              name: dogstatsd
+              protocol: UDP
         - name: proxy
           image: "haproxy:2.2-alpine"
           imagePullPolicy: Always
@@ -2163,7 +2214,12 @@ spec:
               secretKeyRef:
                 name: "myrelease-minio"
                 key: secret-key
-          
+          - name: DOGSTATSD_ENABLED
+            value: "true"
+          - name: DOGSTATSD_HOST
+            value: "localhost"
+          - name: DOGSTATSD_PORT
+            value: "8125"
           ports:
             - name: app
               containerPort: 8080
@@ -2235,6 +2291,15 @@ spec:
             value: 
       containers:
         
+        - name: dogstatsd
+          image: "datadog/dogstatsd:7.25.1"
+          envFrom:
+          - secretRef:
+              name: "myrelease-vulcan-dogstatsd"
+          ports:
+            - containerPort: 8125
+              name: dogstatsd
+              protocol: UDP
         - name: proxy
           image: "haproxy:2.2-alpine"
           imagePullPolicy: Always
@@ -2297,7 +2362,12 @@ spec:
             value: ANYVALUE
           - name: AWS_SECRET_ACCESS_KEY
             value: ANYVALUE
-          
+          - name: DOGSTATSD_ENABLED
+            value: "true"
+          - name: DOGSTATSD_HOST
+            value: "localhost"
+          - name: DOGSTATSD_PORT
+            value: "8125"
           envFrom:
           - secretRef:
               name: myrelease-vulcan-scanengine
@@ -2404,6 +2474,15 @@ spec:
       
       containers:
         
+        - name: dogstatsd
+          image: "datadog/dogstatsd:7.25.1"
+          envFrom:
+          - secretRef:
+              name: "myrelease-vulcan-dogstatsd"
+          ports:
+            - containerPort: 8125
+              name: dogstatsd
+              protocol: UDP
         - name: proxy
           image: "haproxy:2.2-alpine"
           imagePullPolicy: Always
@@ -2439,7 +2518,12 @@ spec:
           - name: REDIS_TTL
             value: "0"
           
-          
+          - name: DOGSTATSD_ENABLED
+            value: "true"
+          - name: DOGSTATSD_HOST
+            value: "localhost"
+          - name: DOGSTATSD_PORT
+            value: "8125"
           envFrom:
           - secretRef:
               name: myrelease-vulcan-stream
@@ -2920,10 +3004,6 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/proxy-body-size: 8m
 spec:
-  tls:
-    - hosts:
-        - "api.vulcan.local"
-      secretName: vulcan-api-tls
   rules:
     - host: "www.vulcan.local"
       http:
@@ -2953,10 +3033,6 @@ metadata:
       more_set_headers "Strict-Transport-Security: max-age=31536000; includeSubDomains";
       more_set_headers "Content-Security-Policy: default-src 'none'; script-src 'self' 'unsafe-inline' https://insights.vulcan.local https://www.google-analytics.com; font-src 'self' https://insights.vulcan.local; connect-src 'self' https://insights.vulcan.local; img-src 'self' https://insights.vulcan.local https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://insights.vulcan.local; object-src 'none'";
 spec:
-  tls:
-    - hosts:
-        - "insights.vulcan.local"
-      secretName: vulcan-insights-tls
   rules:
     - host: "insights.vulcan.local"
       http:
@@ -2978,10 +3054,6 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: persistence
 spec:
-  tls:
-    - hosts:
-        - "persistence.vulcan.local"
-      secretName: vulcan-persistence-tls
   rules:
     - host: "persistence.vulcan.local"
       http:
@@ -3003,10 +3075,6 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: results
 spec:
-  tls:
-    - hosts:
-        - "results.vulcan.local"
-      secretName: vulcan-results-tls
   rules:
     - host: "results.vulcan.local"
       http:
@@ -3031,10 +3099,6 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
     nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
 spec:
-  tls:
-    - hosts:
-        - "stream.vulcan.local"
-      secretName: vulcan-stream-tls
   rules:
     - host: "stream.vulcan.local"
       http:
@@ -3056,10 +3120,6 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: ui
 spec:
-  tls:
-    - hosts:
-        - "www.vulcan.local"
-      secretName: vulcan-ui-tls
   rules:
     - host: "www.vulcan.local"
       http:
@@ -3081,10 +3141,6 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: vulndbapi
 spec:
-  tls:
-    - hosts:
-        - "vulndbapi.vulcan.local"
-      secretName: vulcan-vulndbapi-tls
   rules:
     - host: "vulndbapi.vulcan.local"
       http:
