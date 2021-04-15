@@ -3,8 +3,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "vulcan.fullname" . }}-sqsexporter
-  labels:
-    {{- include "vulcan.labels" . | nindent 4 }}
+  labels: {{- include "vulcan.labels" . | nindent 4 }}
+    app.kubernetes.io/name: sqsexporter
 spec:
   selector:
     matchLabels: {{- include "vulcan.selectorLabels" . | nindent 6 }}

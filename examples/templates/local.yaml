@@ -2412,6 +2412,7 @@ metadata:
     app.kubernetes.io/instance: vulcan
     app.kubernetes.io/version: "1.16.0"
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: sqsexporter
 spec:
   selector:
     matchLabels:
