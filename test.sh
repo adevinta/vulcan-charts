@@ -7,7 +7,7 @@ BASEDIR=$(dirname "$0")
 if [ -n "$1" ]
 then
   find $BASEDIR/stable -type f -name "*.tgz" -print -delete
-  find $BASEDIR/stable -maxdepth 1 -mindepth 1 -type d -print -exec helm dep update --skip-refresh {} \;
+  find $BASEDIR/stable -maxdepth 1 -mindepth 1 -type d -print -exec helm dep update {} \;
 fi
 
 helm lint $BASEDIR/stable/*
