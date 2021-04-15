@@ -1,19 +1,23 @@
 #!/bin/bash
 
+set -e 
+
+BASEDIR=$(dirname "$0")
+
 if [ -n "$1" ]
 then
-  rm -f ./stable/vulcan/charts/*.tgz
-  find ./stable -not -name vulcan -maxdepth 1 -mindepth 1 -type d -print -exec helm dep update --skip-refresh {} \;
-  helm dep update --skip-refresh ./stable/vulcan
+  find $BASEDIR/stable -type f -name "*.tgz" | xargs rm
+  rm -f $BASEDIR/stable/vulcan/charts/*.tgz
+  find $BASEDIR/stable -maxdepth 1 -mindepth 1 -type d -print -exec helm dep update --skip-refresh {} \;
 fi
 
-helm lint ./stable/*
+helm lint $BASEDIR/stable/*
 
-pushd examples
-for f in *.yaml
+OUTDIR=$BASEDIR/examples/templates
+for f in $BASEDIR/examples/*.yaml
 do
-    echo "Validating $f -> templates/$f"
-    helm template myrelease ../stable/vulcan --namespace ns -f $f --debug > templates/$f
-    cat templates/$f | kubeval --strict --ignore-missing-schemas
+    fn=$(basename -- "$f")
+    echo "Validating $fn -> $OUTDIR/$fn"
+    helm template myrelease $BASEDIR/stable/vulcan --namespace ns -f $f --debug > $OUTDIR/$fn
+    cat $OUTDIR/$fn | kubeval --strict --ignore-missing-schemas
 done
-popd

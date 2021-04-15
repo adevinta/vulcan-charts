@@ -6,7 +6,7 @@ git:
 before_script:
 - curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
 - curl -sL https://github.com/instrumenta/kubeval/releases/latest/download/kubeval-linux-amd64.tar.gz | sudo tar xz -C /usr/local/bin kubeval
-script: ./test.sh
+script: ./test.sh -f
 deploy:
   provider: script
   script: ./deploy.sh
