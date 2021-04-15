@@ -1213,8 +1213,6 @@ spec:
         prometheus.io/port: '9101'
     spec:
       
-      securityContext:
-        {}
       initContainers:
         - name: waitfordb
           image: "postgres:9.6-alpine"
@@ -1243,11 +1241,7 @@ spec:
             preStop:
               exec:
                 command: ["/bin/sh","-c","sleep 30;"]
-          resources:
-            {}
         - name: api
-          securityContext:
-            {}
           image: "adevinta/vulcan-api:latest"
           imagePullPolicy: Always
           env:
@@ -1353,8 +1347,6 @@ spec:
             timeoutSeconds: 3
             successThreshold: 1
             failureThreshold: 5
-          resources:
-            {}
       volumes:
       - name: config-proxy
         configMap:
@@ -1388,8 +1380,6 @@ spec:
         prometheus.io/port: '9101'
     spec:
       
-      securityContext:
-        {}
       containers:
         
         - name: proxy
@@ -1408,11 +1398,7 @@ spec:
             preStop:
               exec:
                 command: ["/bin/sh","-c","sleep 30;"]
-          resources:
-            {}
         - name: crontinuous
-          securityContext:
-            {}
           image: "adevinta/vulcan-crontinuous:latest"
           imagePullPolicy: Always
           env:
@@ -1481,8 +1467,6 @@ spec:
             timeoutSeconds: 3
             successThreshold: 1
             failureThreshold: 5
-          resources:
-            {}
       volumes:
       - name: config-proxy
         configMap:
@@ -1511,20 +1495,14 @@ spec:
         app.kubernetes.io/name: goaws
       annotations:
     spec:
-      securityContext:
-        {}
       containers:
       - name: goaws
-        securityContext:
-            {}
         image: "pafortin/goaws:v0.3.1"
         imagePullPolicy: Always
         ports:
           - name: http
             containerPort: 8080
             protocol: TCP
-        resources:
-            {}
         volumeMounts:
       volumes:
       - name: goaws-config
@@ -1558,8 +1536,6 @@ spec:
         prometheus.io/port: '9101'
     spec:
       
-      securityContext:
-        {}
       containers:
         
         - name: proxy
@@ -1578,11 +1554,7 @@ spec:
             preStop:
               exec:
                 command: ["/bin/sh","-c","sleep 30;"]
-          resources:
-            {}
         - name: "insights-private"
-          securityContext:
-            {}
           image: "pottava/s3-proxy:2.0"
           imagePullPolicy: Always
           env:
@@ -1636,11 +1608,7 @@ spec:
             timeoutSeconds: 3
             successThreshold: 1
             failureThreshold: 5
-          resources:
-            {}
         - name: "insights-public"
-          securityContext:
-            {}
           image: "pottava/s3-proxy:2.0"
           imagePullPolicy: Always
           env:
@@ -1694,8 +1662,6 @@ spec:
             timeoutSeconds: 3
             successThreshold: 1
             failureThreshold: 5
-          resources:
-            {}
       volumes:
       - name: config-proxy
         configMap:
@@ -1726,8 +1692,6 @@ spec:
         
     spec:
       
-      securityContext:
-        {}
       containers:
         
         - name: dogstatsd
@@ -1739,11 +1703,7 @@ spec:
             - containerPort: 8125
               name: dogstatsd
               protocol: UDP
-          resources:
-                    null
         - name: metrics
-          securityContext:
-            {}
           image: "containers.mpi-internal.com/spt-security/vulcan-metrics:latest"
           imagePullPolicy: Always
           env:
@@ -1797,8 +1757,6 @@ spec:
             preStop:
               exec:
                 command: ["/bin/sh","-c","sleep 30;"]
-          resources:
-            {}
       volumes:
 ---
 # Source: vulcan/templates/persistence/deployment.yaml
@@ -1829,8 +1787,6 @@ spec:
         prometheus.io/port: '9101'
     spec:
       
-      securityContext:
-        {}
       initContainers:
         - name: waitfordb
           image: "postgres:9.6-alpine"
@@ -1859,11 +1815,7 @@ spec:
             preStop:
               exec:
                 command: ["/bin/sh","-c","sleep 30;"]
-          resources:
-            {}
         - name: persistence
-          securityContext:
-            {}
           image: "adevinta/vulcan-persistence:latest"
           imagePullPolicy: Always
           env:
@@ -1933,8 +1885,6 @@ spec:
             timeoutSeconds: 3
             successThreshold: 1
             failureThreshold: 5
-          resources:
-            {}
       volumes:
       - name: config-proxy
         configMap:
@@ -1963,12 +1913,8 @@ spec:
         app.kubernetes.io/name: redis
       annotations:
     spec:
-      securityContext:
-        {}
       containers:
       - name: redis
-        securityContext:
-            {}
         image: "redis:6.0-alpine"
         imagePullPolicy: Always
         args: ["--requirepass", "$(REDIS_PASSWORD)"]
@@ -1979,8 +1925,6 @@ spec:
           - name: app
             containerPort: 6379
             protocol: TCP
-        resources:
-            {}
       volumes:
 ---
 # Source: vulcan/templates/reportsgenerator/deployment.yaml
@@ -2011,8 +1955,6 @@ spec:
         prometheus.io/port: '9101'
     spec:
       
-      securityContext:
-        {}
       initContainers:
         - name: waitfordb
           image: "postgres:9.6-alpine"
@@ -2041,11 +1983,7 @@ spec:
             preStop:
               exec:
                 command: ["/bin/sh","-c","sleep 30;"]
-          resources:
-            {}
         - name: reportsgenerator
-          securityContext:
-            {}
           image: "adevinta/vulcan-reports-generator:latest"
           imagePullPolicy: Always
           env:
@@ -2142,8 +2080,6 @@ spec:
             timeoutSeconds: 3
             successThreshold: 1
             failureThreshold: 5
-          resources:
-            {}
       volumes:
       - name: config-proxy
         configMap:
@@ -2176,8 +2112,6 @@ spec:
         prometheus.io/port: '9101'
     spec:
       
-      securityContext:
-        {}
       containers:
         
         - name: proxy
@@ -2196,11 +2130,7 @@ spec:
             preStop:
               exec:
                 command: ["/bin/sh","-c","sleep 30;"]
-          resources:
-            {}
         - name: results
-          securityContext:
-            {}
           image: "adevinta/vulcan-results:latest"
           imagePullPolicy: Always
           env:
@@ -2260,8 +2190,6 @@ spec:
             timeoutSeconds: 3
             successThreshold: 1
             failureThreshold: 5
-          resources:
-            {}
       volumes:
       - name: config-proxy
         configMap:
@@ -2295,8 +2223,6 @@ spec:
         prometheus.io/port: '9101'
     spec:
       
-      securityContext:
-        {}
       initContainers:
         - name: waitfordb
           image: "postgres:9.6-alpine"
@@ -2325,11 +2251,7 @@ spec:
             preStop:
               exec:
                 command: ["/bin/sh","-c","sleep 30;"]
-          resources:
-            {}
         - name: scanengine
-          securityContext:
-            {}
           image: "adevinta/vulcan-scan-engine:latest"
           imagePullPolicy: Always
           env:
@@ -2405,8 +2327,6 @@ spec:
             timeoutSeconds: 3
             successThreshold: 1
             failureThreshold: 5
-          resources:
-            {}
       volumes:
       - name: config-proxy
         configMap:
@@ -2453,8 +2373,6 @@ spec:
             value: TBD
           - name: AWS_SECRET_ACCESS_KEY
             value: TBD
-          resources:
-            {}
 ---
 # Source: vulcan/templates/stream/deployment.yaml
 apiVersion: apps/v1
@@ -2484,8 +2402,6 @@ spec:
         prometheus.io/port: '9101'
     spec:
       
-      securityContext:
-        {}
       containers:
         
         - name: proxy
@@ -2504,11 +2420,7 @@ spec:
             preStop:
               exec:
                 command: ["/bin/sh","-c","sleep 30;"]
-          resources:
-            {}
         - name: stream
-          securityContext:
-            {}
           image: "adevinta/vulcan-stream:latest"
           imagePullPolicy: Always
           env:
@@ -2557,8 +2469,6 @@ spec:
             timeoutSeconds: 3
             successThreshold: 1
             failureThreshold: 5
-          resources:
-            {}
       volumes:
       - name: config-proxy
         configMap:
@@ -2591,8 +2501,6 @@ spec:
         prometheus.io/port: '9101'
     spec:
       
-      securityContext:
-        {}
       containers:
         
         - name: proxy
@@ -2611,11 +2519,7 @@ spec:
             preStop:
               exec:
                 command: ["/bin/sh","-c","sleep 30;"]
-          resources:
-            {}
         - name: ui
-          securityContext:
-            {}
           image: "adevinta/vulcan-ui:latest"
           imagePullPolicy: Always
           env:
@@ -2663,8 +2567,6 @@ spec:
             timeoutSeconds: 3
             successThreshold: 1
             failureThreshold: 5
-          resources:
-            {}
       volumes:
       - name: config-proxy
         configMap:
@@ -2696,8 +2598,6 @@ spec:
         
     spec:
       
-      securityContext:
-        {}
       initContainers:
         - name: waitfordb
           image: "postgres:9.6-alpine"
@@ -2711,8 +2611,6 @@ spec:
       containers:
         
         - name: vulndb
-          securityContext:
-            {}
           image: "adevinta/vulnerability-db:latest"
           imagePullPolicy: Always
           env:
@@ -2754,8 +2652,6 @@ spec:
             preStop:
               exec:
                 command: ["/bin/sh","-c","sleep 30;"]
-          resources:
-            {}
       volumes:
 ---
 # Source: vulcan/templates/vulndbapi/deployment.yaml
@@ -2786,8 +2682,6 @@ spec:
         prometheus.io/port: '9101'
     spec:
       
-      securityContext:
-        {}
       initContainers:
         - name: waitfordb
           image: "postgres:9.6-alpine"
@@ -2816,11 +2710,7 @@ spec:
             preStop:
               exec:
                 command: ["/bin/sh","-c","sleep 30;"]
-          resources:
-            {}
         - name: vulndbapi
-          securityContext:
-            {}
           image: "adevinta/vulnerability-db-api:latest"
           imagePullPolicy: Always
           env:
@@ -2869,8 +2759,6 @@ spec:
             timeoutSeconds: 3
             successThreshold: 1
             failureThreshold: 5
-          resources:
-            {}
       volumes:
       - name: config-proxy
         configMap:

@@ -26,20 +26,26 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
+    {{- with $c.comp.podSecurityContext }}
       securityContext:
-        {{- toYaml $c.comp.podSecurityContext | nindent 8 }}
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
       containers:
       - name: {{ $c.comp.name }}
+        {{- with $c.comp.securityContext }}
         securityContext:
-          {{- toYaml $c.comp.securityContext | nindent 12 }}
+          {{- toYaml . | nindent 12 }}
+        {{- end }}
         image: "{{ $c.comp.image.repository }}:{{ $c.comp.image.tag }}"
         imagePullPolicy: {{ $c.comp.image.pullPolicy }}
         ports:
           - name: http
             containerPort: {{ $c.comp.containerPort }}
             protocol: TCP
-        resources:
-          {{- toYaml $c.comp.resources | nindent 12 }}
+          {{- with $c.comp.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
         volumeMounts:
         {{- if .Values.config }}
         - name: goaws-config

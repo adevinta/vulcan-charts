@@ -30,15 +30,19 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
+    {{- with $c.comp.podSecurityContext }}
       securityContext:
-        {{- toYaml $c.comp.podSecurityContext | nindent 8 }}
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
       containers:
         {{- include "comp-common-containers" $c | nindent 8}}
       {{- range $i, $p := $c.comp.conf.proxies }}
         {{- $port := add $c.comp.containerPort $i }}
         - name: "insights-{{ $p.name }}"
+          {{- with $c.comp.securityContext }}
           securityContext:
-            {{- toYaml $c.comp.securityContext | nindent 12 }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           image: "{{ $c.comp.image.repository }}:{{ $c.comp.image.tag }}"
           imagePullPolicy: {{ $c.comp.image.pullPolicy }}
           env:
@@ -104,8 +108,10 @@ spec:
             successThreshold: {{ $c.comp.readinessProbe.successThreshold }}
             failureThreshold: {{ $c.comp.readinessProbe.failureThreshold }}
           {{- end }}
+          {{- with $c.comp.resources }}
           resources:
-            {{- toYaml $c.comp.resources | nindent 12 }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
       {{- end }}
       volumes:
       {{- include "comp-common-volumes" $c | nindent 6}}

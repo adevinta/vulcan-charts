@@ -11,8 +11,10 @@
     - containerPort: 8125
       name: dogstatsd
       protocol: UDP
+  {{- with .comp.dogstatsd.resources }}
   resources:
-    {{- toYaml .comp.dogstatsd.resources | nindent 12 }}
+    {{- toYaml . | nindent 12 }}
+  {{- end }}
 {{- end -}}
 {{- end -}}
 {{- end -}}

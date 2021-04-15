@@ -527,8 +527,6 @@ spec:
       
       imagePullSecrets:
         - name: pullsecretname
-      securityContext:
-        {}
       initContainers:
         - name: waitfordb
           image: "postgres:9.6-alpine"
@@ -550,11 +548,7 @@ spec:
             - containerPort: 8125
               name: dogstatsd
               protocol: UDP
-          resources:
-                    null
         - name: api
-          securityContext:
-            {}
           image: "adevinta/vulcan-api:tag-api"
           imagePullPolicy: Always
           env:
@@ -648,8 +642,6 @@ spec:
             timeoutSeconds: 3
             successThreshold: 1
             failureThreshold: 5
-          resources:
-            {}
       volumes:
 ---
 # Source: vulcan/templates/crontinuous/deployment.yaml
@@ -681,13 +673,9 @@ spec:
       
       imagePullSecrets:
         - name: pullsecretname
-      securityContext:
-        {}
       containers:
         
         - name: crontinuous
-          securityContext:
-            {}
           image: "adevinta/vulcan-crontinuous:tag-crontinuous"
           imagePullPolicy: Always
           env:
@@ -740,8 +728,6 @@ spec:
             timeoutSeconds: 3
             successThreshold: 1
             failureThreshold: 5
-          resources:
-            {}
       volumes:
 ---
 # Source: vulcan/templates/insights/deployment.yaml
@@ -774,13 +760,9 @@ spec:
       
       imagePullSecrets:
         - name: pullsecretname
-      securityContext:
-        {}
       containers:
         
         - name: "insights-private"
-          securityContext:
-            {}
           image: "pottava/s3-proxy:2.0"
           imagePullPolicy: Always
           env:
@@ -822,11 +804,7 @@ spec:
             timeoutSeconds: 3
             successThreshold: 1
             failureThreshold: 5
-          resources:
-            {}
         - name: "insights-public"
-          securityContext:
-            {}
           image: "pottava/s3-proxy:2.0"
           imagePullPolicy: Always
           env:
@@ -868,8 +846,6 @@ spec:
             timeoutSeconds: 3
             successThreshold: 1
             failureThreshold: 5
-          resources:
-            {}
       volumes:
 ---
 # Source: vulcan/templates/metrics/deployment.yaml
@@ -900,8 +876,6 @@ spec:
       
       imagePullSecrets:
         - name: pullsecretname
-      securityContext:
-        {}
       containers:
         
         - name: dogstatsd
@@ -913,11 +887,7 @@ spec:
             - containerPort: 8125
               name: dogstatsd
               protocol: UDP
-          resources:
-                    null
         - name: metrics
-          securityContext:
-            {}
           image: "containers.mpi-internal.com/spt-security/vulcan-metrics:tag-metrics"
           imagePullPolicy: Always
           env:
@@ -965,8 +935,6 @@ spec:
             preStop:
               exec:
                 command: ["/bin/sh","-c","sleep 30;"]
-          resources:
-            {}
       volumes:
 ---
 # Source: vulcan/templates/persistence/deployment.yaml
@@ -998,8 +966,6 @@ spec:
       
       imagePullSecrets:
         - name: pullsecretname
-      securityContext:
-        {}
       initContainers:
         - name: waitfordb
           image: "postgres:9.6-alpine"
@@ -1021,11 +987,7 @@ spec:
             - containerPort: 8125
               name: dogstatsd
               protocol: UDP
-          resources:
-                    null
         - name: persistence
-          securityContext:
-            {}
           image: "adevinta/vulcan-persistence:tag-persistence"
           imagePullPolicy: Always
           env:
@@ -1083,8 +1045,6 @@ spec:
             timeoutSeconds: 3
             successThreshold: 1
             failureThreshold: 5
-          resources:
-            {}
       volumes:
 ---
 # Source: vulcan/templates/redis/deployment.yaml
@@ -1110,12 +1070,8 @@ spec:
         app.kubernetes.io/name: redis
       annotations:
     spec:
-      securityContext:
-        {}
       containers:
       - name: redis
-        securityContext:
-            {}
         image: "redis:6.0-alpine"
         imagePullPolicy: Always
         args: ["--requirepass", "$(REDIS_PASSWORD)"]
@@ -1126,8 +1082,6 @@ spec:
           - name: app
             containerPort: 6379
             protocol: TCP
-        resources:
-            {}
       volumes:
 ---
 # Source: vulcan/templates/reportsgenerator/deployment.yaml
@@ -1159,8 +1113,6 @@ spec:
       
       imagePullSecrets:
         - name: pullsecretname
-      securityContext:
-        {}
       initContainers:
         - name: waitfordb
           image: "postgres:9.6-alpine"
@@ -1190,8 +1142,6 @@ spec:
                       cpu: 100m
                       memory: 128Mi
         - name: reportsgenerator
-          securityContext:
-            {}
           image: "adevinta/vulcan-reports-generator:tag-reports"
           imagePullPolicy: Always
           env:
@@ -1326,8 +1276,6 @@ spec:
       
       imagePullSecrets:
         - name: pullsecretname
-      securityContext:
-        {}
       containers:
         
         - name: dogstatsd
@@ -1339,11 +1287,7 @@ spec:
             - containerPort: 8125
               name: dogstatsd
               protocol: UDP
-          resources:
-                    null
         - name: results
-          securityContext:
-            {}
           image: "adevinta/vulcan-results:tag-results"
           imagePullPolicy: Always
           env:
@@ -1392,8 +1336,6 @@ spec:
             timeoutSeconds: 3
             successThreshold: 1
             failureThreshold: 5
-          resources:
-            {}
       volumes:
 ---
 # Source: vulcan/templates/scanengine/deployment.yaml
@@ -1425,8 +1367,6 @@ spec:
       
       imagePullSecrets:
         - name: pullsecretname
-      securityContext:
-        {}
       initContainers:
         - name: waitfordb
           image: "postgres:9.6-alpine"
@@ -1448,11 +1388,7 @@ spec:
             - containerPort: 8125
               name: dogstatsd
               protocol: UDP
-          resources:
-                    null
         - name: scanengine
-          securityContext:
-            {}
           image: "adevinta/vulcan-scan-engine:tag-scanengine"
           imagePullPolicy: Always
           env:
@@ -1528,8 +1464,6 @@ spec:
             timeoutSeconds: 3
             successThreshold: 1
             failureThreshold: 5
-          resources:
-            {}
       volumes:
 ---
 # Source: vulcan/templates/sqs-exporter.yaml
@@ -1570,8 +1504,6 @@ spec:
           env:
           - name: SQS_QUEUE_NAME_PREFIX
             value: VulcanK8S
-          resources:
-            {}
 ---
 # Source: vulcan/templates/stream/deployment.yaml
 apiVersion: apps/v1
@@ -1602,8 +1534,6 @@ spec:
       
       imagePullSecrets:
         - name: pullsecretname
-      securityContext:
-        {}
       containers:
         
         - name: dogstatsd
@@ -1615,11 +1545,7 @@ spec:
             - containerPort: 8125
               name: dogstatsd
               protocol: UDP
-          resources:
-                    null
         - name: stream
-          securityContext:
-            {}
           image: "adevinta/vulcan-stream:tag-stream"
           imagePullPolicy: Always
           env:
@@ -1673,8 +1599,6 @@ spec:
             timeoutSeconds: 3
             successThreshold: 1
             failureThreshold: 5
-          resources:
-            {}
       volumes:
 ---
 # Source: vulcan/templates/ui/deployment.yaml
@@ -1704,13 +1628,9 @@ spec:
       
       imagePullSecrets:
         - name: pullsecretname
-      securityContext:
-        {}
       containers:
         
         - name: ui
-          securityContext:
-            {}
           image: "adevinta/vulcan-ui:tag-vulcan-ui"
           imagePullPolicy: Always
           env:
@@ -1758,8 +1678,6 @@ spec:
             timeoutSeconds: 3
             successThreshold: 1
             failureThreshold: 5
-          resources:
-            {}
       volumes:
 ---
 # Source: vulcan/templates/vulndb/deployment.yaml
@@ -1791,8 +1709,6 @@ spec:
       
       imagePullSecrets:
         - name: pullsecretname
-      securityContext:
-        {}
       initContainers:
         - name: waitfordb
           image: "postgres:9.6-alpine"
@@ -1806,8 +1722,6 @@ spec:
       containers:
         
         - name: vulndb
-          securityContext:
-            {}
           image: "adevinta/vulnerability-db:tag-vulndb"
           imagePullPolicy: Always
           env:
@@ -1844,8 +1758,6 @@ spec:
             preStop:
               exec:
                 command: ["/bin/sh","-c","sleep 30;"]
-          resources:
-            {}
       volumes:
 ---
 # Source: vulcan/templates/vulndbapi/deployment.yaml
@@ -1876,8 +1788,6 @@ spec:
       
       imagePullSecrets:
         - name: pullsecretname
-      securityContext:
-        {}
       initContainers:
         - name: waitfordb
           image: "postgres:9.6-alpine"
@@ -1891,8 +1801,6 @@ spec:
       containers:
         
         - name: vulndbapi
-          securityContext:
-            {}
           image: "adevinta/vulnerability-db-api:tag-vulndb-api"
           imagePullPolicy: Always
           env:
@@ -1943,8 +1851,6 @@ spec:
             timeoutSeconds: 3
             successThreshold: 1
             failureThreshold: 5
-          resources:
-            {}
       volumes:
 ---
 # Source: vulcan/templates/api/ingress.yaml

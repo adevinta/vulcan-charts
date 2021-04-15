@@ -31,8 +31,10 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
+    {{- with $c.comp.podSecurityContext }}
       securityContext:
-        {{- toYaml $c.comp.podSecurityContext | nindent 8 }}
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
       initContainers:
         - name: waitfordb
           image: "{{ $c.comp.waitfordb.image.repository }}:{{ $c.comp.waitfordb.image.tag }}"
@@ -46,8 +48,10 @@ spec:
       containers:
         {{- include "comp-common-containers" $c | nindent 8}}
         - name: {{ $c.comp.name }}
+          {{- with $c.comp.securityContext }}
           securityContext:
-            {{- toYaml $c.comp.securityContext | nindent 12 }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           image: "{{ $c.comp.image.repository }}:{{ $c.comp.image.tag }}"
           imagePullPolicy: {{ $c.comp.image.pullPolicy }}
           env:
@@ -86,8 +90,10 @@ spec:
           - secretRef:
               name: {{ include "vulndb.fullname" . }}
           {{- include "comp-common-lifecycle" $c | nindent 10 }}
+          {{- with $c.comp.resources }}
           resources:
-            {{- toYaml $c.comp.resources | nindent 12 }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
       volumes:
       {{- include "comp-common-volumes" $c | nindent 6}}
       {{- with $c.comp.nodeSelector }}

@@ -100,8 +100,10 @@ data:
     initialDelaySeconds: {{.comp.proxy.probeInitialDelay | default 5 }}
     timeoutSeconds: {{.comp.proxy.probeTimeoutSeconds | default 3 }}
   {{- end }}
+  {{- with .comp.proxy.resources }}
   resources:
-    {{- toYaml .comp.proxy.resources | nindent 4 }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 {{- end -}}
 {{- end -}}
 

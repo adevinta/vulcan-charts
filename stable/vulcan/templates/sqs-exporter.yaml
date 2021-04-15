@@ -43,8 +43,10 @@ spec:
           - name: AWS_SECRET_ACCESS_KEY
             value: TBD
           {{- end }}
+          {{- with .Values.sqsExporter.resources }}
           resources:
-            {{- toYaml .Values.sqsExporter.resources | nindent 12 }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
