@@ -1,7 +1,7 @@
 {{/*
 Override names
 */}}
-{{- define "comp-hpa" -}}
+{{- define "common-hpa" -}}
 {{- if and .Values.comp.enabled .Values.comp.autoscaling.enabled -}}
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler

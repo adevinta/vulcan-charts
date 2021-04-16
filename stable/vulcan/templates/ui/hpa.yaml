@@ -1,2 +1,2 @@
 {{- $_ := (set .Values "comp" .Values.ui) -}}
-{{- include "comp-hpa" . }}
+{{- include "common-hpa" . }}

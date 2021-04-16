@@ -1,4 +1,4 @@
-{{- define "comp-infra-envs" -}}
+{{- define "common-infra-envs" -}}
 {{- $auth := 0 -}}
 {{- if .Values.comp.infra -}}
 {{- if and  .Values.comp.infra.sns .Values.goaws.enabled -}}

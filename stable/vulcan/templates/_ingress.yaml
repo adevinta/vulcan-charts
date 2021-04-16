@@ -1,7 +1,7 @@
 {{/*
 Override names
 */}}
-{{- define "comp-ingress" -}}
+{{- define "common-ingress" -}}
 {{- if and .Values.comp.enabled .Values.comp.ingress.enabled -}}
 {{- $fullName := printf "%s-%s" (include "vulcan.fullname" . ) .Values.comp.name -}}
 {{- $svcPort := .Values.comp.service.port -}}

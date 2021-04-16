@@ -2402,7 +2402,7 @@ spec:
         configMap:
           name: myrelease-vulcan-scanengine-proxy
 ---
-# Source: vulcan/templates/sqs-exporter.yaml
+# Source: vulcan/templates/sqsexporter/sqs-exporter.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:

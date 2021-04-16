@@ -1,2 +1,2 @@
 {{- $_ := (set .Values "comp" .Values.crontinuous) -}}
-{{- include "comp-ingress" . }}
+{{- include "common-ingress" . }}

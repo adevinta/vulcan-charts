@@ -1,9 +1,9 @@
 {{- define "common-manifests" -}}
-{{- include "comp-proxy-config-map" . }}
+{{- include "common-proxy-config-map" . }}
 {{- end -}}
 
 {{- define "common-annotations" -}}
-{{- include "comp-proxy-annotations" . }}
+{{- include "common-proxy-annotations" . }}
 {{- end -}}
 
 {{/*
@@ -67,17 +67,17 @@ terminationGracePeriodSeconds: {{ .Values.comp.terminationGracePeriodSeconds }}
 {{- end -}}
 
 {{- define "common-containers" -}}
-{{- include "comp-dogstatsd-sidecar" . }}
-{{- include "comp-proxy-container" . }}
+{{- include "common-dogstatsd-sidecar" . }}
+{{- include "common-proxy-container" . }}
 {{- end -}}
 
 {{- define "common-envs" -}}
-{{ include "comp-infra-envs" . }}
-{{ include "comp-dogstatsd-envs" . }}
+{{ include "common-infra-envs" . }}
+{{ include "common-dogstatsd-envs" . }}
 {{- end -}}
 
 {{- define "common-volumes" -}}
-{{- include "comp-proxy-volumes" . }}
+{{- include "common-proxy-volumes" . }}
 {{- end -}}
 
 {{- define "common-appPortName" -}}

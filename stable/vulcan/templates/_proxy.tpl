@@ -1,15 +1,15 @@
 {{/*
 Override names
 */}}
-{{- define "comp-proxy-annotations" -}}
+{{- define "common-proxy-annotations" -}}
 {{- if .Values.comp.proxy.enabled -}}
-checksum/config-proxy: {{ include "comp-proxy-config-map" . | sha256sum }}
+checksum/config-proxy: {{ include "common-proxy-config-map" . | sha256sum }}
 prometheus.io/scrape: 'true'
 prometheus.io/port: '{{ .Values.comp.proxy.metricsPort | default 9101 }}'
 {{- end -}}
 {{- end -}}
 
-{{- define "comp-proxy-config-map" -}}
+{{- define "common-proxy-config-map" -}}
 {{- if .Values.comp.proxy.enabled -}}
 apiVersion: v1
 kind: ConfigMap
@@ -66,7 +66,7 @@ data:
 {{- end -}}
 {{- end -}}
 
-{{- define "comp-proxy-container" -}}
+{{- define "common-proxy-container" -}}
 {{- if .Values.comp.proxy.enabled }}
 - name: proxy
   image: "{{ .Values.comp.proxy.image.repository }}:{{ .Values.comp.proxy.image.tag }}"
@@ -107,7 +107,7 @@ data:
 {{- end -}}
 {{- end -}}
 
-{{- define "comp-proxy-volumes" -}}
+{{- define "common-proxy-volumes" -}}
 {{- if .Values.comp.proxy.enabled -}}
 - name: config-proxy
   configMap:

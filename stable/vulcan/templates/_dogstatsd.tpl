@@ -1,4 +1,4 @@
-{{- define "comp-dogstatsd-sidecar" -}}
+{{- define "common-dogstatsd-sidecar" -}}
 {{- if .Values.comp.dogstatsd -}}
 {{- if .Values.comp.dogstatsd.enabled -}}
 {{- if eq ( .Values.comp.dogstatsd.host | default "localhost") "localhost" }}
@@ -20,7 +20,7 @@
 {{- end -}}
 {{- end -}}
 
-{{- define "comp-dogstatsd-envs" -}}
+{{- define "common-dogstatsd-envs" -}}
 {{- if .Values.comp.dogstatsd -}}
 {{- if .Values.comp.dogstatsd.enabled -}}
 - name: DOGSTATSD_ENABLED

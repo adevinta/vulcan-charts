@@ -1,2 +1,2 @@
 {{- $_ := (set .Values "comp" .Values.vulndbapi) -}}
-{{- include "comp-service" . }}
+{{- include "common-service" . }}

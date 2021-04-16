@@ -1,2 +1,2 @@
 {{- $_ := (set .Values "comp" .Values.stream) -}}
-{{- include "comp-hpa" . }}
+{{- include "common-hpa" . }}
