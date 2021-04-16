@@ -1920,9 +1920,8 @@ spec:
     spec:
       containers:
       - name: redis
-        image: "redis:6.0-alpine"
+        image: "bitnami/redis:6.0.12"
         imagePullPolicy: Always
-        args: ["--requirepass", "$(REDIS_PASSWORD)"]
         envFrom:
           - secretRef:
               name: myrelease-vulcan-redis
