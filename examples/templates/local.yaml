@@ -1212,7 +1212,6 @@ spec:
         prometheus.io/scrape: 'true'
         prometheus.io/port: '9101'
     spec:
-      
       initContainers:
         - name: waitfordb
           image: "postgres:9.6-alpine"
@@ -1251,8 +1250,31 @@ spec:
               exec:
                 command: ["/bin/sh","-c","sleep 30;"]
         - name: api
+          
           image: "adevinta/vulcan-api:latest"
           imagePullPolicy: Always
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","sleep 30;"]
+          livenessProbe:
+            httpGet:
+              path: /api/v1/healthcheck
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 10
+          readinessProbe:
+            httpGet:
+              path: /api/v1/healthcheck
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 5
           env:
           - name: PORT
             value: "8080"
@@ -1339,28 +1361,6 @@ spec:
             - name: app
               containerPort: 8080
               protocol: TCP
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh","-c","sleep 30;"]
-          livenessProbe:
-            httpGet:
-              path: /api/v1/healthcheck
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 10
-          readinessProbe:
-            httpGet:
-              path: /api/v1/healthcheck
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 5
       volumes:
       - name: config-proxy
         configMap:
@@ -1393,7 +1393,6 @@ spec:
         prometheus.io/scrape: 'true'
         prometheus.io/port: '9101'
     spec:
-      
       containers:
         
         - name: proxy
@@ -1413,8 +1412,31 @@ spec:
               exec:
                 command: ["/bin/sh","-c","sleep 30;"]
         - name: crontinuous
+          
           image: "adevinta/vulcan-crontinuous:latest"
           imagePullPolicy: Always
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","sleep 30;"]
+          livenessProbe:
+            httpGet:
+              path: /healthcheck
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 10
+          readinessProbe:
+            httpGet:
+              path: /healthcheck
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 5
           env:
           - name: PORT
             value: "8080"
@@ -1459,28 +1481,6 @@ spec:
             - name: app
               containerPort: 8080
               protocol: TCP
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh","-c","sleep 30;"]
-          livenessProbe:
-            httpGet:
-              path: /healthcheck
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 10
-          readinessProbe:
-            httpGet:
-              path: /healthcheck
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 5
       volumes:
       - name: config-proxy
         configMap:
@@ -1549,7 +1549,6 @@ spec:
         prometheus.io/scrape: 'true'
         prometheus.io/port: '9101'
     spec:
-      
       containers:
         
         - name: proxy
@@ -1569,8 +1568,31 @@ spec:
               exec:
                 command: ["/bin/sh","-c","sleep 30;"]
         - name: "insights-private"
+          
           image: "pottava/s3-proxy:2.0"
           imagePullPolicy: Always
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","sleep 30;"]
+          livenessProbe:
+            httpGet:
+              path: /healthcheck
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 10
+          readinessProbe:
+            httpGet:
+              path: /healthcheck
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 5
           env:
             - name: AWS_REGION
               value: "local"
@@ -1584,22 +1606,14 @@ spec:
               value: "/healthcheck"
             - name: APP_PORT
               value: "8080"
-            - name: AWS_API_ENDPOINT
-              value: "http://myrelease-vulcans3"
-            - name: AWS_ACCESS_KEY_ID
-              valueFrom:
-                secretKeyRef:
-                  name: "myrelease-minio"
-                  key: access-key
-            - name: AWS_SECRET_ACCESS_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: "myrelease-minio"
-                  key: secret-key
           ports:
             - name: private
               containerPort: 8080
               protocol: TCP
+        - name: "insights-public"
+          
+          image: "pottava/s3-proxy:2.0"
+          imagePullPolicy: Always
           lifecycle:
             preStop:
               exec:
@@ -1622,9 +1636,6 @@ spec:
             timeoutSeconds: 3
             successThreshold: 1
             failureThreshold: 5
-        - name: "insights-public"
-          image: "pottava/s3-proxy:2.0"
-          imagePullPolicy: Always
           env:
             - name: AWS_REGION
               value: "local"
@@ -1638,44 +1649,10 @@ spec:
               value: "/healthcheck"
             - name: APP_PORT
               value: "8081"
-            - name: AWS_API_ENDPOINT
-              value: "http://myrelease-vulcans3"
-            - name: AWS_ACCESS_KEY_ID
-              valueFrom:
-                secretKeyRef:
-                  name: "myrelease-minio"
-                  key: access-key
-            - name: AWS_SECRET_ACCESS_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: "myrelease-minio"
-                  key: secret-key
           ports:
-            - name: public
+            - name: private
               containerPort: 8081
               protocol: TCP
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh","-c","sleep 30;"]
-          livenessProbe:
-            httpGet:
-              path: /healthcheck
-              port: 8081
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 10
-          readinessProbe:
-            httpGet:
-              path: /healthcheck
-              port: 8081
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 5
       volumes:
       - name: config-proxy
         configMap:
@@ -1705,7 +1682,6 @@ spec:
       annotations:
         
     spec:
-      
       containers:
         
         - name: dogstatsd
@@ -1718,8 +1694,13 @@ spec:
               name: dogstatsd
               protocol: UDP
         - name: metrics
+          
           image: "containers.mpi-internal.com/spt-security/vulcan-metrics:latest"
           imagePullPolicy: Always
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","sleep 30;"]
           env:
           - name: LOG_LEVEL
             value: "warn"
@@ -1767,10 +1748,6 @@ spec:
               name: myrelease-vulcan-metrics
           - secretRef:
               name: myrelease-vulcan-redis
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh","-c","sleep 30;"]
       volumes:
 ---
 # Source: vulcan/templates/persistence/deployment.yaml
@@ -1800,7 +1777,6 @@ spec:
         prometheus.io/scrape: 'true'
         prometheus.io/port: '9101'
     spec:
-      
       initContainers:
         - name: waitfordb
           image: "postgres:9.6-alpine"
@@ -1839,8 +1815,31 @@ spec:
               exec:
                 command: ["/bin/sh","-c","sleep 30;"]
         - name: persistence
+          
           image: "adevinta/vulcan-persistence:latest"
           imagePullPolicy: Always
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","sleep 30;"]
+          livenessProbe:
+            httpGet:
+              path: /status
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 10
+          readinessProbe:
+            httpGet:
+              path: /status
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 5
           env:
           - name: PORT
             value: "8080"
@@ -1891,28 +1890,6 @@ spec:
             - name: app
               containerPort: 8080
               protocol: TCP
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh","-c","sleep 30;"]
-          livenessProbe:
-            httpGet:
-              path: /status
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 10
-          readinessProbe:
-            httpGet:
-              path: /status
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 5
       volumes:
       - name: config-proxy
         configMap:
@@ -1982,7 +1959,6 @@ spec:
         prometheus.io/scrape: 'true'
         prometheus.io/port: '9101'
     spec:
-      
       initContainers:
         - name: waitfordb
           image: "postgres:9.6-alpine"
@@ -2021,8 +1997,31 @@ spec:
               exec:
                 command: ["/bin/sh","-c","sleep 30;"]
         - name: reportsgenerator
+          
           image: "adevinta/vulcan-reports-generator:latest"
           imagePullPolicy: Always
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","sleep 30;"]
+          livenessProbe:
+            httpGet:
+              path: /healthcheck
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 10
+          readinessProbe:
+            httpGet:
+              path: /healthcheck
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 5
           env:
           - name: PORT
             value: "8080"
@@ -2100,28 +2099,6 @@ spec:
             - name: app
               containerPort: 8080
               protocol: TCP
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh","-c","sleep 30;"]
-          livenessProbe:
-            httpGet:
-              path: /healthcheck
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 10
-          readinessProbe:
-            httpGet:
-              path: /healthcheck
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 5
       volumes:
       - name: config-proxy
         configMap:
@@ -2153,7 +2130,6 @@ spec:
         prometheus.io/scrape: 'true'
         prometheus.io/port: '9101'
     spec:
-      
       containers:
         
         - name: dogstatsd
@@ -2182,8 +2158,31 @@ spec:
               exec:
                 command: ["/bin/sh","-c","sleep 30;"]
         - name: results
+          
           image: "adevinta/vulcan-results:latest"
           imagePullPolicy: Always
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","sleep 30;"]
+          livenessProbe:
+            httpGet:
+              path: /healthcheck
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 10
+          readinessProbe:
+            httpGet:
+              path: /healthcheck
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 5
           env:
           - name: PORT
             value: "8080"
@@ -2224,28 +2223,6 @@ spec:
             - name: app
               containerPort: 8080
               protocol: TCP
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh","-c","sleep 30;"]
-          livenessProbe:
-            httpGet:
-              path: /healthcheck
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 10
-          readinessProbe:
-            httpGet:
-              path: /healthcheck
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 5
       volumes:
       - name: config-proxy
         configMap:
@@ -2278,7 +2255,6 @@ spec:
         prometheus.io/scrape: 'true'
         prometheus.io/port: '9101'
     spec:
-      
       initContainers:
         - name: waitfordb
           image: "postgres:9.6-alpine"
@@ -2317,8 +2293,31 @@ spec:
               exec:
                 command: ["/bin/sh","-c","sleep 30;"]
         - name: scanengine
+          
           image: "adevinta/vulcan-scan-engine:latest"
           imagePullPolicy: Always
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","sleep 30;"]
+          livenessProbe:
+            httpGet:
+              path: /v1/healthcheck
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 10
+          readinessProbe:
+            httpGet:
+              path: /v1/healthcheck
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 5
           env:
           - name: PORT
             value: "8080"
@@ -2375,28 +2374,6 @@ spec:
             - name: app
               containerPort: 8080
               protocol: TCP
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh","-c","sleep 30;"]
-          livenessProbe:
-            httpGet:
-              path: /v1/healthcheck
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 10
-          readinessProbe:
-            httpGet:
-              path: /v1/healthcheck
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 5
       volumes:
       - name: config-proxy
         configMap:
@@ -2435,6 +2412,31 @@ spec:
             - name: metrics
               containerPort: 9384
               protocol: TCP
+          
+          image: "adevinta/vulcan-stream:latest"
+          imagePullPolicy: Always
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","sleep 30;"]
+          livenessProbe:
+            httpGet:
+              path: /status
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 10
+          readinessProbe:
+            httpGet:
+              path: /status
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 5
           env:
           - name: SQS_QUEUE_NAME_PREFIX
             value: VulcanK8S
@@ -2472,7 +2474,6 @@ spec:
         prometheus.io/scrape: 'true'
         prometheus.io/port: '9101'
     spec:
-      
       containers:
         
         - name: dogstatsd
@@ -2501,8 +2502,31 @@ spec:
               exec:
                 command: ["/bin/sh","-c","sleep 30;"]
         - name: stream
+          
           image: "adevinta/vulcan-stream:latest"
           imagePullPolicy: Always
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","sleep 30;"]
+          livenessProbe:
+            httpGet:
+              path: /status
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 10
+          readinessProbe:
+            httpGet:
+              path: /status
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 5
           env:
           - name: PORT
             value: "8080"
@@ -2532,28 +2556,6 @@ spec:
             - name: app
               containerPort: 8080
               protocol: TCP
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh","-c","sleep 30;"]
-          livenessProbe:
-            httpGet:
-              path: /status
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 10
-          readinessProbe:
-            httpGet:
-              path: /status
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 5
       volumes:
       - name: config-proxy
         configMap:
@@ -2585,7 +2587,6 @@ spec:
         prometheus.io/scrape: 'true'
         prometheus.io/port: '9101'
     spec:
-      
       containers:
         
         - name: proxy
@@ -2605,8 +2606,31 @@ spec:
               exec:
                 command: ["/bin/sh","-c","sleep 30;"]
         - name: ui
+          
           image: "adevinta/vulcan-ui:latest"
           imagePullPolicy: Always
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","sleep 30;"]
+          livenessProbe:
+            httpGet:
+              path: /index.html
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 10
+          readinessProbe:
+            httpGet:
+              path: /index.html
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 5
           env:
           - name: PORT
             value: "8080"
@@ -2630,28 +2654,6 @@ spec:
             - name: app
               containerPort: 8080
               protocol: TCP
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh","-c","sleep 30;"]
-          livenessProbe:
-            httpGet:
-              path: /index.html
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 10
-          readinessProbe:
-            httpGet:
-              path: /index.html
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 5
       volumes:
       - name: config-proxy
         configMap:
@@ -2682,7 +2684,6 @@ spec:
         checksum/secrets: 75dc059ded068f2c81524f9d8b7c92ef639dbae175d695c573d414c7a765f74d
         
     spec:
-      
       initContainers:
         - name: waitfordb
           image: "postgres:9.6-alpine"
@@ -2696,8 +2697,13 @@ spec:
       containers:
         
         - name: vulndb
+          
           image: "adevinta/vulnerability-db:latest"
           imagePullPolicy: Always
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","sleep 30;"]
           env:
           - name: PG_HOST
             value: "myrelease-postgresql"
@@ -2733,10 +2739,6 @@ spec:
           envFrom:
           - secretRef:
               name: myrelease-vulcan-vulndb
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh","-c","sleep 30;"]
       volumes:
 ---
 # Source: vulcan/templates/vulndbapi/deployment.yaml
@@ -2766,7 +2768,6 @@ spec:
         prometheus.io/scrape: 'true'
         prometheus.io/port: '9101'
     spec:
-      
       initContainers:
         - name: waitfordb
           image: "postgres:9.6-alpine"
@@ -2796,8 +2797,31 @@ spec:
               exec:
                 command: ["/bin/sh","-c","sleep 30;"]
         - name: vulndbapi
+          
           image: "adevinta/vulnerability-db-api:latest"
           imagePullPolicy: Always
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","sleep 30;"]
+          livenessProbe:
+            httpGet:
+              path: /healthcheck
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 10
+          readinessProbe:
+            httpGet:
+              path: /healthcheck
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 5
           env:
           - name: PORT
             value: "8080"
@@ -2822,28 +2846,6 @@ spec:
             - name: app
               containerPort: 8080
               protocol: TCP
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh","-c","sleep 30;"]
-          livenessProbe:
-            httpGet:
-              path: /healthcheck
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 10
-          readinessProbe:
-            httpGet:
-              path: /healthcheck
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 5
       volumes:
       - name: config-proxy
         configMap:

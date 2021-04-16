@@ -32,6 +32,7 @@ spec:
             - name: metrics
               containerPort: 9384
               protocol: TCP
+          {{- include "common-container" . | nindent 10 }}
           env:
           - name: SQS_QUEUE_NAME_PREFIX
             value: {{ .Values.sqsExporter.queueNamePrefix }}

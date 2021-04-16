@@ -9,30 +9,36 @@
 {{/*
 Lifecycle common preStop
 */}}
-{{- define "common-lifecycle" -}}
-{{- if .Values.comp.lifecycle -}}
-{{- if or .Values.comp.lifecycle.preStopCommand .Values.comp.lifecycle.preStopSleep -}}
+{{- define "common-container" -}}
+{{- with .Values.comp.securityContext }}
+securityContext:
+  {{- toYaml . | nindent 2 }}
+{{- end }}
+image: "{{ .Values.comp.image.repository }}:{{ .Values.comp.image.tag }}"
+imagePullPolicy: {{ .Values.comp.image.pullPolicy }}
+{{- with .Values.comp.lifecycle }}
+{{- if or .preStopCommand .preStopSleep }}
 lifecycle:
   preStop:
     exec:
-{{- if .Values.comp.lifecycle.preStopCommand }}
-      command: {{ .Values.comp.lifecycle.preStopCommand }}
-{{- else }}
-      command: ["/bin/sh","-c","sleep {{ .Values.comp.lifecycle.preStopSleep }};"]
-{{- end -}}
+  {{- if .preStopCommand }}
+      command: {{ .preStopCommand }}
+  {{- else }}
+      command: ["/bin/sh","-c","sleep {{ .preStopSleep }};"]
+  {{- end }}
 {{- end -}}
 {{- end -}}
 {{- if .Values.comp.livenessProbe -}}
 {{- if and .Values.comp.livenessProbe.enabled (or .Values.comp.livenessProbe.command .Values.comp.livenessProbe.path )}}
 livenessProbe:
-{{- if .Values.comp.livenessProbe.command }}
+  {{- if .Values.comp.livenessProbe.command }}
   exec:
     command: {{ .Values.comp.livenessProbe.command }}
-{{- else }}
+  {{- else }}
   httpGet:
     path: {{ .Values.comp.livenessProbe.path }}
     port: {{ .Values.comp.containerPort }}
-{{- end }}
+  {{- end }}
   initialDelaySeconds: {{ .Values.comp.livenessProbe.initialDelaySeconds }}
   periodSeconds: {{ .Values.comp.livenessProbe.periodSeconds }}
   timeoutSeconds: {{ .Values.comp.livenessProbe.timeoutSeconds }}
@@ -43,14 +49,14 @@ livenessProbe:
 {{- if .Values.comp.readinessProbe -}}
 {{- if and .Values.comp.readinessProbe.enabled (or .Values.comp.readinessProbe.command .Values.comp.readinessProbe.path )}}
 readinessProbe:
-{{- if .Values.comp.readinessProbe.command }}
+  {{- if .Values.comp.readinessProbe.command }}
   exec:
     command: {{ .Values.comp.readinessProbe.command }}
-{{- else }}
+  {{- else }}
   httpGet:
     path: {{ .Values.comp.readinessProbe.path }}
     port: {{ .Values.comp.containerPort }}
-{{- end }}
+  {{- end }}
   initialDelaySeconds: {{ .Values.comp.readinessProbe.initialDelaySeconds }}
   periodSeconds: {{ .Values.comp.readinessProbe.periodSeconds }}
   timeoutSeconds: {{ .Values.comp.readinessProbe.timeoutSeconds }}
@@ -58,25 +64,51 @@ readinessProbe:
   failureThreshold: {{ .Values.comp.readinessProbe.failureThreshold }}
 {{- end -}}
 {{- end -}}
+{{- with .Values.comp.resources }}
+resources:
+  {{- toYaml . | nindent 2 }}
+{{- end }}
 {{- end -}}
 
-{{- define "common-spec" -}}
-{{- if .Values.comp.terminationGracePeriodSeconds -}}
-terminationGracePeriodSeconds: {{ .Values.comp.terminationGracePeriodSeconds }}
+
+{{- define "common-deployment-spec" -}}
+{{- with .Values.comp.terminationGracePeriodSeconds }}
+terminationGracePeriodSeconds: {{ . }}
 {{- end -}}
+{{- with .Values.comp.imagePullSecrets }}
+imagePullSecrets:
+{{- toYaml . | nindent 2 }}
+{{- end }}
+{{- with .Values.comp.podSecurityContext }}
+securityContext:
+{{- toYaml . | nindent 2 }}
+{{- end }}
+{{- with .Values.comp.nodeSelector }}
+nodeSelector:
+{{- toYaml . | nindent 2 }}
+{{- end }}
+{{- with .Values.comp.affinity }}
+affinity:
+{{- toYaml . | nindent 2 }}
+{{- end }}
+{{- with .Values.comp.tolerations }}
+tolerations:
+{{- toYaml . | nindent 2 }}
+{{- end }}
 {{- end -}}
 
-{{- define "common-containers" -}}
+
+{{- define "common-deployment-sidecars" -}}
 {{- include "common-dogstatsd-sidecar" . }}
-{{- include "common-proxy-container" . }}
+{{- include "common-proxy-sidecar" . }}
 {{- end -}}
 
-{{- define "common-envs" -}}
+{{- define "common-container-envs" -}}
 {{ include "common-infra-envs" . }}
 {{ include "common-dogstatsd-envs" . }}
 {{- end -}}
 
-{{- define "common-volumes" -}}
+{{- define "common-deployment-volumes" -}}
 {{- include "common-proxy-volumes" . }}
 {{- end -}}
 

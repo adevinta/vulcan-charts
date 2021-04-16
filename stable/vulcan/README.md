@@ -256,22 +256,8 @@ A Helm chart for deploying Vulcan
 | persistence.image.pullPolicy | string | `"Always"` |  |
 | persistence.waitfordb.image.repository | string | `"postgres"` |  |
 | persistence.waitfordb.image.tag | string | `"9.6-alpine"` |  |
-| persistence.livenessProbe.<<.enabled | bool | `true` |  |
-| persistence.livenessProbe.<<.path | string | `nil` |  |
-| persistence.livenessProbe.<<.initialDelaySeconds | int | `5` |  |
-| persistence.livenessProbe.<<.periodSeconds | int | `10` |  |
-| persistence.livenessProbe.<<.timeoutSeconds | int | `3` |  |
-| persistence.livenessProbe.<<.successThreshold | int | `1` |  |
-| persistence.livenessProbe.<<.failureThreshold | int | `10` |  |
-| persistence.livenessProbe.path | string | `"/status"` |  |
-| persistence.readinessProbe.<<.enabled | bool | `true` |  |
-| persistence.readinessProbe.<<.path | string | `nil` |  |
-| persistence.readinessProbe.<<.initialDelaySeconds | int | `5` |  |
-| persistence.readinessProbe.<<.periodSeconds | int | `10` |  |
-| persistence.readinessProbe.<<.timeoutSeconds | int | `3` |  |
-| persistence.readinessProbe.<<.successThreshold | int | `1` |  |
-| persistence.readinessProbe.<<.failureThreshold | int | `5` |  |
-| persistence.readinessProbe.path | string | `"/status"` |  |
+| persistence.livenessProbe | object | `{"<<":{"enabled":true,"failureThreshold":10,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"path":"/status"}` | Liveness configs |
+| persistence.readinessProbe | object | `{"<<":{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"path":"/status"}` | Readyness configs |
 | persistence.infra.s3 | bool | `true` |  |
 | persistence.infra.sns | bool | `true` |  |
 | persistence.infra.sqs | bool | `true` |  |

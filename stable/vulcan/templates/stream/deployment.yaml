@@ -26,24 +26,10 @@ spec:
           {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-    {{- include "common-spec" . | nindent 6 }}
-    {{- with .Values.comp.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-    {{- end }}
-    {{- with .Values.comp.podSecurityContext }}
-      securityContext:
-        {{- toYaml . | nindent 8 }}
-    {{- end }}
       containers:
-        {{- include "common-containers" . | nindent 8}}
+        {{- include "common-deployment-sidecars" . | nindent 8 }}
         - name: {{ .Values.comp.name }}
-          {{- with .Values.comp.securityContext }}
-          securityContext:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-          image: "{{ .Values.comp.image.repository }}:{{ .Values.comp.image.tag }}"
-          imagePullPolicy: {{ .Values.comp.image.pullPolicy }}
+          {{- include "common-container" . | nindent 10 }}
           env:
           - name: PORT
             value: {{ .Values.comp.containerPort | quote }}
@@ -59,7 +45,7 @@ spec:
             value: {{ .Values.comp.conf.redis.db | quote }}
           - name: REDIS_TTL
             value: {{ .Values.comp.conf.redis.ttl | quote }}
-        {{- include "common-envs" . | nindent 10 }}
+        {{- include "common-container-envs" . | nindent 10 }}
         {{- range $name, $value := .Values.comp.extraEnv }}
           - name: {{ $name }}
             value: {{ $value | quote }}
@@ -71,23 +57,7 @@ spec:
             - name: {{ include "common-appPortName" . }}
               containerPort: {{ .Values.comp.containerPort }}
               protocol: TCP
-          {{- include "common-lifecycle" . | nindent 10 }}
-          {{- with .Values.comp.resources }}
-          resources:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
       volumes:
-      {{- include "common-volumes" . | nindent 6}}
-      {{- with .Values.comp.nodeSelector }}
-      nodeSelector:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-    {{- with .Values.comp.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-    {{- end }}
-    {{- with .Values.comp.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-    {{- end }}
+      {{- include "common-deployment-volumes" . | nindent 6}}
+    {{- include "common-deployment-spec" . | nindent 6 }}
 {{- end }}

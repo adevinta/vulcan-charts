@@ -119,12 +119,9 @@ insights:
   autoscaling:
     enabled: true
   conf:
-    proxies:
-    - name: private
-      prefix: ""
+    private:
       s3Bucket: s3-vulcan-insights
-    - name: public
-      prefix: /public
+    public:
       s3Bucket: s3-vulcan-public-insights
   imagePullSecrets:
   - name: pullsecretname

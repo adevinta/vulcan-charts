@@ -524,9 +524,6 @@ spec:
         
         iam.amazonaws.com/role: arn:aws:iam::000000000000:role/APIRole
     spec:
-      
-      imagePullSecrets:
-        - name: pullsecretname
       initContainers:
         - name: waitfordb
           image: "postgres:9.6-alpine"
@@ -549,8 +546,31 @@ spec:
               name: dogstatsd
               protocol: UDP
         - name: api
+          
           image: "adevinta/vulcan-api:tag-api"
           imagePullPolicy: Always
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","sleep 30;"]
+          livenessProbe:
+            httpGet:
+              path: /api/v1/healthcheck
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 10
+          readinessProbe:
+            httpGet:
+              path: /api/v1/healthcheck
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 5
           env:
           - name: PORT
             value: "8080"
@@ -620,29 +640,11 @@ spec:
             - name: http
               containerPort: 8080
               protocol: TCP
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh","-c","sleep 30;"]
-          livenessProbe:
-            httpGet:
-              path: /api/v1/healthcheck
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 10
-          readinessProbe:
-            httpGet:
-              path: /api/v1/healthcheck
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 5
       volumes:
+      
+      
+      imagePullSecrets:
+        - name: pullsecretname
 ---
 # Source: vulcan/templates/crontinuous/deployment.yaml
 apiVersion: apps/v1
@@ -670,14 +672,34 @@ spec:
         
         iam.amazonaws.com/role: arn:aws:iam::000000000000:role/CrontinuousRole
     spec:
-      
-      imagePullSecrets:
-        - name: pullsecretname
       containers:
         
         - name: crontinuous
+          
           image: "adevinta/vulcan-crontinuous:tag-crontinuous"
           imagePullPolicy: Always
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","sleep 30;"]
+          livenessProbe:
+            httpGet:
+              path: /healthcheck
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 10
+          readinessProbe:
+            httpGet:
+              path: /healthcheck
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 5
           env:
           - name: PORT
             value: "8080"
@@ -706,29 +728,11 @@ spec:
             - name: http
               containerPort: 8080
               protocol: TCP
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh","-c","sleep 30;"]
-          livenessProbe:
-            httpGet:
-              path: /healthcheck
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 10
-          readinessProbe:
-            httpGet:
-              path: /healthcheck
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 5
       volumes:
+      
+      
+      imagePullSecrets:
+        - name: pullsecretname
 ---
 # Source: vulcan/templates/insights/deployment.yaml
 apiVersion: apps/v1
@@ -757,14 +761,34 @@ spec:
         prometheus.io/port: '9101'
         iam.amazonaws.com/role: arn:aws:iam::000000000000:role/InsightsRole
     spec:
-      
-      imagePullSecrets:
-        - name: pullsecretname
       containers:
         
         - name: "insights-private"
+          
           image: "pottava/s3-proxy:2.0"
           imagePullPolicy: Always
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","sleep 30;"]
+          livenessProbe:
+            httpGet:
+              path: /healthcheck
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 10
+          readinessProbe:
+            httpGet:
+              path: /healthcheck
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 5
           env:
             - name: AWS_REGION
               value: "eu-west-1"
@@ -782,6 +806,10 @@ spec:
             - name: private
               containerPort: 8080
               protocol: TCP
+        - name: "insights-public"
+          
+          image: "pottava/s3-proxy:2.0"
+          imagePullPolicy: Always
           lifecycle:
             preStop:
               exec:
@@ -804,9 +832,6 @@ spec:
             timeoutSeconds: 3
             successThreshold: 1
             failureThreshold: 5
-        - name: "insights-public"
-          image: "pottava/s3-proxy:2.0"
-          imagePullPolicy: Always
           env:
             - name: AWS_REGION
               value: "eu-west-1"
@@ -821,31 +846,9 @@ spec:
             - name: APP_PORT
               value: "8081"
           ports:
-            - name: public
+            - name: private
               containerPort: 8081
               protocol: TCP
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh","-c","sleep 30;"]
-          livenessProbe:
-            httpGet:
-              path: /healthcheck
-              port: 8081
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 10
-          readinessProbe:
-            httpGet:
-              path: /healthcheck
-              port: 8081
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 5
       volumes:
 ---
 # Source: vulcan/templates/metrics/deployment.yaml
@@ -873,9 +876,6 @@ spec:
         
         iam.amazonaws.com/role: arn:aws:iam::000000000000:role/MetricsRole
     spec:
-      
-      imagePullSecrets:
-        - name: pullsecretname
       containers:
         
         - name: dogstatsd
@@ -888,8 +888,13 @@ spec:
               name: dogstatsd
               protocol: UDP
         - name: metrics
+          
           image: "containers.mpi-internal.com/spt-security/vulcan-metrics:tag-metrics"
           imagePullPolicy: Always
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","sleep 30;"]
           env:
           - name: LOG_LEVEL
             value: "warn"
@@ -931,11 +936,11 @@ spec:
               name: myrelease-vulcan-metrics
           - secretRef:
               name: myrelease-vulcan-redis
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh","-c","sleep 30;"]
       volumes:
+      
+      
+      imagePullSecrets:
+        - name: pullsecretname
 ---
 # Source: vulcan/templates/persistence/deployment.yaml
 apiVersion: apps/v1
@@ -963,9 +968,6 @@ spec:
         
         iam.amazonaws.com/role: arn:aws:iam::000000000000:role/PersistenceRole
     spec:
-      
-      imagePullSecrets:
-        - name: pullsecretname
       initContainers:
         - name: waitfordb
           image: "postgres:9.6-alpine"
@@ -988,8 +990,31 @@ spec:
               name: dogstatsd
               protocol: UDP
         - name: persistence
+          
           image: "adevinta/vulcan-persistence:tag-persistence"
           imagePullPolicy: Always
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","sleep 30;"]
+          livenessProbe:
+            httpGet:
+              path: /status
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 10
+          readinessProbe:
+            httpGet:
+              path: /status
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 5
           env:
           - name: PORT
             value: "8080"
@@ -1023,29 +1048,11 @@ spec:
             - name: http
               containerPort: 8080
               protocol: TCP
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh","-c","sleep 30;"]
-          livenessProbe:
-            httpGet:
-              path: /status
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 10
-          readinessProbe:
-            httpGet:
-              path: /status
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 5
       volumes:
+      
+      
+      imagePullSecrets:
+        - name: pullsecretname
 ---
 # Source: vulcan/templates/redis/deployment.yaml
 apiVersion: apps/v1
@@ -1110,9 +1117,6 @@ spec:
         
         iam.amazonaws.com/role: arn:aws:iam::000000000000:role/ReportsGeneratorRole
     spec:
-      
-      imagePullSecrets:
-        - name: pullsecretname
       initContainers:
         - name: waitfordb
           image: "postgres:9.6-alpine"
@@ -1142,8 +1146,31 @@ spec:
                       cpu: 100m
                       memory: 128Mi
         - name: reportsgenerator
+          
           image: "adevinta/vulcan-reports-generator:tag-reports"
           imagePullPolicy: Always
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","sleep 30;"]
+          livenessProbe:
+            httpGet:
+              path: /healthcheck
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 10
+          readinessProbe:
+            httpGet:
+              path: /healthcheck
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 5
           env:
           - name: PORT
             value: "8080"
@@ -1217,29 +1244,11 @@ spec:
             - name: http
               containerPort: 8080
               protocol: TCP
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh","-c","sleep 30;"]
-          livenessProbe:
-            httpGet:
-              path: /healthcheck
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 10
-          readinessProbe:
-            httpGet:
-              path: /healthcheck
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 5
       volumes:
+      
+      
+      imagePullSecrets:
+        - name: pullsecretname
 ---
 # Source: vulcan/templates/results/deployment.yaml
 apiVersion: apps/v1
@@ -1266,9 +1275,6 @@ spec:
         
         iam.amazonaws.com/role: arn:aws:iam::000000000000:role/ResultsRole
     spec:
-      
-      imagePullSecrets:
-        - name: pullsecretname
       containers:
         
         - name: dogstatsd
@@ -1281,8 +1287,31 @@ spec:
               name: dogstatsd
               protocol: UDP
         - name: results
+          
           image: "adevinta/vulcan-results:tag-results"
           imagePullPolicy: Always
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","sleep 30;"]
+          livenessProbe:
+            httpGet:
+              path: /healthcheck
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 10
+          readinessProbe:
+            httpGet:
+              path: /healthcheck
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 5
           env:
           - name: PORT
             value: "8080"
@@ -1307,29 +1336,11 @@ spec:
             - name: http
               containerPort: 8080
               protocol: TCP
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh","-c","sleep 30;"]
-          livenessProbe:
-            httpGet:
-              path: /healthcheck
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 10
-          readinessProbe:
-            httpGet:
-              path: /healthcheck
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 5
       volumes:
+      
+      
+      imagePullSecrets:
+        - name: pullsecretname
 ---
 # Source: vulcan/templates/scanengine/deployment.yaml
 apiVersion: apps/v1
@@ -1357,9 +1368,6 @@ spec:
         
         iam.amazonaws.com/role: arn:aws:iam::000000000000:role/ScanEngineRole
     spec:
-      
-      imagePullSecrets:
-        - name: pullsecretname
       initContainers:
         - name: waitfordb
           image: "postgres:9.6-alpine"
@@ -1382,8 +1390,31 @@ spec:
               name: dogstatsd
               protocol: UDP
         - name: scanengine
+          
           image: "adevinta/vulcan-scan-engine:tag-scanengine"
           imagePullPolicy: Always
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","sleep 30;"]
+          livenessProbe:
+            httpGet:
+              path: /v1/healthcheck
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 10
+          readinessProbe:
+            httpGet:
+              path: /v1/healthcheck
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 5
           env:
           - name: PORT
             value: "8080"
@@ -1435,29 +1466,11 @@ spec:
             - name: http
               containerPort: 8080
               protocol: TCP
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh","-c","sleep 30;"]
-          livenessProbe:
-            httpGet:
-              path: /v1/healthcheck
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 10
-          readinessProbe:
-            httpGet:
-              path: /v1/healthcheck
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 5
       volumes:
+      
+      
+      imagePullSecrets:
+        - name: pullsecretname
 ---
 # Source: vulcan/templates/sqsexporter/sqs-exporter.yaml
 apiVersion: apps/v1
@@ -1495,6 +1508,31 @@ spec:
             - name: metrics
               containerPort: 9384
               protocol: TCP
+          
+          image: "adevinta/vulcan-stream:tag-stream"
+          imagePullPolicy: Always
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","sleep 30;"]
+          livenessProbe:
+            httpGet:
+              path: /status
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 10
+          readinessProbe:
+            httpGet:
+              path: /status
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 5
           env:
           - name: SQS_QUEUE_NAME_PREFIX
             value: VulcanK8S
@@ -1525,9 +1563,6 @@ spec:
         
         iam.amazonaws.com/role: arn:aws:iam::000000000000:role/StreamRole
     spec:
-      
-      imagePullSecrets:
-        - name: pullsecretname
       containers:
         
         - name: dogstatsd
@@ -1540,8 +1575,31 @@ spec:
               name: dogstatsd
               protocol: UDP
         - name: stream
+          
           image: "adevinta/vulcan-stream:tag-stream"
           imagePullPolicy: Always
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","sleep 30;"]
+          livenessProbe:
+            httpGet:
+              path: /status
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 10
+          readinessProbe:
+            httpGet:
+              path: /status
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 5
           env:
           - name: PORT
             value: "8080"
@@ -1571,29 +1629,11 @@ spec:
             - name: http
               containerPort: 8080
               protocol: TCP
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh","-c","sleep 30;"]
-          livenessProbe:
-            httpGet:
-              path: /status
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 10
-          readinessProbe:
-            httpGet:
-              path: /status
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 5
       volumes:
+      
+      
+      imagePullSecrets:
+        - name: pullsecretname
 ---
 # Source: vulcan/templates/ui/deployment.yaml
 apiVersion: apps/v1
@@ -1619,14 +1659,34 @@ spec:
       annotations:
         
     spec:
-      
-      imagePullSecrets:
-        - name: pullsecretname
       containers:
         
         - name: ui
+          
           image: "adevinta/vulcan-ui:tag-vulcan-ui"
           imagePullPolicy: Always
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","sleep 30;"]
+          livenessProbe:
+            httpGet:
+              path: /index.html
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 10
+          readinessProbe:
+            httpGet:
+              path: /index.html
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 5
           env:
           - name: PORT
             value: "8080"
@@ -1650,29 +1710,11 @@ spec:
             - name: http
               containerPort: 8080
               protocol: TCP
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh","-c","sleep 30;"]
-          livenessProbe:
-            httpGet:
-              path: /index.html
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 10
-          readinessProbe:
-            httpGet:
-              path: /index.html
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 5
       volumes:
+      
+      
+      imagePullSecrets:
+        - name: pullsecretname
 ---
 # Source: vulcan/templates/vulndb/deployment.yaml
 apiVersion: apps/v1
@@ -1700,9 +1742,6 @@ spec:
         
         iam.amazonaws.com/role: arn:aws:iam::000000000000:role/VulnDBRole
     spec:
-      
-      imagePullSecrets:
-        - name: pullsecretname
       initContainers:
         - name: waitfordb
           image: "postgres:9.6-alpine"
@@ -1716,8 +1755,13 @@ spec:
       containers:
         
         - name: vulndb
+          
           image: "adevinta/vulnerability-db:tag-vulndb"
           imagePullPolicy: Always
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","sleep 30;"]
           env:
           - name: PG_HOST
             value: "vulnerabilitydb.postgres.host"
@@ -1748,11 +1792,11 @@ spec:
           envFrom:
           - secretRef:
               name: myrelease-vulcan-vulndb
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh","-c","sleep 30;"]
       volumes:
+      
+      
+      imagePullSecrets:
+        - name: pullsecretname
 ---
 # Source: vulcan/templates/vulndbapi/deployment.yaml
 apiVersion: apps/v1
@@ -1779,9 +1823,6 @@ spec:
         checksum/secrets: 188fcdf32f208c9471337b9765c5be5148ec1ecde7348f0c8fcc7a49b4af5521
         
     spec:
-      
-      imagePullSecrets:
-        - name: pullsecretname
       initContainers:
         - name: waitfordb
           image: "postgres:9.6-alpine"
@@ -1795,8 +1836,31 @@ spec:
       containers:
         
         - name: vulndbapi
+          
           image: "adevinta/vulnerability-db-api:tag-vulndb-api"
           imagePullPolicy: Always
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","sleep 30;"]
+          livenessProbe:
+            httpGet:
+              path: /healthcheck
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 10
+          readinessProbe:
+            httpGet:
+              path: /healthcheck
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 5
           env:
           - name: PORT
             value: "8080"
@@ -1823,29 +1887,11 @@ spec:
             - name: http
               containerPort: 8080
               protocol: TCP
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh","-c","sleep 30;"]
-          livenessProbe:
-            httpGet:
-              path: /healthcheck
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 10
-          readinessProbe:
-            httpGet:
-              path: /healthcheck
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 5
       volumes:
+      
+      
+      imagePullSecrets:
+        - name: pullsecretname
 ---
 # Source: vulcan/templates/api/hpa.yaml
 apiVersion: autoscaling/v1

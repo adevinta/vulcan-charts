@@ -66,7 +66,7 @@ data:
 {{- end -}}
 {{- end -}}
 
-{{- define "common-proxy-container" -}}
+{{- define "common-proxy-sidecar" -}}
 {{- if .Values.comp.proxy.enabled }}
 - name: proxy
   image: "{{ .Values.comp.proxy.image.repository }}:{{ .Values.comp.proxy.image.tag }}"

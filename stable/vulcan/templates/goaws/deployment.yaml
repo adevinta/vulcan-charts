@@ -22,14 +22,6 @@ spec:
           {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-    {{- with .Values.comp.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-    {{- end }}
-    {{- with .Values.comp.podSecurityContext }}
-      securityContext:
-        {{- toYaml . | nindent 8 }}
-    {{- end }}
       containers:
       - name: {{ .Values.comp.name }}
         {{- with .Values.comp.securityContext }}
@@ -42,10 +34,6 @@ spec:
           - name: http
             containerPort: {{ .Values.comp.containerPort }}
             protocol: TCP
-          {{- with .Values.comp.resources }}
-          resources:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
         volumeMounts:
         {{- if .Values.config }}
         - name: goaws-config
@@ -57,16 +45,5 @@ spec:
         configMap:
           name: {{ template "goaws.fullname" . }}
       {{- end }}
-      {{- with .Values.comp.nodeSelector }}
-      nodeSelector:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-    {{- with .Values.comp.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-    {{- end }}
-    {{- with .Values.comp.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-    {{- end }}
+    {{- include "common-deployment-spec" . | nindent 6 }}
 {{- end }}

@@ -25,97 +25,48 @@ spec:
           {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-    {{- include "common-spec" . | nindent 6 }}
-    {{- with .Values.comp.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-    {{- end }}
-    {{- with .Values.comp.podSecurityContext }}
-      securityContext:
-        {{- toYaml . | nindent 8 }}
-    {{- end }}
       containers:
-        {{- include "common-containers" . | nindent 8}}
-      {{- $dot := . }}
-      {{- range $i, $p := .Values.comp.conf.proxies }}
-        {{- $port := add $dot.Values.comp.containerPort $i }}
-        - name: "insights-{{ $p.name }}"
-          {{- with $dot.Values.comp.securityContext }}
-          securityContext:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-          image: "{{ $dot.Values.comp.image.repository }}:{{ $dot.Values.comp.image.tag }}"
-          imagePullPolicy: {{ $dot.Values.comp.image.pullPolicy }}
+        {{- include "common-deployment-sidecars" . | nindent 8 }}
+        - name: "insights-private"
+          {{- include "common-container" . | nindent 10 }}
           env:
             - name: AWS_REGION
-              value: {{ $dot.Values.comp.conf.region | default (include "region" $dot ) | quote }}
+              value: {{ .Values.comp.conf.region | default (include "region" . ) | quote }}
             - name: ACCESS_LOG
-              value: {{ $dot.Values.comp.conf.log | quote }}
+              value: {{ .Values.comp.conf.log | quote }}
             - name: AWS_S3_BUCKET
-              value: {{ $p.s3Bucket | quote }}
+              value: {{ .Values.comp.conf.private.s3Bucket | quote }}
             - name: STRIP_PATH
-              value: {{ $p.prefix | quote }}
+              value: {{ .Values.comp.conf.private.prefix | quote }}
             - name: HEALTHCHECK_PATH
               value: "/healthcheck"
             - name: APP_PORT
-              value: {{ $port | quote }}
-            {{- if $dot.Values.minio.enabled }}
-            - name: AWS_API_ENDPOINT
-              value: {{ include "minio.url" $dot | quote }}
-            - name: AWS_ACCESS_KEY_ID
-              valueFrom:
-                secretKeyRef:
-                  name: "{{ printf "%s-minio" $dot.Release.Name  }}"
-                  key: access-key
-            - name: AWS_SECRET_ACCESS_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: "{{ printf "%s-minio" $dot.Release.Name  }}"
-                  key: secret-key
-            {{- end }}
+              value: {{ .Values.comp.conf.private.port | quote }}
           ports:
-            - name: {{ $p.name }}
-              containerPort: {{ $port }}
+            - name: private
+              containerPort: {{ .Values.comp.conf.private.port }}
               protocol: TCP
-          {{- if or $dot.Values.comp.lifecycle.preStopCommand $dot.Values.comp.lifecycle.preStopSleep }}
-          lifecycle:
-            preStop:
-              exec:
-          {{- if $dot.Values.comp.lifecycle.preStopCommand }}
-                command: {{ $dot.Values.comp.lifecycle.preStopCommand }}
-          {{- else }}
-                command: ["/bin/sh","-c","sleep {{ $dot.Values.comp.lifecycle.preStopSleep }};"]
-          {{- end -}}
-          {{- end -}}
-          {{- if and $dot.Values.comp.readinessProbe.enabled $dot.Values.comp.readinessProbe.path }}
-          livenessProbe:
-            httpGet:
-              path: {{ $dot.Values.comp.livenessProbe.path }}
-              port: {{ $port }}
-            initialDelaySeconds: {{ $dot.Values.comp.livenessProbe.initialDelaySeconds }}
-            periodSeconds: {{ $dot.Values.comp.livenessProbe.periodSeconds }}
-            timeoutSeconds: {{ $dot.Values.comp.livenessProbe.timeoutSeconds }}
-            successThreshold: {{ $dot.Values.comp.livenessProbe.successThreshold }}
-            failureThreshold: {{ $dot.Values.comp.livenessProbe.failureThreshold }}
-          {{- end }}
-          {{- if and $dot.Values.comp.readinessProbe.enabled  $dot.Values.comp.readinessProbe.path }}
-          readinessProbe:
-            httpGet:
-              path: {{ $dot.Values.comp.readinessProbe.path }}
-              port: {{ $port }}
-            initialDelaySeconds: {{ $dot.Values.comp.readinessProbe.initialDelaySeconds }}
-            periodSeconds: {{ $dot.Values.comp.readinessProbe.periodSeconds }}
-            timeoutSeconds: {{ $dot.Values.comp.readinessProbe.timeoutSeconds }}
-            successThreshold: {{ $dot.Values.comp.readinessProbe.successThreshold }}
-            failureThreshold: {{ $dot.Values.comp.readinessProbe.failureThreshold }}
-          {{- end }}
-          {{- with $dot.Values.comp.resources }}
-          resources:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-      {{- end }}
+        - name: "insights-public"
+          {{- include "common-container" . | nindent 10 }}
+          env:
+            - name: AWS_REGION
+              value: {{ .Values.comp.conf.region | default (include "region" . ) | quote }}
+            - name: ACCESS_LOG
+              value: {{ .Values.comp.conf.log | quote }}
+            - name: AWS_S3_BUCKET
+              value: {{ .Values.comp.conf.public.s3Bucket | quote }}
+            - name: STRIP_PATH
+              value: {{ .Values.comp.conf.public.prefix | quote }}
+            - name: HEALTHCHECK_PATH
+              value: "/healthcheck"
+            - name: APP_PORT
+              value: {{ .Values.comp.conf.public.port | quote }}
+          ports:
+            - name: private
+              containerPort: {{ .Values.comp.conf.public.port }}
+              protocol: TCP
       volumes:
-      {{- include "common-volumes" . | nindent 6}}
+      {{- include "common-deployment-volumes" . | nindent 6}}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
