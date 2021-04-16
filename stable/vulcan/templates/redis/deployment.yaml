@@ -30,7 +30,6 @@ spec:
           {{- end }}
         image: "{{ .Values.comp.image.repository }}:{{ .Values.comp.image.tag }}"
         imagePullPolicy: {{ .Values.comp.image.pullPolicy }}
-        args: ["--requirepass", "$(REDIS_PASSWORD)"]
         envFrom:
           - secretRef:
               name: {{ include "redis.fullname" . }}
