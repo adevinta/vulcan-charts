@@ -2413,30 +2413,8 @@ spec:
               containerPort: 9384
               protocol: TCP
           
-          image: "adevinta/vulcan-stream:latest"
-          imagePullPolicy: Always
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh","-c","sleep 30;"]
-          livenessProbe:
-            httpGet:
-              path: /status
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 10
-          readinessProbe:
-            httpGet:
-              path: /status
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 3
-            successThreshold: 1
-            failureThreshold: 5
+          image: "jesusfcr/sqs-exporter:custom-endpoint"
+          imagePullPolicy: 
           env:
           - name: SQS_QUEUE_NAME_PREFIX
             value: VulcanK8S
