@@ -27,6 +27,7 @@ A Helm chart for deploying Vulcan
 | defaults.dogstatsd.enabled | bool | `true` |  |
 | defaults.comp.replicaCount | string | `nil` |  |
 | defaults.comp.image.pullPolicy | string | `"Always"` |  |
+| defaults.comp.extraEnv | object | `{}` | custom env variables |
 | defaults.comp.proxy.enabled | bool | `true` |  |
 | defaults.comp.proxy.image.repository | string | `"haproxy"` |  |
 | defaults.comp.proxy.image.tag | string | `"2.2-alpine"` |  |
@@ -95,6 +96,7 @@ A Helm chart for deploying Vulcan
 | goaws.name | string | `"goaws"` |  |
 | goaws.<<.replicaCount | string | `nil` |  |
 | goaws.<<.image.pullPolicy | string | `"Always"` |  |
+| goaws.<<.extraEnv | object | `{}` | custom env variables |
 | goaws.<<.proxy.enabled | bool | `true` |  |
 | goaws.<<.proxy.image.repository | string | `"haproxy"` |  |
 | goaws.<<.proxy.image.tag | string | `"2.2-alpine"` |  |
@@ -169,6 +171,7 @@ A Helm chart for deploying Vulcan
 | results.name | string | `"results"` |  |
 | results.<<.replicaCount | string | `nil` |  |
 | results.<<.image.pullPolicy | string | `"Always"` |  |
+| results.<<.extraEnv | object | `{}` | custom env variables |
 | results.<<.proxy.enabled | bool | `true` |  |
 | results.<<.proxy.image.repository | string | `"haproxy"` |  |
 | results.<<.proxy.image.tag | string | `"2.2-alpine"` |  |
@@ -254,6 +257,7 @@ A Helm chart for deploying Vulcan
 | persistence.name | string | `"persistence"` |  |
 | persistence.<<.replicaCount | string | `nil` |  |
 | persistence.<<.image.pullPolicy | string | `"Always"` |  |
+| persistence.<<.extraEnv | object | `{}` | custom env variables |
 | persistence.<<.proxy.enabled | bool | `true` |  |
 | persistence.<<.proxy.image.repository | string | `"haproxy"` |  |
 | persistence.<<.proxy.image.tag | string | `"2.2-alpine"` |  |
@@ -345,6 +349,7 @@ A Helm chart for deploying Vulcan
 | stream.name | string | `"stream"` |  |
 | stream.<<.replicaCount | string | `nil` |  |
 | stream.<<.image.pullPolicy | string | `"Always"` |  |
+| stream.<<.extraEnv | object | `{}` | custom env variables |
 | stream.<<.proxy.enabled | bool | `true` |  |
 | stream.<<.proxy.image.repository | string | `"haproxy"` |  |
 | stream.<<.proxy.image.tag | string | `"2.2-alpine"` |  |
@@ -433,6 +438,7 @@ A Helm chart for deploying Vulcan
 | api.name | string | `"api"` |  |
 | api.<<.replicaCount | string | `nil` |  |
 | api.<<.image.pullPolicy | string | `"Always"` |  |
+| api.<<.extraEnv | object | `{}` | custom env variables |
 | api.<<.proxy.enabled | bool | `true` |  |
 | api.<<.proxy.image.repository | string | `"haproxy"` |  |
 | api.<<.proxy.image.tag | string | `"2.2-alpine"` |  |
@@ -551,6 +557,7 @@ A Helm chart for deploying Vulcan
 | crontinuous.name | string | `"crontinuous"` |  |
 | crontinuous.<<.replicaCount | string | `nil` |  |
 | crontinuous.<<.image.pullPolicy | string | `"Always"` |  |
+| crontinuous.<<.extraEnv | object | `{}` | custom env variables |
 | crontinuous.<<.proxy.enabled | bool | `true` |  |
 | crontinuous.<<.proxy.image.repository | string | `"haproxy"` |  |
 | crontinuous.<<.proxy.image.tag | string | `"2.2-alpine"` |  |
@@ -637,6 +644,7 @@ A Helm chart for deploying Vulcan
 | scanengine.name | string | `"scanengine"` |  |
 | scanengine.<<.replicaCount | string | `nil` |  |
 | scanengine.<<.image.pullPolicy | string | `"Always"` |  |
+| scanengine.<<.extraEnv | object | `{}` | custom env variables |
 | scanengine.<<.proxy.enabled | bool | `true` |  |
 | scanengine.<<.proxy.image.repository | string | `"haproxy"` |  |
 | scanengine.<<.proxy.image.tag | string | `"2.2-alpine"` |  |
@@ -736,6 +744,7 @@ A Helm chart for deploying Vulcan
 | ui.name | string | `"ui"` |  |
 | ui.<<.replicaCount | string | `nil` |  |
 | ui.<<.image.pullPolicy | string | `"Always"` |  |
+| ui.<<.extraEnv | object | `{}` | custom env variables |
 | ui.<<.proxy.enabled | bool | `true` |  |
 | ui.<<.proxy.image.repository | string | `"haproxy"` |  |
 | ui.<<.proxy.image.tag | string | `"2.2-alpine"` |  |
@@ -820,6 +829,7 @@ A Helm chart for deploying Vulcan
 | insights.name | string | `"insights"` |  |
 | insights.<<.replicaCount | string | `nil` |  |
 | insights.<<.image.pullPolicy | string | `"Always"` |  |
+| insights.<<.extraEnv | object | `{}` | custom env variables |
 | insights.<<.proxy.enabled | bool | `true` |  |
 | insights.<<.proxy.image.repository | string | `"haproxy"` |  |
 | insights.<<.proxy.image.tag | string | `"2.2-alpine"` |  |
@@ -920,6 +930,7 @@ A Helm chart for deploying Vulcan
 | reportsgenerator.name | string | `"reportsgenerator"` |  |
 | reportsgenerator.<<.replicaCount | string | `nil` |  |
 | reportsgenerator.<<.image.pullPolicy | string | `"Always"` |  |
+| reportsgenerator.<<.extraEnv | object | `{}` | custom env variables |
 | reportsgenerator.<<.proxy.enabled | bool | `true` |  |
 | reportsgenerator.<<.proxy.image.repository | string | `"haproxy"` |  |
 | reportsgenerator.<<.proxy.image.tag | string | `"2.2-alpine"` |  |
@@ -1030,6 +1041,7 @@ A Helm chart for deploying Vulcan
 | redis.name | string | `"redis"` |  |
 | redis.<<.replicaCount | string | `nil` |  |
 | redis.<<.image.pullPolicy | string | `"Always"` |  |
+| redis.<<.extraEnv | object | `{}` | custom env variables |
 | redis.<<.proxy.enabled | bool | `true` |  |
 | redis.<<.proxy.image.repository | string | `"haproxy"` |  |
 | redis.<<.proxy.image.tag | string | `"2.2-alpine"` |  |
@@ -1097,6 +1109,7 @@ A Helm chart for deploying Vulcan
 | metrics.name | string | `"metrics"` |  |
 | metrics.<<.replicaCount | string | `nil` |  |
 | metrics.<<.image.pullPolicy | string | `"Always"` |  |
+| metrics.<<.extraEnv | object | `{}` | custom env variables |
 | metrics.<<.proxy.enabled | bool | `true` |  |
 | metrics.<<.proxy.image.repository | string | `"haproxy"` |  |
 | metrics.<<.proxy.image.tag | string | `"2.2-alpine"` |  |
@@ -1180,6 +1193,7 @@ A Helm chart for deploying Vulcan
 | vulndbapi.name | string | `"vulndbapi"` |  |
 | vulndbapi.<<.replicaCount | string | `nil` |  |
 | vulndbapi.<<.image.pullPolicy | string | `"Always"` |  |
+| vulndbapi.<<.extraEnv | object | `{}` | custom env variables |
 | vulndbapi.<<.proxy.enabled | bool | `true` |  |
 | vulndbapi.<<.proxy.image.repository | string | `"haproxy"` |  |
 | vulndbapi.<<.proxy.image.tag | string | `"2.2-alpine"` |  |
@@ -1263,6 +1277,7 @@ A Helm chart for deploying Vulcan
 | vulndb.name | string | `"vulndb"` |  |
 | vulndb.<<.replicaCount | string | `nil` |  |
 | vulndb.<<.image.pullPolicy | string | `"Always"` |  |
+| vulndb.<<.extraEnv | object | `{}` | custom env variables |
 | vulndb.<<.proxy.enabled | bool | `true` |  |
 | vulndb.<<.proxy.image.repository | string | `"haproxy"` |  |
 | vulndb.<<.proxy.image.tag | string | `"2.2-alpine"` |  |
