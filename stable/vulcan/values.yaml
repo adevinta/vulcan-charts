@@ -626,8 +626,8 @@ redis:
   <<: *comp
 
   image:
-    repository: redis
-    tag: 6.0-alpine
+    repository: bitnami/redis
+    tag: "6.0.12"
     pullPolicy: Always
 
   containerPort: 6379
