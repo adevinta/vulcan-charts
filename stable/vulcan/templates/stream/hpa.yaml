@@ -1,1 +1,2 @@
-{{- include "comp-ingress" (dict "comp" .Values.stream "context" $) }}
+{{- $_ := (set .Values "comp" .Values.stream) -}}
+{{- include "comp-hpa" . }}

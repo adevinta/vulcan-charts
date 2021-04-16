@@ -1,1 +1,2 @@
-{{- include "comp-hpa" (dict "comp" .Values.vulndbapi "context" $) }}
+{{- $_ := (set .Values "comp" .Values.vulndbapi) -}}
+{{- include "comp-ingress" . }}

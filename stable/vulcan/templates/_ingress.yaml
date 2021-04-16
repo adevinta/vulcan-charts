@@ -2,10 +2,10 @@
 Override names
 */}}
 {{- define "comp-ingress" -}}
-{{- if and .comp.enabled .comp.ingress.enabled -}}
-{{- $fullName := printf "%s-%s" (include "vulcan.fullname" .context ) .comp.name -}}
-{{- $svcPort := .comp.service.port -}}
-{{- if semverCompare ">=1.14-0" .context.Capabilities.KubeVersion.GitVersion -}}
+{{- if and .Values.comp.enabled .Values.comp.ingress.enabled -}}
+{{- $fullName := printf "%s-%s" (include "vulcan.fullname" . ) .Values.comp.name -}}
+{{- $svcPort := .Values.comp.service.port -}}
+{{- if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
 apiVersion: networking.k8s.io/v1beta1
 {{- else -}}
 apiVersion: extensions/v1beta1
@@ -13,16 +13,16 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: {{ $fullName }}
-  labels: {{- include "vulcan.labels" .context | nindent 4 }}
-    app.kubernetes.io/name: {{ .comp.name }}
-  {{- with .comp.ingress.annotations }}
+  labels: {{- include "vulcan.labels" . | nindent 4 }}
+    app.kubernetes.io/name: {{ .Values.comp.name }}
+  {{- with .Values.comp.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  {{- if .comp.ingress.tls }}
+  {{- if .Values.comp.ingress.tls }}
   tls:
-    {{- range .comp.ingress.tls }}
+    {{- range .Values.comp.ingress.tls }}
     - hosts:
         {{- range .hosts }}
         - {{ . | quote }}
@@ -31,7 +31,7 @@ spec:
     {{- end }}
   {{- end }}
   rules:
-    {{- range .comp.ingress.hosts }}
+    {{- range .Values.comp.ingress.hosts }}
     - host: {{ .host | quote }}
       http:
         paths:

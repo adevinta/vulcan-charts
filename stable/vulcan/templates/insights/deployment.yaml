@@ -1,5 +1,5 @@
-{{- $c := (dict "comp" .Values.insights "context" $) -}}
-{{- if $c.comp.enabled }}
+{{- $_ := (set .Values "comp" .Values.insights) -}}
+{{- if .Values.comp.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -7,8 +7,8 @@ metadata:
   labels: {{- include "vulcan.labels" . | nindent 4 }}
     app.kubernetes.io/name: insights
 spec:
-  {{- if kindIs "int64" $c.comp.replicaCount }}
-  replicas: {{ $c.comp.replicaCount }}
+  {{- if kindIs "int64" .Values.comp.replicaCount }}
+  replicas: {{ .Values.comp.replicaCount }}
   {{- end }}
   selector:
     matchLabels: {{- include "vulcan.selectorLabels" . | nindent 6 }}
@@ -20,36 +20,37 @@ spec:
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/insights/config-proxy.yaml") . | sha256sum }}
         prometheus.io/scrape: 'true'
-        prometheus.io/port: '{{ $c.comp.proxy.metricsPort }}'
-        {{- with $c.comp.annotations }}
+        prometheus.io/port: '{{ .Values.comp.proxy.metricsPort }}'
+        {{- with .Values.comp.annotations }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-    {{- include "comp-common-spec" $c | nindent 6 }}
-    {{- with $c.comp.imagePullSecrets }}
+    {{- include "common-spec" . | nindent 6 }}
+    {{- with .Values.comp.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- with $c.comp.podSecurityContext }}
+    {{- with .Values.comp.podSecurityContext }}
       securityContext:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       containers:
-        {{- include "comp-common-containers" $c | nindent 8}}
-      {{- range $i, $p := $c.comp.conf.proxies }}
-        {{- $port := add $c.comp.containerPort $i }}
+        {{- include "common-containers" . | nindent 8}}
+      {{- $dot := . }}
+      {{- range $i, $p := .Values.comp.conf.proxies }}
+        {{- $port := add $dot.Values.comp.containerPort $i }}
         - name: "insights-{{ $p.name }}"
-          {{- with $c.comp.securityContext }}
+          {{- with $dot.Values.comp.securityContext }}
           securityContext:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          image: "{{ $c.comp.image.repository }}:{{ $c.comp.image.tag }}"
-          imagePullPolicy: {{ $c.comp.image.pullPolicy }}
+          image: "{{ $dot.Values.comp.image.repository }}:{{ $dot.Values.comp.image.tag }}"
+          imagePullPolicy: {{ $dot.Values.comp.image.pullPolicy }}
           env:
             - name: AWS_REGION
-              value: {{ $c.comp.conf.region | default (include "region" $c.context) | quote }}
+              value: {{ $dot.Values.comp.conf.region | default (include "region" $dot ) | quote }}
             - name: ACCESS_LOG
-              value: {{ $c.comp.conf.log | quote }}
+              value: {{ $dot.Values.comp.conf.log | quote }}
             - name: AWS_S3_BUCKET
               value: {{ $p.s3Bucket | quote }}
             - name: STRIP_PATH
@@ -58,72 +59,72 @@ spec:
               value: "/healthcheck"
             - name: APP_PORT
               value: {{ $port | quote }}
-            {{- if $c.context.Values.minio.enabled }}
+            {{- if $dot.Values.minio.enabled }}
             - name: AWS_API_ENDPOINT
-              value: {{ include "minio.url" $c.context | quote }}
+              value: {{ include "minio.url" $dot | quote }}
             - name: AWS_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef:
-                  name: "{{ printf "%s-minio" $c.context.Release.Name  }}"
+                  name: "{{ printf "%s-minio" $dot.Release.Name  }}"
                   key: access-key
             - name: AWS_SECRET_ACCESS_KEY
               valueFrom:
                 secretKeyRef:
-                  name: "{{ printf "%s-minio" $c.context.Release.Name  }}"
+                  name: "{{ printf "%s-minio" $dot.Release.Name  }}"
                   key: secret-key
             {{- end }}
           ports:
             - name: {{ $p.name }}
               containerPort: {{ $port }}
               protocol: TCP
-          {{- if or $c.comp.lifecycle.preStopCommand $c.comp.lifecycle.preStopSleep }}
+          {{- if or $dot.Values.comp.lifecycle.preStopCommand $dot.Values.comp.lifecycle.preStopSleep }}
           lifecycle:
             preStop:
               exec:
-          {{- if $c.comp.lifecycle.preStopCommand }}
-                command: {{ $c.comp.lifecycle.preStopCommand }}
+          {{- if $dot.Values.comp.lifecycle.preStopCommand }}
+                command: {{ $dot.Values.comp.lifecycle.preStopCommand }}
           {{- else }}
-                command: ["/bin/sh","-c","sleep {{ $c.comp.lifecycle.preStopSleep }};"]
+                command: ["/bin/sh","-c","sleep {{ $dot.Values.comp.lifecycle.preStopSleep }};"]
           {{- end -}}
           {{- end -}}
-          {{- if and $c.comp.readinessProbe.enabled $c.comp.readinessProbe.path }}
+          {{- if and $dot.Values.comp.readinessProbe.enabled $dot.Values.comp.readinessProbe.path }}
           livenessProbe:
             httpGet:
-              path: {{ $c.comp.livenessProbe.path }}
+              path: {{ $dot.Values.comp.livenessProbe.path }}
               port: {{ $port }}
-            initialDelaySeconds: {{ $c.comp.livenessProbe.initialDelaySeconds }}
-            periodSeconds: {{ $c.comp.livenessProbe.periodSeconds }}
-            timeoutSeconds: {{ $c.comp.livenessProbe.timeoutSeconds }}
-            successThreshold: {{ $c.comp.livenessProbe.successThreshold }}
-            failureThreshold: {{ $c.comp.livenessProbe.failureThreshold }}
+            initialDelaySeconds: {{ $dot.Values.comp.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ $dot.Values.comp.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ $dot.Values.comp.livenessProbe.timeoutSeconds }}
+            successThreshold: {{ $dot.Values.comp.livenessProbe.successThreshold }}
+            failureThreshold: {{ $dot.Values.comp.livenessProbe.failureThreshold }}
           {{- end }}
-          {{- if and $c.comp.readinessProbe.enabled  $c.comp.readinessProbe.path }}
+          {{- if and $dot.Values.comp.readinessProbe.enabled  $dot.Values.comp.readinessProbe.path }}
           readinessProbe:
             httpGet:
-              path: {{ $c.comp.readinessProbe.path }}
+              path: {{ $dot.Values.comp.readinessProbe.path }}
               port: {{ $port }}
-            initialDelaySeconds: {{ $c.comp.readinessProbe.initialDelaySeconds }}
-            periodSeconds: {{ $c.comp.readinessProbe.periodSeconds }}
-            timeoutSeconds: {{ $c.comp.readinessProbe.timeoutSeconds }}
-            successThreshold: {{ $c.comp.readinessProbe.successThreshold }}
-            failureThreshold: {{ $c.comp.readinessProbe.failureThreshold }}
+            initialDelaySeconds: {{ $dot.Values.comp.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ $dot.Values.comp.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ $dot.Values.comp.readinessProbe.timeoutSeconds }}
+            successThreshold: {{ $dot.Values.comp.readinessProbe.successThreshold }}
+            failureThreshold: {{ $dot.Values.comp.readinessProbe.failureThreshold }}
           {{- end }}
-          {{- with $c.comp.resources }}
+          {{- with $dot.Values.comp.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
       {{- end }}
       volumes:
-      {{- include "comp-common-volumes" $c | nindent 6}}
+      {{- include "common-volumes" . | nindent 6}}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-    {{- with $c.comp.affinity }}
+    {{- with .Values.comp.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- with $c.comp.tolerations }}
+    {{- with .Values.comp.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}

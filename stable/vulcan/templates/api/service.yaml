@@ -1,1 +1,2 @@
-{{- include "comp-service" (dict "comp" .Values.api "context" $) }}
+{{- $_ := set .Values "comp" .Values.api -}}
+{{- include "comp-service" . }}

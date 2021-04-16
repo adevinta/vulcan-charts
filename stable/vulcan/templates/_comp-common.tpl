@@ -1,88 +1,88 @@
-{{- define "comp-common-manifests" -}}
+{{- define "common-manifests" -}}
 {{- include "comp-proxy-config-map" . }}
 {{- end -}}
 
-{{- define "comp-common-annotations" -}}
+{{- define "common-annotations" -}}
 {{- include "comp-proxy-annotations" . }}
 {{- end -}}
 
 {{/*
 Lifecycle common preStop
 */}}
-{{- define "comp-common-lifecycle" -}}
-{{- if .comp.lifecycle -}}
-{{- if or .comp.lifecycle.preStopCommand .comp.lifecycle.preStopSleep -}}
+{{- define "common-lifecycle" -}}
+{{- if .Values.comp.lifecycle -}}
+{{- if or .Values.comp.lifecycle.preStopCommand .Values.comp.lifecycle.preStopSleep -}}
 lifecycle:
   preStop:
     exec:
-{{- if .comp.lifecycle.preStopCommand }}
-      command: {{ .comp.lifecycle.preStopCommand }}
+{{- if .Values.comp.lifecycle.preStopCommand }}
+      command: {{ .Values.comp.lifecycle.preStopCommand }}
 {{- else }}
-      command: ["/bin/sh","-c","sleep {{ .comp.lifecycle.preStopSleep }};"]
+      command: ["/bin/sh","-c","sleep {{ .Values.comp.lifecycle.preStopSleep }};"]
 {{- end -}}
 {{- end -}}
 {{- end -}}
-{{- if .comp.livenessProbe -}}
-{{- if and .comp.livenessProbe.enabled (or .comp.livenessProbe.command .comp.livenessProbe.path )}}
+{{- if .Values.comp.livenessProbe -}}
+{{- if and .Values.comp.livenessProbe.enabled (or .Values.comp.livenessProbe.command .Values.comp.livenessProbe.path )}}
 livenessProbe:
-{{- if .comp.livenessProbe.command }}
+{{- if .Values.comp.livenessProbe.command }}
   exec:
-    command: {{ .comp.livenessProbe.command }}
+    command: {{ .Values.comp.livenessProbe.command }}
 {{- else }}
   httpGet:
-    path: {{ .comp.livenessProbe.path }}
-    port: {{ .comp.containerPort }}
+    path: {{ .Values.comp.livenessProbe.path }}
+    port: {{ .Values.comp.containerPort }}
 {{- end }}
-  initialDelaySeconds: {{ .comp.livenessProbe.initialDelaySeconds }}
-  periodSeconds: {{ .comp.livenessProbe.periodSeconds }}
-  timeoutSeconds: {{ .comp.livenessProbe.timeoutSeconds }}
-  successThreshold: {{ .comp.livenessProbe.successThreshold }}
-  failureThreshold: {{ .comp.livenessProbe.failureThreshold }}
+  initialDelaySeconds: {{ .Values.comp.livenessProbe.initialDelaySeconds }}
+  periodSeconds: {{ .Values.comp.livenessProbe.periodSeconds }}
+  timeoutSeconds: {{ .Values.comp.livenessProbe.timeoutSeconds }}
+  successThreshold: {{ .Values.comp.livenessProbe.successThreshold }}
+  failureThreshold: {{ .Values.comp.livenessProbe.failureThreshold }}
 {{- end }}
 {{- end }}
-{{- if .comp.readinessProbe -}}
-{{- if and .comp.readinessProbe.enabled (or .comp.readinessProbe.command .comp.readinessProbe.path )}}
+{{- if .Values.comp.readinessProbe -}}
+{{- if and .Values.comp.readinessProbe.enabled (or .Values.comp.readinessProbe.command .Values.comp.readinessProbe.path )}}
 readinessProbe:
-{{- if .comp.readinessProbe.command }}
+{{- if .Values.comp.readinessProbe.command }}
   exec:
-    command: {{ .comp.readinessProbe.command }}
+    command: {{ .Values.comp.readinessProbe.command }}
 {{- else }}
   httpGet:
-    path: {{ .comp.readinessProbe.path }}
-    port: {{ .comp.containerPort }}
+    path: {{ .Values.comp.readinessProbe.path }}
+    port: {{ .Values.comp.containerPort }}
 {{- end }}
-  initialDelaySeconds: {{ .comp.readinessProbe.initialDelaySeconds }}
-  periodSeconds: {{ .comp.readinessProbe.periodSeconds }}
-  timeoutSeconds: {{ .comp.readinessProbe.timeoutSeconds }}
-  successThreshold: {{ .comp.readinessProbe.successThreshold }}
-  failureThreshold: {{ .comp.readinessProbe.failureThreshold }}
+  initialDelaySeconds: {{ .Values.comp.readinessProbe.initialDelaySeconds }}
+  periodSeconds: {{ .Values.comp.readinessProbe.periodSeconds }}
+  timeoutSeconds: {{ .Values.comp.readinessProbe.timeoutSeconds }}
+  successThreshold: {{ .Values.comp.readinessProbe.successThreshold }}
+  failureThreshold: {{ .Values.comp.readinessProbe.failureThreshold }}
 {{- end -}}
 {{- end -}}
 {{- end -}}
 
-{{- define "comp-common-spec" -}}
-{{- if .comp.terminationGracePeriodSeconds -}}
-terminationGracePeriodSeconds: {{ .comp.terminationGracePeriodSeconds }}
+{{- define "common-spec" -}}
+{{- if .Values.comp.terminationGracePeriodSeconds -}}
+terminationGracePeriodSeconds: {{ .Values.comp.terminationGracePeriodSeconds }}
 {{- end -}}
 {{- end -}}
 
-{{- define "comp-common-containers" -}}
+{{- define "common-containers" -}}
 {{- include "comp-dogstatsd-sidecar" . }}
 {{- include "comp-proxy-container" . }}
 {{- end -}}
 
-{{- define "comp-common-envs" -}}
+{{- define "common-envs" -}}
 {{ include "comp-infra-envs" . }}
 {{ include "comp-dogstatsd-envs" . }}
 {{- end -}}
 
-{{- define "comp-common-volumes" -}}
+{{- define "common-volumes" -}}
 {{- include "comp-proxy-volumes" . }}
 {{- end -}}
 
-{{- define "comp-common-appPortName" -}}
-{{- if .comp.proxy -}}
-{{- ternary "app" "http" .comp.proxy.enabled -}}
+{{- define "common-appPortName" -}}
+{{- if .Values.comp.proxy -}}
+{{- ternary "app" "http" .Values.comp.proxy.enabled -}}
 {{- else -}}
 http
 {{- end -}}

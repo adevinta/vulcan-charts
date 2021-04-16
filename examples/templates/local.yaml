@@ -2991,7 +2991,7 @@ spec:
         - name: data
           emptyDir: {}
 ---
-# Source: vulcan/templates/api/hpa.yaml
+# Source: vulcan/templates/api/ingress.yaml
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
@@ -3014,7 +3014,7 @@ spec:
               serviceName: myrelease-vulcan-api
               servicePort: 80
 ---
-# Source: vulcan/templates/insights/hpa.yaml
+# Source: vulcan/templates/insights/ingress.yaml
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
@@ -3043,7 +3043,7 @@ spec:
               serviceName: myrelease-vulcan-insights
               servicePort: 80
 ---
-# Source: vulcan/templates/persistence/hpa.yaml
+# Source: vulcan/templates/persistence/ingress.yaml
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
@@ -3064,7 +3064,7 @@ spec:
               serviceName: myrelease-vulcan-persistence
               servicePort: 80
 ---
-# Source: vulcan/templates/results/hpa.yaml
+# Source: vulcan/templates/results/ingress.yaml
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
@@ -3085,7 +3085,7 @@ spec:
               serviceName: myrelease-vulcan-results
               servicePort: 80
 ---
-# Source: vulcan/templates/stream/hpa.yaml
+# Source: vulcan/templates/stream/ingress.yaml
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
@@ -3109,7 +3109,7 @@ spec:
               serviceName: myrelease-vulcan-stream
               servicePort: 80
 ---
-# Source: vulcan/templates/ui/hpa.yaml
+# Source: vulcan/templates/ui/ingress.yaml
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
@@ -3130,7 +3130,7 @@ spec:
               serviceName: myrelease-vulcan-ui
               servicePort: 80
 ---
-# Source: vulcan/templates/vulndbapi/hpa.yaml
+# Source: vulcan/templates/vulndbapi/ingress.yaml
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:

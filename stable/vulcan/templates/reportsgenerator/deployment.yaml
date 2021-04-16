@@ -1,6 +1,6 @@
-{{- $c := (dict "comp" .Values.reportsgenerator "context" $) -}}
-{{- if $c.comp.enabled }}
-{{- include "comp-common-manifests" $c }}
+{{- $_ := (set .Values "comp" .Values.reportsgenerator) -}}
+{{- if .Values.comp.enabled }}
+{{- include "common-manifests" . }}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -9,8 +9,8 @@ metadata:
   labels: {{- include "vulcan.labels" . | nindent 4 }}
     app.kubernetes.io/name: reportsgenerator
 spec:
-  {{- if kindIs "int64" $c.comp.replicaCount }}
-  replicas: {{ $c.comp.replicaCount }}
+  {{- if kindIs "int64" .Values.comp.replicaCount }}
+  replicas: {{ .Values.comp.replicaCount }}
   {{- end }}
   selector:
     matchLabels: {{- include "vulcan.selectorLabels" . | nindent 6 }}
@@ -21,106 +21,106 @@ spec:
         app.kubernetes.io/name: reportsgenerator
       annotations:
         checksum/secrets: {{ include (print $.Template.BasePath "/reportsgenerator/secrets.yaml") . | sha256sum }}
-        {{- include "comp-common-annotations" $c | nindent 8 }}
-        {{- with $c.comp.annotations }}
+        {{- include "common-annotations" . | nindent 8 }}
+        {{- with .Values.comp.annotations }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-    {{- include "comp-common-spec" $c | nindent 6 }}
-    {{- with $c.comp.imagePullSecrets }}
+    {{- include "common-spec" . | nindent 6 }}
+    {{- with .Values.comp.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- with $c.comp.podSecurityContext }}
+    {{- with .Values.comp.podSecurityContext }}
       securityContext:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       initContainers:
         - name: waitfordb
-          image: "{{ $c.comp.waitfordb.image.repository }}:{{ $c.comp.waitfordb.image.tag }}"
+          image: "{{ .Values.comp.waitfordb.image.repository }}:{{ .Values.comp.waitfordb.image.tag }}"
           imagePullPolicy: Always
           command: ['sh', '-c', 'until pg_isready -t 5; do echo WaitingDB; done;']
           env:
           - name: PGHOST
-            value: {{ $c.comp.db.host | default (include "postgresqlHost" .) | quote }}
+            value: {{ .Values.comp.db.host | default (include "postgresqlHost" .) | quote }}
           - name: PGPORT
-            value: {{ $c.comp.db.port | quote }}
+            value: {{ .Values.comp.db.port | quote }}
       containers:
-        {{- include "comp-common-containers" $c | nindent 8}}
-        - name: {{ $c.comp.name }}
-          {{- with $c.comp.securityContext }}
+        {{- include "common-containers" . | nindent 8}}
+        - name: {{ .Values.comp.name }}
+          {{- with .Values.comp.securityContext }}
           securityContext:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          image: "{{ $c.comp.image.repository }}:{{ $c.comp.image.tag }}"
-          imagePullPolicy: {{ $c.comp.image.pullPolicy }}
+          image: "{{ .Values.comp.image.repository }}:{{ .Values.comp.image.tag }}"
+          imagePullPolicy: {{ .Values.comp.image.pullPolicy }}
           env:
           - name: PORT
-            value: {{ $c.comp.containerPort | quote }}
+            value: {{ .Values.comp.containerPort | quote }}
           - name: PG_HOST
-            value: {{ $c.comp.db.host | default (include "postgresqlHost" .) | quote }}
+            value: {{ .Values.comp.db.host | default (include "postgresqlHost" .) | quote }}
           - name: PG_NAME
-            value: {{ $c.comp.db.name | quote }}
+            value: {{ .Values.comp.db.name | quote }}
           - name: PG_USER
-            value: {{ $c.comp.db.user | quote }}
+            value: {{ .Values.comp.db.user | quote }}
           - name: PG_PORT
-            value: {{ $c.comp.db.port | quote }}
+            value: {{ .Values.comp.db.port | quote }}
           - name: PG_SSLMODE
-            value: {{ $c.comp.db.sslMode | quote }}
-          {{- if $c.comp.db.ca }}
+            value: {{ .Values.comp.db.sslMode | quote }}
+          {{- if .Values.comp.db.ca }}
           - name: PG_CA_B64
-            value: {{ $c.comp.db.ca | b64enc | quote }}
+            value: {{ .Values.comp.db.ca | b64enc | quote }}
           {{- end }}
           - name: LOG_LEVEL
-            value: {{ $c.comp.conf.logLevel | quote }}
+            value: {{ .Values.comp.conf.logLevel | quote }}
           - name: SQS_QUEUE_ARN
-            value: {{ $c.comp.conf.queueArn | quote }}
+            value: {{ .Values.comp.conf.queueArn | quote }}
           - name: SES_REGION
-            value: {{ $c.comp.conf.ses.region | default (include "region" .) | quote }}
+            value: {{ .Values.comp.conf.ses.region | default (include "region" .) | quote }}
           - name: SES_FROM
-            value: {{ $c.comp.conf.ses.from | quote }}
+            value: {{ .Values.comp.conf.ses.from | quote }}
           - name: SES_CC
-            value: {{ $c.comp.conf.ses.cc | quote }}
+            value: {{ .Values.comp.conf.ses.cc | quote }}
           - name: SCAN_EMAIL_SUBJECT
-            value: {{ $c.comp.conf.generators.scan.emailSubject | quote }}
+            value: {{ .Values.comp.conf.generators.scan.emailSubject | quote }}
           - name: SCAN_S3_PUBLIC_BUCKET
-            value: {{ $c.comp.conf.generators.scan.publicBucket | quote }}
+            value: {{ .Values.comp.conf.generators.scan.publicBucket | quote }}
           - name: SCAN_S3_PRIVATE_BUCKET
-            value: {{ $c.comp.conf.generators.scan.privateBucket | quote }}
+            value: {{ .Values.comp.conf.generators.scan.privateBucket | quote }}
           - name: SCAN_GA_ID
-            value: {{ $c.comp.conf.generators.scan.gaId | quote }}
+            value: {{ .Values.comp.conf.generators.scan.gaId | quote }}
           - name: SCAN_COMPANY_NAME
-            value: {{ $c.comp.conf.generators.scan.contact.companyName | quote }}
+            value: {{ .Values.comp.conf.generators.scan.contact.companyName | quote }}
           - name: SCAN_SUPPORT_EMAIL
-            value: {{ $c.comp.conf.generators.scan.contact.supportEmail | quote }}
+            value: {{ .Values.comp.conf.generators.scan.contact.supportEmail | quote }}
           - name: SCAN_CONTACT_EMAIL
-            value: {{ $c.comp.conf.generators.scan.contact.email | quote }}
+            value: {{ .Values.comp.conf.generators.scan.contact.email | quote }}
           - name: SCAN_CONTACT_CHANNEL
-            value: {{ $c.comp.conf.generators.scan.contact.slackChannel | quote }}
+            value: {{ .Values.comp.conf.generators.scan.contact.slackChannel | quote }}
           - name: SCAN_CONTACT_JIRA
-            value: {{ $c.comp.conf.generators.scan.contact.jira | quote }}
+            value: {{ .Values.comp.conf.generators.scan.contact.jira | quote }}
           - name: SCAN_DOCS_API_LINK
-            value: {{ $c.comp.conf.generators.scan.docs.apiDocLink | quote }}
+            value: {{ .Values.comp.conf.generators.scan.docs.apiDocLink | quote }}
           - name: SCAN_DOCS_ROADMAP_LINK
-            value: {{ $c.comp.conf.generators.scan.docs.roadmapLink | quote }}
+            value: {{ .Values.comp.conf.generators.scan.docs.roadmapLink | quote }}
           - name: PERSISTENCE_ENDPOINT  # We keep this PERSISTENCE variable for compatibility
-            value: {{ $c.comp.conf.scanengineUrl | default (include "scanengine.url" .) | quote }}
+            value: {{ .Values.comp.conf.scanengineUrl | default (include "scanengine.url" .) | quote }}
           - name: RESULTS_ENDPOINT
-            value: {{ $c.comp.conf.resultsUrl | default (include "results.url" .) | quote }}
+            value: {{ .Values.comp.conf.resultsUrl | default (include "results.url" .) | quote }}
           - name: SCAN_PROXY_ENDPOINT
-            value: {{ $c.comp.conf.generators.scan.proxyEndpoint | quote }}
+            value: {{ .Values.comp.conf.generators.scan.proxyEndpoint | quote }}
           - name: VULCAN_UI
-            value: {{ $c.comp.conf.generators.scan.vulcanUi | quote }}
+            value: {{ .Values.comp.conf.generators.scan.vulcanUi | quote }}
           - name: SCAN_VIEW_REPORT
-            value: {{ printf "%sapi/v1/report?team_id=%s&scan_id=%s" $c.comp.conf.generators.scan.vulcanUi "%s" "%s" | quote }}
-          {{- if $c.comp.conf.generators.scan.redirectUrl }}
+            value: {{ printf "%sapi/v1/report?team_id=%s&scan_id=%s" .Values.comp.conf.generators.scan.vulcanUi "%s" "%s" | quote }}
+          {{- if .Values.comp.conf.generators.scan.redirectUrl }}
           - name: SCAN_REDIRECT_URL
-            value: {{ $c.comp.conf.generators.scan.redirectUrl | quote }}
+            value: {{ .Values.comp.conf.generators.scan.redirectUrl | quote }}
           {{- end }}
           - name: LIVEREPORT_EMAIL_SUBJECT
-            value: {{ $c.comp.conf.generators.livereport.emailSubject | quote }}
-        {{- include "comp-common-envs" $c | nindent 10 }}
-        {{- range $name, $value := $c.comp.extraEnv }}
+            value: {{ .Values.comp.conf.generators.livereport.emailSubject | quote }}
+        {{- include "common-envs" . | nindent 10 }}
+        {{- range $name, $value := .Values.comp.extraEnv }}
           - name: {{ $name }}
             value: {{ $value | quote }}
         {{- end }}
@@ -128,25 +128,25 @@ spec:
           - secretRef:
               name: {{ include "reportsgenerator.fullname" . }}
           ports:
-            - name: {{ include "comp-common-appPortName" $c }}
-              containerPort: {{ $c.comp.containerPort }}
+            - name: {{ include "common-appPortName" . }}
+              containerPort: {{ .Values.comp.containerPort }}
               protocol: TCP
-          {{- include "comp-common-lifecycle" $c | nindent 10 }}
-          {{- with $c.comp.resources }}
+          {{- include "common-lifecycle" . | nindent 10 }}
+          {{- with .Values.comp.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
       volumes:
-      {{- include "comp-common-volumes" $c | nindent 6}}
-      {{- with $c.comp.nodeSelector }}
+      {{- include "common-volumes" . | nindent 6}}
+      {{- with .Values.comp.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-    {{- with $c.comp.affinity }}
+    {{- with .Values.comp.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- with $c.comp.tolerations }}
+    {{- with .Values.comp.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}

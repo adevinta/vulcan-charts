@@ -1,1 +1,2 @@
-{{- include "comp-service" (dict "comp" .Values.crontinuous "context" $) }}
+{{- $_ := (set .Values "comp" .Values.crontinuous) -}}
+{{- include "comp-service" . }}

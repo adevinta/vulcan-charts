@@ -1,6 +1,6 @@
-{{- $c := (dict "comp" .Values.results "context" $) -}}
-{{- if $c.comp.enabled }}
-{{- include "comp-common-manifests" $c }}
+{{- $_ := (set .Values "comp" .Values.results) -}}
+{{- if .Values.comp.enabled }}
+{{- include "common-manifests" . }}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -9,8 +9,8 @@ metadata:
   labels: {{- include "vulcan.labels" . | nindent 4 }}
     app.kubernetes.io/name: results
 spec:
-  {{- if kindIs "int64" $c.comp.replicaCount }}
-  replicas: {{ $c.comp.replicaCount }}
+  {{- if kindIs "int64" .Values.comp.replicaCount }}
+  replicas: {{ .Values.comp.replicaCount }}
   {{- end }}
   selector:
     matchLabels: {{- include "vulcan.selectorLabels" . | nindent 6 }}
@@ -20,67 +20,67 @@ spec:
       labels: {{- include "vulcan.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/name: results
       annotations:
-        {{- include "comp-common-annotations" $c | nindent 8 }}
-        {{- with $c.comp.annotations }}
+        {{- include "common-annotations" . | nindent 8 }}
+        {{- with .Values.comp.annotations }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-    {{- include "comp-common-spec" $c | nindent 6 }}
-    {{- with $c.comp.imagePullSecrets }}
+    {{- include "common-spec" . | nindent 6 }}
+    {{- with .Values.comp.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- with $c.comp.podSecurityContext }}
+    {{- with .Values.comp.podSecurityContext }}
       securityContext:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       containers:
-        {{- include "comp-common-containers" $c | nindent 8}}
-        - name: {{ $c.comp.name }}
-          {{- with $c.comp.securityContext }}
+        {{- include "common-containers" . | nindent 8}}
+        - name: {{ .Values.comp.name }}
+          {{- with .Values.comp.securityContext }}
           securityContext:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          image: "{{ $c.comp.image.repository }}:{{ $c.comp.image.tag }}"
-          imagePullPolicy: {{ $c.comp.image.pullPolicy }}
+          image: "{{ .Values.comp.image.repository }}:{{ .Values.comp.image.tag }}"
+          imagePullPolicy: {{ .Values.comp.image.pullPolicy }}
           env:
           - name: PORT
-            value: {{ $c.comp.containerPort | quote }}
+            value: {{ .Values.comp.containerPort | quote }}
           - name: DEBUG
-            value: {{ $c.comp.conf.debug | quote }}
+            value: {{ .Values.comp.conf.debug | quote }}
           - name: AWS_REGION
-            value: {{ $c.comp.conf.region | default (include "region" .) | quote }}
+            value: {{ .Values.comp.conf.region | default (include "region" .) | quote }}
           - name: BUCKET_REPORTS
-            value: {{ $c.comp.conf.bucketReports | quote }}
+            value: {{ .Values.comp.conf.bucketReports | quote }}
           - name: BUCKET_LOGS
-            value: {{ $c.comp.conf.bucketLogs | quote }}
+            value: {{ .Values.comp.conf.bucketLogs | quote }}
           - name: LINK_BASE
-            value: "{{ $c.comp.conf.linkBase }}/v1"
-        {{- include "comp-common-envs" $c | nindent 10 }}
-        {{- range $name, $value := $c.comp.extraEnv }}
+            value: "{{ .Values.comp.conf.linkBase }}/v1"
+        {{- include "common-envs" . | nindent 10 }}
+        {{- range $name, $value := .Values.comp.extraEnv }}
           - name: {{ $name }}
             value: {{ $value | quote }}
         {{- end }}
           ports:
-            - name: {{ include "comp-common-appPortName" $c }}
-              containerPort: {{ $c.comp.containerPort }}
+            - name: {{ include "common-appPortName" . }}
+              containerPort: {{ .Values.comp.containerPort }}
               protocol: TCP
-          {{- include "comp-common-lifecycle" $c | nindent 10 }}
-          {{- with $c.comp.resources }}
+          {{- include "common-lifecycle" . | nindent 10 }}
+          {{- with .Values.comp.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
       volumes:
-      {{- include "comp-common-volumes" $c | nindent 6}}
-      {{- with $c.comp.nodeSelector }}
+      {{- include "common-volumes" . | nindent 6}}
+      {{- with .Values.comp.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-    {{- with $c.comp.affinity }}
+    {{- with .Values.comp.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- with $c.comp.tolerations }}
+    {{- with .Values.comp.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}

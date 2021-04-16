@@ -1,6 +1,6 @@
-{{- $c := (dict "comp" .Values.metrics "context" $) -}}
-{{- if $c.comp.enabled }}
-{{- include "comp-common-manifests" $c }}
+{{- $_ := (set .Values "comp" .Values.metrics) -}}
+{{- if .Values.comp.enabled }}
+{{- include "common-manifests" . }}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -9,8 +9,8 @@ metadata:
   labels: {{- include "vulcan.labels" . | nindent 4 }}
     app.kubernetes.io/name: metrics
 spec:
-  {{- if kindIs "int64" $c.comp.replicaCount }}
-  replicas: {{ $c.comp.replicaCount }}
+  {{- if kindIs "int64" .Values.comp.replicaCount }}
+  replicas: {{ .Values.comp.replicaCount }}
   {{- end }}
   selector:
     matchLabels: {{- include "vulcan.selectorLabels" . | nindent 6 }}
@@ -20,60 +20,60 @@ spec:
       labels: {{- include "vulcan.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/name: metrics
       annotations:
-        {{- include "comp-common-annotations" $c | nindent 8 }}
-        {{- with $c.comp.annotations }}
+        {{- include "common-annotations" . | nindent 8 }}
+        {{- with .Values.comp.annotations }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-    {{- include "comp-common-spec" $c | nindent 6 }}
-    {{- with $c.comp.imagePullSecrets }}
+    {{- include "common-spec" . | nindent 6 }}
+    {{- with .Values.comp.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- with $c.comp.podSecurityContext }}
+    {{- with .Values.comp.podSecurityContext }}
       securityContext:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       containers:
-        {{- include "comp-common-containers" $c | nindent 8}}
-        - name: {{ $c.comp.name }}
-          {{- with $c.comp.securityContext }}
+        {{- include "common-containers" . | nindent 8}}
+        - name: {{ .Values.comp.name }}
+          {{- with .Values.comp.securityContext }}
           securityContext:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          image: "{{ $c.comp.image.repository }}:{{ $c.comp.image.tag }}"
-          imagePullPolicy: {{ $c.comp.image.pullPolicy }}
+          image: "{{ .Values.comp.image.repository }}:{{ .Values.comp.image.tag }}"
+          imagePullPolicy: {{ .Values.comp.image.pullPolicy }}
           env:
           - name: LOG_LEVEL
-            value: {{ $c.comp.conf.logLevel | quote }}
+            value: {{ .Values.comp.conf.logLevel | quote }}
           - name: SQS_POLLING_INTERVAL
-            value: {{ $c.comp.conf.sqsPollingInterval | quote }}
+            value: {{ .Values.comp.conf.sqsPollingInterval | quote }}
           - name: CHECKS_SQS_QUEUE_ARN
-            value: {{ $c.comp.conf.checksQueueArn | quote }}
+            value: {{ .Values.comp.conf.checksQueueArn | quote }}
           - name: SCANS_SQS_QUEUE_ARN
-            value: {{ $c.comp.conf.scansQueueArn | quote }}
+            value: {{ .Values.comp.conf.scansQueueArn | quote }}
           - name: FINDINGS_SQS_QUEUE_ARN
-            value: {{ $c.comp.conf.findingsQueueArn | quote }}
+            value: {{ .Values.comp.conf.findingsQueueArn | quote }}
           - name: RESULTS_HOST
-            value: {{ $c.comp.conf.resultsHost | default (include "results.fullname" .)| quote }}
+            value: {{ .Values.comp.conf.resultsHost | default (include "results.fullname" .)| quote }}
           - name: RESULTS_SCHEME
-            value: {{ $c.comp.conf.resultsScheme | quote }}
+            value: {{ .Values.comp.conf.resultsScheme | quote }}
           - name: DEVHOSE_URL
-            value: {{ $c.comp.conf.devHoseURL | quote }}
+            value: {{ .Values.comp.conf.devHoseURL | quote }}
           - name: DEVHOSE_TENANT
-            value: {{ $c.comp.conf.devHoseTenant | quote }}
+            value: {{ .Values.comp.conf.devHoseTenant | quote }}
           - name: DEVHOSE_METRICS_SOURCE
-            value: {{ $c.comp.conf.devHoseMetricsSource | quote }}
+            value: {{ .Values.comp.conf.devHoseMetricsSource | quote }}
           - name: DEVHOSE_FINDINGS_SOURCE
-            value: {{ $c.comp.conf.devHoseFindingsSource | quote }}
+            value: {{ .Values.comp.conf.devHoseFindingsSource | quote }}
           - name: REDIS_ADDR
-            value: {{ $c.comp.conf.redisAddr | default (include "redis.url" .)| quote }}
+            value: {{ .Values.comp.conf.redisAddr | default (include "redis.url" .)| quote }}
           - name: VULCAN_API
-            value: {{ $c.comp.conf.vulcanApi | default (include "api.url" .) }}
+            value: {{ .Values.comp.conf.vulcanApi | default (include "api.url" .) }}
           - name: VULCAN_API_EXTERNAL
-            value: {{ $c.comp.conf.vulcanAPIExternal | quote }}
-        {{- include "comp-common-envs" $c | nindent 10 }}
-        {{- range $name, $value := $c.comp.extraEnv }}
+            value: {{ .Values.comp.conf.vulcanAPIExternal | quote }}
+        {{- include "common-envs" . | nindent 10 }}
+        {{- range $name, $value := .Values.comp.extraEnv }}
           - name: {{ $name }}
             value: {{ $value | quote }}
         {{- end }}
@@ -82,22 +82,22 @@ spec:
               name: {{ include "metrics.fullname" . }}
           - secretRef:
               name: {{ include "redis.fullname" . }}
-          {{- include "comp-common-lifecycle" $c | nindent 10 }}
-          {{- with $c.comp.resources }}
+          {{- include "common-lifecycle" . | nindent 10 }}
+          {{- with .Values.comp.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
       volumes:
-      {{- include "comp-common-volumes" $c | nindent 6}}
-      {{- with $c.comp.nodeSelector }}
+      {{- include "common-volumes" . | nindent 6}}
+      {{- with .Values.comp.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-    {{- with $c.comp.affinity }}
+    {{- with .Values.comp.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- with $c.comp.tolerations }}
+    {{- with .Values.comp.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}

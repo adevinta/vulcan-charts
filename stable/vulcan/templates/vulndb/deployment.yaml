@@ -1,6 +1,6 @@
-{{- $c := (dict "comp" .Values.vulndb "context" $) -}}
-{{- if $c.comp.enabled }}
-{{- include "comp-common-manifests" $c }}
+{{- $_ := (set .Values "comp" .Values.vulndb) -}}
+{{- if .Values.comp.enabled }}
+{{- include "common-manifests" . }}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -9,8 +9,8 @@ metadata:
   labels: {{- include "vulcan.labels" . | nindent 4 }}
     app.kubernetes.io/name: vulndb
 spec:
-  {{- if kindIs "int64" $c.comp.replicaCount }}
-  replicas: {{ $c.comp.replicaCount }}
+  {{- if kindIs "int64" .Values.comp.replicaCount }}
+  replicas: {{ .Values.comp.replicaCount }}
   {{- end }}
   selector:
     matchLabels: {{- include "vulcan.selectorLabels" . | nindent 6 }}
@@ -21,90 +21,90 @@ spec:
         app.kubernetes.io/name: vulndb
       annotations:
         checksum/secrets: {{ include (print $.Template.BasePath "/vulndb/secrets.yaml") . | sha256sum }}
-        {{- include "comp-common-annotations" $c | nindent 8 }}
-        {{- with $c.comp.annotations }}
+        {{- include "common-annotations" . | nindent 8 }}
+        {{- with .Values.comp.annotations }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-    {{- include "comp-common-spec" $c | nindent 6 }}
-    {{- with $c.comp.imagePullSecrets }}
+    {{- include "common-spec" . | nindent 6 }}
+    {{- with .Values.comp.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- with $c.comp.podSecurityContext }}
+    {{- with .Values.comp.podSecurityContext }}
       securityContext:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       initContainers:
         - name: waitfordb
-          image: "{{ $c.comp.waitfordb.image.repository }}:{{ $c.comp.waitfordb.image.tag }}"
+          image: "{{ .Values.comp.waitfordb.image.repository }}:{{ .Values.comp.waitfordb.image.tag }}"
           imagePullPolicy: Always
           command: ['sh', '-c', 'until pg_isready -t 5; do echo WaitingDB; done;']
           env:
           - name: PGHOST
-            value: {{ $c.comp.db.host | default (include "postgresqlHost" .) | quote }}
+            value: {{ .Values.comp.db.host | default (include "postgresqlHost" .) | quote }}
           - name: PGPORT
-            value: {{ $c.comp.db.port | quote }}
+            value: {{ .Values.comp.db.port | quote }}
       containers:
-        {{- include "comp-common-containers" $c | nindent 8}}
-        - name: {{ $c.comp.name }}
-          {{- with $c.comp.securityContext }}
+        {{- include "common-containers" . | nindent 8}}
+        - name: {{ .Values.comp.name }}
+          {{- with .Values.comp.securityContext }}
           securityContext:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          image: "{{ $c.comp.image.repository }}:{{ $c.comp.image.tag }}"
-          imagePullPolicy: {{ $c.comp.image.pullPolicy }}
+          image: "{{ .Values.comp.image.repository }}:{{ .Values.comp.image.tag }}"
+          imagePullPolicy: {{ .Values.comp.image.pullPolicy }}
           env:
           - name: PG_HOST
-            value: {{ $c.comp.db.host | default (include "postgresqlHost" .) | quote }}
+            value: {{ .Values.comp.db.host | default (include "postgresqlHost" .) | quote }}
           - name: PG_NAME
-            value: {{ $c.comp.db.name | quote }}
+            value: {{ .Values.comp.db.name | quote }}
           - name: PG_USER
-            value: {{ $c.comp.db.user | quote }}
+            value: {{ .Values.comp.db.user | quote }}
           - name: PG_PORT
-            value: {{ $c.comp.db.port | quote }}
+            value: {{ .Values.comp.db.port | quote }}
           - name: PG_SSLMODE
-            value: {{ $c.comp.db.sslMode | quote }}
-          {{- if $c.comp.db.ca }}
+            value: {{ .Values.comp.db.sslMode | quote }}
+          {{- if .Values.comp.db.ca }}
           - name: PG_CA_B64
-            value: {{ $c.comp.db.ca | b64enc | quote }}
+            value: {{ .Values.comp.db.ca | b64enc | quote }}
           {{- end }}
           - name: LOG_LEVEL
-            value: {{ $c.comp.conf.logLevel | quote }}
+            value: {{ .Values.comp.conf.logLevel | quote }}
           - name: MAX_EVENT_AGE
-            value: {{ $c.comp.conf.maxEventAge | quote }}
+            value: {{ .Values.comp.conf.maxEventAge | quote }}
           - name: SQS_QUEUE_ARN
-            value: {{ $c.comp.conf.checksQueueArn | quote }}
+            value: {{ .Values.comp.conf.checksQueueArn | quote }}
           - name: SNS_TOPIC_ARN
-            value: {{ $c.comp.conf.vulnsTopicArn | quote }}
+            value: {{ .Values.comp.conf.vulnsTopicArn | quote }}
           - name: RESULTS_URL
-            value: {{ $c.comp.conf.resultsUrl | default ( printf "https://%s" (include "results.fullname" .))}}
+            value: {{ .Values.comp.conf.resultsUrl | default ( printf "https://%s" (include "results.fullname" .))}}
           - name: RESULTS_INTERNAL_URL
-            value: {{ $c.comp.conf.resultsInternalUrl | default (include "results.url" .)| quote }}
-        {{- include "comp-common-envs" $c | nindent 10 }}
-        {{- range $name, $value := $c.comp.extraEnv }}
+            value: {{ .Values.comp.conf.resultsInternalUrl | default (include "results.url" .)| quote }}
+        {{- include "common-envs" . | nindent 10 }}
+        {{- range $name, $value := .Values.comp.extraEnv }}
           - name: {{ $name }}
             value: {{ $value | quote }}
         {{- end }}
           envFrom:
           - secretRef:
               name: {{ include "vulndb.fullname" . }}
-          {{- include "comp-common-lifecycle" $c | nindent 10 }}
-          {{- with $c.comp.resources }}
+          {{- include "common-lifecycle" . | nindent 10 }}
+          {{- with .Values.comp.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
       volumes:
-      {{- include "comp-common-volumes" $c | nindent 6}}
-      {{- with $c.comp.nodeSelector }}
+      {{- include "common-volumes" . | nindent 6}}
+      {{- with .Values.comp.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-    {{- with $c.comp.affinity }}
+    {{- with .Values.comp.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- with $c.comp.tolerations }}
+    {{- with .Values.comp.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}

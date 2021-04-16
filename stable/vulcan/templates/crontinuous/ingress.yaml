@@ -1,1 +1,2 @@
-{{- include "comp-hpa" (dict "comp" .Values.crontinuous "context" $) }}
+{{- $_ := (set .Values "comp" .Values.crontinuous) -}}
+{{- include "comp-ingress" . }}

@@ -1,1 +1,2 @@
-{{- include "comp-ingress" (dict "comp" .Values.metrics "context" $) }}
+{{- $_ := (set .Values "comp" .Values.metrics) -}}
+{{- include "comp-hpa" . }}

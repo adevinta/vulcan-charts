@@ -1,32 +1,32 @@
 {{- define "comp-infra-envs" -}}
 {{- $auth := 0 -}}
-{{- if .comp.infra -}}
-{{- if and  .comp.infra.sns .context.Values.goaws.enabled -}}
+{{- if .Values.comp.infra -}}
+{{- if and  .Values.comp.infra.sns .Values.goaws.enabled -}}
 - name: AWS_SNS_ENDPOINT
-  value: {{ include "sns.url" .context | quote }}
+  value: {{ include "sns.url" . | quote }}
 {{- $auth = 1 -}}
 {{- end -}}
-{{- if and .comp.infra.sqs .context.Values.goaws.enabled }}
+{{- if and .Values.comp.infra.sqs .Values.goaws.enabled }}
 - name: AWS_SQS_ENDPOINT
-  value: {{ include "sqs.url" .context | quote }}
+  value: {{ include "sqs.url" . | quote }}
 {{- $auth = 1 -}}
 {{- end -}}
-{{- if and .comp.infra.s3 .context.Values.minio.enabled }}
+{{- if and .Values.comp.infra.s3 .Values.minio.enabled }}
 - name: AWS_S3_ENDPOINT
-  value: {{ include "minio.url" .context | quote }}
+  value: {{ include "minio.url" . | quote }}
 - name: PATH_STYLE
   value: "true"
 - name: AWS_S3_REGION
-  value: {{ .context.Values.global.region | quote }}
+  value: {{ .Values.global.region | quote }}
 - name: AWS_ACCESS_KEY_ID
   valueFrom:
     secretKeyRef:
-      name: "{{ printf "%s-minio" .context.Release.Name }}"
+      name: "{{ printf "%s-minio" .Release.Name }}"
       key: access-key
 - name: AWS_SECRET_ACCESS_KEY
   valueFrom:
     secretKeyRef:
-      name: "{{ printf "%s-minio" .context.Release.Name }}"
+      name: "{{ printf "%s-minio" .Release.Name }}"
       key: secret-key
 {{- $auth = 0 -}}
 {{- end }}

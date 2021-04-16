@@ -2,21 +2,21 @@
 Override names
 */}}
 {{- define "comp-service" -}}
-{{- if and .comp.enabled -}}
+{{- if and .Values.comp.enabled -}}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "vulcan.fullname" .context }}-{{ .comp.name }}
-  labels: {{- include "vulcan.labels" .context | nindent 4 }}
-    app.kubernetes.io/name: {{ .comp.name }}
+  name: {{ template "vulcan.fullname" . }}-{{ .Values.comp.name }}
+  labels: {{- include "vulcan.labels" . | nindent 4 }}
+    app.kubernetes.io/name: {{ .Values.comp.name }}
 spec:
-  type: {{ .comp.service.type }}
+  type: {{ .Values.comp.service.type }}
   ports:
-    - port: {{ .comp.service.port }}
-      targetPort: {{ .comp.service.targetPort | default "http" }}
-      protocol: {{ .comp.service.protocol | default "TCP" }}
-      name: {{ .comp.service.portName | default "http" }}
-  selector: {{- include "vulcan.selectorLabels" .context | nindent 6 }}
-      app.kubernetes.io/name: {{ .comp.name }}
+    - port: {{ .Values.comp.service.port }}
+      targetPort: {{ .Values.comp.service.targetPort | default "http" }}
+      protocol: {{ .Values.comp.service.protocol | default "TCP" }}
+      name: {{ .Values.comp.service.portName | default "http" }}
+  selector: {{- include "vulcan.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/name: {{ .Values.comp.name }}
 {{- end -}}
 {{- end -}}

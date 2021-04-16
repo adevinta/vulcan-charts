@@ -1,5 +1,5 @@
-{{- $c := (dict "comp" .Values.insights "context" $) -}}
-{{- if and $c.comp.enabled }}
+{{- $_ := (set .Values "comp" .Values.insights) -}}
+{{- if and .Values.comp.enabled }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -10,34 +10,34 @@ data:
   haproxy.cfg: |
     global
       daemon
-      maxconn {{ $c.comp.proxy.maxconn | default 64 }}
+      maxconn {{ .Values.comp.proxy.maxconn | default 64 }}
       log stdout format raw daemon
 
     defaults
       mode http
-      timeout connect {{ $c.comp.proxy.timeoutConnect | default "5s" }}
-      timeout client {{ $c.comp.proxy.timeoutClient | default "25s" }}
-      timeout server {{ $c.comp.proxy.timeoutServer | default "25s" }}
-      timeout tunnel {{ $c.comp.proxy.timeoutTunnel | default "3600s" }}
+      timeout connect {{ .Values.comp.proxy.timeoutConnect | default "5s" }}
+      timeout client {{ .Values.comp.proxy.timeoutClient | default "25s" }}
+      timeout server {{ .Values.comp.proxy.timeoutServer | default "25s" }}
+      timeout tunnel {{ .Values.comp.proxy.timeoutTunnel | default "3600s" }}
       option  http-server-close
 
-    {{- if $c.comp.proxy.cache.enabled }}
+    {{- if .Values.comp.proxy.cache.enabled }}
     cache small
       total-max-size 64     # mb
       max-age 240           # seconds
     {{- end }}
 
     frontend http
-      bind *:{{ $c.comp.proxy.port | default 80 }}
+      bind *:{{ .Values.comp.proxy.port | default 80 }}
       log global
       option httplog clf
-    {{- if $c.comp.proxy.cache.enabled }}
+    {{- if .Values.comp.proxy.cache.enabled }}
       http-request cache-use small
       http-response cache-store small
     {{- end }}
       http-request capture req.hdr(Host) len 50
       http-request capture req.hdr(User-Agent) len 100
-      {{- range $c.comp.conf.proxies }}
+      {{- range .Values.comp.conf.proxies }}
       {{- if .prefix }}
       use_backend {{ .name }} if { path -i -m beg {{ .prefix}} }
       {{- else }}
@@ -46,16 +46,16 @@ data:
       {{- end }}
 
     {{- $dot := . }}
-    {{- range $i, $p := $c.comp.conf.proxies }}
-    {{- $port := add $dot $c.comp.containerPort $i }}
+    {{- range $i, $p := .Values.comp.conf.proxies }}
+    {{- $port := add $dot $dot.Values.comp.containerPort $i }}
 
     backend {{ $p.name }}
       server app 127.0.0.1:{{ $port }}
     {{- end }}
 
     frontend stats
-      bind *:{{ $c.comp.proxy.metricsPort }}
+      bind *:{{ .Values.comp.proxy.metricsPort }}
       option http-use-htx
       http-request use-service prometheus-exporter if { path /metrics }
-      monitor-uri {{ $c.comp.proxy.probePath }}
+      monitor-uri {{ .Values.comp.proxy.probePath }}
 {{- end }}

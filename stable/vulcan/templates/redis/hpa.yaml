@@ -1,1 +1,0 @@
-{{- include "comp-ingress" (dict "comp" .Values.redis "context" $) }}

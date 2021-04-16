@@ -1,5 +1,5 @@
-{{- $c := (dict "comp" .Values.persistence "context" $) -}}
-{{- if and $c.comp.enabled $c.comp.conf.loadSQL }}
+{{- $_ := (set .Values "comp" .Values.persistence) -}}
+{{- if and .Values.comp.enabled .Values.comp.conf.loadSQL }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -7,5 +7,5 @@ metadata:
   labels: {{- include "vulcan.labels" . | nindent 4 }}
     app.kubernetes.io/name: persistence
 data:
-  load.sql: {{ (tpl $c.comp.conf.loadSQL . | quote ) }}
+  load.sql: {{ (tpl .Values.comp.conf.loadSQL . | quote ) }}
 {{- end }}

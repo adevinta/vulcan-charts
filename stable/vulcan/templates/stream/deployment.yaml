@@ -1,6 +1,6 @@
-{{- $c := (dict "comp" .Values.stream "context" $) -}}
-{{- if $c.comp.enabled }}
-{{- include "comp-common-manifests" $c }}
+{{- $_ := (set .Values "comp" .Values.stream) -}}
+{{- if .Values.comp.enabled }}
+{{- include "common-manifests" . }}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -9,8 +9,8 @@ metadata:
   labels: {{- include "vulcan.labels" . | nindent 4 }}
     app.kubernetes.io/name: stream
 spec:
-  {{- if kindIs "int64" $c.comp.replicaCount }}
-  replicas: {{ $c.comp.replicaCount }}
+  {{- if kindIs "int64" .Values.comp.replicaCount }}
+  replicas: {{ .Values.comp.replicaCount }}
   {{- end }}
   selector:
     matchLabels: {{- include "vulcan.selectorLabels" . | nindent 6 }}
@@ -21,46 +21,46 @@ spec:
         app.kubernetes.io/name: stream
       annotations:
         checksum/secrets: {{ include (print $.Template.BasePath "/stream/secrets.yaml") . | sha256sum }}
-        {{- include "comp-common-annotations" $c | nindent 8 }}
-        {{- with $c.comp.annotations }}
+        {{- include "common-annotations" . | nindent 8 }}
+        {{- with .Values.comp.annotations }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-    {{- include "comp-common-spec" $c | nindent 6 }}
-    {{- with $c.comp.imagePullSecrets }}
+    {{- include "common-spec" . | nindent 6 }}
+    {{- with .Values.comp.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- with $c.comp.podSecurityContext }}
+    {{- with .Values.comp.podSecurityContext }}
       securityContext:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       containers:
-        {{- include "comp-common-containers" $c | nindent 8}}
-        - name: {{ $c.comp.name }}
-          {{- with $c.comp.securityContext }}
+        {{- include "common-containers" . | nindent 8}}
+        - name: {{ .Values.comp.name }}
+          {{- with .Values.comp.securityContext }}
           securityContext:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          image: "{{ $c.comp.image.repository }}:{{ $c.comp.image.tag }}"
-          imagePullPolicy: {{ $c.comp.image.pullPolicy }}
+          image: "{{ .Values.comp.image.repository }}:{{ .Values.comp.image.tag }}"
+          imagePullPolicy: {{ .Values.comp.image.pullPolicy }}
           env:
           - name: PORT
-            value: {{ $c.comp.containerPort | quote }}
+            value: {{ .Values.comp.containerPort | quote }}
           - name: LOG_LEVEL
-            value: {{ $c.comp.conf.logLevel | quote }}
+            value: {{ .Values.comp.conf.logLevel | quote }}
           - name: REDIS_HOST
-            value: {{ $c.comp.conf.redis.host | quote }}
+            value: {{ .Values.comp.conf.redis.host | quote }}
           - name: REDIS_PORT
-            value: {{ $c.comp.conf.redis.port | quote }}
+            value: {{ .Values.comp.conf.redis.port | quote }}
           - name: REDIS_USR
-            value: {{ $c.comp.conf.redis.usr | quote }}
+            value: {{ .Values.comp.conf.redis.usr | quote }}
           - name: REDIS_DB
-            value: {{ $c.comp.conf.redis.db | quote }}
+            value: {{ .Values.comp.conf.redis.db | quote }}
           - name: REDIS_TTL
-            value: {{ $c.comp.conf.redis.ttl | quote }}
-        {{- include "comp-common-envs" $c | nindent 10 }}
-        {{- range $name, $value := $c.comp.extraEnv }}
+            value: {{ .Values.comp.conf.redis.ttl | quote }}
+        {{- include "common-envs" . | nindent 10 }}
+        {{- range $name, $value := .Values.comp.extraEnv }}
           - name: {{ $name }}
             value: {{ $value | quote }}
         {{- end }}
@@ -68,25 +68,25 @@ spec:
           - secretRef:
               name: {{ include "stream.fullname" . }}
           ports:
-            - name: {{ include "comp-common-appPortName" $c }}
-              containerPort: {{ $c.comp.containerPort }}
+            - name: {{ include "common-appPortName" . }}
+              containerPort: {{ .Values.comp.containerPort }}
               protocol: TCP
-          {{- include "comp-common-lifecycle" $c | nindent 10 }}
-          {{- with $c.comp.resources }}
+          {{- include "common-lifecycle" . | nindent 10 }}
+          {{- with .Values.comp.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
       volumes:
-      {{- include "comp-common-volumes" $c | nindent 6}}
-      {{- with $c.comp.nodeSelector }}
+      {{- include "common-volumes" . | nindent 6}}
+      {{- with .Values.comp.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-    {{- with $c.comp.affinity }}
+    {{- with .Values.comp.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- with $c.comp.tolerations }}
+    {{- with .Values.comp.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}

@@ -1,5 +1,5 @@
-{{- $c := (dict "comp" .Values.redis "context" $) -}}
-{{- if $c.comp.enabled }}
+{{- $_ := (set .Values "comp" .Values.redis) -}}
+{{- if .Values.comp.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -7,8 +7,8 @@ metadata:
   labels: {{- include "vulcan.labels" . | nindent 4 }}
     app.kubernetes.io/name: redis
 spec:
-  {{- if kindIs "int64" $c.comp.replicaCount }}
-  replicas: {{ $c.comp.replicaCount }}
+  {{- if kindIs "int64" .Values.comp.replicaCount }}
+  replicas: {{ .Values.comp.replicaCount }}
   {{- end }}
   selector:
     matchLabels: {{- include "vulcan.selectorLabels" . | nindent 6 }}
@@ -18,52 +18,52 @@ spec:
       labels: {{- include "vulcan.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/name: redis
       annotations:
-        {{- with $c.comp.annotations }}
+        {{- with .Values.comp.annotations }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-    {{- with $c.comp.imagePullSecrets }}
+    {{- with .Values.comp.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- with $c.comp.podSecurityContext }}
+    {{- with .Values.comp.podSecurityContext }}
       securityContext:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       containers:
-      - name: {{ $c.comp.name }}
-          {{- with $c.comp.securityContext }}
+      - name: {{ .Values.comp.name }}
+          {{- with .Values.comp.securityContext }}
           securityContext:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-        image: "{{ $c.comp.image.repository }}:{{ $c.comp.image.tag }}"
-        imagePullPolicy: {{ $c.comp.image.pullPolicy }}
+        image: "{{ .Values.comp.image.repository }}:{{ .Values.comp.image.tag }}"
+        imagePullPolicy: {{ .Values.comp.image.pullPolicy }}
         args: ["--requirepass", "$(REDIS_PASSWORD)"]
         envFrom:
           - secretRef:
               name: {{ include "redis.fullname" . }}
-        {{- range $name, $value := $c.comp.extraEnv }}
+        {{- range $name, $value := .Values.comp.extraEnv }}
         - name: {{ $name }}
           value: {{ $value | quote }}
         {{- end }}
         ports:
-          - name: {{ include "comp-common-appPortName" $c }}
-            containerPort: {{ $c.comp.containerPort }}
+          - name: {{ include "common-appPortName" . }}
+            containerPort: {{ .Values.comp.containerPort }}
             protocol: TCP
-          {{- with $c.comp.resources }}
+          {{- with .Values.comp.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
       volumes:
-      {{- with $c.comp.nodeSelector }}
+      {{- with .Values.comp.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-    {{- with $c.comp.affinity }}
+    {{- with .Values.comp.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- with $c.comp.tolerations }}
+    {{- with .Values.comp.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
