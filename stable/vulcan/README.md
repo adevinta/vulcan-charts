@@ -19,68 +19,8 @@ A Helm chart for deploying Vulcan
 |-----|------|---------|-------------|
 | global.domain | string | `"vulcan.local"` |  |
 | global.region | string | `"local"` |  |
-| defaults.db.user | string | `"postgres"` |  |
-| defaults.db.password | string | `"TBD"` |  |
-| defaults.db.sslMode | string | `"disable"` |  |
-| defaults.dogstatsd.image.repository | string | `"datadog/dogstatsd"` |  |
-| defaults.dogstatsd.image.tag | string | `"7.25.1"` |  |
-| defaults.dogstatsd.enabled | bool | `true` |  |
-| defaults.comp.replicaCount | string | `nil` |  |
-| defaults.comp.image.pullPolicy | string | `"Always"` |  |
-| defaults.comp.extraEnv | object | `{}` | custom env variables |
-| defaults.comp.proxy.enabled | bool | `true` |  |
-| defaults.comp.proxy.image.repository | string | `"haproxy"` |  |
-| defaults.comp.proxy.image.tag | string | `"2.2-alpine"` |  |
-| defaults.comp.proxy.port | int | `9090` |  |
-| defaults.comp.proxy.cache.enabled | bool | `false` |  |
-| defaults.comp.proxy.cache.maxSize | int | `64` |  |
-| defaults.comp.proxy.cache.maxAge | int | `240` |  |
-| defaults.comp.proxy.probe | bool | `false` |  |
-| defaults.comp.proxy.probePath | string | `"/healthz"` |  |
-| defaults.comp.proxy.probeInitialDelay | int | `5` |  |
-| defaults.comp.proxy.probeTimeoutSeconds | int | `3` |  |
-| defaults.comp.proxy.lifecycle.preStopSleep | int | `30` |  |
-| defaults.comp.proxy.resources | object | `{}` |  |
-| defaults.comp.podSecurityContext | object | `{}` |  |
-| defaults.comp.securityContext | object | `{}` |  |
-| defaults.comp.autoscaling.enabled | bool | `false` |  |
-| defaults.comp.autoscaling.minReplicas | int | `1` |  |
-| defaults.comp.autoscaling.maxReplicas | int | `5` |  |
-| defaults.comp.autoscaling.targetCPUUtilizationPercentage | int | `50` |  |
-| defaults.comp.autoscaling.targetMemoryUtilizationPercentage | int | `50` |  |
-| defaults.comp.imagePullSecrets | list | `[]` |  |
-| defaults.comp.nameOverride | string | `""` |  |
-| defaults.comp.fullnameOverride | string | `""` |  |
-| defaults.comp.containerPort | int | `8080` |  |
-| defaults.comp.lifecycle.preStopSleep | int | `30` |  |
-| defaults.comp.livenessProbe.enabled | bool | `true` |  |
-| defaults.comp.livenessProbe.path | string | `nil` |  |
-| defaults.comp.livenessProbe.initialDelaySeconds | int | `5` |  |
-| defaults.comp.livenessProbe.periodSeconds | int | `10` |  |
-| defaults.comp.livenessProbe.timeoutSeconds | int | `3` |  |
-| defaults.comp.livenessProbe.successThreshold | int | `1` |  |
-| defaults.comp.livenessProbe.failureThreshold | int | `10` |  |
-| defaults.comp.readinessProbe.enabled | bool | `true` |  |
-| defaults.comp.readinessProbe.path | string | `nil` |  |
-| defaults.comp.readinessProbe.initialDelaySeconds | int | `5` |  |
-| defaults.comp.readinessProbe.periodSeconds | int | `10` |  |
-| defaults.comp.readinessProbe.timeoutSeconds | int | `3` |  |
-| defaults.comp.readinessProbe.successThreshold | int | `1` |  |
-| defaults.comp.readinessProbe.failureThreshold | int | `5` |  |
-| defaults.comp.service.type | string | `"ClusterIP"` |  |
-| defaults.comp.service.port | int | `80` |  |
-| defaults.comp.service.portName | string | `nil` |  |
-| defaults.comp.service.protocol | string | `"TCP"` |  |
-| defaults.comp.service.targetPort | string | `nil` |  |
-| defaults.comp.ingress.enabled | bool | `false` |  |
-| defaults.comp.ingress.annotations | object | `{}` |  |
-| defaults.comp.ingress.hosts[0].host | string | `"chart-example.local"` |  |
-| defaults.comp.ingress.hosts[0].paths | list | `[]` |  |
-| defaults.comp.ingress.tls | list | `[]` |  |
-| defaults.comp.resources | object | `{}` |  |
-| defaults.comp.nodeSelector | object | `{}` |  |
-| defaults.comp.tolerations | list | `[]` |  |
-| defaults.comp.affinity | object | `{}` |  |
+| anchors | object | `{"comp":{"affinity":{},"autoscaling":{"enabled":false,"maxReplicas":5,"minReplicas":1,"targetCPUUtilizationPercentage":50,"targetMemoryUtilizationPercentage":50},"containerPort":8080,"extraEnv":{},"fullnameOverride":"","image":{"pullPolicy":"Always"},"imagePullSecrets":[],"ingress":{"annotations":{},"enabled":false,"hosts":[{"host":"chart-example.local","paths":[]}],"tls":[]},"lifecycle":{"preStopSleep":30},"livenessProbe":{"enabled":true,"failureThreshold":10,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"nameOverride":"","nodeSelector":{},"podSecurityContext":{},"proxy":{"cache":{"enabled":false,"maxAge":240,"maxSize":64},"enabled":true,"image":{"repository":"haproxy","tag":"2.3-alpine"},"lifecycle":{"preStopSleep":30},"port":9090,"probe":false,"probeInitialDelay":5,"probePath":"/healthz","probeTimeoutSeconds":3,"resources":{}},"readinessProbe":{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"replicaCount":null,"resources":{},"securityContext":{},"service":{"port":80,"portName":null,"protocol":"TCP","targetPort":null,"type":"ClusterIP"},"tolerations":[]},"db":{"password":"TBD","sslMode":"disable","user":"postgres"},"dogstatsd":{"enabled":true,"image":{"repository":"datadog/dogstatsd","tag":"7.27.0"}}}` | Anchors |
+| anchors.comp.extraEnv | object | `{}` | custom env variables |
 | postgresql.enabled | bool | `false` |  |
 | postgresql.postgresqlUsername | string | `"postgres"` |  |
 | postgresql.postgresqlPassword | string | `"TBD"` |  |
@@ -99,7 +39,7 @@ A Helm chart for deploying Vulcan
 | goaws.<<.extraEnv | object | `{}` | custom env variables |
 | goaws.<<.proxy.enabled | bool | `true` |  |
 | goaws.<<.proxy.image.repository | string | `"haproxy"` |  |
-| goaws.<<.proxy.image.tag | string | `"2.2-alpine"` |  |
+| goaws.<<.proxy.image.tag | string | `"2.3-alpine"` |  |
 | goaws.<<.proxy.port | int | `9090` |  |
 | goaws.<<.proxy.cache.enabled | bool | `false` |  |
 | goaws.<<.proxy.cache.maxSize | int | `64` |  |
@@ -174,7 +114,7 @@ A Helm chart for deploying Vulcan
 | results.<<.extraEnv | object | `{}` | custom env variables |
 | results.<<.proxy.enabled | bool | `true` |  |
 | results.<<.proxy.image.repository | string | `"haproxy"` |  |
-| results.<<.proxy.image.tag | string | `"2.2-alpine"` |  |
+| results.<<.proxy.image.tag | string | `"2.3-alpine"` |  |
 | results.<<.proxy.port | int | `9090` |  |
 | results.<<.proxy.cache.enabled | bool | `false` |  |
 | results.<<.proxy.cache.maxSize | int | `64` |  |
@@ -250,7 +190,7 @@ A Helm chart for deploying Vulcan
 | results.readinessProbe.<<.failureThreshold | int | `5` |  |
 | results.readinessProbe.path | string | `"/healthcheck"` |  |
 | results.dogstatsd.image.repository | string | `"datadog/dogstatsd"` |  |
-| results.dogstatsd.image.tag | string | `"7.25.1"` |  |
+| results.dogstatsd.image.tag | string | `"7.27.0"` |  |
 | results.dogstatsd.enabled | bool | `true` |  |
 | results.infra.s3 | bool | `true` |  |
 | persistence.enabled | bool | `true` |  |
@@ -260,7 +200,7 @@ A Helm chart for deploying Vulcan
 | persistence.<<.extraEnv | object | `{}` | custom env variables |
 | persistence.<<.proxy.enabled | bool | `true` |  |
 | persistence.<<.proxy.image.repository | string | `"haproxy"` |  |
-| persistence.<<.proxy.image.tag | string | `"2.2-alpine"` |  |
+| persistence.<<.proxy.image.tag | string | `"2.3-alpine"` |  |
 | persistence.<<.proxy.port | int | `9090` |  |
 | persistence.<<.proxy.cache.enabled | bool | `false` |  |
 | persistence.<<.proxy.cache.maxSize | int | `64` |  |
@@ -343,7 +283,7 @@ A Helm chart for deploying Vulcan
 | persistence.conf.secretKeyBase | string | `"TBDTBD"` |  |
 | persistence.conf.railsMaxThreads | int | `4` |  |
 | persistence.dogstatsd.image.repository | string | `"datadog/dogstatsd"` |  |
-| persistence.dogstatsd.image.tag | string | `"7.25.1"` |  |
+| persistence.dogstatsd.image.tag | string | `"7.27.0"` |  |
 | persistence.dogstatsd.enabled | bool | `true` |  |
 | stream.enabled | bool | `true` |  |
 | stream.name | string | `"stream"` |  |
@@ -352,7 +292,7 @@ A Helm chart for deploying Vulcan
 | stream.<<.extraEnv | object | `{}` | custom env variables |
 | stream.<<.proxy.enabled | bool | `true` |  |
 | stream.<<.proxy.image.repository | string | `"haproxy"` |  |
-| stream.<<.proxy.image.tag | string | `"2.2-alpine"` |  |
+| stream.<<.proxy.image.tag | string | `"2.3-alpine"` |  |
 | stream.<<.proxy.port | int | `9090` |  |
 | stream.<<.proxy.cache.enabled | bool | `false` |  |
 | stream.<<.proxy.cache.maxSize | int | `64` |  |
@@ -432,7 +372,7 @@ A Helm chart for deploying Vulcan
 | stream.conf.redis.db | int | `0` |  |
 | stream.conf.redis.ttl | int | `0` |  |
 | stream.dogstatsd.image.repository | string | `"datadog/dogstatsd"` |  |
-| stream.dogstatsd.image.tag | string | `"7.25.1"` |  |
+| stream.dogstatsd.image.tag | string | `"7.27.0"` |  |
 | stream.dogstatsd.enabled | bool | `true` |  |
 | api.enabled | bool | `true` |  |
 | api.name | string | `"api"` |  |
@@ -441,7 +381,7 @@ A Helm chart for deploying Vulcan
 | api.<<.extraEnv | object | `{}` | custom env variables |
 | api.<<.proxy.enabled | bool | `true` |  |
 | api.<<.proxy.image.repository | string | `"haproxy"` |  |
-| api.<<.proxy.image.tag | string | `"2.2-alpine"` |  |
+| api.<<.proxy.image.tag | string | `"2.3-alpine"` |  |
 | api.<<.proxy.port | int | `9090` |  |
 | api.<<.proxy.cache.enabled | bool | `false` |  |
 | api.<<.proxy.cache.maxSize | int | `64` |  |
@@ -550,7 +490,7 @@ A Helm chart for deploying Vulcan
 | api.conf.awscatalogue.retries | int | `1` |  |
 | api.conf.awscatalogue.retry_interval | int | `2` |  |
 | api.dogstatsd.image.repository | string | `"datadog/dogstatsd"` |  |
-| api.dogstatsd.image.tag | string | `"7.25.1"` |  |
+| api.dogstatsd.image.tag | string | `"7.27.0"` |  |
 | api.dogstatsd.enabled | bool | `true` |  |
 | api.ingress.path | string | `"/api"` |  |
 | crontinuous.enabled | bool | `true` |  |
@@ -560,7 +500,7 @@ A Helm chart for deploying Vulcan
 | crontinuous.<<.extraEnv | object | `{}` | custom env variables |
 | crontinuous.<<.proxy.enabled | bool | `true` |  |
 | crontinuous.<<.proxy.image.repository | string | `"haproxy"` |  |
-| crontinuous.<<.proxy.image.tag | string | `"2.2-alpine"` |  |
+| crontinuous.<<.proxy.image.tag | string | `"2.3-alpine"` |  |
 | crontinuous.<<.proxy.port | int | `9090` |  |
 | crontinuous.<<.proxy.cache.enabled | bool | `false` |  |
 | crontinuous.<<.proxy.cache.maxSize | int | `64` |  |
@@ -647,7 +587,7 @@ A Helm chart for deploying Vulcan
 | scanengine.<<.extraEnv | object | `{}` | custom env variables |
 | scanengine.<<.proxy.enabled | bool | `true` |  |
 | scanengine.<<.proxy.image.repository | string | `"haproxy"` |  |
-| scanengine.<<.proxy.image.tag | string | `"2.2-alpine"` |  |
+| scanengine.<<.proxy.image.tag | string | `"2.3-alpine"` |  |
 | scanengine.<<.proxy.port | int | `9090` |  |
 | scanengine.<<.proxy.cache.enabled | bool | `false` |  |
 | scanengine.<<.proxy.cache.maxSize | int | `64` |  |
@@ -738,7 +678,7 @@ A Helm chart for deploying Vulcan
 | scanengine.db.<<.sslMode | string | `"disable"` |  |
 | scanengine.db.name | string | `"scanengine"` |  |
 | scanengine.dogstatsd.image.repository | string | `"datadog/dogstatsd"` |  |
-| scanengine.dogstatsd.image.tag | string | `"7.25.1"` |  |
+| scanengine.dogstatsd.image.tag | string | `"7.27.0"` |  |
 | scanengine.dogstatsd.enabled | bool | `true` |  |
 | ui.enabled | bool | `true` |  |
 | ui.name | string | `"ui"` |  |
@@ -747,7 +687,7 @@ A Helm chart for deploying Vulcan
 | ui.<<.extraEnv | object | `{}` | custom env variables |
 | ui.<<.proxy.enabled | bool | `true` |  |
 | ui.<<.proxy.image.repository | string | `"haproxy"` |  |
-| ui.<<.proxy.image.tag | string | `"2.2-alpine"` |  |
+| ui.<<.proxy.image.tag | string | `"2.3-alpine"` |  |
 | ui.<<.proxy.port | int | `9090` |  |
 | ui.<<.proxy.cache.enabled | bool | `false` |  |
 | ui.<<.proxy.cache.maxSize | int | `64` |  |
@@ -832,7 +772,7 @@ A Helm chart for deploying Vulcan
 | insights.<<.extraEnv | object | `{}` | custom env variables |
 | insights.<<.proxy.enabled | bool | `true` |  |
 | insights.<<.proxy.image.repository | string | `"haproxy"` |  |
-| insights.<<.proxy.image.tag | string | `"2.2-alpine"` |  |
+| insights.<<.proxy.image.tag | string | `"2.3-alpine"` |  |
 | insights.<<.proxy.port | int | `9090` |  |
 | insights.<<.proxy.cache.enabled | bool | `false` |  |
 | insights.<<.proxy.cache.maxSize | int | `64` |  |
@@ -905,7 +845,7 @@ A Helm chart for deploying Vulcan
 | insights.proxy.enabled | bool | `true` |  |
 | insights.proxy.<<.enabled | bool | `true` |  |
 | insights.proxy.<<.image.repository | string | `"haproxy"` |  |
-| insights.proxy.<<.image.tag | string | `"2.2-alpine"` |  |
+| insights.proxy.<<.image.tag | string | `"2.3-alpine"` |  |
 | insights.proxy.<<.port | int | `9090` |  |
 | insights.proxy.<<.cache.enabled | bool | `false` |  |
 | insights.proxy.<<.cache.maxSize | int | `64` |  |
@@ -933,7 +873,7 @@ A Helm chart for deploying Vulcan
 | reportsgenerator.<<.extraEnv | object | `{}` | custom env variables |
 | reportsgenerator.<<.proxy.enabled | bool | `true` |  |
 | reportsgenerator.<<.proxy.image.repository | string | `"haproxy"` |  |
-| reportsgenerator.<<.proxy.image.tag | string | `"2.2-alpine"` |  |
+| reportsgenerator.<<.proxy.image.tag | string | `"2.3-alpine"` |  |
 | reportsgenerator.<<.proxy.port | int | `9090` |  |
 | reportsgenerator.<<.proxy.cache.enabled | bool | `false` |  |
 | reportsgenerator.<<.proxy.cache.maxSize | int | `64` |  |
@@ -1035,7 +975,7 @@ A Helm chart for deploying Vulcan
 | reportsgenerator.db.<<.sslMode | string | `"disable"` |  |
 | reportsgenerator.db.name | string | `"reportsgenerator"` |  |
 | reportsgenerator.dogstatsd.image.repository | string | `"datadog/dogstatsd"` |  |
-| reportsgenerator.dogstatsd.image.tag | string | `"7.25.1"` |  |
+| reportsgenerator.dogstatsd.image.tag | string | `"7.27.0"` |  |
 | reportsgenerator.dogstatsd.enabled | bool | `true` |  |
 | redis.enabled | bool | `true` |  |
 | redis.name | string | `"redis"` |  |
@@ -1044,7 +984,7 @@ A Helm chart for deploying Vulcan
 | redis.<<.extraEnv | object | `{}` | custom env variables |
 | redis.<<.proxy.enabled | bool | `true` |  |
 | redis.<<.proxy.image.repository | string | `"haproxy"` |  |
-| redis.<<.proxy.image.tag | string | `"2.2-alpine"` |  |
+| redis.<<.proxy.image.tag | string | `"2.3-alpine"` |  |
 | redis.<<.proxy.port | int | `9090` |  |
 | redis.<<.proxy.cache.enabled | bool | `false` |  |
 | redis.<<.proxy.cache.maxSize | int | `64` |  |
@@ -1112,7 +1052,7 @@ A Helm chart for deploying Vulcan
 | metrics.<<.extraEnv | object | `{}` | custom env variables |
 | metrics.<<.proxy.enabled | bool | `true` |  |
 | metrics.<<.proxy.image.repository | string | `"haproxy"` |  |
-| metrics.<<.proxy.image.tag | string | `"2.2-alpine"` |  |
+| metrics.<<.proxy.image.tag | string | `"2.3-alpine"` |  |
 | metrics.<<.proxy.port | int | `9090` |  |
 | metrics.<<.proxy.cache.enabled | bool | `false` |  |
 | metrics.<<.proxy.cache.maxSize | int | `64` |  |
@@ -1187,7 +1127,7 @@ A Helm chart for deploying Vulcan
 | metrics.conf.vulcanAPIExternal | string | `nil` |  |
 | metrics.infra.sqs | bool | `true` |  |
 | metrics.dogstatsd.image.repository | string | `"datadog/dogstatsd"` |  |
-| metrics.dogstatsd.image.tag | string | `"7.25.1"` |  |
+| metrics.dogstatsd.image.tag | string | `"7.27.0"` |  |
 | metrics.dogstatsd.enabled | bool | `true` |  |
 | vulndbapi.enabled | bool | `true` |  |
 | vulndbapi.name | string | `"vulndbapi"` |  |
@@ -1196,7 +1136,7 @@ A Helm chart for deploying Vulcan
 | vulndbapi.<<.extraEnv | object | `{}` | custom env variables |
 | vulndbapi.<<.proxy.enabled | bool | `true` |  |
 | vulndbapi.<<.proxy.image.repository | string | `"haproxy"` |  |
-| vulndbapi.<<.proxy.image.tag | string | `"2.2-alpine"` |  |
+| vulndbapi.<<.proxy.image.tag | string | `"2.3-alpine"` |  |
 | vulndbapi.<<.proxy.port | int | `9090` |  |
 | vulndbapi.<<.proxy.cache.enabled | bool | `false` |  |
 | vulndbapi.<<.proxy.cache.maxSize | int | `64` |  |
@@ -1280,7 +1220,7 @@ A Helm chart for deploying Vulcan
 | vulndb.<<.extraEnv | object | `{}` | custom env variables |
 | vulndb.<<.proxy.enabled | bool | `true` |  |
 | vulndb.<<.proxy.image.repository | string | `"haproxy"` |  |
-| vulndb.<<.proxy.image.tag | string | `"2.2-alpine"` |  |
+| vulndb.<<.proxy.image.tag | string | `"2.3-alpine"` |  |
 | vulndb.<<.proxy.port | int | `9090` |  |
 | vulndb.<<.proxy.cache.enabled | bool | `false` |  |
 | vulndb.<<.proxy.cache.maxSize | int | `64` |  |

@@ -943,7 +943,7 @@ spec:
       containers:
         
         - name: dogstatsd
-          image: "datadog/dogstatsd:7.25.1"
+          image: "datadog/dogstatsd:7.27.0"
           envFrom:
           - secretRef:
               name: "myrelease-vulcan-dogstatsd"
@@ -952,7 +952,7 @@ spec:
               name: dogstatsd
               protocol: UDP
         - name: proxy
-          image: "haproxy:2.2-alpine"
+          image: "haproxy:2.3-alpine"
           imagePullPolicy: Always
           ports:
             - name: http
@@ -1100,7 +1100,7 @@ spec:
       containers:
         
         - name: proxy
-          image: "haproxy:2.2-alpine"
+          image: "haproxy:2.3-alpine"
           imagePullPolicy: Always
           ports:
             - name: http
@@ -1206,7 +1206,7 @@ spec:
       containers:
         
         - name: proxy
-          image: "haproxy:2.2-alpine"
+          image: "haproxy:2.3-alpine"
           imagePullPolicy: Always
           ports:
             - name: http
@@ -1341,7 +1341,7 @@ spec:
       containers:
         
         - name: dogstatsd
-          image: "datadog/dogstatsd:7.25.1"
+          image: "datadog/dogstatsd:7.27.0"
           envFrom:
           - secretRef:
               name: "myrelease-vulcan-dogstatsd"
@@ -1443,7 +1443,7 @@ spec:
       containers:
         
         - name: dogstatsd
-          image: "datadog/dogstatsd:7.25.1"
+          image: "datadog/dogstatsd:7.27.0"
           envFrom:
           - secretRef:
               name: "myrelease-vulcan-dogstatsd"
@@ -1452,7 +1452,7 @@ spec:
               name: dogstatsd
               protocol: UDP
         - name: proxy
-          image: "haproxy:2.2-alpine"
+          image: "haproxy:2.3-alpine"
           imagePullPolicy: Always
           ports:
             - name: http
@@ -1611,7 +1611,7 @@ spec:
       containers:
         
         - name: dogstatsd
-          image: "datadog/dogstatsd:7.25.1"
+          image: "datadog/dogstatsd:7.27.0"
           envFrom:
           - secretRef:
               name: "myrelease-vulcan-dogstatsd"
@@ -1627,7 +1627,7 @@ spec:
                       cpu: 100m
                       memory: 128Mi
         - name: proxy
-          image: "haproxy:2.2-alpine"
+          image: "haproxy:2.3-alpine"
           imagePullPolicy: Always
           ports:
             - name: http
@@ -1792,7 +1792,7 @@ spec:
       containers:
         
         - name: dogstatsd
-          image: "datadog/dogstatsd:7.25.1"
+          image: "datadog/dogstatsd:7.27.0"
           envFrom:
           - secretRef:
               name: "myrelease-vulcan-dogstatsd"
@@ -1801,7 +1801,7 @@ spec:
               name: dogstatsd
               protocol: UDP
         - name: proxy
-          image: "haproxy:2.2-alpine"
+          image: "haproxy:2.3-alpine"
           imagePullPolicy: Always
           ports:
             - name: http
@@ -1914,7 +1914,7 @@ spec:
       containers:
         
         - name: dogstatsd
-          image: "datadog/dogstatsd:7.25.1"
+          image: "datadog/dogstatsd:7.27.0"
           envFrom:
           - secretRef:
               name: "myrelease-vulcan-dogstatsd"
@@ -1923,7 +1923,7 @@ spec:
               name: dogstatsd
               protocol: UDP
         - name: proxy
-          image: "haproxy:2.2-alpine"
+          image: "haproxy:2.3-alpine"
           imagePullPolicy: Always
           ports:
             - name: http
@@ -2093,7 +2093,7 @@ spec:
       containers:
         
         - name: dogstatsd
-          image: "datadog/dogstatsd:7.25.1"
+          image: "datadog/dogstatsd:7.27.0"
           envFrom:
           - secretRef:
               name: "myrelease-vulcan-dogstatsd"
@@ -2102,7 +2102,7 @@ spec:
               name: dogstatsd
               protocol: UDP
         - name: proxy
-          image: "haproxy:2.2-alpine"
+          image: "haproxy:2.3-alpine"
           imagePullPolicy: Always
           ports:
             - name: http
@@ -2208,7 +2208,7 @@ spec:
       containers:
         
         - name: proxy
-          image: "haproxy:2.2-alpine"
+          image: "haproxy:2.3-alpine"
           imagePullPolicy: Always
           ports:
             - name: http
@@ -2399,7 +2399,7 @@ spec:
       containers:
         
         - name: proxy
-          image: "haproxy:2.2-alpine"
+          image: "haproxy:2.3-alpine"
           imagePullPolicy: Always
           ports:
             - name: http

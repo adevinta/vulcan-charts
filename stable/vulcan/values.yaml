@@ -5,7 +5,8 @@ global:
   domain: vulcan.local
   region: local
 
-defaults:
+# -- Anchors
+anchors:
 
   db: &db
     user: postgres
@@ -15,7 +16,7 @@ defaults:
   dogstatsd: &dogstatsd
     image: 
       repository: datadog/dogstatsd
-      tag: 7.25.1
+      tag: 7.27.0
     enabled: true
 
   # Default values for all the components
@@ -33,7 +34,7 @@ defaults:
       enabled: true
       image:
         repository: haproxy
-        tag: 2.2-alpine
+        tag: 2.3-alpine
       port: 9090  # We use non 80 port to prevent prometheus trying to access metrics on port 80
       cache:
         enabled: false
