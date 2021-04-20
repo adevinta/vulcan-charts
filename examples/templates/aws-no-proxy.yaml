@@ -1515,7 +1515,7 @@ spec:
         - name: sqsexporter
           
           image: "jesusfcr/sqs-prometheus-exporter:improve"
-          imagePullPolicy: 
+          imagePullPolicy: Always
           lifecycle:
             preStop:
               exec:

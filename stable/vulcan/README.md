@@ -637,6 +637,7 @@ A Helm chart for deploying Vulcan
 | sqsexporter.<<.affinity | object | `{}` |  |
 | sqsexporter.image.repository | string | `"jesusfcr/sqs-prometheus-exporter"` |  |
 | sqsexporter.image.tag | string | `"improve"` |  |
+| sqsexporter.image.pullPolicy | string | `"Always"` |  |
 | sqsexporter.queueNamePrefix | string | `"VulcanK8S"` |  |
 | sqsexporter.infra.sqs | bool | `true` |  |
 | dogstatsd.apiKey | string | `"TBD"` |  |

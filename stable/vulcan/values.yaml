@@ -683,6 +683,8 @@ sqsexporter:
   image:
     repository: jesusfcr/sqs-prometheus-exporter
     tag: improve
+    pullPolicy: Always
+
   queueNamePrefix: VulcanK8S
   infra:
     sqs: true
