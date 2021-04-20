@@ -1871,7 +1871,7 @@ spec:
         - name: pullsecretname
 ---
 # Source: vulcan/templates/api/hpa.yaml
-apiVersion: autoscaling/v1
+apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
   name: myrelease-vulcan-api
@@ -1888,10 +1888,14 @@ spec:
     name: myrelease-vulcan-api
   minReplicas: 1
   maxReplicas: 5
-  targetCPUUtilizationPercentage: 50
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        targetAverageUtilization: 50
 ---
 # Source: vulcan/templates/insights/hpa.yaml
-apiVersion: autoscaling/v1
+apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
   name: myrelease-vulcan-insights
@@ -1908,10 +1912,14 @@ spec:
     name: myrelease-vulcan-insights
   minReplicas: 1
   maxReplicas: 5
-  targetCPUUtilizationPercentage: 50
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        targetAverageUtilization: 50
 ---
 # Source: vulcan/templates/persistence/hpa.yaml
-apiVersion: autoscaling/v1
+apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
   name: myrelease-vulcan-persistence
@@ -1928,10 +1936,14 @@ spec:
     name: myrelease-vulcan-persistence
   minReplicas: 1
   maxReplicas: 5
-  targetCPUUtilizationPercentage: 50
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        targetAverageUtilization: 50
 ---
 # Source: vulcan/templates/results/hpa.yaml
-apiVersion: autoscaling/v1
+apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
   name: myrelease-vulcan-results
@@ -1948,10 +1960,14 @@ spec:
     name: myrelease-vulcan-results
   minReplicas: 1
   maxReplicas: 5
-  targetCPUUtilizationPercentage: 50
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        targetAverageUtilization: 50
 ---
 # Source: vulcan/templates/scanengine/hpa.yaml
-apiVersion: autoscaling/v1
+apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
   name: myrelease-vulcan-scanengine
@@ -1968,7 +1984,11 @@ spec:
     name: myrelease-vulcan-scanengine
   minReplicas: 1
   maxReplicas: 5
-  targetCPUUtilizationPercentage: 50
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        targetAverageUtilization: 50
 ---
 # Source: vulcan/templates/api/ingress.yaml
 apiVersion: networking.k8s.io/v1beta1
