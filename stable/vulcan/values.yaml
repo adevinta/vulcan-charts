@@ -115,6 +115,12 @@ anchors:
     affinity: {}
 
 
+waitfordb:
+  image:
+    repository: postgres
+    tag: 9.6-alpine
+
+
 postgresql:
   enabled: false
   postgresqlUsername: postgres
@@ -266,11 +272,6 @@ persistence:
     tag: latest
     pullPolicy: Always
 
-  waitfordb:
-    image:
-      repository: postgres
-      tag: 9.6-alpine
-
   # -- liveness settings
   livenessProbe:
     <<: *comp-livenessProbe
@@ -308,11 +309,6 @@ stream:
     tag: latest
     pullPolicy: Always
 
-  waitfordb:
-    image:
-      repository: postgres
-      tag: 9.6-alpine
-
   # -- liveness settings
   livenessProbe:
     <<: *comp-livenessProbe
@@ -345,11 +341,6 @@ api:
     repository: adevinta/vulcan-api
     tag: latest
     pullPolicy: Always
-
-  waitfordb:
-    image:
-      repository: postgres
-      tag: 9.6-alpine
 
   infra:
     sqs: true
@@ -455,11 +446,6 @@ scanengine:
     repository: adevinta/vulcan-scan-engine
     tag: latest
     pullPolicy: Always
-
-  waitfordb:
-    image:
-      repository: postgres
-      tag: 9.6-alpine
 
   # -- liveness settings
   livenessProbe:
@@ -589,11 +575,6 @@ reportsgenerator:
     tag: latest
     pullPolicy: Always
 
-  waitfordb:
-    image:
-      repository: postgres
-      tag: 9.6-alpine
-
   # -- liveness settings
   livenessProbe:
     <<: *comp-livenessProbe
@@ -718,11 +699,6 @@ vulndbapi:
     tag: latest
     pullPolicy: Always
 
-  waitfordb:
-    image:
-      repository: postgres
-      tag: 9.6-alpine
-
   # -- liveness settings
   livenessProbe:
     <<: *comp-livenessProbe
@@ -750,11 +726,6 @@ vulndb:
     repository: adevinta/vulnerability-db
     tag: latest
     pullPolicy: Always
-
-  waitfordb:
-    image:
-      repository: postgres
-      tag: 9.6-alpine
 
   conf:
     logLevel: "error"

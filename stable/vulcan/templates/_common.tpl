@@ -119,3 +119,16 @@ tolerations:
 http
 {{- end -}}
 {{- end -}}
+
+
+{{- define "common-deployment-init-waitfordb" -}}
+- name: waitfordb
+  image: "{{ .Values.waitfordb.image.repository }}:{{ .Values.waitfordb.image.tag }}"
+  imagePullPolicy: Always
+  command: ['sh', '-c', 'until pg_isready -t 5; do echo WaitingDB; done;']
+  env:
+  - name: PGHOST
+    value: {{ .Values.comp.db.host | default (include "postgresqlHost" .) | quote }}
+  - name: PGPORT
+    value: {{ .Values.comp.db.port | quote }}
+{{- end -}}

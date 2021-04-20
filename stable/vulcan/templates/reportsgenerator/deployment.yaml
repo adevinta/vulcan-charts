@@ -27,15 +27,7 @@ spec:
         {{- end }}
     spec:
       initContainers:
-        - name: waitfordb
-          image: "{{ .Values.comp.waitfordb.image.repository }}:{{ .Values.comp.waitfordb.image.tag }}"
-          imagePullPolicy: Always
-          command: ['sh', '-c', 'until pg_isready -t 5; do echo WaitingDB; done;']
-          env:
-          - name: PGHOST
-            value: {{ .Values.comp.db.host | default (include "postgresqlHost" .) | quote }}
-          - name: PGPORT
-            value: {{ .Values.comp.db.port | quote }}
+        {{- include "common-deployment-init-waitfordb" . | nindent 8 }}
       containers:
         {{- include "common-deployment-sidecars" . | nindent 8 }}
         - name: {{ .Values.comp.name }}
