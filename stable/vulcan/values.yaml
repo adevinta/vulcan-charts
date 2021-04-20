@@ -84,6 +84,7 @@ anchors:
     # -- readiness settings
     readinessProbe: &comp-readynessProbe
       enabled: true
+      # -- defaults to healthcheckPath
       path:
       initialDelaySeconds: 5
       periodSeconds: 10
