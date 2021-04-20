@@ -29,14 +29,14 @@ lifecycle:
 {{- end -}}
 {{- end -}}
 {{- if .Values.comp.livenessProbe -}}
-{{- if and .Values.comp.livenessProbe.enabled (or .Values.comp.livenessProbe.command .Values.comp.livenessProbe.path )}}
+{{- if and .Values.comp.livenessProbe.enabled (or .Values.comp.livenessProbe.command ( .Values.comp.livenessProbe.path | default .Values.comp.healthcheckPath )) }}
 livenessProbe:
   {{- if .Values.comp.livenessProbe.command }}
   exec:
-    command: {{ .Values.comp.livenessProbe.command }}
+    command: {{ .Values.comp.livenessProbe.command | default .Values.comp.healthcheckPath }}
   {{- else }}
   httpGet:
-    path: {{ .Values.comp.livenessProbe.path }}
+    path: {{ .Values.comp.livenessProbe.path | default .Values.comp.healthcheckPath }}
     port: {{ .Values.comp.containerPort }}
   {{- end }}
   initialDelaySeconds: {{ .Values.comp.livenessProbe.initialDelaySeconds }}
@@ -47,14 +47,14 @@ livenessProbe:
 {{- end }}
 {{- end }}
 {{- if .Values.comp.readinessProbe -}}
-{{- if and .Values.comp.readinessProbe.enabled (or .Values.comp.readinessProbe.command .Values.comp.readinessProbe.path )}}
+{{- if and .Values.comp.readinessProbe.enabled (or .Values.comp.readinessProbe.command ( .Values.comp.readinessProbe.path | default .Values.comp.healthcheckPath )) }}
 readinessProbe:
   {{- if .Values.comp.readinessProbe.command }}
   exec:
     command: {{ .Values.comp.readinessProbe.command }}
   {{- else }}
   httpGet:
-    path: {{ .Values.comp.readinessProbe.path }}
+    path: {{ .Values.comp.readinessProbe.path | default .Values.comp.healthcheckPath }}
     port: {{ .Values.comp.containerPort }}
   {{- end }}
   initialDelaySeconds: {{ .Values.comp.readinessProbe.initialDelaySeconds }}

@@ -250,16 +250,7 @@ results:
     bucketLogs: logs
     linkBase: http://chart-example.local
 
-
-  # -- liveness settings
-  livenessProbe:
-    <<: *comp-livenessProbe
-    path: /healthcheck
-
-  # -- readiness settings
-  readinessProbe:
-    <<: *comp-readynessProbe
-    path: /healthcheck
+  healthcheckPath: /healthcheck
 
   dogstatsd: *dogstatsd
 
@@ -277,15 +268,7 @@ persistence:
     tag: latest
     pullPolicy: Always
 
-  # -- liveness settings
-  livenessProbe:
-    <<: *comp-livenessProbe
-    path: /status
-
-  # -- readiness settings
-  readinessProbe:
-    <<: *comp-readynessProbe
-    path: /status
+  healthcheckPath: /status
 
   infra:
     s3: true
@@ -315,15 +298,7 @@ stream:
     tag: latest
     pullPolicy: Always
 
-  # -- liveness settings
-  livenessProbe:
-    <<: *comp-livenessProbe
-    path: /status
-
-  # -- readiness settings
-  readinessProbe:
-    <<: *comp-readynessProbe
-    path: /status
+  healthcheckPath: /status
 
   conf:
     logLevel: "DEBUG"
@@ -353,15 +328,7 @@ api:
     sns: true
     s3: true
 
-  # -- liveness settings
-  livenessProbe:
-    <<: *comp-livenessProbe
-    path: /api/v1/healthcheck
-
-  # -- readiness settings
-  readinessProbe:
-    <<: *comp-readynessProbe
-    path: /api/v1/healthcheck
+  healthcheckPath: /api/v1/healthcheck
 
   # -- postgres database settings
   db:
@@ -422,15 +389,7 @@ crontinuous:
   infra:
     s3: true
 
-  # -- liveness settings
-  livenessProbe:
-    <<: *comp-livenessProbe
-    path: /healthcheck
-
-  # -- readiness settings
-  readinessProbe:
-    <<: *comp-readynessProbe
-    path: /healthcheck
+  healthcheckPath: /healthcheck
 
   conf:
     region:
@@ -454,15 +413,7 @@ scanengine:
     tag: latest
     pullPolicy: Always
 
-  # -- liveness settings
-  livenessProbe:
-    <<: *comp-livenessProbe
-    path: /v1/healthcheck
-
-  # -- readiness settings
-  readinessProbe:
-    <<: *comp-readynessProbe
-    path: /v1/healthcheck
+  healthcheckPath: /v1/healthcheck
 
   infra:
     sqs: true
@@ -506,15 +457,7 @@ ui:
     tag: latest
     pullPolicy: Always
 
-  # -- liveness settings
-  livenessProbe:
-    <<: *comp-livenessProbe
-    path: /index.html
-
-  # -- readiness settings
-  readinessProbe:
-    <<: *comp-readynessProbe
-    path: /index.html
+  healthcheckPath: /index.html
 
   infra:
     sqs: false
@@ -541,15 +484,7 @@ insights:
     tag: "2.0"
     pullPolicy: Always
 
-  # -- liveness settings
-  livenessProbe:
-    <<: *comp-livenessProbe
-    path: /healthcheck
-
-  # -- readiness settings
-  readinessProbe:
-    <<: *comp-readynessProbe
-    path: /healthcheck
+  healthcheckPath: /healthcheck
 
   # -- proxy settings. mandatory for insights
   proxy:
@@ -583,15 +518,7 @@ reportsgenerator:
     tag: latest
     pullPolicy: Always
 
-  # -- liveness settings
-  livenessProbe:
-    <<: *comp-livenessProbe
-    path: /healthcheck
-
-  # -- readiness settings
-  readinessProbe:
-    <<: *comp-readynessProbe
-    path: /healthcheck
+  healthcheckPath: /healthcheck
 
   infra:
     sqs: true
@@ -708,15 +635,7 @@ vulndbapi:
     tag: latest
     pullPolicy: Always
 
-  # -- liveness settings
-  livenessProbe:
-    <<: *comp-livenessProbe
-    path: /healthcheck
-
-  # -- readiness settings
-  readinessProbe:
-    <<: *comp-readynessProbe
-    path: /healthcheck
+  healthcheckPath: /healthcheck
 
   conf:
     logLevel: info

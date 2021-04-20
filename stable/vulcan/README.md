@@ -110,8 +110,7 @@ A Helm chart for deploying Vulcan
 | results.conf.bucketReports | string | `"reports"` |  |
 | results.conf.bucketLogs | string | `"logs"` |  |
 | results.conf.linkBase | string | `"http://chart-example.local"` |  |
-| results.livenessProbe | object | `{"<<":{"enabled":true,"failureThreshold":10,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"path":"/healthcheck"}` | liveness settings |
-| results.readinessProbe | object | `{"<<":{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"path":"/healthcheck"}` | readiness settings |
+| results.healthcheckPath | string | `"/healthcheck"` |  |
 | results.dogstatsd.image.repository | string | `"datadog/dogstatsd"` |  |
 | results.dogstatsd.image.tag | string | `"7.27.0"` |  |
 | results.dogstatsd.enabled | bool | `true` |  |
@@ -141,8 +140,7 @@ A Helm chart for deploying Vulcan
 | persistence.image.repository | string | `"adevinta/vulcan-persistence"` |  |
 | persistence.image.tag | string | `"latest"` |  |
 | persistence.image.pullPolicy | string | `"Always"` |  |
-| persistence.livenessProbe | object | `{"<<":{"enabled":true,"failureThreshold":10,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"path":"/status"}` | liveness settings |
-| persistence.readinessProbe | object | `{"<<":{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"path":"/status"}` | readiness settings |
+| persistence.healthcheckPath | string | `"/status"` |  |
 | persistence.infra.s3 | bool | `true` |  |
 | persistence.infra.sns | bool | `true` |  |
 | persistence.infra.sqs | bool | `true` |  |
@@ -178,8 +176,7 @@ A Helm chart for deploying Vulcan
 | stream.image.repository | string | `"adevinta/vulcan-stream"` |  |
 | stream.image.tag | string | `"latest"` |  |
 | stream.image.pullPolicy | string | `"Always"` |  |
-| stream.livenessProbe | object | `{"<<":{"enabled":true,"failureThreshold":10,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"path":"/status"}` | liveness settings |
-| stream.readinessProbe | object | `{"<<":{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"path":"/status"}` | readiness settings |
+| stream.healthcheckPath | string | `"/status"` |  |
 | stream.conf.logLevel | string | `"DEBUG"` |  |
 | stream.conf.redis.host | string | `"TBD"` |  |
 | stream.conf.redis.port | string | `"TDB"` |  |
@@ -218,8 +215,7 @@ A Helm chart for deploying Vulcan
 | api.infra.sqs | bool | `true` |  |
 | api.infra.sns | bool | `true` |  |
 | api.infra.s3 | bool | `true` |  |
-| api.livenessProbe | object | `{"<<":{"enabled":true,"failureThreshold":10,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"path":"/api/v1/healthcheck"}` | liveness settings |
-| api.readinessProbe | object | `{"<<":{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"path":"/api/v1/healthcheck"}` | readiness settings |
+| api.healthcheckPath | string | `"/api/v1/healthcheck"` |  |
 | api.db | object | `{"<<":{"ca":null,"host":null,"name":null,"password":"TBD","port":null,"sslMode":"disable","user":"postgres"},"name":"api"}` | postgres database settings |
 | api.conf.debug | string | `"false"` |  |
 | api.conf.bucketReports | string | `"reports"` |  |
@@ -280,8 +276,7 @@ A Helm chart for deploying Vulcan
 | crontinuous.image.tag | string | `"latest"` |  |
 | crontinuous.image.pullPolicy | string | `"Always"` |  |
 | crontinuous.infra.s3 | bool | `true` |  |
-| crontinuous.livenessProbe | object | `{"<<":{"enabled":true,"failureThreshold":10,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"path":"/healthcheck"}` | liveness settings |
-| crontinuous.readinessProbe | object | `{"<<":{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"path":"/healthcheck"}` | readiness settings |
+| crontinuous.healthcheckPath | string | `"/healthcheck"` |  |
 | crontinuous.conf.region | string | `nil` |  |
 | crontinuous.conf.vulcanToken | string | `"TBDTBDTBD"` |  |
 | crontinuous.conf.crontinuousBucket | string | `"crontinuous"` |  |
@@ -316,8 +311,7 @@ A Helm chart for deploying Vulcan
 | scanengine.image.repository | string | `"adevinta/vulcan-scan-engine"` |  |
 | scanengine.image.tag | string | `"latest"` |  |
 | scanengine.image.pullPolicy | string | `"Always"` |  |
-| scanengine.livenessProbe | object | `{"<<":{"enabled":true,"failureThreshold":10,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"path":"/v1/healthcheck"}` | liveness settings |
-| scanengine.readinessProbe | object | `{"<<":{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"path":"/v1/healthcheck"}` | readiness settings |
+| scanengine.healthcheckPath | string | `"/v1/healthcheck"` |  |
 | scanengine.infra.sqs | bool | `true` |  |
 | scanengine.infra.sns | bool | `true` |  |
 | scanengine.conf.logLevel | string | `"error"` |  |
@@ -361,8 +355,7 @@ A Helm chart for deploying Vulcan
 | ui.image.repository | string | `"adevinta/vulcan-ui"` |  |
 | ui.image.tag | string | `"latest"` |  |
 | ui.image.pullPolicy | string | `"Always"` |  |
-| ui.livenessProbe | object | `{"<<":{"enabled":true,"failureThreshold":10,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"path":"/index.html"}` | liveness settings |
-| ui.readinessProbe | object | `{"<<":{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"path":"/index.html"}` | readiness settings |
+| ui.healthcheckPath | string | `"/index.html"` |  |
 | ui.infra.sqs | bool | `false` |  |
 | ui.conf.apiUrl | string | `nil` |  |
 | ui.conf.docs.apiLink | string | `nil` |  |
@@ -396,8 +389,7 @@ A Helm chart for deploying Vulcan
 | insights.image.repository | string | `"pottava/s3-proxy"` |  |
 | insights.image.tag | string | `"2.0"` |  |
 | insights.image.pullPolicy | string | `"Always"` |  |
-| insights.livenessProbe | object | `{"<<":{"enabled":true,"failureThreshold":10,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"path":"/healthcheck"}` | liveness settings |
-| insights.readinessProbe | object | `{"<<":{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"path":"/healthcheck"}` | readiness settings |
+| insights.healthcheckPath | string | `"/healthcheck"` |  |
 | insights.proxy | object | `{"<<":{"cache":{"enabled":false,"maxAge":240,"maxSize":64},"enabled":true,"image":{"repository":"haproxy","tag":"2.3-alpine"},"lifecycle":{"preStopSleep":30},"metricsPort":9101,"port":9090,"probe":false,"probeInitialDelay":5,"probePath":"/healthz","probeTimeoutSeconds":3,"resources":{},"timeoutClient":null,"timeoutConnect":null,"timeoutServer":null,"timeoutTunnel":null},"cache":{"enabled":true},"enabled":true}` | proxy settings. mandatory for insights |
 | insights.conf.region | string | `nil` |  |
 | insights.conf.log | string | `"false"` |  |
@@ -434,8 +426,7 @@ A Helm chart for deploying Vulcan
 | reportsgenerator.image.repository | string | `"adevinta/vulcan-reports-generator"` |  |
 | reportsgenerator.image.tag | string | `"latest"` |  |
 | reportsgenerator.image.pullPolicy | string | `"Always"` |  |
-| reportsgenerator.livenessProbe | object | `{"<<":{"enabled":true,"failureThreshold":10,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"path":"/healthcheck"}` | liveness settings |
-| reportsgenerator.readinessProbe | object | `{"<<":{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"path":"/healthcheck"}` | readiness settings |
+| reportsgenerator.healthcheckPath | string | `"/healthcheck"` |  |
 | reportsgenerator.infra.sqs | bool | `true` |  |
 | reportsgenerator.conf.logLevel | string | `"error"` |  |
 | reportsgenerator.conf.queueArn | string | `"arn:aws:sqs:local:012345678900:VulcanK8SReportsGenerator"` |  |
@@ -570,8 +561,7 @@ A Helm chart for deploying Vulcan
 | vulndbapi.image.repository | string | `"adevinta/vulnerability-db-api"` |  |
 | vulndbapi.image.tag | string | `"latest"` |  |
 | vulndbapi.image.pullPolicy | string | `"Always"` |  |
-| vulndbapi.livenessProbe | object | `{"<<":{"enabled":true,"failureThreshold":10,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"path":"/healthcheck"}` | liveness settings |
-| vulndbapi.readinessProbe | object | `{"<<":{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"path":"/healthcheck"}` | readiness settings |
+| vulndbapi.healthcheckPath | string | `"/healthcheck"` |  |
 | vulndbapi.conf.logLevel | string | `"info"` |  |
 | vulndbapi.db | object | `{"<<":{"ca":null,"host":null,"name":null,"password":"TBD","port":null,"sslMode":"disable","user":"postgres"},"name":"vulnerabilitydb"}` | postgres database settings |
 | vulndb.enabled | bool | `true` |  |
