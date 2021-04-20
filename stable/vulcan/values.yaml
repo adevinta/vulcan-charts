@@ -75,7 +75,7 @@ anchors:
       successThreshold: 1
       failureThreshold: 10
 
-    # -- readyness settings
+    # -- readiness settings
     readinessProbe: &comp-readynessProbe
       enabled: true
       path:
@@ -238,10 +238,13 @@ results:
     bucketLogs: logs
     linkBase: http://chart-example.local
 
+
+  # -- liveness settings
   livenessProbe:
     <<: *comp-livenessProbe
     path: /healthcheck
 
+  # -- readiness settings
   readinessProbe:
     <<: *comp-readynessProbe
     path: /healthcheck
@@ -267,10 +270,12 @@ persistence:
       repository: postgres
       tag: 9.6-alpine
 
+  # -- liveness settings
   livenessProbe:
     <<: *comp-livenessProbe
     path: /status
 
+  # -- readiness settings
   readinessProbe:
     <<: *comp-readynessProbe
     path: /status
@@ -307,10 +312,12 @@ stream:
       repository: postgres
       tag: 9.6-alpine
 
+  # -- liveness settings
   livenessProbe:
     <<: *comp-livenessProbe
     path: /status
 
+  # -- readiness settings
   readinessProbe:
     <<: *comp-readynessProbe
     path: /status
@@ -348,10 +355,12 @@ api:
     sns: true
     s3: true
 
+  # -- liveness settings
   livenessProbe:
     <<: *comp-livenessProbe
     path: /api/v1/healthcheck
 
+  # -- readiness settings
   readinessProbe:
     <<: *comp-readynessProbe
     path: /api/v1/healthcheck
@@ -414,10 +423,12 @@ crontinuous:
   infra:
     s3: true
 
+  # -- liveness settings
   livenessProbe:
     <<: *comp-livenessProbe
     path: /healthcheck
 
+  # -- readiness settings
   readinessProbe:
     <<: *comp-readynessProbe
     path: /healthcheck
@@ -449,10 +460,12 @@ scanengine:
       repository: postgres
       tag: 9.6-alpine
 
+  # -- liveness settings
   livenessProbe:
     <<: *comp-livenessProbe
     path: /v1/healthcheck
 
+  # -- readiness settings
   readinessProbe:
     <<: *comp-readynessProbe
     path: /v1/healthcheck
@@ -498,10 +511,12 @@ ui:
     tag: latest
     pullPolicy: Always
 
+  # -- liveness settings
   livenessProbe:
     <<: *comp-livenessProbe
     path: /index.html
 
+  # -- readiness settings
   readinessProbe:
     <<: *comp-readynessProbe
     path: /index.html
@@ -531,10 +546,12 @@ insights:
     tag: "2.0"
     pullPolicy: Always
 
+  # -- liveness settings
   livenessProbe:
     <<: *comp-livenessProbe
     path: /healthcheck
 
+  # -- readiness settings
   readinessProbe:
     <<: *comp-readynessProbe
     path: /healthcheck
@@ -576,10 +593,12 @@ reportsgenerator:
       repository: postgres
       tag: 9.6-alpine
 
+  # -- liveness settings
   livenessProbe:
     <<: *comp-livenessProbe
     path: /healthcheck
 
+  # -- readiness settings
   readinessProbe:
     <<: *comp-readynessProbe
     path: /healthcheck
@@ -703,10 +722,12 @@ vulndbapi:
       repository: postgres
       tag: 9.6-alpine
 
+  # -- liveness settings
   livenessProbe:
     <<: *comp-livenessProbe
     path: /healthcheck
 
+  # -- readiness settings
   readinessProbe:
     <<: *comp-readynessProbe
     path: /healthcheck

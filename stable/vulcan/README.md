@@ -23,7 +23,7 @@ A Helm chart for deploying Vulcan
 | anchors.comp.extraEnv | object | `{}` | custom env variables |
 | anchors.comp.proxy | object | `{"cache":{"enabled":false,"maxAge":240,"maxSize":64},"enabled":true,"image":{"repository":"haproxy","tag":"2.3-alpine"},"lifecycle":{"preStopSleep":30},"port":9090,"probe":false,"probeInitialDelay":5,"probePath":"/healthz","probeTimeoutSeconds":3,"resources":{},"timeoutClient":null,"timeoutConnect":null,"timeoutServer":null,"timeoutTunnel":null}` | proxy settings |
 | anchors.comp.livenessProbe | object | `{"enabled":true,"failureThreshold":10,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3}` | liveness settings |
-| anchors.comp.readinessProbe | object | `{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3}` | readyness settings |
+| anchors.comp.readinessProbe | object | `{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3}` | readiness settings |
 | anchors.comp.autoscaling | object | `{"enabled":false,"maxReplicas":5,"minReplicas":1,"targetCPUUtilizationPercentage":50,"targetMemoryUtilizationPercentage":null}` | autoscaling settings |
 | anchors.comp.service | object | `{"port":80,"portName":null,"protocol":"TCP","targetPort":null,"type":"ClusterIP"}` | service settings |
 | anchors.comp.ingress | object | `{"annotations":{},"enabled":false,"hosts":[],"tls":[]}` | ingress settings |
@@ -52,7 +52,7 @@ A Helm chart for deploying Vulcan
 | goaws.<<.containerPort | int | `8080` |  |
 | goaws.<<.lifecycle.preStopSleep | int | `30` |  |
 | goaws.<<.livenessProbe | object | `{"enabled":true,"failureThreshold":10,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3}` | liveness settings |
-| goaws.<<.readinessProbe | object | `{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3}` | readyness settings |
+| goaws.<<.readinessProbe | object | `{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3}` | readiness settings |
 | goaws.<<.autoscaling | object | `{"enabled":false,"maxReplicas":5,"minReplicas":1,"targetCPUUtilizationPercentage":50,"targetMemoryUtilizationPercentage":null}` | autoscaling settings |
 | goaws.<<.service | object | `{"port":80,"portName":null,"protocol":"TCP","targetPort":null,"type":"ClusterIP"}` | service settings |
 | goaws.<<.ingress | object | `{"annotations":{},"enabled":false,"hosts":[],"tls":[]}` | ingress settings |
@@ -91,7 +91,7 @@ A Helm chart for deploying Vulcan
 | results.<<.containerPort | int | `8080` |  |
 | results.<<.lifecycle.preStopSleep | int | `30` |  |
 | results.<<.livenessProbe | object | `{"enabled":true,"failureThreshold":10,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3}` | liveness settings |
-| results.<<.readinessProbe | object | `{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3}` | readyness settings |
+| results.<<.readinessProbe | object | `{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3}` | readiness settings |
 | results.<<.autoscaling | object | `{"enabled":false,"maxReplicas":5,"minReplicas":1,"targetCPUUtilizationPercentage":50,"targetMemoryUtilizationPercentage":null}` | autoscaling settings |
 | results.<<.service | object | `{"port":80,"portName":null,"protocol":"TCP","targetPort":null,"type":"ClusterIP"}` | service settings |
 | results.<<.ingress | object | `{"annotations":{},"enabled":false,"hosts":[],"tls":[]}` | ingress settings |
@@ -107,22 +107,8 @@ A Helm chart for deploying Vulcan
 | results.conf.bucketReports | string | `"reports"` |  |
 | results.conf.bucketLogs | string | `"logs"` |  |
 | results.conf.linkBase | string | `"http://chart-example.local"` |  |
-| results.livenessProbe.<<.enabled | bool | `true` |  |
-| results.livenessProbe.<<.path | string | `nil` |  |
-| results.livenessProbe.<<.initialDelaySeconds | int | `5` |  |
-| results.livenessProbe.<<.periodSeconds | int | `10` |  |
-| results.livenessProbe.<<.timeoutSeconds | int | `3` |  |
-| results.livenessProbe.<<.successThreshold | int | `1` |  |
-| results.livenessProbe.<<.failureThreshold | int | `10` |  |
-| results.livenessProbe.path | string | `"/healthcheck"` |  |
-| results.readinessProbe.<<.enabled | bool | `true` |  |
-| results.readinessProbe.<<.path | string | `nil` |  |
-| results.readinessProbe.<<.initialDelaySeconds | int | `5` |  |
-| results.readinessProbe.<<.periodSeconds | int | `10` |  |
-| results.readinessProbe.<<.timeoutSeconds | int | `3` |  |
-| results.readinessProbe.<<.successThreshold | int | `1` |  |
-| results.readinessProbe.<<.failureThreshold | int | `5` |  |
-| results.readinessProbe.path | string | `"/healthcheck"` |  |
+| results.livenessProbe | object | `{"<<":{"enabled":true,"failureThreshold":10,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"path":"/healthcheck"}` | liveness settings |
+| results.readinessProbe | object | `{"<<":{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"path":"/healthcheck"}` | readiness settings |
 | results.dogstatsd.image.repository | string | `"datadog/dogstatsd"` |  |
 | results.dogstatsd.image.tag | string | `"7.27.0"` |  |
 | results.dogstatsd.enabled | bool | `true` |  |
@@ -141,7 +127,7 @@ A Helm chart for deploying Vulcan
 | persistence.<<.containerPort | int | `8080` |  |
 | persistence.<<.lifecycle.preStopSleep | int | `30` |  |
 | persistence.<<.livenessProbe | object | `{"enabled":true,"failureThreshold":10,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3}` | liveness settings |
-| persistence.<<.readinessProbe | object | `{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3}` | readyness settings |
+| persistence.<<.readinessProbe | object | `{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3}` | readiness settings |
 | persistence.<<.autoscaling | object | `{"enabled":false,"maxReplicas":5,"minReplicas":1,"targetCPUUtilizationPercentage":50,"targetMemoryUtilizationPercentage":null}` | autoscaling settings |
 | persistence.<<.service | object | `{"port":80,"portName":null,"protocol":"TCP","targetPort":null,"type":"ClusterIP"}` | service settings |
 | persistence.<<.ingress | object | `{"annotations":{},"enabled":false,"hosts":[],"tls":[]}` | ingress settings |
@@ -154,22 +140,8 @@ A Helm chart for deploying Vulcan
 | persistence.image.pullPolicy | string | `"Always"` |  |
 | persistence.waitfordb.image.repository | string | `"postgres"` |  |
 | persistence.waitfordb.image.tag | string | `"9.6-alpine"` |  |
-| persistence.livenessProbe.<<.enabled | bool | `true` |  |
-| persistence.livenessProbe.<<.path | string | `nil` |  |
-| persistence.livenessProbe.<<.initialDelaySeconds | int | `5` |  |
-| persistence.livenessProbe.<<.periodSeconds | int | `10` |  |
-| persistence.livenessProbe.<<.timeoutSeconds | int | `3` |  |
-| persistence.livenessProbe.<<.successThreshold | int | `1` |  |
-| persistence.livenessProbe.<<.failureThreshold | int | `10` |  |
-| persistence.livenessProbe.path | string | `"/status"` |  |
-| persistence.readinessProbe.<<.enabled | bool | `true` |  |
-| persistence.readinessProbe.<<.path | string | `nil` |  |
-| persistence.readinessProbe.<<.initialDelaySeconds | int | `5` |  |
-| persistence.readinessProbe.<<.periodSeconds | int | `10` |  |
-| persistence.readinessProbe.<<.timeoutSeconds | int | `3` |  |
-| persistence.readinessProbe.<<.successThreshold | int | `1` |  |
-| persistence.readinessProbe.<<.failureThreshold | int | `5` |  |
-| persistence.readinessProbe.path | string | `"/status"` |  |
+| persistence.livenessProbe | object | `{"<<":{"enabled":true,"failureThreshold":10,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"path":"/status"}` | liveness settings |
+| persistence.readinessProbe | object | `{"<<":{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"path":"/status"}` | readiness settings |
 | persistence.infra.s3 | bool | `true` |  |
 | persistence.infra.sns | bool | `true` |  |
 | persistence.infra.sqs | bool | `true` |  |
@@ -197,7 +169,7 @@ A Helm chart for deploying Vulcan
 | stream.<<.containerPort | int | `8080` |  |
 | stream.<<.lifecycle.preStopSleep | int | `30` |  |
 | stream.<<.livenessProbe | object | `{"enabled":true,"failureThreshold":10,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3}` | liveness settings |
-| stream.<<.readinessProbe | object | `{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3}` | readyness settings |
+| stream.<<.readinessProbe | object | `{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3}` | readiness settings |
 | stream.<<.autoscaling | object | `{"enabled":false,"maxReplicas":5,"minReplicas":1,"targetCPUUtilizationPercentage":50,"targetMemoryUtilizationPercentage":null}` | autoscaling settings |
 | stream.<<.service | object | `{"port":80,"portName":null,"protocol":"TCP","targetPort":null,"type":"ClusterIP"}` | service settings |
 | stream.<<.ingress | object | `{"annotations":{},"enabled":false,"hosts":[],"tls":[]}` | ingress settings |
@@ -210,22 +182,8 @@ A Helm chart for deploying Vulcan
 | stream.image.pullPolicy | string | `"Always"` |  |
 | stream.waitfordb.image.repository | string | `"postgres"` |  |
 | stream.waitfordb.image.tag | string | `"9.6-alpine"` |  |
-| stream.livenessProbe.<<.enabled | bool | `true` |  |
-| stream.livenessProbe.<<.path | string | `nil` |  |
-| stream.livenessProbe.<<.initialDelaySeconds | int | `5` |  |
-| stream.livenessProbe.<<.periodSeconds | int | `10` |  |
-| stream.livenessProbe.<<.timeoutSeconds | int | `3` |  |
-| stream.livenessProbe.<<.successThreshold | int | `1` |  |
-| stream.livenessProbe.<<.failureThreshold | int | `10` |  |
-| stream.livenessProbe.path | string | `"/status"` |  |
-| stream.readinessProbe.<<.enabled | bool | `true` |  |
-| stream.readinessProbe.<<.path | string | `nil` |  |
-| stream.readinessProbe.<<.initialDelaySeconds | int | `5` |  |
-| stream.readinessProbe.<<.periodSeconds | int | `10` |  |
-| stream.readinessProbe.<<.timeoutSeconds | int | `3` |  |
-| stream.readinessProbe.<<.successThreshold | int | `1` |  |
-| stream.readinessProbe.<<.failureThreshold | int | `5` |  |
-| stream.readinessProbe.path | string | `"/status"` |  |
+| stream.livenessProbe | object | `{"<<":{"enabled":true,"failureThreshold":10,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"path":"/status"}` | liveness settings |
+| stream.readinessProbe | object | `{"<<":{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"path":"/status"}` | readiness settings |
 | stream.conf.logLevel | string | `"DEBUG"` |  |
 | stream.conf.redis.host | string | `"TBD"` |  |
 | stream.conf.redis.port | string | `"TDB"` |  |
@@ -250,7 +208,7 @@ A Helm chart for deploying Vulcan
 | api.<<.containerPort | int | `8080` |  |
 | api.<<.lifecycle.preStopSleep | int | `30` |  |
 | api.<<.livenessProbe | object | `{"enabled":true,"failureThreshold":10,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3}` | liveness settings |
-| api.<<.readinessProbe | object | `{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3}` | readyness settings |
+| api.<<.readinessProbe | object | `{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3}` | readiness settings |
 | api.<<.autoscaling | object | `{"enabled":false,"maxReplicas":5,"minReplicas":1,"targetCPUUtilizationPercentage":50,"targetMemoryUtilizationPercentage":null}` | autoscaling settings |
 | api.<<.service | object | `{"port":80,"portName":null,"protocol":"TCP","targetPort":null,"type":"ClusterIP"}` | service settings |
 | api.<<.ingress | object | `{"annotations":{},"enabled":false,"hosts":[],"tls":[]}` | ingress settings |
@@ -266,22 +224,8 @@ A Helm chart for deploying Vulcan
 | api.infra.sqs | bool | `true` |  |
 | api.infra.sns | bool | `true` |  |
 | api.infra.s3 | bool | `true` |  |
-| api.livenessProbe.<<.enabled | bool | `true` |  |
-| api.livenessProbe.<<.path | string | `nil` |  |
-| api.livenessProbe.<<.initialDelaySeconds | int | `5` |  |
-| api.livenessProbe.<<.periodSeconds | int | `10` |  |
-| api.livenessProbe.<<.timeoutSeconds | int | `3` |  |
-| api.livenessProbe.<<.successThreshold | int | `1` |  |
-| api.livenessProbe.<<.failureThreshold | int | `10` |  |
-| api.livenessProbe.path | string | `"/api/v1/healthcheck"` |  |
-| api.readinessProbe.<<.enabled | bool | `true` |  |
-| api.readinessProbe.<<.path | string | `nil` |  |
-| api.readinessProbe.<<.initialDelaySeconds | int | `5` |  |
-| api.readinessProbe.<<.periodSeconds | int | `10` |  |
-| api.readinessProbe.<<.timeoutSeconds | int | `3` |  |
-| api.readinessProbe.<<.successThreshold | int | `1` |  |
-| api.readinessProbe.<<.failureThreshold | int | `5` |  |
-| api.readinessProbe.path | string | `"/api/v1/healthcheck"` |  |
+| api.livenessProbe | object | `{"<<":{"enabled":true,"failureThreshold":10,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"path":"/api/v1/healthcheck"}` | liveness settings |
+| api.readinessProbe | object | `{"<<":{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"path":"/api/v1/healthcheck"}` | readiness settings |
 | api.db.<<.user | string | `"postgres"` |  |
 | api.db.<<.password | string | `"TBD"` |  |
 | api.db.<<.sslMode | string | `"disable"` |  |
@@ -333,7 +277,7 @@ A Helm chart for deploying Vulcan
 | crontinuous.<<.containerPort | int | `8080` |  |
 | crontinuous.<<.lifecycle.preStopSleep | int | `30` |  |
 | crontinuous.<<.livenessProbe | object | `{"enabled":true,"failureThreshold":10,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3}` | liveness settings |
-| crontinuous.<<.readinessProbe | object | `{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3}` | readyness settings |
+| crontinuous.<<.readinessProbe | object | `{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3}` | readiness settings |
 | crontinuous.<<.autoscaling | object | `{"enabled":false,"maxReplicas":5,"minReplicas":1,"targetCPUUtilizationPercentage":50,"targetMemoryUtilizationPercentage":null}` | autoscaling settings |
 | crontinuous.<<.service | object | `{"port":80,"portName":null,"protocol":"TCP","targetPort":null,"type":"ClusterIP"}` | service settings |
 | crontinuous.<<.ingress | object | `{"annotations":{},"enabled":false,"hosts":[],"tls":[]}` | ingress settings |
@@ -345,22 +289,8 @@ A Helm chart for deploying Vulcan
 | crontinuous.image.tag | string | `"latest"` |  |
 | crontinuous.image.pullPolicy | string | `"Always"` |  |
 | crontinuous.infra.s3 | bool | `true` |  |
-| crontinuous.livenessProbe.<<.enabled | bool | `true` |  |
-| crontinuous.livenessProbe.<<.path | string | `nil` |  |
-| crontinuous.livenessProbe.<<.initialDelaySeconds | int | `5` |  |
-| crontinuous.livenessProbe.<<.periodSeconds | int | `10` |  |
-| crontinuous.livenessProbe.<<.timeoutSeconds | int | `3` |  |
-| crontinuous.livenessProbe.<<.successThreshold | int | `1` |  |
-| crontinuous.livenessProbe.<<.failureThreshold | int | `10` |  |
-| crontinuous.livenessProbe.path | string | `"/healthcheck"` |  |
-| crontinuous.readinessProbe.<<.enabled | bool | `true` |  |
-| crontinuous.readinessProbe.<<.path | string | `nil` |  |
-| crontinuous.readinessProbe.<<.initialDelaySeconds | int | `5` |  |
-| crontinuous.readinessProbe.<<.periodSeconds | int | `10` |  |
-| crontinuous.readinessProbe.<<.timeoutSeconds | int | `3` |  |
-| crontinuous.readinessProbe.<<.successThreshold | int | `1` |  |
-| crontinuous.readinessProbe.<<.failureThreshold | int | `5` |  |
-| crontinuous.readinessProbe.path | string | `"/healthcheck"` |  |
+| crontinuous.livenessProbe | object | `{"<<":{"enabled":true,"failureThreshold":10,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"path":"/healthcheck"}` | liveness settings |
+| crontinuous.readinessProbe | object | `{"<<":{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"path":"/healthcheck"}` | readiness settings |
 | crontinuous.conf.region | string | `nil` |  |
 | crontinuous.conf.vulcanToken | string | `"TBDTBDTBD"` |  |
 | crontinuous.conf.crontinuousBucket | string | `"crontinuous"` |  |
@@ -384,7 +314,7 @@ A Helm chart for deploying Vulcan
 | scanengine.<<.containerPort | int | `8080` |  |
 | scanengine.<<.lifecycle.preStopSleep | int | `30` |  |
 | scanengine.<<.livenessProbe | object | `{"enabled":true,"failureThreshold":10,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3}` | liveness settings |
-| scanengine.<<.readinessProbe | object | `{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3}` | readyness settings |
+| scanengine.<<.readinessProbe | object | `{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3}` | readiness settings |
 | scanengine.<<.autoscaling | object | `{"enabled":false,"maxReplicas":5,"minReplicas":1,"targetCPUUtilizationPercentage":50,"targetMemoryUtilizationPercentage":null}` | autoscaling settings |
 | scanengine.<<.service | object | `{"port":80,"portName":null,"protocol":"TCP","targetPort":null,"type":"ClusterIP"}` | service settings |
 | scanengine.<<.ingress | object | `{"annotations":{},"enabled":false,"hosts":[],"tls":[]}` | ingress settings |
@@ -397,22 +327,8 @@ A Helm chart for deploying Vulcan
 | scanengine.image.pullPolicy | string | `"Always"` |  |
 | scanengine.waitfordb.image.repository | string | `"postgres"` |  |
 | scanengine.waitfordb.image.tag | string | `"9.6-alpine"` |  |
-| scanengine.livenessProbe.<<.enabled | bool | `true` |  |
-| scanengine.livenessProbe.<<.path | string | `nil` |  |
-| scanengine.livenessProbe.<<.initialDelaySeconds | int | `5` |  |
-| scanengine.livenessProbe.<<.periodSeconds | int | `10` |  |
-| scanengine.livenessProbe.<<.timeoutSeconds | int | `3` |  |
-| scanengine.livenessProbe.<<.successThreshold | int | `1` |  |
-| scanengine.livenessProbe.<<.failureThreshold | int | `10` |  |
-| scanengine.livenessProbe.path | string | `"/v1/healthcheck"` |  |
-| scanengine.readinessProbe.<<.enabled | bool | `true` |  |
-| scanengine.readinessProbe.<<.path | string | `nil` |  |
-| scanengine.readinessProbe.<<.initialDelaySeconds | int | `5` |  |
-| scanengine.readinessProbe.<<.periodSeconds | int | `10` |  |
-| scanengine.readinessProbe.<<.timeoutSeconds | int | `3` |  |
-| scanengine.readinessProbe.<<.successThreshold | int | `1` |  |
-| scanengine.readinessProbe.<<.failureThreshold | int | `5` |  |
-| scanengine.readinessProbe.path | string | `"/v1/healthcheck"` |  |
+| scanengine.livenessProbe | object | `{"<<":{"enabled":true,"failureThreshold":10,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"path":"/v1/healthcheck"}` | liveness settings |
+| scanengine.readinessProbe | object | `{"<<":{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"path":"/v1/healthcheck"}` | readiness settings |
 | scanengine.infra.sqs | bool | `true` |  |
 | scanengine.infra.sns | bool | `true` |  |
 | scanengine.conf.logLevel | string | `"error"` |  |
@@ -448,7 +364,7 @@ A Helm chart for deploying Vulcan
 | ui.<<.containerPort | int | `8080` |  |
 | ui.<<.lifecycle.preStopSleep | int | `30` |  |
 | ui.<<.livenessProbe | object | `{"enabled":true,"failureThreshold":10,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3}` | liveness settings |
-| ui.<<.readinessProbe | object | `{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3}` | readyness settings |
+| ui.<<.readinessProbe | object | `{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3}` | readiness settings |
 | ui.<<.autoscaling | object | `{"enabled":false,"maxReplicas":5,"minReplicas":1,"targetCPUUtilizationPercentage":50,"targetMemoryUtilizationPercentage":null}` | autoscaling settings |
 | ui.<<.service | object | `{"port":80,"portName":null,"protocol":"TCP","targetPort":null,"type":"ClusterIP"}` | service settings |
 | ui.<<.ingress | object | `{"annotations":{},"enabled":false,"hosts":[],"tls":[]}` | ingress settings |
@@ -459,22 +375,8 @@ A Helm chart for deploying Vulcan
 | ui.image.repository | string | `"adevinta/vulcan-ui"` |  |
 | ui.image.tag | string | `"latest"` |  |
 | ui.image.pullPolicy | string | `"Always"` |  |
-| ui.livenessProbe.<<.enabled | bool | `true` |  |
-| ui.livenessProbe.<<.path | string | `nil` |  |
-| ui.livenessProbe.<<.initialDelaySeconds | int | `5` |  |
-| ui.livenessProbe.<<.periodSeconds | int | `10` |  |
-| ui.livenessProbe.<<.timeoutSeconds | int | `3` |  |
-| ui.livenessProbe.<<.successThreshold | int | `1` |  |
-| ui.livenessProbe.<<.failureThreshold | int | `10` |  |
-| ui.livenessProbe.path | string | `"/index.html"` |  |
-| ui.readinessProbe.<<.enabled | bool | `true` |  |
-| ui.readinessProbe.<<.path | string | `nil` |  |
-| ui.readinessProbe.<<.initialDelaySeconds | int | `5` |  |
-| ui.readinessProbe.<<.periodSeconds | int | `10` |  |
-| ui.readinessProbe.<<.timeoutSeconds | int | `3` |  |
-| ui.readinessProbe.<<.successThreshold | int | `1` |  |
-| ui.readinessProbe.<<.failureThreshold | int | `5` |  |
-| ui.readinessProbe.path | string | `"/index.html"` |  |
+| ui.livenessProbe | object | `{"<<":{"enabled":true,"failureThreshold":10,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"path":"/index.html"}` | liveness settings |
+| ui.readinessProbe | object | `{"<<":{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"path":"/index.html"}` | readiness settings |
 | ui.infra.sqs | bool | `false` |  |
 | ui.conf.apiUrl | string | `nil` |  |
 | ui.conf.docs.apiLink | string | `nil` |  |
@@ -497,7 +399,7 @@ A Helm chart for deploying Vulcan
 | insights.<<.containerPort | int | `8080` |  |
 | insights.<<.lifecycle.preStopSleep | int | `30` |  |
 | insights.<<.livenessProbe | object | `{"enabled":true,"failureThreshold":10,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3}` | liveness settings |
-| insights.<<.readinessProbe | object | `{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3}` | readyness settings |
+| insights.<<.readinessProbe | object | `{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3}` | readiness settings |
 | insights.<<.autoscaling | object | `{"enabled":false,"maxReplicas":5,"minReplicas":1,"targetCPUUtilizationPercentage":50,"targetMemoryUtilizationPercentage":null}` | autoscaling settings |
 | insights.<<.service | object | `{"port":80,"portName":null,"protocol":"TCP","targetPort":null,"type":"ClusterIP"}` | service settings |
 | insights.<<.ingress | object | `{"annotations":{},"enabled":false,"hosts":[],"tls":[]}` | ingress settings |
@@ -508,22 +410,8 @@ A Helm chart for deploying Vulcan
 | insights.image.repository | string | `"pottava/s3-proxy"` |  |
 | insights.image.tag | string | `"2.0"` |  |
 | insights.image.pullPolicy | string | `"Always"` |  |
-| insights.livenessProbe.<<.enabled | bool | `true` |  |
-| insights.livenessProbe.<<.path | string | `nil` |  |
-| insights.livenessProbe.<<.initialDelaySeconds | int | `5` |  |
-| insights.livenessProbe.<<.periodSeconds | int | `10` |  |
-| insights.livenessProbe.<<.timeoutSeconds | int | `3` |  |
-| insights.livenessProbe.<<.successThreshold | int | `1` |  |
-| insights.livenessProbe.<<.failureThreshold | int | `10` |  |
-| insights.livenessProbe.path | string | `"/healthcheck"` |  |
-| insights.readinessProbe.<<.enabled | bool | `true` |  |
-| insights.readinessProbe.<<.path | string | `nil` |  |
-| insights.readinessProbe.<<.initialDelaySeconds | int | `5` |  |
-| insights.readinessProbe.<<.periodSeconds | int | `10` |  |
-| insights.readinessProbe.<<.timeoutSeconds | int | `3` |  |
-| insights.readinessProbe.<<.successThreshold | int | `1` |  |
-| insights.readinessProbe.<<.failureThreshold | int | `5` |  |
-| insights.readinessProbe.path | string | `"/healthcheck"` |  |
+| insights.livenessProbe | object | `{"<<":{"enabled":true,"failureThreshold":10,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"path":"/healthcheck"}` | liveness settings |
+| insights.readinessProbe | object | `{"<<":{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"path":"/healthcheck"}` | readiness settings |
 | insights.proxy.enabled | bool | `true` |  |
 | insights.proxy.<<.enabled | bool | `true` |  |
 | insights.proxy.<<.image.repository | string | `"haproxy"` |  |
@@ -568,7 +456,7 @@ A Helm chart for deploying Vulcan
 | reportsgenerator.<<.containerPort | int | `8080` |  |
 | reportsgenerator.<<.lifecycle.preStopSleep | int | `30` |  |
 | reportsgenerator.<<.livenessProbe | object | `{"enabled":true,"failureThreshold":10,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3}` | liveness settings |
-| reportsgenerator.<<.readinessProbe | object | `{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3}` | readyness settings |
+| reportsgenerator.<<.readinessProbe | object | `{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3}` | readiness settings |
 | reportsgenerator.<<.autoscaling | object | `{"enabled":false,"maxReplicas":5,"minReplicas":1,"targetCPUUtilizationPercentage":50,"targetMemoryUtilizationPercentage":null}` | autoscaling settings |
 | reportsgenerator.<<.service | object | `{"port":80,"portName":null,"protocol":"TCP","targetPort":null,"type":"ClusterIP"}` | service settings |
 | reportsgenerator.<<.ingress | object | `{"annotations":{},"enabled":false,"hosts":[],"tls":[]}` | ingress settings |
@@ -581,22 +469,8 @@ A Helm chart for deploying Vulcan
 | reportsgenerator.image.pullPolicy | string | `"Always"` |  |
 | reportsgenerator.waitfordb.image.repository | string | `"postgres"` |  |
 | reportsgenerator.waitfordb.image.tag | string | `"9.6-alpine"` |  |
-| reportsgenerator.livenessProbe.<<.enabled | bool | `true` |  |
-| reportsgenerator.livenessProbe.<<.path | string | `nil` |  |
-| reportsgenerator.livenessProbe.<<.initialDelaySeconds | int | `5` |  |
-| reportsgenerator.livenessProbe.<<.periodSeconds | int | `10` |  |
-| reportsgenerator.livenessProbe.<<.timeoutSeconds | int | `3` |  |
-| reportsgenerator.livenessProbe.<<.successThreshold | int | `1` |  |
-| reportsgenerator.livenessProbe.<<.failureThreshold | int | `10` |  |
-| reportsgenerator.livenessProbe.path | string | `"/healthcheck"` |  |
-| reportsgenerator.readinessProbe.<<.enabled | bool | `true` |  |
-| reportsgenerator.readinessProbe.<<.path | string | `nil` |  |
-| reportsgenerator.readinessProbe.<<.initialDelaySeconds | int | `5` |  |
-| reportsgenerator.readinessProbe.<<.periodSeconds | int | `10` |  |
-| reportsgenerator.readinessProbe.<<.timeoutSeconds | int | `3` |  |
-| reportsgenerator.readinessProbe.<<.successThreshold | int | `1` |  |
-| reportsgenerator.readinessProbe.<<.failureThreshold | int | `5` |  |
-| reportsgenerator.readinessProbe.path | string | `"/healthcheck"` |  |
+| reportsgenerator.livenessProbe | object | `{"<<":{"enabled":true,"failureThreshold":10,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"path":"/healthcheck"}` | liveness settings |
+| reportsgenerator.readinessProbe | object | `{"<<":{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"path":"/healthcheck"}` | readiness settings |
 | reportsgenerator.infra.sqs | bool | `true` |  |
 | reportsgenerator.conf.logLevel | string | `"error"` |  |
 | reportsgenerator.conf.queueArn | string | `"arn:aws:sqs:local:012345678900:VulcanK8SReportsGenerator"` |  |
@@ -643,7 +517,7 @@ A Helm chart for deploying Vulcan
 | redis.<<.containerPort | int | `8080` |  |
 | redis.<<.lifecycle.preStopSleep | int | `30` |  |
 | redis.<<.livenessProbe | object | `{"enabled":true,"failureThreshold":10,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3}` | liveness settings |
-| redis.<<.readinessProbe | object | `{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3}` | readyness settings |
+| redis.<<.readinessProbe | object | `{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3}` | readiness settings |
 | redis.<<.autoscaling | object | `{"enabled":false,"maxReplicas":5,"minReplicas":1,"targetCPUUtilizationPercentage":50,"targetMemoryUtilizationPercentage":null}` | autoscaling settings |
 | redis.<<.service | object | `{"port":80,"portName":null,"protocol":"TCP","targetPort":null,"type":"ClusterIP"}` | service settings |
 | redis.<<.ingress | object | `{"annotations":{},"enabled":false,"hosts":[],"tls":[]}` | ingress settings |
@@ -675,7 +549,7 @@ A Helm chart for deploying Vulcan
 | metrics.<<.containerPort | int | `8080` |  |
 | metrics.<<.lifecycle.preStopSleep | int | `30` |  |
 | metrics.<<.livenessProbe | object | `{"enabled":true,"failureThreshold":10,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3}` | liveness settings |
-| metrics.<<.readinessProbe | object | `{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3}` | readyness settings |
+| metrics.<<.readinessProbe | object | `{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3}` | readiness settings |
 | metrics.<<.autoscaling | object | `{"enabled":false,"maxReplicas":5,"minReplicas":1,"targetCPUUtilizationPercentage":50,"targetMemoryUtilizationPercentage":null}` | autoscaling settings |
 | metrics.<<.service | object | `{"port":80,"portName":null,"protocol":"TCP","targetPort":null,"type":"ClusterIP"}` | service settings |
 | metrics.<<.ingress | object | `{"annotations":{},"enabled":false,"hosts":[],"tls":[]}` | ingress settings |
@@ -723,7 +597,7 @@ A Helm chart for deploying Vulcan
 | vulndbapi.<<.containerPort | int | `8080` |  |
 | vulndbapi.<<.lifecycle.preStopSleep | int | `30` |  |
 | vulndbapi.<<.livenessProbe | object | `{"enabled":true,"failureThreshold":10,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3}` | liveness settings |
-| vulndbapi.<<.readinessProbe | object | `{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3}` | readyness settings |
+| vulndbapi.<<.readinessProbe | object | `{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3}` | readiness settings |
 | vulndbapi.<<.autoscaling | object | `{"enabled":false,"maxReplicas":5,"minReplicas":1,"targetCPUUtilizationPercentage":50,"targetMemoryUtilizationPercentage":null}` | autoscaling settings |
 | vulndbapi.<<.service | object | `{"port":80,"portName":null,"protocol":"TCP","targetPort":null,"type":"ClusterIP"}` | service settings |
 | vulndbapi.<<.ingress | object | `{"annotations":{},"enabled":false,"hosts":[],"tls":[]}` | ingress settings |
@@ -736,22 +610,8 @@ A Helm chart for deploying Vulcan
 | vulndbapi.image.pullPolicy | string | `"Always"` |  |
 | vulndbapi.waitfordb.image.repository | string | `"postgres"` |  |
 | vulndbapi.waitfordb.image.tag | string | `"9.6-alpine"` |  |
-| vulndbapi.livenessProbe.<<.enabled | bool | `true` |  |
-| vulndbapi.livenessProbe.<<.path | string | `nil` |  |
-| vulndbapi.livenessProbe.<<.initialDelaySeconds | int | `5` |  |
-| vulndbapi.livenessProbe.<<.periodSeconds | int | `10` |  |
-| vulndbapi.livenessProbe.<<.timeoutSeconds | int | `3` |  |
-| vulndbapi.livenessProbe.<<.successThreshold | int | `1` |  |
-| vulndbapi.livenessProbe.<<.failureThreshold | int | `10` |  |
-| vulndbapi.livenessProbe.path | string | `"/healthcheck"` |  |
-| vulndbapi.readinessProbe.<<.enabled | bool | `true` |  |
-| vulndbapi.readinessProbe.<<.path | string | `nil` |  |
-| vulndbapi.readinessProbe.<<.initialDelaySeconds | int | `5` |  |
-| vulndbapi.readinessProbe.<<.periodSeconds | int | `10` |  |
-| vulndbapi.readinessProbe.<<.timeoutSeconds | int | `3` |  |
-| vulndbapi.readinessProbe.<<.successThreshold | int | `1` |  |
-| vulndbapi.readinessProbe.<<.failureThreshold | int | `5` |  |
-| vulndbapi.readinessProbe.path | string | `"/healthcheck"` |  |
+| vulndbapi.livenessProbe | object | `{"<<":{"enabled":true,"failureThreshold":10,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"path":"/healthcheck"}` | liveness settings |
+| vulndbapi.readinessProbe | object | `{"<<":{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"path":"/healthcheck"}` | readiness settings |
 | vulndbapi.conf.logLevel | string | `"info"` |  |
 | vulndbapi.db.<<.user | string | `"postgres"` |  |
 | vulndbapi.db.<<.password | string | `"TBD"` |  |
@@ -771,7 +631,7 @@ A Helm chart for deploying Vulcan
 | vulndb.<<.containerPort | int | `8080` |  |
 | vulndb.<<.lifecycle.preStopSleep | int | `30` |  |
 | vulndb.<<.livenessProbe | object | `{"enabled":true,"failureThreshold":10,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3}` | liveness settings |
-| vulndb.<<.readinessProbe | object | `{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3}` | readyness settings |
+| vulndb.<<.readinessProbe | object | `{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3}` | readiness settings |
 | vulndb.<<.autoscaling | object | `{"enabled":false,"maxReplicas":5,"minReplicas":1,"targetCPUUtilizationPercentage":50,"targetMemoryUtilizationPercentage":null}` | autoscaling settings |
 | vulndb.<<.service | object | `{"port":80,"portName":null,"protocol":"TCP","targetPort":null,"type":"ClusterIP"}` | service settings |
 | vulndb.<<.ingress | object | `{"annotations":{},"enabled":false,"hosts":[],"tls":[]}` | ingress settings |
