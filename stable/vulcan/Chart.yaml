@@ -30,5 +30,4 @@ dependencies:
 - name: minio
   version: 3.3.6
   repository: https://charts.bitnami.com/bitnami
-  alias: minio
   condition: minio.enabled
