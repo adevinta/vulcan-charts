@@ -52,6 +52,6 @@ spec:
               containerPort: {{ .Values.comp.containerPort }}
               protocol: TCP
       volumes:
-      {{- include "common-deployment-volumes" . | nindent 6}}
+      {{- include "common-deployment-volumes" . | nindent 6 }}
     {{- include "common-deployment-spec" . | nindent 6 }}
 {{- end }}

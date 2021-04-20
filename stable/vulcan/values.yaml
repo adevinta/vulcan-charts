@@ -501,12 +501,10 @@ insights:
       name: private
       s3Bucket: insights
       prefix: ""
-      port: 8080
     public:
       name: public
       s3Bucket: public-insights
       prefix: "/public"
-      port: 8081
 
 
 reportsgenerator:

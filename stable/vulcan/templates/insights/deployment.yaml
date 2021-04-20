@@ -41,10 +41,10 @@ spec:
             - name: HEALTHCHECK_PATH
               value: "/healthcheck"
             - name: APP_PORT
-              value: {{ .Values.comp.conf.private.port | quote }}
+              value: {{ .Values.comp.containerPort | quote }}
           ports:
             - name: private
-              containerPort: {{ .Values.comp.conf.private.port }}
+              containerPort: {{ .Values.comp.containerPort }}
               protocol: TCP
         - name: "insights-public"
           {{- include "common-container" . | nindent 10 }}
@@ -60,13 +60,13 @@ spec:
             - name: HEALTHCHECK_PATH
               value: "/healthcheck"
             - name: APP_PORT
-              value: {{ .Values.comp.conf.public.port | quote }}
+              value: {{ add .Values.comp.containerPort 1 | quote }}
           ports:
             - name: private
-              containerPort: {{ .Values.comp.conf.public.port }}
+              containerPort: {{ add .Values.comp.containerPort 1 }}
               protocol: TCP
       volumes:
-      {{- include "common-deployment-volumes" . | nindent 6}}
+      {{- include "common-deployment-volumes" . | nindent 6 }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

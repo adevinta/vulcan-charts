@@ -69,6 +69,6 @@ spec:
           - secretRef:
               name: {{ include "redis.fullname" . }}
       volumes:
-      {{- include "common-deployment-volumes" . | nindent 6}}
+      {{- include "common-deployment-volumes" . | nindent 6 }}
     {{- include "common-deployment-spec" . | nindent 6 }}
 {{- end }}

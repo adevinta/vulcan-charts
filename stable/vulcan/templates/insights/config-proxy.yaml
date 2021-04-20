@@ -49,10 +49,10 @@ data:
       {{- end }}
 
     backend {{ .Values.comp.conf.private.name }}
-      server app 127.0.0.1:{{ .Values.comp.conf.private.port }}
+      server app 127.0.0.1:{{ .Values.comp.containerPort }}
 
     backend {{ .Values.comp.conf.public.name }}
-      server app 127.0.0.1:{{ .Values.comp.conf.public.port }}
+      server app 127.0.0.1:{{ add .Values.comp.containerPort 1 }}
 
     frontend stats
       bind *:{{ .Values.comp.proxy.metricsPort }}

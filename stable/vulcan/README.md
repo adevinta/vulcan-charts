@@ -406,11 +406,9 @@ A Helm chart for deploying Vulcan
 | insights.conf.private.name | string | `"private"` |  |
 | insights.conf.private.s3Bucket | string | `"insights"` |  |
 | insights.conf.private.prefix | string | `""` |  |
-| insights.conf.private.port | int | `8080` |  |
 | insights.conf.public.name | string | `"public"` |  |
 | insights.conf.public.s3Bucket | string | `"public-insights"` |  |
 | insights.conf.public.prefix | string | `"/public"` |  |
-| insights.conf.public.port | int | `8081` |  |
 | reportsgenerator.enabled | bool | `true` |  |
 | reportsgenerator.name | string | `"reportsgenerator"` |  |
 | reportsgenerator.<<.replicaCount | string | `nil` |  |
