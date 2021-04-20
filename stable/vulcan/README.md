@@ -27,6 +27,8 @@ A Helm chart for deploying Vulcan
 | anchors.comp.autoscaling | object | `{"enabled":false,"maxReplicas":5,"minReplicas":1,"targetCPUUtilizationPercentage":50,"targetMemoryUtilizationPercentage":null}` | autoscaling settings |
 | anchors.comp.service | object | `{"port":80,"portName":null,"protocol":"TCP","targetPort":null,"type":"ClusterIP"}` | service settings |
 | anchors.comp.ingress | object | `{"annotations":{},"enabled":false,"hosts":[],"tls":[]}` | ingress settings |
+| waitfordb.image.repository | string | `"postgres"` |  |
+| waitfordb.image.tag | string | `"9.6-alpine"` |  |
 | postgresql.enabled | bool | `false` |  |
 | postgresql.postgresqlUsername | string | `"postgres"` |  |
 | postgresql.postgresqlPassword | string | `"TBD"` |  |
@@ -138,8 +140,6 @@ A Helm chart for deploying Vulcan
 | persistence.image.repository | string | `"adevinta/vulcan-persistence"` |  |
 | persistence.image.tag | string | `"latest"` |  |
 | persistence.image.pullPolicy | string | `"Always"` |  |
-| persistence.waitfordb.image.repository | string | `"postgres"` |  |
-| persistence.waitfordb.image.tag | string | `"9.6-alpine"` |  |
 | persistence.livenessProbe | object | `{"<<":{"enabled":true,"failureThreshold":10,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"path":"/status"}` | liveness settings |
 | persistence.readinessProbe | object | `{"<<":{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"path":"/status"}` | readiness settings |
 | persistence.infra.s3 | bool | `true` |  |
@@ -180,8 +180,6 @@ A Helm chart for deploying Vulcan
 | stream.image.repository | string | `"adevinta/vulcan-stream"` |  |
 | stream.image.tag | string | `"latest"` |  |
 | stream.image.pullPolicy | string | `"Always"` |  |
-| stream.waitfordb.image.repository | string | `"postgres"` |  |
-| stream.waitfordb.image.tag | string | `"9.6-alpine"` |  |
 | stream.livenessProbe | object | `{"<<":{"enabled":true,"failureThreshold":10,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"path":"/status"}` | liveness settings |
 | stream.readinessProbe | object | `{"<<":{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"path":"/status"}` | readiness settings |
 | stream.conf.logLevel | string | `"DEBUG"` |  |
@@ -219,8 +217,6 @@ A Helm chart for deploying Vulcan
 | api.image.repository | string | `"adevinta/vulcan-api"` |  |
 | api.image.tag | string | `"latest"` |  |
 | api.image.pullPolicy | string | `"Always"` |  |
-| api.waitfordb.image.repository | string | `"postgres"` |  |
-| api.waitfordb.image.tag | string | `"9.6-alpine"` |  |
 | api.infra.sqs | bool | `true` |  |
 | api.infra.sns | bool | `true` |  |
 | api.infra.s3 | bool | `true` |  |
@@ -325,8 +321,6 @@ A Helm chart for deploying Vulcan
 | scanengine.image.repository | string | `"adevinta/vulcan-scan-engine"` |  |
 | scanengine.image.tag | string | `"latest"` |  |
 | scanengine.image.pullPolicy | string | `"Always"` |  |
-| scanengine.waitfordb.image.repository | string | `"postgres"` |  |
-| scanengine.waitfordb.image.tag | string | `"9.6-alpine"` |  |
 | scanengine.livenessProbe | object | `{"<<":{"enabled":true,"failureThreshold":10,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"path":"/v1/healthcheck"}` | liveness settings |
 | scanengine.readinessProbe | object | `{"<<":{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"path":"/v1/healthcheck"}` | readiness settings |
 | scanengine.infra.sqs | bool | `true` |  |
@@ -448,8 +442,6 @@ A Helm chart for deploying Vulcan
 | reportsgenerator.image.repository | string | `"adevinta/vulcan-reports-generator"` |  |
 | reportsgenerator.image.tag | string | `"latest"` |  |
 | reportsgenerator.image.pullPolicy | string | `"Always"` |  |
-| reportsgenerator.waitfordb.image.repository | string | `"postgres"` |  |
-| reportsgenerator.waitfordb.image.tag | string | `"9.6-alpine"` |  |
 | reportsgenerator.livenessProbe | object | `{"<<":{"enabled":true,"failureThreshold":10,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"path":"/healthcheck"}` | liveness settings |
 | reportsgenerator.readinessProbe | object | `{"<<":{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"path":"/healthcheck"}` | readiness settings |
 | reportsgenerator.infra.sqs | bool | `true` |  |
@@ -589,8 +581,6 @@ A Helm chart for deploying Vulcan
 | vulndbapi.image.repository | string | `"adevinta/vulnerability-db-api"` |  |
 | vulndbapi.image.tag | string | `"latest"` |  |
 | vulndbapi.image.pullPolicy | string | `"Always"` |  |
-| vulndbapi.waitfordb.image.repository | string | `"postgres"` |  |
-| vulndbapi.waitfordb.image.tag | string | `"9.6-alpine"` |  |
 | vulndbapi.livenessProbe | object | `{"<<":{"enabled":true,"failureThreshold":10,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"path":"/healthcheck"}` | liveness settings |
 | vulndbapi.readinessProbe | object | `{"<<":{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"path":"/healthcheck"}` | readiness settings |
 | vulndbapi.conf.logLevel | string | `"info"` |  |
@@ -623,8 +613,6 @@ A Helm chart for deploying Vulcan
 | vulndb.image.repository | string | `"adevinta/vulnerability-db"` |  |
 | vulndb.image.tag | string | `"latest"` |  |
 | vulndb.image.pullPolicy | string | `"Always"` |  |
-| vulndb.waitfordb.image.repository | string | `"postgres"` |  |
-| vulndb.waitfordb.image.tag | string | `"9.6-alpine"` |  |
 | vulndb.conf.logLevel | string | `"error"` |  |
 | vulndb.conf.checksQueueArn | string | `"arn:aws:sqs:local:012345678900:VulcanK8SVulnDBChecks"` |  |
 | vulndb.conf.vulnsTopicArn | string | `"arn:aws:sns:local:012345678900:VulcanK8SVulnDBVulns"` |  |
