@@ -30,6 +30,7 @@ anchors:
     extraEnv: {}
     #   FOO: BAR
 
+    # -- proxy settings
     proxy: &proxy
       enabled: true
       image:
@@ -64,6 +65,7 @@ anchors:
     lifecycle:
       preStopSleep: 30
 
+    # -- liveness settings
     livenessProbe: &comp-livenessProbe
       enabled: true
       path:
@@ -73,6 +75,7 @@ anchors:
       successThreshold: 1
       failureThreshold: 10
 
+    # -- readyness settings
     readinessProbe: &comp-readynessProbe
       enabled: true
       path:
@@ -82,6 +85,7 @@ anchors:
       successThreshold: 1
       failureThreshold: 5
 
+    # -- autoscaling settings
     autoscaling:
       enabled: false
       minReplicas: 1
@@ -89,6 +93,7 @@ anchors:
       targetCPUUtilizationPercentage: 50
       targetMemoryUtilizationPercentage:
 
+    # -- service settings
     service:
       type: ClusterIP
       port: 80
@@ -96,6 +101,7 @@ anchors:
       protocol: TCP
       targetPort:
 
+    # -- ingress settings
     ingress:
       enabled: false
       annotations: {}
