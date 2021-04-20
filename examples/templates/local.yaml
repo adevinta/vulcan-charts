@@ -2406,7 +2406,7 @@ spec:
       containers:
         - name: sqsexporter
           
-          image: "jesusfcr/sqs-prometheus-exporter:improve"
+          image: "jesusfcr/sqs-prometheus-exporter:0.2.0"
           imagePullPolicy: Always
           lifecycle:
             preStop:
