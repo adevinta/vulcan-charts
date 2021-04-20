@@ -37,6 +37,7 @@ anchors:
         repository: haproxy
         tag: 2.3-alpine
       port: 9090
+      metricsPort: 9101
       cache:
         enabled: false
         maxSize: 64 # mb
@@ -556,10 +557,10 @@ insights:
     <<: *comp-readynessProbe
     path: /healthcheck
 
+  # -- proxy settings. mandatory for insights
   proxy:
-    enabled: true
     <<: *proxy
-    metricsPort: 9101
+    enabled: true
     cache:
       enabled: true
 

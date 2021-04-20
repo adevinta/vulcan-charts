@@ -19,9 +19,9 @@ A Helm chart for deploying Vulcan
 |-----|------|---------|-------------|
 | global.domain | string | `"vulcan.local"` |  |
 | global.region | string | `"local"` |  |
-| anchors | object | `{"comp":{"affinity":{},"autoscaling":{"enabled":false,"maxReplicas":5,"minReplicas":1,"targetCPUUtilizationPercentage":50,"targetMemoryUtilizationPercentage":null},"containerPort":8080,"extraEnv":{},"fullnameOverride":"","image":{"pullPolicy":"Always"},"imagePullSecrets":[],"ingress":{"annotations":{},"enabled":false,"hosts":[],"tls":[]},"lifecycle":{"preStopSleep":30},"livenessProbe":{"enabled":true,"failureThreshold":10,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"nameOverride":"","nodeSelector":{},"podSecurityContext":{},"proxy":{"cache":{"enabled":false,"maxAge":240,"maxSize":64},"enabled":true,"image":{"repository":"haproxy","tag":"2.3-alpine"},"lifecycle":{"preStopSleep":30},"port":9090,"probe":false,"probeInitialDelay":5,"probePath":"/healthz","probeTimeoutSeconds":3,"resources":{},"timeoutClient":null,"timeoutConnect":null,"timeoutServer":null,"timeoutTunnel":null},"readinessProbe":{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"replicaCount":null,"resources":{},"securityContext":{},"service":{"port":80,"portName":null,"protocol":"TCP","targetPort":null,"type":"ClusterIP"},"tolerations":[]},"db":{"password":"TBD","sslMode":"disable","user":"postgres"},"dogstatsd":{"enabled":true,"image":{"repository":"datadog/dogstatsd","tag":"7.27.0"}}}` | Anchors |
+| anchors | object | `{"comp":{"affinity":{},"autoscaling":{"enabled":false,"maxReplicas":5,"minReplicas":1,"targetCPUUtilizationPercentage":50,"targetMemoryUtilizationPercentage":null},"containerPort":8080,"extraEnv":{},"fullnameOverride":"","image":{"pullPolicy":"Always"},"imagePullSecrets":[],"ingress":{"annotations":{},"enabled":false,"hosts":[],"tls":[]},"lifecycle":{"preStopSleep":30},"livenessProbe":{"enabled":true,"failureThreshold":10,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"nameOverride":"","nodeSelector":{},"podSecurityContext":{},"proxy":{"cache":{"enabled":false,"maxAge":240,"maxSize":64},"enabled":true,"image":{"repository":"haproxy","tag":"2.3-alpine"},"lifecycle":{"preStopSleep":30},"metricsPort":9101,"port":9090,"probe":false,"probeInitialDelay":5,"probePath":"/healthz","probeTimeoutSeconds":3,"resources":{},"timeoutClient":null,"timeoutConnect":null,"timeoutServer":null,"timeoutTunnel":null},"readinessProbe":{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"replicaCount":null,"resources":{},"securityContext":{},"service":{"port":80,"portName":null,"protocol":"TCP","targetPort":null,"type":"ClusterIP"},"tolerations":[]},"db":{"password":"TBD","sslMode":"disable","user":"postgres"},"dogstatsd":{"enabled":true,"image":{"repository":"datadog/dogstatsd","tag":"7.27.0"}}}` | Anchors |
 | anchors.comp.extraEnv | object | `{}` | custom env variables |
-| anchors.comp.proxy | object | `{"cache":{"enabled":false,"maxAge":240,"maxSize":64},"enabled":true,"image":{"repository":"haproxy","tag":"2.3-alpine"},"lifecycle":{"preStopSleep":30},"port":9090,"probe":false,"probeInitialDelay":5,"probePath":"/healthz","probeTimeoutSeconds":3,"resources":{},"timeoutClient":null,"timeoutConnect":null,"timeoutServer":null,"timeoutTunnel":null}` | proxy settings |
+| anchors.comp.proxy | object | `{"cache":{"enabled":false,"maxAge":240,"maxSize":64},"enabled":true,"image":{"repository":"haproxy","tag":"2.3-alpine"},"lifecycle":{"preStopSleep":30},"metricsPort":9101,"port":9090,"probe":false,"probeInitialDelay":5,"probePath":"/healthz","probeTimeoutSeconds":3,"resources":{},"timeoutClient":null,"timeoutConnect":null,"timeoutServer":null,"timeoutTunnel":null}` | proxy settings |
 | anchors.comp.livenessProbe | object | `{"enabled":true,"failureThreshold":10,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3}` | liveness settings |
 | anchors.comp.readinessProbe | object | `{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3}` | readiness settings |
 | anchors.comp.autoscaling | object | `{"enabled":false,"maxReplicas":5,"minReplicas":1,"targetCPUUtilizationPercentage":50,"targetMemoryUtilizationPercentage":null}` | autoscaling settings |
@@ -43,7 +43,7 @@ A Helm chart for deploying Vulcan
 | goaws.<<.replicaCount | string | `nil` |  |
 | goaws.<<.image.pullPolicy | string | `"Always"` |  |
 | goaws.<<.extraEnv | object | `{}` | custom env variables |
-| goaws.<<.proxy | object | `{"cache":{"enabled":false,"maxAge":240,"maxSize":64},"enabled":true,"image":{"repository":"haproxy","tag":"2.3-alpine"},"lifecycle":{"preStopSleep":30},"port":9090,"probe":false,"probeInitialDelay":5,"probePath":"/healthz","probeTimeoutSeconds":3,"resources":{},"timeoutClient":null,"timeoutConnect":null,"timeoutServer":null,"timeoutTunnel":null}` | proxy settings |
+| goaws.<<.proxy | object | `{"cache":{"enabled":false,"maxAge":240,"maxSize":64},"enabled":true,"image":{"repository":"haproxy","tag":"2.3-alpine"},"lifecycle":{"preStopSleep":30},"metricsPort":9101,"port":9090,"probe":false,"probeInitialDelay":5,"probePath":"/healthz","probeTimeoutSeconds":3,"resources":{},"timeoutClient":null,"timeoutConnect":null,"timeoutServer":null,"timeoutTunnel":null}` | proxy settings |
 | goaws.<<.podSecurityContext | object | `{}` |  |
 | goaws.<<.securityContext | object | `{}` |  |
 | goaws.<<.imagePullSecrets | list | `[]` |  |
@@ -82,7 +82,7 @@ A Helm chart for deploying Vulcan
 | results.<<.replicaCount | string | `nil` |  |
 | results.<<.image.pullPolicy | string | `"Always"` |  |
 | results.<<.extraEnv | object | `{}` | custom env variables |
-| results.<<.proxy | object | `{"cache":{"enabled":false,"maxAge":240,"maxSize":64},"enabled":true,"image":{"repository":"haproxy","tag":"2.3-alpine"},"lifecycle":{"preStopSleep":30},"port":9090,"probe":false,"probeInitialDelay":5,"probePath":"/healthz","probeTimeoutSeconds":3,"resources":{},"timeoutClient":null,"timeoutConnect":null,"timeoutServer":null,"timeoutTunnel":null}` | proxy settings |
+| results.<<.proxy | object | `{"cache":{"enabled":false,"maxAge":240,"maxSize":64},"enabled":true,"image":{"repository":"haproxy","tag":"2.3-alpine"},"lifecycle":{"preStopSleep":30},"metricsPort":9101,"port":9090,"probe":false,"probeInitialDelay":5,"probePath":"/healthz","probeTimeoutSeconds":3,"resources":{},"timeoutClient":null,"timeoutConnect":null,"timeoutServer":null,"timeoutTunnel":null}` | proxy settings |
 | results.<<.podSecurityContext | object | `{}` |  |
 | results.<<.securityContext | object | `{}` |  |
 | results.<<.imagePullSecrets | list | `[]` |  |
@@ -118,7 +118,7 @@ A Helm chart for deploying Vulcan
 | persistence.<<.replicaCount | string | `nil` |  |
 | persistence.<<.image.pullPolicy | string | `"Always"` |  |
 | persistence.<<.extraEnv | object | `{}` | custom env variables |
-| persistence.<<.proxy | object | `{"cache":{"enabled":false,"maxAge":240,"maxSize":64},"enabled":true,"image":{"repository":"haproxy","tag":"2.3-alpine"},"lifecycle":{"preStopSleep":30},"port":9090,"probe":false,"probeInitialDelay":5,"probePath":"/healthz","probeTimeoutSeconds":3,"resources":{},"timeoutClient":null,"timeoutConnect":null,"timeoutServer":null,"timeoutTunnel":null}` | proxy settings |
+| persistence.<<.proxy | object | `{"cache":{"enabled":false,"maxAge":240,"maxSize":64},"enabled":true,"image":{"repository":"haproxy","tag":"2.3-alpine"},"lifecycle":{"preStopSleep":30},"metricsPort":9101,"port":9090,"probe":false,"probeInitialDelay":5,"probePath":"/healthz","probeTimeoutSeconds":3,"resources":{},"timeoutClient":null,"timeoutConnect":null,"timeoutServer":null,"timeoutTunnel":null}` | proxy settings |
 | persistence.<<.podSecurityContext | object | `{}` |  |
 | persistence.<<.securityContext | object | `{}` |  |
 | persistence.<<.imagePullSecrets | list | `[]` |  |
@@ -160,7 +160,7 @@ A Helm chart for deploying Vulcan
 | stream.<<.replicaCount | string | `nil` |  |
 | stream.<<.image.pullPolicy | string | `"Always"` |  |
 | stream.<<.extraEnv | object | `{}` | custom env variables |
-| stream.<<.proxy | object | `{"cache":{"enabled":false,"maxAge":240,"maxSize":64},"enabled":true,"image":{"repository":"haproxy","tag":"2.3-alpine"},"lifecycle":{"preStopSleep":30},"port":9090,"probe":false,"probeInitialDelay":5,"probePath":"/healthz","probeTimeoutSeconds":3,"resources":{},"timeoutClient":null,"timeoutConnect":null,"timeoutServer":null,"timeoutTunnel":null}` | proxy settings |
+| stream.<<.proxy | object | `{"cache":{"enabled":false,"maxAge":240,"maxSize":64},"enabled":true,"image":{"repository":"haproxy","tag":"2.3-alpine"},"lifecycle":{"preStopSleep":30},"metricsPort":9101,"port":9090,"probe":false,"probeInitialDelay":5,"probePath":"/healthz","probeTimeoutSeconds":3,"resources":{},"timeoutClient":null,"timeoutConnect":null,"timeoutServer":null,"timeoutTunnel":null}` | proxy settings |
 | stream.<<.podSecurityContext | object | `{}` |  |
 | stream.<<.securityContext | object | `{}` |  |
 | stream.<<.imagePullSecrets | list | `[]` |  |
@@ -199,7 +199,7 @@ A Helm chart for deploying Vulcan
 | api.<<.replicaCount | string | `nil` |  |
 | api.<<.image.pullPolicy | string | `"Always"` |  |
 | api.<<.extraEnv | object | `{}` | custom env variables |
-| api.<<.proxy | object | `{"cache":{"enabled":false,"maxAge":240,"maxSize":64},"enabled":true,"image":{"repository":"haproxy","tag":"2.3-alpine"},"lifecycle":{"preStopSleep":30},"port":9090,"probe":false,"probeInitialDelay":5,"probePath":"/healthz","probeTimeoutSeconds":3,"resources":{},"timeoutClient":null,"timeoutConnect":null,"timeoutServer":null,"timeoutTunnel":null}` | proxy settings |
+| api.<<.proxy | object | `{"cache":{"enabled":false,"maxAge":240,"maxSize":64},"enabled":true,"image":{"repository":"haproxy","tag":"2.3-alpine"},"lifecycle":{"preStopSleep":30},"metricsPort":9101,"port":9090,"probe":false,"probeInitialDelay":5,"probePath":"/healthz","probeTimeoutSeconds":3,"resources":{},"timeoutClient":null,"timeoutConnect":null,"timeoutServer":null,"timeoutTunnel":null}` | proxy settings |
 | api.<<.podSecurityContext | object | `{}` |  |
 | api.<<.securityContext | object | `{}` |  |
 | api.<<.imagePullSecrets | list | `[]` |  |
@@ -268,7 +268,7 @@ A Helm chart for deploying Vulcan
 | crontinuous.<<.replicaCount | string | `nil` |  |
 | crontinuous.<<.image.pullPolicy | string | `"Always"` |  |
 | crontinuous.<<.extraEnv | object | `{}` | custom env variables |
-| crontinuous.<<.proxy | object | `{"cache":{"enabled":false,"maxAge":240,"maxSize":64},"enabled":true,"image":{"repository":"haproxy","tag":"2.3-alpine"},"lifecycle":{"preStopSleep":30},"port":9090,"probe":false,"probeInitialDelay":5,"probePath":"/healthz","probeTimeoutSeconds":3,"resources":{},"timeoutClient":null,"timeoutConnect":null,"timeoutServer":null,"timeoutTunnel":null}` | proxy settings |
+| crontinuous.<<.proxy | object | `{"cache":{"enabled":false,"maxAge":240,"maxSize":64},"enabled":true,"image":{"repository":"haproxy","tag":"2.3-alpine"},"lifecycle":{"preStopSleep":30},"metricsPort":9101,"port":9090,"probe":false,"probeInitialDelay":5,"probePath":"/healthz","probeTimeoutSeconds":3,"resources":{},"timeoutClient":null,"timeoutConnect":null,"timeoutServer":null,"timeoutTunnel":null}` | proxy settings |
 | crontinuous.<<.podSecurityContext | object | `{}` |  |
 | crontinuous.<<.securityContext | object | `{}` |  |
 | crontinuous.<<.imagePullSecrets | list | `[]` |  |
@@ -305,7 +305,7 @@ A Helm chart for deploying Vulcan
 | scanengine.<<.replicaCount | string | `nil` |  |
 | scanengine.<<.image.pullPolicy | string | `"Always"` |  |
 | scanengine.<<.extraEnv | object | `{}` | custom env variables |
-| scanengine.<<.proxy | object | `{"cache":{"enabled":false,"maxAge":240,"maxSize":64},"enabled":true,"image":{"repository":"haproxy","tag":"2.3-alpine"},"lifecycle":{"preStopSleep":30},"port":9090,"probe":false,"probeInitialDelay":5,"probePath":"/healthz","probeTimeoutSeconds":3,"resources":{},"timeoutClient":null,"timeoutConnect":null,"timeoutServer":null,"timeoutTunnel":null}` | proxy settings |
+| scanengine.<<.proxy | object | `{"cache":{"enabled":false,"maxAge":240,"maxSize":64},"enabled":true,"image":{"repository":"haproxy","tag":"2.3-alpine"},"lifecycle":{"preStopSleep":30},"metricsPort":9101,"port":9090,"probe":false,"probeInitialDelay":5,"probePath":"/healthz","probeTimeoutSeconds":3,"resources":{},"timeoutClient":null,"timeoutConnect":null,"timeoutServer":null,"timeoutTunnel":null}` | proxy settings |
 | scanengine.<<.podSecurityContext | object | `{}` |  |
 | scanengine.<<.securityContext | object | `{}` |  |
 | scanengine.<<.imagePullSecrets | list | `[]` |  |
@@ -355,7 +355,7 @@ A Helm chart for deploying Vulcan
 | ui.<<.replicaCount | string | `nil` |  |
 | ui.<<.image.pullPolicy | string | `"Always"` |  |
 | ui.<<.extraEnv | object | `{}` | custom env variables |
-| ui.<<.proxy | object | `{"cache":{"enabled":false,"maxAge":240,"maxSize":64},"enabled":true,"image":{"repository":"haproxy","tag":"2.3-alpine"},"lifecycle":{"preStopSleep":30},"port":9090,"probe":false,"probeInitialDelay":5,"probePath":"/healthz","probeTimeoutSeconds":3,"resources":{},"timeoutClient":null,"timeoutConnect":null,"timeoutServer":null,"timeoutTunnel":null}` | proxy settings |
+| ui.<<.proxy | object | `{"cache":{"enabled":false,"maxAge":240,"maxSize":64},"enabled":true,"image":{"repository":"haproxy","tag":"2.3-alpine"},"lifecycle":{"preStopSleep":30},"metricsPort":9101,"port":9090,"probe":false,"probeInitialDelay":5,"probePath":"/healthz","probeTimeoutSeconds":3,"resources":{},"timeoutClient":null,"timeoutConnect":null,"timeoutServer":null,"timeoutTunnel":null}` | proxy settings |
 | ui.<<.podSecurityContext | object | `{}` |  |
 | ui.<<.securityContext | object | `{}` |  |
 | ui.<<.imagePullSecrets | list | `[]` |  |
@@ -390,7 +390,7 @@ A Helm chart for deploying Vulcan
 | insights.<<.replicaCount | string | `nil` |  |
 | insights.<<.image.pullPolicy | string | `"Always"` |  |
 | insights.<<.extraEnv | object | `{}` | custom env variables |
-| insights.<<.proxy | object | `{"cache":{"enabled":false,"maxAge":240,"maxSize":64},"enabled":true,"image":{"repository":"haproxy","tag":"2.3-alpine"},"lifecycle":{"preStopSleep":30},"port":9090,"probe":false,"probeInitialDelay":5,"probePath":"/healthz","probeTimeoutSeconds":3,"resources":{},"timeoutClient":null,"timeoutConnect":null,"timeoutServer":null,"timeoutTunnel":null}` | proxy settings |
+| insights.<<.proxy | object | `{"cache":{"enabled":false,"maxAge":240,"maxSize":64},"enabled":true,"image":{"repository":"haproxy","tag":"2.3-alpine"},"lifecycle":{"preStopSleep":30},"metricsPort":9101,"port":9090,"probe":false,"probeInitialDelay":5,"probePath":"/healthz","probeTimeoutSeconds":3,"resources":{},"timeoutClient":null,"timeoutConnect":null,"timeoutServer":null,"timeoutTunnel":null}` | proxy settings |
 | insights.<<.podSecurityContext | object | `{}` |  |
 | insights.<<.securityContext | object | `{}` |  |
 | insights.<<.imagePullSecrets | list | `[]` |  |
@@ -412,26 +412,7 @@ A Helm chart for deploying Vulcan
 | insights.image.pullPolicy | string | `"Always"` |  |
 | insights.livenessProbe | object | `{"<<":{"enabled":true,"failureThreshold":10,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"path":"/healthcheck"}` | liveness settings |
 | insights.readinessProbe | object | `{"<<":{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"path":"/healthcheck"}` | readiness settings |
-| insights.proxy.enabled | bool | `true` |  |
-| insights.proxy.<<.enabled | bool | `true` |  |
-| insights.proxy.<<.image.repository | string | `"haproxy"` |  |
-| insights.proxy.<<.image.tag | string | `"2.3-alpine"` |  |
-| insights.proxy.<<.port | int | `9090` |  |
-| insights.proxy.<<.cache.enabled | bool | `false` |  |
-| insights.proxy.<<.cache.maxSize | int | `64` |  |
-| insights.proxy.<<.cache.maxAge | int | `240` |  |
-| insights.proxy.<<.probe | bool | `false` |  |
-| insights.proxy.<<.probePath | string | `"/healthz"` |  |
-| insights.proxy.<<.probeInitialDelay | int | `5` |  |
-| insights.proxy.<<.probeTimeoutSeconds | int | `3` |  |
-| insights.proxy.<<.timeoutConnect | string | `nil` |  |
-| insights.proxy.<<.timeoutClient | string | `nil` |  |
-| insights.proxy.<<.timeoutServer | string | `nil` |  |
-| insights.proxy.<<.timeoutTunnel | string | `nil` |  |
-| insights.proxy.<<.lifecycle.preStopSleep | int | `30` |  |
-| insights.proxy.<<.resources | object | `{}` |  |
-| insights.proxy.metricsPort | int | `9101` |  |
-| insights.proxy.cache.enabled | bool | `true` |  |
+| insights.proxy | object | `{"<<":{"cache":{"enabled":false,"maxAge":240,"maxSize":64},"enabled":true,"image":{"repository":"haproxy","tag":"2.3-alpine"},"lifecycle":{"preStopSleep":30},"metricsPort":9101,"port":9090,"probe":false,"probeInitialDelay":5,"probePath":"/healthz","probeTimeoutSeconds":3,"resources":{},"timeoutClient":null,"timeoutConnect":null,"timeoutServer":null,"timeoutTunnel":null},"cache":{"enabled":true},"enabled":true}` | proxy settings. mandatory for insights |
 | insights.conf.region | string | `nil` |  |
 | insights.conf.log | string | `"false"` |  |
 | insights.conf.private.name | string | `"private"` |  |
@@ -447,7 +428,7 @@ A Helm chart for deploying Vulcan
 | reportsgenerator.<<.replicaCount | string | `nil` |  |
 | reportsgenerator.<<.image.pullPolicy | string | `"Always"` |  |
 | reportsgenerator.<<.extraEnv | object | `{}` | custom env variables |
-| reportsgenerator.<<.proxy | object | `{"cache":{"enabled":false,"maxAge":240,"maxSize":64},"enabled":true,"image":{"repository":"haproxy","tag":"2.3-alpine"},"lifecycle":{"preStopSleep":30},"port":9090,"probe":false,"probeInitialDelay":5,"probePath":"/healthz","probeTimeoutSeconds":3,"resources":{},"timeoutClient":null,"timeoutConnect":null,"timeoutServer":null,"timeoutTunnel":null}` | proxy settings |
+| reportsgenerator.<<.proxy | object | `{"cache":{"enabled":false,"maxAge":240,"maxSize":64},"enabled":true,"image":{"repository":"haproxy","tag":"2.3-alpine"},"lifecycle":{"preStopSleep":30},"metricsPort":9101,"port":9090,"probe":false,"probeInitialDelay":5,"probePath":"/healthz","probeTimeoutSeconds":3,"resources":{},"timeoutClient":null,"timeoutConnect":null,"timeoutServer":null,"timeoutTunnel":null}` | proxy settings |
 | reportsgenerator.<<.podSecurityContext | object | `{}` |  |
 | reportsgenerator.<<.securityContext | object | `{}` |  |
 | reportsgenerator.<<.imagePullSecrets | list | `[]` |  |
@@ -508,7 +489,7 @@ A Helm chart for deploying Vulcan
 | redis.<<.replicaCount | string | `nil` |  |
 | redis.<<.image.pullPolicy | string | `"Always"` |  |
 | redis.<<.extraEnv | object | `{}` | custom env variables |
-| redis.<<.proxy | object | `{"cache":{"enabled":false,"maxAge":240,"maxSize":64},"enabled":true,"image":{"repository":"haproxy","tag":"2.3-alpine"},"lifecycle":{"preStopSleep":30},"port":9090,"probe":false,"probeInitialDelay":5,"probePath":"/healthz","probeTimeoutSeconds":3,"resources":{},"timeoutClient":null,"timeoutConnect":null,"timeoutServer":null,"timeoutTunnel":null}` | proxy settings |
+| redis.<<.proxy | object | `{"cache":{"enabled":false,"maxAge":240,"maxSize":64},"enabled":true,"image":{"repository":"haproxy","tag":"2.3-alpine"},"lifecycle":{"preStopSleep":30},"metricsPort":9101,"port":9090,"probe":false,"probeInitialDelay":5,"probePath":"/healthz","probeTimeoutSeconds":3,"resources":{},"timeoutClient":null,"timeoutConnect":null,"timeoutServer":null,"timeoutTunnel":null}` | proxy settings |
 | redis.<<.podSecurityContext | object | `{}` |  |
 | redis.<<.securityContext | object | `{}` |  |
 | redis.<<.imagePullSecrets | list | `[]` |  |
@@ -540,7 +521,7 @@ A Helm chart for deploying Vulcan
 | metrics.<<.replicaCount | string | `nil` |  |
 | metrics.<<.image.pullPolicy | string | `"Always"` |  |
 | metrics.<<.extraEnv | object | `{}` | custom env variables |
-| metrics.<<.proxy | object | `{"cache":{"enabled":false,"maxAge":240,"maxSize":64},"enabled":true,"image":{"repository":"haproxy","tag":"2.3-alpine"},"lifecycle":{"preStopSleep":30},"port":9090,"probe":false,"probeInitialDelay":5,"probePath":"/healthz","probeTimeoutSeconds":3,"resources":{},"timeoutClient":null,"timeoutConnect":null,"timeoutServer":null,"timeoutTunnel":null}` | proxy settings |
+| metrics.<<.proxy | object | `{"cache":{"enabled":false,"maxAge":240,"maxSize":64},"enabled":true,"image":{"repository":"haproxy","tag":"2.3-alpine"},"lifecycle":{"preStopSleep":30},"metricsPort":9101,"port":9090,"probe":false,"probeInitialDelay":5,"probePath":"/healthz","probeTimeoutSeconds":3,"resources":{},"timeoutClient":null,"timeoutConnect":null,"timeoutServer":null,"timeoutTunnel":null}` | proxy settings |
 | metrics.<<.podSecurityContext | object | `{}` |  |
 | metrics.<<.securityContext | object | `{}` |  |
 | metrics.<<.imagePullSecrets | list | `[]` |  |
@@ -588,7 +569,7 @@ A Helm chart for deploying Vulcan
 | vulndbapi.<<.replicaCount | string | `nil` |  |
 | vulndbapi.<<.image.pullPolicy | string | `"Always"` |  |
 | vulndbapi.<<.extraEnv | object | `{}` | custom env variables |
-| vulndbapi.<<.proxy | object | `{"cache":{"enabled":false,"maxAge":240,"maxSize":64},"enabled":true,"image":{"repository":"haproxy","tag":"2.3-alpine"},"lifecycle":{"preStopSleep":30},"port":9090,"probe":false,"probeInitialDelay":5,"probePath":"/healthz","probeTimeoutSeconds":3,"resources":{},"timeoutClient":null,"timeoutConnect":null,"timeoutServer":null,"timeoutTunnel":null}` | proxy settings |
+| vulndbapi.<<.proxy | object | `{"cache":{"enabled":false,"maxAge":240,"maxSize":64},"enabled":true,"image":{"repository":"haproxy","tag":"2.3-alpine"},"lifecycle":{"preStopSleep":30},"metricsPort":9101,"port":9090,"probe":false,"probeInitialDelay":5,"probePath":"/healthz","probeTimeoutSeconds":3,"resources":{},"timeoutClient":null,"timeoutConnect":null,"timeoutServer":null,"timeoutTunnel":null}` | proxy settings |
 | vulndbapi.<<.podSecurityContext | object | `{}` |  |
 | vulndbapi.<<.securityContext | object | `{}` |  |
 | vulndbapi.<<.imagePullSecrets | list | `[]` |  |
@@ -622,7 +603,7 @@ A Helm chart for deploying Vulcan
 | vulndb.<<.replicaCount | string | `nil` |  |
 | vulndb.<<.image.pullPolicy | string | `"Always"` |  |
 | vulndb.<<.extraEnv | object | `{}` | custom env variables |
-| vulndb.<<.proxy | object | `{"cache":{"enabled":false,"maxAge":240,"maxSize":64},"enabled":true,"image":{"repository":"haproxy","tag":"2.3-alpine"},"lifecycle":{"preStopSleep":30},"port":9090,"probe":false,"probeInitialDelay":5,"probePath":"/healthz","probeTimeoutSeconds":3,"resources":{},"timeoutClient":null,"timeoutConnect":null,"timeoutServer":null,"timeoutTunnel":null}` | proxy settings |
+| vulndb.<<.proxy | object | `{"cache":{"enabled":false,"maxAge":240,"maxSize":64},"enabled":true,"image":{"repository":"haproxy","tag":"2.3-alpine"},"lifecycle":{"preStopSleep":30},"metricsPort":9101,"port":9090,"probe":false,"probeInitialDelay":5,"probePath":"/healthz","probeTimeoutSeconds":3,"resources":{},"timeoutClient":null,"timeoutConnect":null,"timeoutServer":null,"timeoutTunnel":null}` | proxy settings |
 | vulndb.<<.podSecurityContext | object | `{}` |  |
 | vulndb.<<.securityContext | object | `{}` |  |
 | vulndb.<<.imagePullSecrets | list | `[]` |  |
