@@ -3,7 +3,7 @@ Override names
 */}}
 {{- define "common-hpa" -}}
 {{- if and .Values.comp.enabled .Values.comp.autoscaling.enabled -}}
-apiVersion: autoscaling/v1
+apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
   name: {{ template "vulcan.fullname" . }}-{{ .Values.comp.name }}
@@ -16,6 +16,18 @@ spec:
     name: {{ template "vulcan.fullname" . }}-{{ .Values.comp.name }}
   minReplicas: {{ .Values.comp.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.comp.autoscaling.maxReplicas }}
-  targetCPUUtilizationPercentage: {{ .Values.comp.autoscaling.targetCPUUtilizationPercentage }}
+  metrics:
+    {{- if .Values.comp.autoscaling.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: cpu
+        targetAverageUtilization: {{ .Values.comp.autoscaling.targetCPUUtilizationPercentage }}
+    {{- end }}
+    {{- if .Values.comp.autoscaling.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        targetAverageUtilization: {{ .Values.comp.autoscaling.targetMemoryUtilizationPercentage }}
+    {{- end }}
 {{- end -}}
 {{- end -}}
