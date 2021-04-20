@@ -2025,7 +2025,7 @@ spec:
       imagePullSecrets:
         - name: pullsecretname
 ---
-# Source: vulcan/templates/sqsexporter/sqs-exporter.yaml
+# Source: vulcan/templates/sqsexporter/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -2065,6 +2065,8 @@ spec:
             value: "8080"
           - name: SQS_QUEUE_NAME_PREFIX
             value: VulcanK8S
+          - name: AWS_REGION
+            value: "eu-west-1"
           
           
           ports:

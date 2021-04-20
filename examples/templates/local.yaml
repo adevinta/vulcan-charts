@@ -2378,7 +2378,7 @@ spec:
         configMap:
           name: myrelease-vulcan-scanengine-proxy
 ---
-# Source: vulcan/templates/sqsexporter/sqs-exporter.yaml
+# Source: vulcan/templates/sqsexporter/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -2417,6 +2417,8 @@ spec:
             value: "8080"
           - name: SQS_QUEUE_NAME_PREFIX
             value: VulcanK8S
+          - name: AWS_REGION
+            value: "local"
           
           - name: AWS_SQS_ENDPOINT
             value: "http://myrelease-vulcan-goaws"

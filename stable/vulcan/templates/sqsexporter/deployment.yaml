@@ -29,6 +29,8 @@ spec:
             value: {{ .Values.comp.containerPort | quote }}
           - name: SQS_QUEUE_NAME_PREFIX
             value: {{ .Values.comp.queueNamePrefix }}
+          - name: AWS_REGION
+            value: {{ .Values.global.region | quote }}
         {{- include "common-container-envs" . | nindent 10 }}
           ports:
             - name: metrics
