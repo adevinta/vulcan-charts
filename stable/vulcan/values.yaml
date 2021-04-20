@@ -8,10 +8,15 @@ global:
 # -- Anchors
 anchors:
 
+  # -- postgres database settings
   db: &db
+    host:
+    name:
     user: postgres
     password: TBD
+    port:
     sslMode: disable
+    ca:
 
   dogstatsd: &dogstatsd
     image: 
@@ -287,6 +292,7 @@ persistence:
     sns: true
     sqs: true
 
+  # -- postgres database settings
   db:
     <<: *db
     name: persistence
@@ -357,6 +363,7 @@ api:
     <<: *comp-readynessProbe
     path: /api/v1/healthcheck
 
+  # -- postgres database settings
   db:
     <<: *db
     name: api
@@ -481,6 +488,7 @@ scanengine:
       numOfWorkers: 2
       period: 20
 
+  # -- postgres database settings
   db:
     <<: *db
     name: scanengine
@@ -620,6 +628,7 @@ reportsgenerator:
       from: tbd@tbd.com
       cc: '["tbd@tbd.com"]'
 
+  # -- postgres database settings
   db:
     <<: *db
     name: reportsgenerator
@@ -712,6 +721,7 @@ vulndbapi:
   conf:
     logLevel: info
 
+  # -- postgres database settings
   db:
     <<: *db
     name: vulnerabilitydb
@@ -742,6 +752,7 @@ vulndb:
     sqs: true
     sns: true
 
+  # -- postgres database settings
   db:
     <<: *db
     name: vulnerabilitydb
