@@ -87,7 +87,7 @@ anchors:
       minReplicas: 1
       maxReplicas: 5
       targetCPUUtilizationPercentage: 50
-      targetMemoryUtilizationPercentage: 50
+      targetMemoryUtilizationPercentage:
 
     service:
       type: ClusterIP
