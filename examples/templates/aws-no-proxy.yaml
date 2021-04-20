@@ -633,6 +633,8 @@ spec:
             value: "localhost"
           - name: DOGSTATSD_PORT
             value: "8125"
+          - name: FOO
+            value: "bar-api"
           envFrom:
           - secretRef:
               name: myrelease-vulcan-api
@@ -721,6 +723,8 @@ spec:
             value: "[]"
           
           
+          - name: FOO
+            value: "bar-cron"
           envFrom:
           - secretRef:
               name: myrelease-vulcan-crontinuous
@@ -931,6 +935,8 @@ spec:
             value: "localhost"
           - name: DOGSTATSD_PORT
             value: "8125"
+          - name: FOO
+            value: "bar-metrics"
           envFrom:
           - secretRef:
               name: myrelease-vulcan-metrics
@@ -1041,6 +1047,8 @@ spec:
             value: "localhost"
           - name: DOGSTATSD_PORT
             value: "8125"
+          - name: FOO
+            value: "bar-persist"
           envFrom:
           - secretRef:
               name: myrelease-vulcan-persistence
@@ -1236,6 +1244,8 @@ spec:
             value: "localhost"
           - name: DOGSTATSD_PORT
             value: "8125"
+          - name: FOO
+            value: "bar-rep"
           envFrom:
           - secretRef:
               name: myrelease-vulcan-reportsgenerator
@@ -1331,6 +1341,8 @@ spec:
             value: "localhost"
           - name: DOGSTATSD_PORT
             value: "8125"
+          - name: FOO
+            value: "bar-results"
           ports:
             - name: http
               containerPort: 8080
@@ -1458,6 +1470,8 @@ spec:
             value: "localhost"
           - name: DOGSTATSD_PORT
             value: "8125"
+          - name: FOO
+            value: "bar-scan"
           envFrom:
           - secretRef:
               name: myrelease-vulcan-scanengine
@@ -1494,25 +1508,34 @@ spec:
         app.kubernetes.io/name: sqsexporter
       annotations:
         prometheus.io/scrape: 'true'
-        prometheus.io/port: '9384'
+        prometheus.io/port: "8080"
         iam.amazonaws.com/role: arn:aws:iam::000000000000:role/SQSExporterRole
     spec:
-      imagePullSecrets:
-        - name: pullsecretname
       containers:
-        - name: sqs-exporter
-          image: "jesusfcr/sqs-exporter:custom-endpoint"
-          imagePullPolicy: 
-          ports:
-            - name: metrics
-              containerPort: 9384
-              protocol: TCP
+        - name: sqsexporter
           
-          image: "jesusfcr/sqs-exporter:custom-endpoint"
+          image: "jesusfcr/sqs-prometheus-exporter:improve"
           imagePullPolicy: 
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","sleep 30;"]
           env:
+          - name: PORT
+            value: "8080"
           - name: SQS_QUEUE_NAME_PREFIX
             value: VulcanK8S
+          
+          
+          - name: FOO
+            value: "bar-sqsexp"
+          ports:
+            - name: metrics
+              containerPort: 8080
+              protocol: TCP
+      
+      imagePullSecrets:
+        - name: pullsecretname
 ---
 # Source: vulcan/templates/stream/deployment.yaml
 apiVersion: apps/v1
@@ -1599,6 +1622,8 @@ spec:
             value: "localhost"
           - name: DOGSTATSD_PORT
             value: "8125"
+          - name: FOO
+            value: "bar-stream"
           envFrom:
           - secretRef:
               name: myrelease-vulcan-stream
@@ -1683,6 +1708,8 @@ spec:
             value: "https://org.slack.com/archives/XXXXXXXXXXXX"
           
           
+          - name: FOO
+            value: "bar-ui"
           ports:
             - name: http
               containerPort: 8080
@@ -1766,6 +1793,8 @@ spec:
             value: "http://myrelease-vulcan-results"
           
           
+          - name: FOO
+            value: "bar-vulndb"
           envFrom:
           - secretRef:
               name: myrelease-vulcan-vulndb
@@ -1857,6 +1886,8 @@ spec:
             value: "info"
           
           
+          - name: FOO
+            value: "bar-vulndbapi"
           envFrom:
           - secretRef:
               name: myrelease-vulcan-vulndbapi

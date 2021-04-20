@@ -84,6 +84,8 @@ api:
       secretName: vulcan-api-tls
   proxy:
     enabled: false
+  extraEnv:
+    FOO: bar-api
 crontinuous:
   annotations:
     iam.amazonaws.com/role: arn:aws:iam::000000000000:role/CrontinuousRole
@@ -101,6 +103,8 @@ crontinuous:
   - name: pullsecretname
   proxy:
     enabled: false
+  extraEnv:
+    FOO: bar-cron
 customTplManifests: |
   apiVersion: v1
   kind: ConfigMap
@@ -148,6 +152,8 @@ insights:
       secretName: vulcan-insights-tls
   proxy:
     enabled: false
+  extraEnv:
+    FOO: bar-insights
 metrics:
   annotations:
     iam.amazonaws.com/role: arn:aws:iam::000000000000:role/MetricsRole
@@ -167,6 +173,8 @@ metrics:
     tag: tag-metrics
   imagePullSecrets:
   - name: pullsecretname
+  extraEnv:
+    FOO: bar-metrics
 persistence:
   annotations:
     iam.amazonaws.com/role: arn:aws:iam::000000000000:role/PersistenceRole
@@ -201,6 +209,8 @@ persistence:
       secretName: vulcan-persistence-tls
   proxy:
     enabled: false
+  extraEnv:
+    FOO: bar-persist
 reportsgenerator:
   annotations:
     iam.amazonaws.com/role: arn:aws:iam::000000000000:role/ReportsGeneratorRole
@@ -248,6 +258,8 @@ reportsgenerator:
   - name: pullsecretname
   proxy:
     enabled: false
+  extraEnv:
+    FOO: bar-rep
 results:
   annotations:
     iam.amazonaws.com/role: arn:aws:iam::000000000000:role/ResultsRole
@@ -276,6 +288,8 @@ results:
       secretName: vulcan-results-tls
   proxy:
     enabled: false
+  extraEnv:
+    FOO: bar-results
 scanengine:
   annotations:
     iam.amazonaws.com/role: arn:aws:iam::000000000000:role/ScanEngineRole
@@ -309,11 +323,15 @@ scanengine:
   - name: pullsecretname
   proxy:
     enabled: false
-sqsExporter:
+  extraEnv:
+    FOO: bar-scan
+sqsexporter:
   annotations:
     iam.amazonaws.com/role: arn:aws:iam::000000000000:role/SQSExporterRole
   imagePullSecrets:
   - name: pullsecretname
+  extraEnv:
+    FOO: bar-sqsexp
 stream:
   annotations:
     iam.amazonaws.com/role: arn:aws:iam::000000000000:role/StreamRole
@@ -343,6 +361,8 @@ stream:
       secretName: vulcan-stream-tls
   proxy:
     enabled: false
+  extraEnv:
+    FOO: bar-stream
 ui:
   conf:
     apiUrl: https://www.vulcan.example.com/api/v1/
@@ -372,6 +392,8 @@ ui:
       secretName: vulcan-ui-tls
   proxy:
     enabled: false
+  extraEnv:
+    FOO: bar-ui
 vulndb:
   annotations:
     iam.amazonaws.com/role: arn:aws:iam::000000000000:role/VulnDBRole
@@ -390,6 +412,8 @@ vulndb:
     tag: tag-vulndb
   imagePullSecrets:
   - name: pullsecretname
+  extraEnv:
+    FOO: bar-vulndb
 vulndbapi:
   conf:
     logLevel: info
@@ -405,3 +429,5 @@ vulndbapi:
   - name: pullsecretname
   proxy:
     enabled: false
+  extraEnv:
+    FOO: bar-vulndbapi

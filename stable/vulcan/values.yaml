@@ -676,13 +676,16 @@ vulndb:
     name: vulnerabilitydb
 
 
-sqsExporter:
+sqsexporter:
   enabled: true
+  name: sqsexporter
+  <<: *comp
   image:
-    repository: jesusfcr/sqs-exporter
-    tag: custom-endpoint
+    repository: jesusfcr/sqs-prometheus-exporter
+    tag: improve
   queueNamePrefix: VulcanK8S
-  resources: {}
+  infra:
+    sqs: true
 
 
 dogstatsd:

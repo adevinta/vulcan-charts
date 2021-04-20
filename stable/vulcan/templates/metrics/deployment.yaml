@@ -59,10 +59,6 @@ spec:
           - name: VULCAN_API_EXTERNAL
             value: {{ .Values.comp.conf.vulcanAPIExternal | quote }}
         {{- include "common-container-envs" . | nindent 10 }}
-        {{- range $name, $value := .Values.comp.extraEnv }}
-          - name: {{ $name }}
-            value: {{ $value | quote }}
-        {{- end }}
           envFrom:
           - secretRef:
               name: {{ include "metrics.fullname" . }}

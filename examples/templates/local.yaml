@@ -2401,28 +2401,34 @@ spec:
         app.kubernetes.io/name: sqsexporter
       annotations:
         prometheus.io/scrape: 'true'
-        prometheus.io/port: '9384'
+        prometheus.io/port: "8080"
     spec:
       containers:
-        - name: sqs-exporter
-          image: "jesusfcr/sqs-exporter:custom-endpoint"
-          imagePullPolicy: 
-          ports:
-            - name: metrics
-              containerPort: 9384
-              protocol: TCP
+        - name: sqsexporter
           
-          image: "jesusfcr/sqs-exporter:custom-endpoint"
+          image: "jesusfcr/sqs-prometheus-exporter:improve"
           imagePullPolicy: 
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","sleep 30;"]
           env:
+          - name: PORT
+            value: "8080"
           - name: SQS_QUEUE_NAME_PREFIX
             value: VulcanK8S
-          - name: SQS_ENDPOINT
+          
+          - name: AWS_SQS_ENDPOINT
             value: "http://myrelease-vulcan-goaws"
           - name: AWS_ACCESS_KEY_ID
-            value: TBD
+            value: ANYVALUE
           - name: AWS_SECRET_ACCESS_KEY
-            value: TBD
+            value: ANYVALUE
+          
+          ports:
+            - name: metrics
+              containerPort: 8080
+              protocol: TCP
 ---
 # Source: vulcan/templates/stream/deployment.yaml
 apiVersion: apps/v1

@@ -43,10 +43,6 @@ spec:
           - name: LINK_BASE
             value: "{{ .Values.comp.conf.linkBase }}/v1"
         {{- include "common-container-envs" . | nindent 10 }}
-        {{- range $name, $value := .Values.comp.extraEnv }}
-          - name: {{ $name }}
-            value: {{ $value | quote }}
-        {{- end }}
           ports:
             - name: {{ include "common-appPortName" . }}
               containerPort: {{ .Values.comp.containerPort }}

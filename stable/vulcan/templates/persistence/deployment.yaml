@@ -54,10 +54,6 @@ spec:
           - name: RAILS_MAX_THREADS
             value: {{ .Values.comp.conf.railsMaxThreads | quote }}
         {{- include "common-container-envs" . | nindent 10 }}
-        {{- range $name, $value := .Values.comp.extraEnv }}
-          - name: {{ $name }}
-            value: {{ $value | quote }}
-        {{- end }}
           envFrom:
           - secretRef:
               name: {{ include "persistence.fullname" . }}

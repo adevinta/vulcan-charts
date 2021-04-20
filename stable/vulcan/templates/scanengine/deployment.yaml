@@ -72,10 +72,6 @@ spec:
           - name: "QUEUES_NESSUS_CHECKTYPES"
             value: {{ .Values.comp.conf.queues.nessus.checktypes | quote }}
         {{- include "common-container-envs" . | nindent 10 }}
-        {{- range $name, $value := .Values.comp.extraEnv }}
-          - name: {{ $name }}
-            value: {{ $value | quote }}
-        {{- end }}
           envFrom:
           - secretRef:
               name: {{ include "scanengine.fullname" . }}

@@ -50,10 +50,6 @@ spec:
           - name: TEAMS_WHITELIST_REPORT
             value: {{ .Values.comp.conf.teamsWhitelistReport | quote }}
         {{- include "common-container-envs" . | nindent 10 }}
-        {{- range $name, $value := .Values.comp.extraEnv }}
-          - name: {{ $name }}
-            value: {{ $value | quote }}
-        {{- end }}
           envFrom:
           - secretRef:
               name: {{ include "crontinuous.fullname" . }}

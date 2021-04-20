@@ -47,10 +47,6 @@ spec:
           - name: UI_CONTACT_SLACK
             value: {{ .Values.comp.conf.contact.slack | quote }}
         {{- include "common-container-envs" . | nindent 10 }}
-        {{- range $name, $value := .Values.comp.extraEnv }}
-          - name: {{ $name }}
-            value: {{ $value | quote }}
-        {{- end }}
           ports:
             - name: {{ include "common-appPortName" . }}
               containerPort: {{ .Values.comp.containerPort }}

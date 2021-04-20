@@ -612,11 +612,33 @@ A Helm chart for deploying Vulcan
 | vulndb.infra.sqs | bool | `true` |  |
 | vulndb.infra.sns | bool | `true` |  |
 | vulndb.db | object | `{"<<":{"ca":null,"host":null,"name":null,"password":"TBD","port":null,"sslMode":"disable","user":"postgres"},"name":"vulnerabilitydb"}` | postgres database settings |
-| sqsExporter.enabled | bool | `true` |  |
-| sqsExporter.image.repository | string | `"jesusfcr/sqs-exporter"` |  |
-| sqsExporter.image.tag | string | `"custom-endpoint"` |  |
-| sqsExporter.queueNamePrefix | string | `"VulcanK8S"` |  |
-| sqsExporter.resources | object | `{}` |  |
+| sqsexporter.enabled | bool | `true` |  |
+| sqsexporter.name | string | `"sqsexporter"` |  |
+| sqsexporter.<<.replicaCount | string | `nil` |  |
+| sqsexporter.<<.image.pullPolicy | string | `"Always"` |  |
+| sqsexporter.<<.extraEnv | object | `{}` | custom env variables |
+| sqsexporter.<<.proxy | object | `{"cache":{"enabled":false,"maxAge":240,"maxSize":64},"enabled":true,"image":{"repository":"haproxy","tag":"2.3-alpine"},"lifecycle":{"preStopSleep":30},"metricsPort":9101,"port":9090,"probe":false,"probeInitialDelay":5,"probePath":"/healthz","probeTimeoutSeconds":3,"resources":{},"timeoutClient":null,"timeoutConnect":null,"timeoutServer":null,"timeoutTunnel":null}` | proxy settings |
+| sqsexporter.<<.podSecurityContext | object | `{}` |  |
+| sqsexporter.<<.securityContext | object | `{}` |  |
+| sqsexporter.<<.imagePullSecrets | list | `[]` |  |
+| sqsexporter.<<.nameOverride | string | `""` |  |
+| sqsexporter.<<.fullnameOverride | string | `""` |  |
+| sqsexporter.<<.containerPort | int | `8080` |  |
+| sqsexporter.<<.lifecycle.preStopSleep | int | `30` |  |
+| sqsexporter.<<.livenessProbe | object | `{"enabled":true,"failureThreshold":10,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3}` | liveness settings |
+| sqsexporter.<<.readinessProbe | object | `{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3}` | readiness settings |
+| sqsexporter.<<.readinessProbe.path | string | `nil` | defaults to healthcheckPath |
+| sqsexporter.<<.autoscaling | object | `{"enabled":false,"maxReplicas":5,"minReplicas":1,"targetCPUUtilizationPercentage":50,"targetMemoryUtilizationPercentage":null}` | autoscaling settings |
+| sqsexporter.<<.service | object | `{"port":80,"portName":null,"protocol":"TCP","targetPort":null,"type":"ClusterIP"}` | service settings |
+| sqsexporter.<<.ingress | object | `{"annotations":{},"enabled":false,"hosts":[],"tls":[]}` | ingress settings |
+| sqsexporter.<<.resources | object | `{}` |  |
+| sqsexporter.<<.nodeSelector | object | `{}` |  |
+| sqsexporter.<<.tolerations | list | `[]` |  |
+| sqsexporter.<<.affinity | object | `{}` |  |
+| sqsexporter.image.repository | string | `"jesusfcr/sqs-prometheus-exporter"` |  |
+| sqsexporter.image.tag | string | `"improve"` |  |
+| sqsexporter.queueNamePrefix | string | `"VulcanK8S"` |  |
+| sqsexporter.infra.sqs | bool | `true` |  |
 | dogstatsd.apiKey | string | `"TBD"` |  |
 
 ----------------------------------------------

@@ -60,10 +60,6 @@ spec:
           - name: RESULTS_INTERNAL_URL
             value: {{ .Values.comp.conf.resultsInternalUrl | default (include "results.url" .)| quote }}
         {{- include "common-container-envs" . | nindent 10 }}
-        {{- range $name, $value := .Values.comp.extraEnv }}
-          - name: {{ $name }}
-            value: {{ $value | quote }}
-        {{- end }}
           envFrom:
           - secretRef:
               name: {{ include "vulndb.fullname" . }}

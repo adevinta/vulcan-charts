@@ -106,6 +106,10 @@ tolerations:
 {{- define "common-container-envs" -}}
 {{ include "common-infra-envs" . }}
 {{ include "common-dogstatsd-envs" . }}
+{{- range $name, $value := .Values.comp.extraEnv }}
+- name: {{ $name }}
+  value: {{ $value | quote }}
+{{- end }}
 {{- end -}}
 
 {{- define "common-deployment-volumes" -}}

@@ -90,10 +90,6 @@ spec:
           - name: AWSCATALOGUE_RETRY_INTERVAL
             value: {{ .Values.comp.conf.awscatalogue.retry_interval| quote }}
         {{- include "common-container-envs" . | nindent 10 }}
-        {{- range $name, $value := .Values.comp.extraEnv }}
-          - name: {{ $name }}
-            value: {{ $value | quote }}
-        {{- end }}
           envFrom:
           - secretRef:
               name: {{ include "api.fullname" . }}

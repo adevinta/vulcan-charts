@@ -312,7 +312,7 @@ scanengine:
     tag: tag-scanengine
   imagePullSecrets:
   - name: pullsecretname
-sqsExporter:
+sqsexporter:
   annotations:
     iam.amazonaws.com/role: arn:aws:iam::000000000000:role/SQSExporterRole
   imagePullSecrets:
