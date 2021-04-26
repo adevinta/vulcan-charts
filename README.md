@@ -21,11 +21,22 @@ Create the `vulcan` namespace:
 kubectl create ns vulcan
 ```
 
-Create a `values.yaml` config file with the paramenters.
-
+Create a `values.yaml` config file with the parameters or choose one of the files in examples.
 
 Install vulcan application:
 
 ```sh
-helm upgrade -i vulcan vulcan/vulcan -f values.yaml --namespace vulcan
+helm upgrade -i vulcan vulcan/vulcan -f examples/local.yaml --namespace vulcan
+```
+
+## Contributors
+
+Before committing changes execute the following commands:
+
+```sh
+# Update examples/templates
+./test.sh -f
+
+# Update the charts generated README.md files.
+helm-docs -s file
 ```
