@@ -15,8 +15,14 @@ helm lint $BASEDIR/stable/*
 OUTDIR=$BASEDIR/examples/templates
 for f in $BASEDIR/examples/*.yaml
 do
-    fn=$(basename -- "$f")
-    echo "Validating $fn -> $OUTDIR/$fn"
-    helm template myrelease $BASEDIR/stable/vulcan --namespace ns -f $f --debug > $OUTDIR/$fn
-    cat $OUTDIR/$fn | kubeval --strict --ignore-missing-schemas
+  fn=$(basename -- "$f")
+  echo "Validating $fn -> $OUTDIR/$fn"
+  helm template myrelease $BASEDIR/stable/vulcan --namespace ns -f $f --debug > $OUTDIR/$fn
+  cat $OUTDIR/$fn | kubeval --strict --ignore-missing-schemas
 done
+
+if [[ -x "$(which helm-docs)" ]]; then
+  helm-docs -s file
+else
+  echo "Unable to find helm-docs ... skipping"
+fi

@@ -34,9 +34,9 @@ helm upgrade -i vulcan vulcan/vulcan -f examples/local.yaml --namespace vulcan
 Before committing changes execute the following commands:
 
 ```sh
-# Update examples/templates
+# Update examples/templates and update the charts generated README.md files.
 ./test.sh -f
 
-# Update the charts generated README.md files.
-helm-docs -s file
+# Review the updated files and add to the repository.
+git add .
 ```
