@@ -536,14 +536,14 @@ reportsgenerator:
         gaId: UA-000000000-0
         proxyEndpoint: # https://vulcan-insights
         contact:
-          companyName:
-          supportEmail:
-          email:
-          slackChannel:
-          jira: # vulcan Jira project
+          companyName: Example
+          email: vulcan@example.com
+          jira: https://jira.example.com/
+          slackChannel: https://www.slack.com/archives/XXXXX
+          supportEmail: vulcan@example.com
         docs:
-          apiDocLink: # vulcan-api doc link
-          roadmapLink: # vulcan roadmap link
+          apiDocLink: https://www.example.com/org/vulcan-api/examples/#how-do-i-list-the-members-of-a-team
+          roadmapLink: https://docs.google.com/spreadsheets/d/xxxxxxxxxxxxxxx/edit?usp=sharing
         vulcanUi: # https://vulcan-www
         viewReport: # vulcan-api/api/v1/report?team_id=%s&scan_id=%s
         redirectUrl: # https://public-redirect/index.html?reportUrl=

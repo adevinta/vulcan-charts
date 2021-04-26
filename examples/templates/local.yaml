@@ -2053,19 +2053,19 @@ spec:
           - name: SCAN_GA_ID
             value: "UA-000000000-0"
           - name: SCAN_COMPANY_NAME
-            value: 
+            value: "Example"
           - name: SCAN_SUPPORT_EMAIL
-            value: 
+            value: "vulcan@example.com"
           - name: SCAN_CONTACT_EMAIL
-            value: 
+            value: "vulcan@example.com"
           - name: SCAN_CONTACT_CHANNEL
-            value: 
+            value: "https://www.slack.com/archives/XXXXX"
           - name: SCAN_CONTACT_JIRA
-            value: 
+            value: "https://jira.example.com/"
           - name: SCAN_DOCS_API_LINK
-            value: 
+            value: "https://www.example.com/org/vulcan-api/examples/#how-do-i-list-the-members-of-a-team"
           - name: SCAN_DOCS_ROADMAP_LINK
-            value: 
+            value: "https://docs.google.com/spreadsheets/d/xxxxxxxxxxxxxxx/edit?usp=sharing"
           - name: PERSISTENCE_ENDPOINT  # We keep this PERSISTENCE variable for compatibility
             value: "http://myrelease-vulcan-scanengine"
           - name: RESULTS_ENDPOINT
