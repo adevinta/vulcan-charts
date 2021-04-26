@@ -19,7 +19,7 @@ anchors:
     ca:
 
   dogstatsd: &dogstatsd
-    image: 
+    image:
       repository: datadog/dogstatsd
       tag: 7.27.0
     enabled: true
@@ -45,8 +45,8 @@ anchors:
       metricsPort: 9101
       cache:
         enabled: false
-        maxSize: 64 # mb
-        maxAge: 240 # seconds
+        maxSize: 64   # mb
+        maxAge: 240   # seconds
       probe: false
       probePath: /healthz
       probeInitialDelay: 5
@@ -353,12 +353,12 @@ api:
     saml:
       metadata: https://okta/app/TBD/sso/saml/metadata
       issuer: http://okta/TBD
-      callback: # https://vulcan-api/api/v1/login/callback
+      callback:   # https://vulcan-api/api/v1/login/callback
       trustedDomains: '[]'  # '["vulcan-api"]'
     log:
       level: INFO
     defaultOwners: '[]'  # '["owner1","owner2"]'
-    vulndbapiUrl: # http://vulnerabilitydbapi
+    vulndbapiUrl:   # http://vulnerabilitydbapi
     persistenceHost:
     crontinuousUrl:
     reportsgeneratorUrl:
@@ -397,7 +397,7 @@ crontinuous:
     vulcanToken: TBDTBDTBD
     crontinuousBucket: crontinuous
     vulcanUser: tbd
-    vulcanApi:  # http://host/api
+    vulcanApi:    # http://host/api
     enableTeamsWhitelistScan: "false"
     teamsWhitelistScan: '[]'
     enableTeamsWhitelistReport: "false"
@@ -464,15 +464,15 @@ ui:
     sqs: false
 
   conf:
-    apiUrl: # https://vulcan-api/api/v1/
+    apiUrl:   # https://vulcan-api/api/v1/
     docs:
-      apiLink: # vulcan API doc
-      whitelistingLink: # vulcan scanner IPs
-      discoveryLink: # vulcan asset discovery doc
-      auditRoleLink: # vulcan AWS audit role doc
+      apiLink: https://docs.erxample.com/vulcan/vulcan-api/   # vulcan API doc
+      whitelistingLink:   # vulcan scanner IPs
+      discoveryLink: https://docs.example.com/vulcan/discovery  # vulcan asset discovery doc
+      auditRoleLink: https://docs.example.com/vulcan/network-access  # vulcan AWS audit role doc
     contact:
-      email: # vulcan contact email
-      slack: # vulcan slack channel
+      email: vulcan@example.com   # vulcan contact email
+      slack: https://example.slack.com/archives/XXXXX    # vulcan slack channel
 
 
 insights:
@@ -534,21 +534,21 @@ reportsgenerator:
         publicBucket: public-insights
         privateBucket: insights
         gaId: UA-000000000-0
-        proxyEndpoint: # https://vulcan-insights
+        proxyEndpoint:     # https://vulcan-insights
         contact:
           companyName: Example
           email: vulcan@example.com
           jira: https://jira.example.com/
-          slackChannel: https://www.slack.com/archives/XXXXX
+          slackChannel: https://example.slack.com/archives/XXXXX
           supportEmail: vulcan@example.com
         docs:
-          apiDocLink: https://www.example.com/org/vulcan-api/examples/#how-do-i-list-the-members-of-a-team
-          roadmapLink: https://docs.google.com/spreadsheets/d/xxxxxxxxxxxxxxx/edit?usp=sharing
-        vulcanUi: # https://vulcan-www
-        viewReport: # vulcan-api/api/v1/report?team_id=%s&scan_id=%s
-        redirectUrl: # https://public-redirect/index.html?reportUrl=
+          apiDocLink: https://docs.example.com/vulcan/vulcan-api/examples/#how-do-i-list-the-members-of-a-team
+          roadmapLink: https://docs.example.com/vulcan/roadmap
+        vulcanUi:     # https://vulcan-www
+        viewReport:   # vulcan-api/api/v1/report?team_id=%s&scan_id=%s
+        redirectUrl:  # https://public-redirect/index.html?reportUrl=
       livereport:
-        emailSubject: #Vulcan Digest
+        emailSubject:   # Vulcan Digest
     ses:
       region:
       from: tbd@tbd.com
@@ -575,7 +575,7 @@ redis:
   containerPort: 6379
 
   conf:
-    redisPassword: TBD 
+    redisPassword: TBD
 
   service:
     type: ClusterIP
@@ -614,9 +614,9 @@ metrics:
     redisAddr:
     redisPassword:
     resultsHost:
-    vulcanApi: # http://host/api
+    vulcanApi:    # http://host/api
     vulcanAPIToken: token
-    vulcanAPIExternal: # https://external/api
+    vulcanAPIExternal:    # https://external/api
 
   infra:
     sqs: true
@@ -661,7 +661,7 @@ vulndb:
     vulnsTopicArn: arn:aws:sns:local:012345678900:VulcanK8SVulnDBVulns
     maxEventAge: 365
     resultsUrl: http://vulcan-results.vulcan.com
-    resultsInternalUrl: # http://vulcan-results
+    resultsInternalUrl:   # http://vulcan-results
 
   proxy:
     enabled: false

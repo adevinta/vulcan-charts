@@ -6,6 +6,12 @@ A Helm chart for deploying Vulcan
 
 **Homepage:** <https://github.com/adevinta/vulcan-charts>
 
+## Maintainers
+
+| Name | Email | Url |
+| ---- | ------ | --- |
+| Adevinta | vulcan@adevinta.com |  |
+
 ## Requirements
 
 | Repository | Name | Version |
@@ -367,12 +373,12 @@ A Helm chart for deploying Vulcan
 | ui.healthcheckPath | string | `"/index.html"` |  |
 | ui.infra.sqs | bool | `false` |  |
 | ui.conf.apiUrl | string | `nil` |  |
-| ui.conf.docs.apiLink | string | `nil` |  |
+| ui.conf.docs.apiLink | string | `"https://docs.erxample.com/vulcan/vulcan-api/"` |  |
 | ui.conf.docs.whitelistingLink | string | `nil` |  |
-| ui.conf.docs.discoveryLink | string | `nil` |  |
-| ui.conf.docs.auditRoleLink | string | `nil` |  |
-| ui.conf.contact.email | string | `nil` |  |
-| ui.conf.contact.slack | string | `nil` |  |
+| ui.conf.docs.discoveryLink | string | `"https://docs.example.com/vulcan/discovery"` |  |
+| ui.conf.docs.auditRoleLink | string | `"https://docs.example.com/vulcan/network-access"` |  |
+| ui.conf.contact.email | string | `"vulcan@example.com"` |  |
+| ui.conf.contact.slack | string | `"https://example.slack.com/archives/XXXXX"` |  |
 | insights.enabled | bool | `true` |  |
 | insights.name | string | `"insights"` |  |
 | insights.<<.replicaCount | string | `nil` |  |
@@ -450,10 +456,10 @@ A Helm chart for deploying Vulcan
 | reportsgenerator.conf.generators.scan.contact.companyName | string | `"Example"` |  |
 | reportsgenerator.conf.generators.scan.contact.email | string | `"vulcan@example.com"` |  |
 | reportsgenerator.conf.generators.scan.contact.jira | string | `"https://jira.example.com/"` |  |
-| reportsgenerator.conf.generators.scan.contact.slackChannel | string | `"https://www.slack.com/archives/XXXXX"` |  |
+| reportsgenerator.conf.generators.scan.contact.slackChannel | string | `"https://example.slack.com/archives/XXXXX"` |  |
 | reportsgenerator.conf.generators.scan.contact.supportEmail | string | `"vulcan@example.com"` |  |
-| reportsgenerator.conf.generators.scan.docs.apiDocLink | string | `"https://www.example.com/org/vulcan-api/examples/#how-do-i-list-the-members-of-a-team"` |  |
-| reportsgenerator.conf.generators.scan.docs.roadmapLink | string | `"https://docs.google.com/spreadsheets/d/xxxxxxxxxxxxxxx/edit?usp=sharing"` |  |
+| reportsgenerator.conf.generators.scan.docs.apiDocLink | string | `"https://docs.example.com/vulcan/vulcan-api/examples/#how-do-i-list-the-members-of-a-team"` |  |
+| reportsgenerator.conf.generators.scan.docs.roadmapLink | string | `"https://docs.example.com/vulcan/roadmap"` |  |
 | reportsgenerator.conf.generators.scan.vulcanUi | string | `nil` |  |
 | reportsgenerator.conf.generators.scan.viewReport | string | `nil` |  |
 | reportsgenerator.conf.generators.scan.redirectUrl | string | `nil` |  |

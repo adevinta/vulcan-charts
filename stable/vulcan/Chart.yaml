@@ -31,3 +31,7 @@ dependencies:
   version: 3.3.6
   repository: https://charts.bitnami.com/bitnami
   condition: minio.enabled
+
+maintainers:
+  - email: vulcan@adevinta.com
+    name: Adevinta

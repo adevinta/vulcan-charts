@@ -2059,13 +2059,13 @@ spec:
           - name: SCAN_CONTACT_EMAIL
             value: "vulcan@example.com"
           - name: SCAN_CONTACT_CHANNEL
-            value: "https://www.slack.com/archives/XXXXX"
+            value: "https://example.slack.com/archives/XXXXX"
           - name: SCAN_CONTACT_JIRA
             value: "https://jira.example.com/"
           - name: SCAN_DOCS_API_LINK
-            value: "https://www.example.com/org/vulcan-api/examples/#how-do-i-list-the-members-of-a-team"
+            value: "https://docs.example.com/vulcan/vulcan-api/examples/#how-do-i-list-the-members-of-a-team"
           - name: SCAN_DOCS_ROADMAP_LINK
-            value: "https://docs.google.com/spreadsheets/d/xxxxxxxxxxxxxxx/edit?usp=sharing"
+            value: "https://docs.example.com/vulcan/roadmap"
           - name: PERSISTENCE_ENDPOINT  # We keep this PERSISTENCE variable for compatibility
             value: "http://myrelease-vulcan-scanengine"
           - name: RESULTS_ENDPOINT
@@ -2622,17 +2622,17 @@ spec:
           - name: API_URL
             value: "https://www.vulcan.local/api/v1/"
           - name: UI_DOCS_API_LINK
-            value: 
+            value: "https://docs.erxample.com/vulcan/vulcan-api/"
           - name: UI_DOCS_WHITELISTING_LINK
             value: 
           - name: UI_DOCS_DISCOVERY_LINK
-            value: 
+            value: "https://docs.example.com/vulcan/discovery"
           - name: UI_DOCS_AUDITROLE_LINK
-            value: 
+            value: "https://docs.example.com/vulcan/network-access"
           - name: UI_CONTACT_EMAIL
-            value: 
+            value: "vulcan@example.com"
           - name: UI_CONTACT_SLACK
-            value: 
+            value: "https://example.slack.com/archives/XXXXX"
           
           
           ports:
