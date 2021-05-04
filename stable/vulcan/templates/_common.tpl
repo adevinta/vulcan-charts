@@ -132,7 +132,7 @@ http
   command: ['sh', '-c', 'until pg_isready -t 5; do echo WaitingDB; done;']
   env:
   - name: PGHOST
-    value: {{ .Values.comp.db.host | default (include "postgresqlHost" .) | quote }}
+    value: {{ include "pg.host" . | quote }}
   - name: PGPORT
-    value: {{ .Values.comp.db.port | quote }}
+    value: {{ include "pg.port" . | quote }}
 {{- end -}}

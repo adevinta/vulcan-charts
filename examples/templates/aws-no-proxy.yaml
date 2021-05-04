@@ -1024,14 +1024,14 @@ spec:
           env:
           - name: PORT
             value: "8080"
-          - name: POSTGRES_DB
-            value: "vulcanpersistence"
           - name: POSTGRES_HOST
             value: "persistence.postgres.host"
-          - name: POSTGRES_PORT
-            value: "5432"
+          - name: POSTGRES_DB
+            value: "vulcanpersistence"
           - name: POSTGRES_USER
             value: "vulcan"
+          - name: POSTGRES_PORT
+            value: "5432"
           - name: POSTGRES_SSLMODE
             value: "verify-full"
           - name: POSTGRES_CA_B64

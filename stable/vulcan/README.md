@@ -25,8 +25,8 @@ A Helm chart for deploying Vulcan
 |-----|------|---------|-------------|
 | global.domain | string | `"vulcan.local"` |  |
 | global.region | string | `"local"` |  |
-| anchors | object | `{"comp":{"affinity":{},"autoscaling":{"enabled":false,"maxReplicas":5,"minReplicas":1,"targetCPUUtilizationPercentage":50,"targetMemoryUtilizationPercentage":null},"containerPort":8080,"extraEnv":{},"fullnameOverride":"","image":{"pullPolicy":"Always"},"imagePullSecrets":[],"ingress":{"annotations":{},"enabled":false,"hosts":[],"tls":[]},"lifecycle":{"preStopSleep":30},"livenessProbe":{"enabled":true,"failureThreshold":10,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"nameOverride":"","nodeSelector":{},"podSecurityContext":{},"proxy":{"cache":{"enabled":false,"maxAge":240,"maxSize":64},"enabled":true,"image":{"repository":"haproxy","tag":"2.3-alpine"},"lifecycle":{"preStopSleep":30},"metricsPort":9101,"port":9090,"probe":false,"probeInitialDelay":5,"probePath":"/healthz","probeTimeoutSeconds":3,"resources":{},"timeoutClient":null,"timeoutConnect":null,"timeoutServer":null,"timeoutTunnel":null},"readinessProbe":{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"replicaCount":null,"resources":{},"securityContext":{},"service":{"port":80,"portName":null,"protocol":"TCP","targetPort":null,"type":"ClusterIP"},"tolerations":[]},"db":{"ca":null,"host":null,"name":null,"password":"TBD","port":null,"sslMode":"disable","user":"postgres"},"dogstatsd":{"enabled":true,"image":{"repository":"datadog/dogstatsd","tag":"7.27.0"}}}` | Anchors |
-| anchors.db | object | `{"ca":null,"host":null,"name":null,"password":"TBD","port":null,"sslMode":"disable","user":"postgres"}` | postgres database settings |
+| anchors | object | `{"comp":{"affinity":{},"autoscaling":{"enabled":false,"maxReplicas":5,"minReplicas":1,"targetCPUUtilizationPercentage":50,"targetMemoryUtilizationPercentage":null},"containerPort":8080,"extraEnv":{},"fullnameOverride":"","image":{"pullPolicy":"Always"},"imagePullSecrets":[],"ingress":{"annotations":{},"enabled":false,"hosts":[],"tls":[]},"lifecycle":{"preStopSleep":30},"livenessProbe":{"enabled":true,"failureThreshold":10,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"nameOverride":"","nodeSelector":{},"podSecurityContext":{},"proxy":{"cache":{"enabled":false,"maxAge":240,"maxSize":64},"enabled":true,"image":{"repository":"haproxy","tag":"2.3-alpine"},"lifecycle":{"preStopSleep":30},"metricsPort":9101,"port":9090,"probe":false,"probeInitialDelay":5,"probePath":"/healthz","probeTimeoutSeconds":3,"resources":{},"timeoutClient":null,"timeoutConnect":null,"timeoutServer":null,"timeoutTunnel":null},"readinessProbe":{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"replicaCount":null,"resources":{},"securityContext":{},"service":{"port":80,"portName":null,"protocol":"TCP","targetPort":null,"type":"ClusterIP"},"tolerations":[]},"db":{"ca":null,"host":null,"name":null,"password":"TBD","port":5432,"sslMode":"disable","user":null},"dogstatsd":{"enabled":true,"image":{"repository":"datadog/dogstatsd","tag":"7.27.0"}}}` | Anchors |
+| anchors.db | object | `{"ca":null,"host":null,"name":null,"password":"TBD","port":5432,"sslMode":"disable","user":null}` | postgres database settings |
 | anchors.comp.extraEnv | object | `{}` | custom env variables |
 | anchors.comp.proxy | object | `{"cache":{"enabled":false,"maxAge":240,"maxSize":64},"enabled":true,"image":{"repository":"haproxy","tag":"2.3-alpine"},"lifecycle":{"preStopSleep":30},"metricsPort":9101,"port":9090,"probe":false,"probeInitialDelay":5,"probePath":"/healthz","probeTimeoutSeconds":3,"resources":{},"timeoutClient":null,"timeoutConnect":null,"timeoutServer":null,"timeoutTunnel":null}` | proxy settings |
 | anchors.comp.livenessProbe | object | `{"enabled":true,"failureThreshold":10,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3}` | liveness settings |
@@ -38,6 +38,7 @@ A Helm chart for deploying Vulcan
 | waitfordb.image.repository | string | `"postgres"` |  |
 | waitfordb.image.tag | string | `"9.6-alpine"` |  |
 | postgresql.enabled | bool | `false` |  |
+| postgresql.service.port | int | `5432` |  |
 | postgresql.postgresqlUsername | string | `"postgres"` |  |
 | postgresql.postgresqlPassword | string | `"TBD"` |  |
 | postgresql.postgresqlDatabase | string | `"persistence"` |  |
@@ -77,7 +78,7 @@ A Helm chart for deploying Vulcan
 | goaws.containerPort | int | `8080` |  |
 | goaws.config."goaws.yaml" | string | `"Local:\n  Host: {{ .Release.Name }}-goaws\n  Port: {{ .Values.containerPort }}\n  AccountId: \"012345678900\"\n  LogToFile: false\n  QueueAttributeDefaults:\n    VisibilityTimeout: 30\n    ReceiveMessageWaitTimeSeconds: 0\n  Queues:\n    - Name: VulcanK8SAPIScans\n    - Name: VulcanK8SChecksGeneric\n    - Name: VulcanK8SChecksTenable\n    - Name: VulcanK8SMetricsChecks\n    - Name: VulcanK8SMetricsScans\n    - Name: VulcanK8SMetricsFindings\n    - Name: VulcanK8SScanEngineChecks\n    - Name: VulcanK8SReportsGenerator\n    - Name: VulcanK8SPersistenceChecks\n    - Name: VulcanK8SVulnDBChecks\n  Topics:\n    - Name: VulcanK8SChecks\n      Subscriptions:\n        - QueueName: VulcanK8SMetricsChecks\n          Raw: true\n        - QueueName: VulcanK8SScanEngineChecks\n          Raw: true\n          #FilterPolicy: '{\"foo\": [\"bar\"]}'\n    - Name: VulcanK8SScans\n      Subscriptions:\n        - QueueName: VulcanK8SAPIScans\n          Raw: true\n        - QueueName: VulcanK8SMetricsScans\n          Raw: true\n    - Name: VulcanK8SReportsGen\n      Subscriptions:\n        - QueueName: VulcanK8SReportsGenerator\n          Raw: true\n    - Name: VulcanK8SScanEngineChecks\n      Subscriptions:\n        - QueueName: VulcanK8SPersistenceChecks\n          Raw: true\n    - Name: VulcanK8SVulnDBVulns\n        - QueueName: VulcanK8SMetricsFindings\n          Raw: true\n  RandomLatency:\n    Min: 0\n    Max: 0\n"` |  |
 | minio.enabled | bool | `false` |  |
-| minio.nameOverride | string | `"vulcans3"` |  |
+| minio.nameOverride | string | `"minio"` |  |
 | minio.mode | string | `"standalone"` |  |
 | minio.defaultBuckets | string | `"reports,logs,scans,insights,public-insights,crontinuous"` |  |
 | minio.serviceAccount.create | bool | `false` |  |
@@ -154,7 +155,7 @@ A Helm chart for deploying Vulcan
 | persistence.infra.s3 | bool | `true` |  |
 | persistence.infra.sns | bool | `true` |  |
 | persistence.infra.sqs | bool | `true` |  |
-| persistence.db | object | `{"<<":{"ca":null,"host":null,"name":null,"password":"TBD","port":null,"sslMode":"disable","user":"postgres"},"name":"persistence"}` | postgres database settings |
+| persistence.db | object | `{"<<":{"ca":null,"host":null,"name":null,"password":"TBD","port":5432,"sslMode":"disable","user":null},"name":"persistence"}` | postgres database settings |
 | persistence.conf.logLevel | string | `"warn"` |  |
 | persistence.conf.secretKeyBase | string | `"TBDTBD"` |  |
 | persistence.conf.railsMaxThreads | int | `4` |  |
@@ -228,7 +229,7 @@ A Helm chart for deploying Vulcan
 | api.infra.sns | bool | `true` |  |
 | api.infra.s3 | bool | `true` |  |
 | api.healthcheckPath | string | `"/api/v1/healthcheck"` |  |
-| api.db | object | `{"<<":{"ca":null,"host":null,"name":null,"password":"TBD","port":null,"sslMode":"disable","user":"postgres"},"name":"api"}` | postgres database settings |
+| api.db | object | `{"<<":{"ca":null,"host":null,"name":null,"password":"TBD","port":5432,"sslMode":"disable","user":null},"name":"api"}` | postgres database settings |
 | api.conf.debug | string | `"false"` |  |
 | api.conf.bucketReports | string | `"reports"` |  |
 | api.conf.bucketLogs | string | `"logs"` |  |
@@ -340,7 +341,7 @@ A Helm chart for deploying Vulcan
 | scanengine.conf.streamUrl | string | `nil` |  |
 | scanengine.conf.checkCreator.numOfWorkers | int | `2` |  |
 | scanengine.conf.checkCreator.period | int | `20` |  |
-| scanengine.db | object | `{"<<":{"ca":null,"host":null,"name":null,"password":"TBD","port":null,"sslMode":"disable","user":"postgres"},"name":"scanengine"}` | postgres database settings |
+| scanengine.db | object | `{"<<":{"ca":null,"host":null,"name":null,"password":"TBD","port":5432,"sslMode":"disable","user":null},"name":"scanengine"}` | postgres database settings |
 | scanengine.dogstatsd.image.repository | string | `"datadog/dogstatsd"` |  |
 | scanengine.dogstatsd.image.tag | string | `"7.27.0"` |  |
 | scanengine.dogstatsd.enabled | bool | `true` |  |
@@ -467,7 +468,7 @@ A Helm chart for deploying Vulcan
 | reportsgenerator.conf.ses.region | string | `nil` |  |
 | reportsgenerator.conf.ses.from | string | `"tbd@tbd.com"` |  |
 | reportsgenerator.conf.ses.cc | string | `"[\"tbd@tbd.com\"]"` |  |
-| reportsgenerator.db | object | `{"<<":{"ca":null,"host":null,"name":null,"password":"TBD","port":null,"sslMode":"disable","user":"postgres"},"name":"reportsgenerator"}` | postgres database settings |
+| reportsgenerator.db | object | `{"<<":{"ca":null,"host":null,"name":null,"password":"TBD","port":5432,"sslMode":"disable","user":null},"name":"reportsgenerator"}` | postgres database settings |
 | reportsgenerator.dogstatsd.image.repository | string | `"datadog/dogstatsd"` |  |
 | reportsgenerator.dogstatsd.image.tag | string | `"7.27.0"` |  |
 | reportsgenerator.dogstatsd.enabled | bool | `true` |  |
@@ -581,7 +582,7 @@ A Helm chart for deploying Vulcan
 | vulndbapi.image.pullPolicy | string | `"Always"` |  |
 | vulndbapi.healthcheckPath | string | `"/healthcheck"` |  |
 | vulndbapi.conf.logLevel | string | `"info"` |  |
-| vulndbapi.db | object | `{"<<":{"ca":null,"host":null,"name":null,"password":"TBD","port":null,"sslMode":"disable","user":"postgres"},"name":"vulnerabilitydb"}` | postgres database settings |
+| vulndbapi.db | object | `{"<<":{"ca":null,"host":null,"name":null,"password":"TBD","port":5432,"sslMode":"disable","user":null},"name":"vulnerabilitydb"}` | postgres database settings |
 | vulndb.enabled | bool | `true` |  |
 | vulndb.name | string | `"vulndb"` |  |
 | vulndb.<<.replicaCount | string | `nil` |  |
@@ -617,7 +618,7 @@ A Helm chart for deploying Vulcan
 | vulndb.proxy.enabled | bool | `false` |  |
 | vulndb.infra.sqs | bool | `true` |  |
 | vulndb.infra.sns | bool | `true` |  |
-| vulndb.db | object | `{"<<":{"ca":null,"host":null,"name":null,"password":"TBD","port":null,"sslMode":"disable","user":"postgres"},"name":"vulnerabilitydb"}` | postgres database settings |
+| vulndb.db | object | `{"<<":{"ca":null,"host":null,"name":null,"password":"TBD","port":5432,"sslMode":"disable","user":null},"name":"vulnerabilitydb"}` | postgres database settings |
 | sqsexporter.enabled | bool | `true` |  |
 | sqsexporter.name | string | `"sqsexporter"` |  |
 | sqsexporter.<<.replicaCount | string | `nil` |  |

@@ -12,9 +12,9 @@ anchors:
   db: &db
     host:
     name:
-    user: postgres
+    user:
     password: TBD
-    port:
+    port: 5432
     sslMode: disable
     ca:
 
@@ -129,6 +129,8 @@ waitfordb:
 
 postgresql:
   enabled: false
+  service:
+    port: 5432
   postgresqlUsername: postgres
   postgresqlPassword: TBD
   postgresqlDatabase: persistence
@@ -215,7 +217,7 @@ goaws:
 
 minio:
   enabled: false
-  nameOverride: vulcans3
+  nameOverride: minio
   mode: standalone
   defaultBuckets: "reports,logs,scans,insights,public-insights,crontinuous"
   serviceAccount:

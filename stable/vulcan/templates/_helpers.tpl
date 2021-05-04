@@ -162,3 +162,58 @@ app.kubernetes.io/instance: {{ include "vulcan.name" . }}
 {{- define "postgresqlHost" -}}
 {{- printf "%s-postgresql" .Release.Name -}}
 {{- end -}}
+
+
+{{- define "pg.host" -}}
+  {{- if .Values.postgresql.enabled -}}
+    {{- include "postgresqlHost" . -}}
+  {{- else -}}
+    {{- .Values.comp.db.host -}}
+  {{- end -}}
+{{- end -}}
+
+{{- define "pg.database" -}}
+  {{- .Values.comp.db.name -}}
+{{- end -}}
+
+{{- define "pg.username" -}}
+  {{- if .Values.postgresql.enabled -}}
+    {{- .Values.postgresql.postgresqlUsername -}}
+  {{- else -}}
+    {{- .Values.comp.db.user -}}
+  {{- end -}}
+{{- end -}}
+
+{{- define "pg.password" -}}
+  {{- if .Values.postgresql.enabled -}}
+    {{- .Values.postgresql.postgresqlPassword -}}
+  {{- else -}}
+    {{- .Values.comp.db.password -}}
+  {{- end -}}
+{{- end -}}
+
+{{- define "pg.port" -}}
+  {{- if .Values.postgresql.enabled -}}
+    {{- .Values.postgresql.service.port | default "5432" -}}
+  {{- else -}}
+    {{- .Values.comp.db.port | default "5432" -}}
+  {{- end -}}
+{{- end -}}
+
+{{- define "pg.sslMode" -}}
+  {{- if .Values.postgresql.enabled -}}
+    {{- "disable" -}}
+  {{- else -}}
+    {{- .Values.comp.db.sslMode | default "allow" -}}
+  {{- end -}}
+{{- end -}}
+
+{{- define "pg.b64ca" -}}
+  {{- if and (not .Values.postgresql.enabled) .Values.comp.db.ca -}}
+    {{- .Values.comp.db.ca | b64enc -}}
+  {{- end -}}
+{{- end -}}
+
+{{- define "pg.encryptedPassword" -}}
+  {{- include "pg.password" . | b64enc -}}
+{{- end -}}

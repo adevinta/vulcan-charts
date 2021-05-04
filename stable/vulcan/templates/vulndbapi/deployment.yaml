@@ -36,19 +36,17 @@ spec:
           - name: PORT
             value: {{ .Values.comp.containerPort | quote }}
           - name: PG_HOST
-            value: {{ .Values.comp.db.host | default (include "postgresqlHost" .) | quote }}
+            value: {{ include "pg.host" . | quote }}
           - name: PG_NAME
-            value: {{ .Values.comp.db.name | quote }}
+            value: {{ include "pg.database" . | quote }}
           - name: PG_USER
-            value: {{ .Values.comp.db.user | quote }}
+            value: {{ include "pg.username" . | quote }}
           - name: PG_PORT
-            value: {{ .Values.comp.db.port | quote }}
+            value: {{ include "pg.port" . | quote }}
           - name: PG_SSLMODE
-            value: {{ .Values.comp.db.sslMode | quote }}
-          {{- if .Values.comp.db.ca }}
+            value: {{ include "pg.sslMode" . | quote }}
           - name: PG_CA_B64
-            value: {{ .Values.comp.db.ca | b64enc | quote }}
-          {{- end }}
+            value: {{ include "pg.b64ca" . | quote }}
           - name: LOG_LEVEL
             value: {{ .Values.comp.conf.logLevel | quote }}
         {{- include "common-container-envs" . | nindent 10 }}

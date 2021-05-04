@@ -3,10 +3,10 @@
 apiVersion: v1
 kind: Secret
 metadata:
-  name: myrelease-vulcans3
+  name: myrelease-minio
   namespace: ns
   labels:
-    app.kubernetes.io/name: vulcans3
+    app.kubernetes.io/name: minio
     helm.sh/chart: minio-3.3.6
     app.kubernetes.io/instance: myrelease
     app.kubernetes.io/managed-by: Helm
@@ -728,10 +728,10 @@ data:
 apiVersion: v1
 kind: Service
 metadata:
-  name: myrelease-vulcans3
+  name: myrelease-minio
   namespace: ns
   labels:
-    app.kubernetes.io/name: vulcans3
+    app.kubernetes.io/name: minio
     helm.sh/chart: minio-3.3.6
     app.kubernetes.io/instance: myrelease
     app.kubernetes.io/managed-by: Helm
@@ -742,7 +742,7 @@ spec:
       port: 80
       targetPort: minio
   selector:
-    app.kubernetes.io/name: vulcans3
+    app.kubernetes.io/name: minio
     app.kubernetes.io/instance: myrelease
 ---
 # Source: vulcan/charts/postgresql/templates/metrics-svc.yaml
@@ -1102,10 +1102,10 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: myrelease-vulcans3
+  name: myrelease-minio
   namespace: ns
   labels:
-    app.kubernetes.io/name: vulcans3
+    app.kubernetes.io/name: minio
     helm.sh/chart: minio-3.3.6
     app.kubernetes.io/instance: myrelease
     app.kubernetes.io/managed-by: Helm
@@ -1114,12 +1114,12 @@ spec:
     type: Recreate
   selector:
     matchLabels:
-      app.kubernetes.io/name: vulcans3
+      app.kubernetes.io/name: minio
       app.kubernetes.io/instance: myrelease
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: vulcans3
+        app.kubernetes.io/name: minio
         helm.sh/chart: minio-3.3.6
         app.kubernetes.io/instance: myrelease
         app.kubernetes.io/managed-by: Helm
@@ -1140,12 +1140,12 @@ spec:
             - name: MINIO_ACCESS_KEY
               valueFrom:
                 secretKeyRef:
-                  name: myrelease-vulcans3
+                  name: myrelease-minio
                   key: access-key
             - name: MINIO_SECRET_KEY
               valueFrom:
                 secretKeyRef:
-                  name: myrelease-vulcans3
+                  name: myrelease-minio
                   key: secret-key
             - name: MINIO_DEFAULT_BUCKETS
               value: reports,logs,scans,insights,public-insights,crontinuous
@@ -1221,7 +1221,7 @@ spec:
           - name: PGHOST
             value: "myrelease-postgresql"
           - name: PGPORT
-            value: 
+            value: "5432"
       containers:
         
         - name: dogstatsd
@@ -1285,9 +1285,11 @@ spec:
           - name: PG_USER
             value: "postgres"
           - name: PG_PORT
-            value: 
+            value: "5432"
           - name: PG_SSLMODE
             value: "disable"
+          - name: PG_CA_B64
+            value: ""
           - name: LOG_LEVEL
             value: 
           - name: COOKIE_DOMAIN
@@ -1786,7 +1788,7 @@ spec:
           - name: PGHOST
             value: "myrelease-postgresql"
           - name: PGPORT
-            value: 
+            value: "5432"
       containers:
         
         - name: dogstatsd
@@ -1843,16 +1845,18 @@ spec:
           env:
           - name: PORT
             value: "8080"
-          - name: POSTGRES_DB
-            value: "persistence"
           - name: POSTGRES_HOST
             value: "myrelease-postgresql"
-          - name: POSTGRES_PORT
-            value: 
+          - name: POSTGRES_DB
+            value: "persistence"
           - name: POSTGRES_USER
             value: "postgres"
+          - name: POSTGRES_PORT
+            value: "5432"
           - name: POSTGRES_SSLMODE
             value: "disable"
+          - name: POSTGRES_CA_B64
+            value: ""
           - name: LOG_LEVEL
             value: "warn"
           - name: RAILS_MAX_THREADS
@@ -1967,7 +1971,7 @@ spec:
           - name: PGHOST
             value: "myrelease-postgresql"
           - name: PGPORT
-            value: 
+            value: "5432"
       containers:
         
         - name: dogstatsd
@@ -2031,9 +2035,11 @@ spec:
           - name: PG_USER
             value: "postgres"
           - name: PG_PORT
-            value: 
+            value: "5432"
           - name: PG_SSLMODE
             value: "disable"
+          - name: PG_CA_B64
+            value: ""
           - name: LOG_LEVEL
             value: "error"
           - name: SQS_QUEUE_ARN
@@ -2263,7 +2269,7 @@ spec:
           - name: PGHOST
             value: "myrelease-postgresql"
           - name: PGPORT
-            value: 
+            value: "5432"
       containers:
         
         - name: dogstatsd
@@ -2327,9 +2333,11 @@ spec:
           - name: PG_USER
             value: "postgres"
           - name: PG_PORT
-            value: 
+            value: "5432"
           - name: PG_SSLMODE
             value: "disable"
+          - name: PG_CA_B64
+            value: ""
           - name: LOG_LEVEL
             value: "error"
           - name: PERSISTENCE_HOST
@@ -2678,7 +2686,7 @@ spec:
           - name: PGHOST
             value: "myrelease-postgresql"
           - name: PGPORT
-            value: 
+            value: "5432"
       containers:
         
         - name: vulndb
@@ -2697,9 +2705,11 @@ spec:
           - name: PG_USER
             value: "postgres"
           - name: PG_PORT
-            value: 
+            value: "5432"
           - name: PG_SSLMODE
             value: "disable"
+          - name: PG_CA_B64
+            value: ""
           - name: LOG_LEVEL
             value: "error"
           - name: MAX_EVENT_AGE
@@ -2762,7 +2772,7 @@ spec:
           - name: PGHOST
             value: "myrelease-postgresql"
           - name: PGPORT
-            value: 
+            value: "5432"
       containers:
         
         - name: proxy
@@ -2817,9 +2827,11 @@ spec:
           - name: PG_USER
             value: "postgres"
           - name: PG_PORT
-            value: 
+            value: "5432"
           - name: PG_SSLMODE
             value: "disable"
+          - name: PG_CA_B64
+            value: ""
           - name: LOG_LEVEL
             value: "info"
           

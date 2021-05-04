@@ -35,20 +35,18 @@ spec:
           env:
           - name: PORT
             value: {{ .Values.comp.containerPort | quote }}
-          - name: POSTGRES_DB
-            value: {{ .Values.comp.db.name | quote }}
           - name: POSTGRES_HOST
-            value: {{ .Values.comp.db.host | default (include "postgresqlHost" .) | quote }}
-          - name: POSTGRES_PORT
-            value: {{ .Values.comp.db.port | quote }}
+            value: {{ include "pg.host" . | quote }}
+          - name: POSTGRES_DB
+            value: {{ include "pg.database" . | quote }}
           - name: POSTGRES_USER
-            value: {{ .Values.comp.db.user | quote }}
+            value: {{ include "pg.username" . | quote }}
+          - name: POSTGRES_PORT
+            value: {{ include "pg.port" . | quote }}
           - name: POSTGRES_SSLMODE
-            value: {{ .Values.comp.db.sslMode | quote }}
-          {{- if .Values.comp.db.ca }}
+            value: {{ include "pg.sslMode" . | quote }}
           - name: POSTGRES_CA_B64
-            value: {{ .Values.comp.db.ca | b64enc | quote }}
-          {{- end }}
+            value: {{ include "pg.b64ca" . | quote }}
           - name: LOG_LEVEL
             value: {{ .Values.comp.conf.logLevel | quote }}
           - name: RAILS_MAX_THREADS
