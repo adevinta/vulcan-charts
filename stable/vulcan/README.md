@@ -18,6 +18,7 @@ A Helm chart for deploying Vulcan
 |------------|------|---------|
 | https://charts.bitnami.com/bitnami | minio | 3.3.6 |
 | https://charts.bitnami.com/bitnami | postgresql | 8.9.4 |
+| https://charts.bitnami.com/bitnami | redis | 14.1.1 |
 
 ## Values
 
@@ -49,6 +50,12 @@ A Helm chart for deploying Vulcan
 | postgresql.resources.requests.memory | string | `"0"` |  |
 | postgresql.persistence.enabled | bool | `false` |  |
 | postgresql.metrics.enabled | bool | `true` |  |
+| redis.enabled | bool | `false` |  |
+| redis.architecture | string | `"standalone"` |  |
+| redis.auth.enabled | bool | `false` |  |
+| redis.master.service.port | int | `6379` |  |
+| redis.master.persistence.enabled | bool | `false` |  |
+| redis.serviceAccount.create | bool | `false` |  |
 | goaws.enabled | bool | `false` |  |
 | goaws.name | string | `"goaws"` |  |
 | goaws.<<.replicaCount | string | `nil` |  |
@@ -76,7 +83,7 @@ A Helm chart for deploying Vulcan
 | goaws.image.tag | string | `"v0.3.1"` |  |
 | goaws.image.pullPolicy | string | `"Always"` |  |
 | goaws.containerPort | int | `8080` |  |
-| goaws.config."goaws.yaml" | string | `"Local:\n  Host: {{ .Release.Name }}-goaws\n  Port: {{ .Values.containerPort }}\n  AccountId: \"012345678900\"\n  LogToFile: false\n  QueueAttributeDefaults:\n    VisibilityTimeout: 30\n    ReceiveMessageWaitTimeSeconds: 0\n  Queues:\n    - Name: VulcanK8SAPIScans\n    - Name: VulcanK8SChecksGeneric\n    - Name: VulcanK8SChecksTenable\n    - Name: VulcanK8SMetricsChecks\n    - Name: VulcanK8SMetricsScans\n    - Name: VulcanK8SMetricsFindings\n    - Name: VulcanK8SScanEngineChecks\n    - Name: VulcanK8SReportsGenerator\n    - Name: VulcanK8SPersistenceChecks\n    - Name: VulcanK8SVulnDBChecks\n  Topics:\n    - Name: VulcanK8SChecks\n      Subscriptions:\n        - QueueName: VulcanK8SMetricsChecks\n          Raw: true\n        - QueueName: VulcanK8SScanEngineChecks\n          Raw: true\n          #FilterPolicy: '{\"foo\": [\"bar\"]}'\n    - Name: VulcanK8SScans\n      Subscriptions:\n        - QueueName: VulcanK8SAPIScans\n          Raw: true\n        - QueueName: VulcanK8SMetricsScans\n          Raw: true\n    - Name: VulcanK8SReportsGen\n      Subscriptions:\n        - QueueName: VulcanK8SReportsGenerator\n          Raw: true\n    - Name: VulcanK8SScanEngineChecks\n      Subscriptions:\n        - QueueName: VulcanK8SPersistenceChecks\n          Raw: true\n    - Name: VulcanK8SVulnDBVulns\n        - QueueName: VulcanK8SMetricsFindings\n          Raw: true\n  RandomLatency:\n    Min: 0\n    Max: 0\n"` |  |
+| goaws.config."goaws.yaml" | string | `"Local:\n  Host: {{ include \"goaws.fullname\" . }}\n  Port: {{ .Values.goaws.containerPort }}\n  AccountId: \"012345678900\"\n  LogToFile: false\n  QueueAttributeDefaults:\n    VisibilityTimeout: 30\n    ReceiveMessageWaitTimeSeconds: 0\n  Queues:\n    - Name: VulcanK8SAPIScans\n    - Name: VulcanK8SChecksGeneric\n    - Name: VulcanK8SChecksTenable\n    - Name: VulcanK8SMetricsChecks\n    - Name: VulcanK8SMetricsScans\n    - Name: VulcanK8SMetricsFindings\n    - Name: VulcanK8SScanEngineChecks\n    - Name: VulcanK8SReportsGenerator\n    - Name: VulcanK8SPersistenceChecks\n    - Name: VulcanK8SVulnDBChecks\n  Topics:\n    - Name: VulcanK8SChecks\n      Subscriptions:\n        - QueueName: VulcanK8SMetricsChecks\n          Raw: true\n        - QueueName: VulcanK8SScanEngineChecks\n          Raw: true\n          #FilterPolicy: '{\"foo\": [\"bar\"]}'\n    - Name: VulcanK8SScans\n      Subscriptions:\n        - QueueName: VulcanK8SAPIScans\n          Raw: true\n        - QueueName: VulcanK8SMetricsScans\n          Raw: true\n    - Name: VulcanK8SReportsGen\n      Subscriptions:\n        - QueueName: VulcanK8SReportsGenerator\n          Raw: true\n    - Name: VulcanK8SScanEngineChecks\n      Subscriptions:\n        - QueueName: VulcanK8SPersistenceChecks\n          Raw: true\n    - Name: VulcanK8SVulnDBVulns\n      Subscriptions:\n        - QueueName: VulcanK8SMetricsFindings\n          Raw: true\n  RandomLatency:\n    Min: 0\n    Max: 0\n"` |  |
 | minio.enabled | bool | `false` |  |
 | minio.nameOverride | string | `"minio"` |  |
 | minio.mode | string | `"standalone"` |  |
@@ -190,12 +197,12 @@ A Helm chart for deploying Vulcan
 | stream.image.pullPolicy | string | `"Always"` |  |
 | stream.healthcheckPath | string | `"/status"` |  |
 | stream.conf.logLevel | string | `"DEBUG"` |  |
-| stream.conf.redis.host | string | `"TBD"` |  |
-| stream.conf.redis.port | string | `"TDB"` |  |
-| stream.conf.redis.usr | string | `"TBD"` |  |
-| stream.conf.redis.pwd | string | `"TBD"` |  |
-| stream.conf.redis.db | int | `0` |  |
-| stream.conf.redis.ttl | int | `0` |  |
+| stream.conf.ttl | int | `0` |  |
+| stream.redis.host | string | `nil` |  |
+| stream.redis.port | string | `nil` |  |
+| stream.redis.username | string | `nil` |  |
+| stream.redis.password | string | `nil` |  |
+| stream.redis.db | int | `0` |  |
 | stream.dogstatsd.image.repository | string | `"datadog/dogstatsd"` |  |
 | stream.dogstatsd.image.tag | string | `"7.27.0"` |  |
 | stream.dogstatsd.enabled | bool | `true` |  |
@@ -472,39 +479,6 @@ A Helm chart for deploying Vulcan
 | reportsgenerator.dogstatsd.image.repository | string | `"datadog/dogstatsd"` |  |
 | reportsgenerator.dogstatsd.image.tag | string | `"7.27.0"` |  |
 | reportsgenerator.dogstatsd.enabled | bool | `true` |  |
-| redis.enabled | bool | `true` |  |
-| redis.name | string | `"redis"` |  |
-| redis.<<.replicaCount | string | `nil` |  |
-| redis.<<.image.pullPolicy | string | `"Always"` |  |
-| redis.<<.extraEnv | object | `{}` | custom env variables |
-| redis.<<.proxy | object | `{"cache":{"enabled":false,"maxAge":240,"maxSize":64},"enabled":true,"image":{"repository":"haproxy","tag":"2.3-alpine"},"lifecycle":{"preStopSleep":30},"metricsPort":9101,"port":9090,"probe":false,"probeInitialDelay":5,"probePath":"/healthz","probeTimeoutSeconds":3,"resources":{},"timeoutClient":null,"timeoutConnect":null,"timeoutServer":null,"timeoutTunnel":null}` | proxy settings |
-| redis.<<.podSecurityContext | object | `{}` |  |
-| redis.<<.securityContext | object | `{}` |  |
-| redis.<<.imagePullSecrets | list | `[]` |  |
-| redis.<<.nameOverride | string | `""` |  |
-| redis.<<.fullnameOverride | string | `""` |  |
-| redis.<<.containerPort | int | `8080` |  |
-| redis.<<.lifecycle.preStopSleep | int | `30` |  |
-| redis.<<.livenessProbe | object | `{"enabled":true,"failureThreshold":10,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3}` | liveness settings |
-| redis.<<.readinessProbe | object | `{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3}` | readiness settings |
-| redis.<<.readinessProbe.path | string | `nil` | defaults to healthcheckPath |
-| redis.<<.autoscaling | object | `{"enabled":false,"maxReplicas":5,"minReplicas":1,"targetCPUUtilizationPercentage":50,"targetMemoryUtilizationPercentage":null}` | autoscaling settings |
-| redis.<<.service | object | `{"port":80,"portName":null,"protocol":"TCP","targetPort":null,"type":"ClusterIP"}` | service settings |
-| redis.<<.ingress | object | `{"annotations":{},"enabled":false,"hosts":[],"tls":[]}` | ingress settings |
-| redis.<<.resources | object | `{}` |  |
-| redis.<<.nodeSelector | object | `{}` |  |
-| redis.<<.tolerations | list | `[]` |  |
-| redis.<<.affinity | object | `{}` |  |
-| redis.image.repository | string | `"bitnami/redis"` |  |
-| redis.image.tag | string | `"6.0.12"` |  |
-| redis.image.pullPolicy | string | `"Always"` |  |
-| redis.containerPort | int | `6379` |  |
-| redis.conf.redisPassword | string | `"TBD"` |  |
-| redis.service.type | string | `"ClusterIP"` |  |
-| redis.service.port | int | `6379` |  |
-| redis.service.protocol | string | `"TCP"` |  |
-| redis.service.targetPort | int | `6379` |  |
-| redis.service.portName | string | `"redis"` |  |
 | metrics.enabled | bool | `true` |  |
 | metrics.name | string | `"metrics"` |  |
 | metrics.<<.replicaCount | string | `nil` |  |
@@ -544,9 +518,6 @@ A Helm chart for deploying Vulcan
 | metrics.conf.devHoseTenant | string | `"tbd"` |  |
 | metrics.conf.devHoseMetricsSource | string | `"tbd"` |  |
 | metrics.conf.devHoseFindingsSource | string | `"tbd"` |  |
-| metrics.conf.redisAddr | string | `nil` |  |
-| metrics.conf.redisPassword | string | `nil` |  |
-| metrics.conf.resultsHost | string | `nil` |  |
 | metrics.conf.vulcanApi | string | `nil` |  |
 | metrics.conf.vulcanAPIToken | string | `"token"` |  |
 | metrics.conf.vulcanAPIExternal | string | `nil` |  |

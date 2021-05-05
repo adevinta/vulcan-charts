@@ -7,6 +7,8 @@ goaws:
 postgresql:
   enabled: true
 
+redis:
+  enabled: true
 
 results:
   conf:

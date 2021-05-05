@@ -153,6 +153,18 @@ postgresql:
   metrics:
     enabled: true
 
+redis:
+  enabled: false
+  architecture: standalone
+  auth:
+    enabled: false
+  master:
+    service:
+      port: 6379
+    persistence:
+      enabled: false
+  serviceAccount:
+    create: false
 
 goaws:
   enabled: false
@@ -168,8 +180,8 @@ goaws:
   config:
     goaws.yaml: |
       Local:
-        Host: {{ .Release.Name }}-goaws
-        Port: {{ .Values.containerPort }}
+        Host: {{ include "goaws.fullname" . }}
+        Port: {{ .Values.goaws.containerPort }}
         AccountId: "012345678900"
         LogToFile: false
         QueueAttributeDefaults:
@@ -209,6 +221,7 @@ goaws:
               - QueueName: VulcanK8SPersistenceChecks
                 Raw: true
           - Name: VulcanK8SVulnDBVulns
+            Subscriptions:
               - QueueName: VulcanK8SMetricsFindings
                 Raw: true
         RandomLatency:
@@ -305,13 +318,14 @@ stream:
 
   conf:
     logLevel: "DEBUG"
-    redis:
-      host: TBD
-      port: TDB
-      usr: TBD
-      pwd: TBD
-      db: 0   # default
-      ttl: 0  # default
+    ttl: 0  # default
+
+  redis:
+    host:
+    port:
+    username:
+    password:
+    db: 0   # default
 
   dogstatsd: *dogstatsd
 
@@ -564,29 +578,6 @@ reportsgenerator:
   dogstatsd: *dogstatsd
 
 
-redis:
-  enabled: true
-  name: redis
-  <<: *comp
-
-  image:
-    repository: bitnami/redis
-    tag: "6.0.12"
-    pullPolicy: Always
-
-  containerPort: 6379
-
-  conf:
-    redisPassword: TBD
-
-  service:
-    type: ClusterIP
-    port: 6379
-    protocol: TCP
-    targetPort: 6379
-    portName: redis
-
-
 metrics:
   enabled: true
   name: metrics
@@ -613,9 +604,6 @@ metrics:
     devHoseTenant: tbd
     devHoseMetricsSource: tbd
     devHoseFindingsSource: tbd
-    redisAddr:
-    redisPassword:
-    resultsHost:
     vulcanApi:    # http://host/api
     vulcanAPIToken: token
     vulcanAPIExternal:    # https://external/api

@@ -78,21 +78,6 @@ data:
   POSTGRES_PASSWORD: "cGFzc3dvcmRwZXJzaXN0ZW5jZQ=="
   SECRET_KEY_BASE: "c2VjcmV0a2V5"
 ---
-# Source: vulcan/templates/redis/secrets.yaml
-apiVersion: v1
-kind: Secret
-metadata:
-  name: myrelease-vulcan-redis
-  labels:
-    helm.sh/chart: vulcan-0.3.0
-    app.kubernetes.io/instance: vulcan
-    app.kubernetes.io/version: "1.16.0"
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: redis
-type: Opaque
-data:
-  REDIS_PASSWORD: "VEJE"
----
 # Source: vulcan/templates/reportsgenerator/secrets.yaml
 apiVersion: v1
 kind: Secret
@@ -136,7 +121,7 @@ metadata:
     app.kubernetes.io/name: stream
 type: Opaque
 data:
-  REDIS_PWD: ""
+  REDIS_PWD: "PG5vIHZhbHVlPg=="
 ---
 # Source: vulcan/templates/vulndb/secrets.yaml
 apiVersion: v1
@@ -321,28 +306,6 @@ spec:
   selector:
       app.kubernetes.io/instance: vulcan
       app.kubernetes.io/name: persistence
----
-# Source: vulcan/templates/redis/service.yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: myrelease-vulcan-redis
-  labels:
-    helm.sh/chart: vulcan-0.3.0
-    app.kubernetes.io/instance: vulcan
-    app.kubernetes.io/version: "1.16.0"
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: redis
-spec:
-  type: ClusterIP
-  ports:
-    - port: 6379
-      targetPort: 6379
-      protocol: TCP
-      name: redis
-  selector:
-      app.kubernetes.io/instance: vulcan
-      app.kubernetes.io/name: redis
 ---
 # Source: vulcan/templates/reportsgenerator/service.yaml
 apiVersion: v1
@@ -891,6 +854,13 @@ spec:
             - containerPort: 8125
               name: dogstatsd
               protocol: UDP
+        - name: redis
+          image: bitnami/redis:6.0.12
+          imagePullPolicy: Always
+          ports:
+          - containerPort: 6379
+            name: redis
+            protocol: TCP
         - name: metrics
           
           image: "containers.mpi-internal.com/spt-security/vulcan-metrics:tag-metrics"
@@ -923,7 +893,9 @@ spec:
           - name: DEVHOSE_FINDINGS_SOURCE
             value: "vulcan-findings"
           - name: REDIS_ADDR
-            value: "myrelease-vulcan-redis:6379"
+            value: "localhost:6379"
+          - name: REDIS_PASSWORD
+            value: ""
           - name: VULCAN_API
             value: http://myrelease-vulcan-api/api
           - name: VULCAN_API_EXTERNAL
@@ -940,8 +912,6 @@ spec:
           envFrom:
           - secretRef:
               name: myrelease-vulcan-metrics
-          - secretRef:
-              name: myrelease-vulcan-redis
       volumes:
       
       
@@ -1061,42 +1031,6 @@ spec:
       
       imagePullSecrets:
         - name: pullsecretname
----
-# Source: vulcan/templates/redis/deployment.yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: myrelease-vulcan-redis
-  labels:
-    helm.sh/chart: vulcan-0.3.0
-    app.kubernetes.io/instance: vulcan
-    app.kubernetes.io/version: "1.16.0"
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: redis
-spec:
-  selector:
-    matchLabels:
-      app.kubernetes.io/instance: vulcan
-      app.kubernetes.io/name: redis
-  template:
-    metadata:
-      labels:
-        app.kubernetes.io/instance: vulcan
-        app.kubernetes.io/name: redis
-      annotations:
-    spec:
-      containers:
-      - name: redis
-        image: "bitnami/redis:6.0.12"
-        imagePullPolicy: Always
-        envFrom:
-          - secretRef:
-              name: myrelease-vulcan-redis
-        ports:
-          - name: app
-            containerPort: 6379
-            protocol: TCP
-      volumes:
 ---
 # Source: vulcan/templates/reportsgenerator/deployment.yaml
 apiVersion: apps/v1
@@ -1561,7 +1495,7 @@ spec:
         app.kubernetes.io/instance: vulcan
         app.kubernetes.io/name: stream
       annotations:
-        checksum/secrets: 5d84321825590cb742029580a1711d5626bc9fb605fb2da03f3c8dd978c7a411
+        checksum/secrets: a4fbab842aa42bb374547258c38878e1c26a140d49a26a99462ff24af0b7ad63
         
         iam.amazonaws.com/role: arn:aws:iam::000000000000:role/StreamRole
     spec:
@@ -1608,11 +1542,11 @@ spec:
           - name: LOG_LEVEL
             value: "DEBUG"
           - name: REDIS_HOST
-            value: "redishost"
+            value: "myelasticcache"
+          - name: REDIS_USERNAME
+            value: ""
           - name: REDIS_PORT
             value: "6379"
-          - name: REDIS_USR
-            value: ""
           - name: REDIS_DB
             value: "0"
           - name: REDIS_TTL

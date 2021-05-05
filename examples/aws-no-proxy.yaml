@@ -165,7 +165,6 @@ metrics:
     devHoseToken: secretdevhosetoken
     devHoseURL: http://devhosehost.com/devhose
     findingsQueueArn: arn:aws:sqs:eu-west-1:000000000000:MetricsFindings
-    redisPassword: redispassword
     scansQueueArn: arn:aws:sqs:eu-west-1:000000000000:MetricsScans
     vulcanAPIExternal: https://api.vulcan.example.com/api
     vulcanAPIToken: supersecretvulcantoken
@@ -336,11 +335,10 @@ stream:
   annotations:
     iam.amazonaws.com/role: arn:aws:iam::000000000000:role/StreamRole
   conf:
-    redis:
-      host: redishost
-      port: 6379
-      pwd: ""
-      usr: ""
+    ttl: 0
+  redis:
+    host: myelasticcache
+    pwd: myelasticpwd
   image:
     tag: tag-stream
   imagePullSecrets:

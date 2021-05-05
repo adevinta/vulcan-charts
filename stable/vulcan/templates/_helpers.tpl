@@ -74,10 +74,6 @@ app.kubernetes.io/instance: {{ include "vulcan.name" . }}
 {{- printf "%s-%s" (include "vulcan.fullname" .) .Values.persistence.name -}}
 {{- end -}}
 
-{{- define "redis.fullname" -}}
-{{- printf "%s-%s" (include "vulcan.fullname" .) .Values.redis.name -}}
-{{- end -}}
-
 {{- define "reportsgenerator.fullname" -}}
 {{- printf "%s-%s" (include "vulcan.fullname" .) .Values.reportsgenerator.name -}}
 {{- end -}}
@@ -143,12 +139,8 @@ app.kubernetes.io/instance: {{ include "vulcan.name" . }}
 {{- printf "http://%s" (include "stream.fullname" .) -}}
 {{- end -}}
 
-{{- define "redis.url" -}}
-{{- printf "%s:6379" (include "redis.fullname" .) -}}
-{{- end -}}
-
 {{- define "minio.url" -}}
-{{- printf "http://%s-vulcans3" .Release.Name -}}
+{{- printf "http://%s-minio" .Release.Name -}}
 {{- end -}}
 
 {{- define "sqs.url" -}}
@@ -159,14 +151,10 @@ app.kubernetes.io/instance: {{ include "vulcan.name" . }}
 {{- printf "http://%s" (include "goaws.fullname" .) -}}
 {{- end -}}
 
-{{- define "postgresqlHost" -}}
-{{- printf "%s-postgresql" .Release.Name -}}
-{{- end -}}
-
 
 {{- define "pg.host" -}}
   {{- if .Values.postgresql.enabled -}}
-    {{- include "postgresqlHost" . -}}
+    {{- printf "%s-postgresql" .Release.Name -}}
   {{- else -}}
     {{- .Values.comp.db.host -}}
   {{- end -}}
@@ -216,4 +204,51 @@ app.kubernetes.io/instance: {{ include "vulcan.name" . }}
 
 {{- define "pg.encryptedPassword" -}}
   {{- include "pg.password" . | b64enc -}}
+{{- end -}}
+
+
+{{- define "redis.host" -}}
+  {{- if .Values.redis.enabled -}}
+    {{- printf "%s-redis-master" .Release.Name -}}
+  {{- else -}}
+    {{- .Values.comp.redis.host -}}
+  {{- end -}}
+{{- end -}}
+
+{{- define "redis.db" -}}
+  {{- .Values.comp.redis.db | default "0" -}}
+{{- end -}}
+
+{{- define "redis.username" -}}
+  {{- if .Values.redis.enabled -}}
+    {{- .Values.redis.username -}}
+  {{- else -}}
+    {{- .Values.comp.redis.username -}}
+  {{- end -}}
+{{- end -}}
+
+{{- define "redis.password" -}}
+  {{- if and .Values.redis.enabled .Values.redis.auth -}}
+    {{- .Values.redis.auth.password -}}
+  {{- else -}}
+    {{- .Values.comp.redis.password -}}
+  {{- end -}}
+{{- end -}}
+
+{{- define "redis.port" -}}
+  {{- if .Values.redis.enabled -}}
+    {{- .Values.redis.master.service.port | default "6379" -}}
+  {{- else -}}
+    {{- .Values.comp.redis.port | default "6379" -}}
+  {{- end -}}
+{{- end -}}
+
+{{- define "redis.encryptedPassword" -}}
+  {{- if (include "redis.password" .) -}}
+    {{- include "redis.password" . | b64enc -}}
+  {{- end -}}
+{{- end -}}
+
+{{- define "redis.url" -}}
+{{- printf "%s:%s" (include "redis.host" .) (include "redis.port" .) -}}
 {{- end -}}

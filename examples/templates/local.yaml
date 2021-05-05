@@ -108,21 +108,6 @@ data:
   POSTGRES_PASSWORD: "VEJE"
   SECRET_KEY_BASE: "VEJEVEJE"
 ---
-# Source: vulcan/templates/redis/secrets.yaml
-apiVersion: v1
-kind: Secret
-metadata:
-  name: myrelease-vulcan-redis
-  labels:
-    helm.sh/chart: vulcan-0.3.0
-    app.kubernetes.io/instance: vulcan
-    app.kubernetes.io/version: "1.16.0"
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: redis
-type: Opaque
-data:
-  REDIS_PASSWORD: "VEJE"
----
 # Source: vulcan/templates/reportsgenerator/secrets.yaml
 apiVersion: v1
 kind: Secret
@@ -166,7 +151,7 @@ metadata:
     app.kubernetes.io/name: stream
 type: Opaque
 data:
-  REDIS_PWD: "VEJE"
+  REDIS_PWD: ""
 ---
 # Source: vulcan/templates/vulndb/secrets.yaml
 apiVersion: v1
@@ -214,6 +199,156 @@ data:
     CREATE DATABASE scanengine;
     CREATE DATABASE reportsgenerator;
     CREATE DATABASE vulnerabilitydb;
+---
+# Source: vulcan/charts/redis/templates/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: myrelease-redis-configuration
+  namespace: "ns"
+  labels:
+    app.kubernetes.io/name: redis
+    helm.sh/chart: redis-14.1.1
+    app.kubernetes.io/instance: myrelease
+    app.kubernetes.io/managed-by: Helm
+data:
+  redis.conf: |-
+    # User-supplied common configuration:
+    # Enable AOF https://redis.io/topics/persistence#append-only-file
+    appendonly yes
+    # Disable RDB persistence, AOF persistence already enabled.
+    save ""
+    # End of common configuration
+  master.conf: |-
+    dir /data
+    # User-supplied master configuration:
+    rename-command FLUSHDB ""
+    rename-command FLUSHALL ""
+    # End of master configuration
+  replica.conf: |-
+    dir /data
+    slave-read-only yes
+    # User-supplied replica configuration:
+    rename-command FLUSHDB ""
+    rename-command FLUSHALL ""
+    # End of replica configuration
+---
+# Source: vulcan/charts/redis/templates/health-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: myrelease-redis-health
+  namespace: "ns"
+  labels:
+    app.kubernetes.io/name: redis
+    helm.sh/chart: redis-14.1.1
+    app.kubernetes.io/instance: myrelease
+    app.kubernetes.io/managed-by: Helm
+data:
+  ping_readiness_local.sh: |-
+    #!/bin/bash
+
+    [[ -f $REDIS_PASSWORD_FILE ]] && export REDIS_PASSWORD="$(< "${REDIS_PASSWORD_FILE}")"
+    export REDISCLI_AUTH="$REDIS_PASSWORD"
+    response=$(
+      timeout -s 3 $1 \
+      redis-cli \
+        -h localhost \
+        -p $REDIS_PORT \
+        ping
+    )
+    if [ "$response" != "PONG" ]; then
+      echo "$response"
+      exit 1
+    fi
+  ping_liveness_local.sh: |-
+    #!/bin/bash
+
+    [[ -f $REDIS_PASSWORD_FILE ]] && export REDIS_PASSWORD="$(< "${REDIS_PASSWORD_FILE}")"
+    export REDISCLI_AUTH="$REDIS_PASSWORD"
+    response=$(
+      timeout -s 3 $1 \
+      redis-cli \
+        -h localhost \
+        -p $REDIS_PORT \
+        ping
+    )
+    if [ "$response" != "PONG" ] && [ "$response" != "LOADING Redis is loading the dataset in memory" ]; then
+      echo "$response"
+      exit 1
+    fi
+  ping_readiness_master.sh: |-
+    #!/bin/bash
+
+    [[ -f $REDIS_MASTER_PASSWORD_FILE ]] && export REDIS_MASTER_PASSWORD="$(< "${REDIS_MASTER_PASSWORD_FILE}")"
+    export REDISCLI_AUTH="$REDIS_MASTER_PASSWORD"
+    response=$(
+      timeout -s 3 $1 \
+      redis-cli \
+        -h $REDIS_MASTER_HOST \
+        -p $REDIS_MASTER_PORT_NUMBER \
+        ping
+    )
+    if [ "$response" != "PONG" ]; then
+      echo "$response"
+      exit 1
+    fi
+  ping_liveness_master.sh: |-
+    #!/bin/bash
+
+    [[ -f $REDIS_MASTER_PASSWORD_FILE ]] && export REDIS_MASTER_PASSWORD="$(< "${REDIS_MASTER_PASSWORD_FILE}")"
+    export REDISCLI_AUTH="$REDIS_MASTER_PASSWORD"
+    response=$(
+      timeout -s 3 $1 \
+      redis-cli \
+        -h $REDIS_MASTER_HOST \
+        -p $REDIS_MASTER_PORT_NUMBER \
+        ping
+    )
+    if [ "$response" != "PONG" ] && [ "$response" != "LOADING Redis is loading the dataset in memory" ]; then
+      echo "$response"
+      exit 1
+    fi
+  ping_readiness_local_and_master.sh: |-
+    script_dir="$(dirname "$0")"
+    exit_status=0
+    "$script_dir/ping_readiness_local.sh" $1 || exit_status=$?
+    "$script_dir/ping_readiness_master.sh" $1 || exit_status=$?
+    exit $exit_status
+  ping_liveness_local_and_master.sh: |-
+    script_dir="$(dirname "$0")"
+    exit_status=0
+    "$script_dir/ping_liveness_local.sh" $1 || exit_status=$?
+    "$script_dir/ping_liveness_master.sh" $1 || exit_status=$?
+    exit $exit_status
+---
+# Source: vulcan/charts/redis/templates/scripts-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: myrelease-redis-scripts
+  namespace: "ns"
+  labels:
+    app.kubernetes.io/name: redis
+    helm.sh/chart: redis-14.1.1
+    app.kubernetes.io/instance: myrelease
+    app.kubernetes.io/managed-by: Helm
+data:
+  start-master.sh: |
+    #!/bin/bash
+
+    [[ -f $REDIS_PASSWORD_FILE ]] && export REDIS_PASSWORD="$(< "${REDIS_PASSWORD_FILE}")"
+    if [[ ! -f /opt/bitnami/redis/etc/master.conf ]];then
+        cp /opt/bitnami/redis/mounted-etc/master.conf /opt/bitnami/redis/etc/master.conf
+    fi
+    if [[ ! -f /opt/bitnami/redis/etc/redis.conf ]];then
+        cp /opt/bitnami/redis/mounted-etc/redis.conf /opt/bitnami/redis/etc/redis.conf
+    fi
+    ARGS=("--port" "${REDIS_PORT}")
+    ARGS+=("--protected-mode" "no")
+    ARGS+=("--include" "/opt/bitnami/redis/etc/redis.conf")
+    ARGS+=("--include" "/opt/bitnami/redis/etc/master.conf")
+    exec redis-server "${ARGS[@]}"
 ---
 # Source: vulcan/templates/api/deployment.yaml
 apiVersion: v1
@@ -317,8 +452,8 @@ metadata:
 data:
   goaws.yaml: |
     Local:
-      Host: myrelease-goaws
-      Port: 
+      Host: myrelease-vulcan-goaws
+      Port: 8080
       AccountId: "012345678900"
       LogToFile: false
       QueueAttributeDefaults:
@@ -358,6 +493,7 @@ data:
             - QueueName: VulcanK8SPersistenceChecks
               Raw: true
         - Name: VulcanK8SVulnDBVulns
+          Subscriptions:
             - QueueName: VulcanK8SMetricsFindings
               Raw: true
       RandomLatency:
@@ -812,6 +948,53 @@ spec:
     release: "myrelease"
     role: master
 ---
+# Source: vulcan/charts/redis/templates/headless-svc.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: myrelease-redis-headless
+  namespace: "ns"
+  labels:
+    app.kubernetes.io/name: redis
+    helm.sh/chart: redis-14.1.1
+    app.kubernetes.io/instance: myrelease
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    - name: tcp-redis
+      port: 6379
+      targetPort: redis
+  selector:
+    app.kubernetes.io/name: redis
+    app.kubernetes.io/instance: myrelease
+---
+# Source: vulcan/charts/redis/templates/master/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: myrelease-redis-master
+  namespace: "ns"
+  labels:
+    app.kubernetes.io/name: redis
+    helm.sh/chart: redis-14.1.1
+    app.kubernetes.io/instance: myrelease
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: master
+spec:
+  type: ClusterIP
+  
+  ports:
+    - name: tcp-redis
+      port: 6379
+      targetPort: redis
+      nodePort: null
+  selector:
+    app.kubernetes.io/name: redis
+    app.kubernetes.io/instance: myrelease
+    app.kubernetes.io/component: master
+---
 # Source: vulcan/templates/api/service.yaml
 apiVersion: v1
 kind: Service
@@ -921,28 +1104,6 @@ spec:
   selector:
       app.kubernetes.io/instance: vulcan
       app.kubernetes.io/name: persistence
----
-# Source: vulcan/templates/redis/service.yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: myrelease-vulcan-redis
-  labels:
-    helm.sh/chart: vulcan-0.3.0
-    app.kubernetes.io/instance: vulcan
-    app.kubernetes.io/version: "1.16.0"
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: redis
-spec:
-  type: ClusterIP
-  ports:
-    - port: 6379
-      targetPort: 6379
-      protocol: TCP
-      name: redis
-  selector:
-      app.kubernetes.io/instance: vulcan
-      app.kubernetes.io/name: redis
 ---
 # Source: vulcan/templates/reportsgenerator/service.yaml
 apiVersion: v1
@@ -1335,7 +1496,7 @@ spec:
           - name: AWS_SQS_ENDPOINT
             value: "http://myrelease-vulcan-goaws"
           - name: AWS_S3_ENDPOINT
-            value: "http://myrelease-vulcans3"
+            value: "http://myrelease-minio"
           - name: PATH_STYLE
             value: "true"
           - name: AWS_S3_REGION
@@ -1460,7 +1621,7 @@ spec:
             value: "[\"team3\"]"
           
           - name: AWS_S3_ENDPOINT
-            value: "http://myrelease-vulcans3"
+            value: "http://myrelease-minio"
           - name: PATH_STYLE
             value: "true"
           - name: AWS_S3_REGION
@@ -1510,6 +1671,7 @@ spec:
         app.kubernetes.io/instance: vulcan
         app.kubernetes.io/name: goaws
       annotations:
+        checksum/config: 06986fc846c642df41fe414a7d17e61fcc52e68fd7fc02a3988c9ff1559366bd
     spec:
       containers:
       - name: goaws
@@ -1520,6 +1682,8 @@ spec:
             containerPort: 8080
             protocol: TCP
         volumeMounts:
+        - name: goaws-config
+          mountPath: /conf
       volumes:
       - name: goaws-config
         configMap:
@@ -1695,6 +1859,13 @@ spec:
             - containerPort: 8125
               name: dogstatsd
               protocol: UDP
+        - name: redis
+          image: bitnami/redis:6.0.12
+          imagePullPolicy: Always
+          ports:
+          - containerPort: 6379
+            name: redis
+            protocol: TCP
         - name: metrics
           
           image: "containers.mpi-internal.com/spt-security/vulcan-metrics:latest"
@@ -1727,7 +1898,9 @@ spec:
           - name: DEVHOSE_FINDINGS_SOURCE
             value: "tbd"
           - name: REDIS_ADDR
-            value: "myrelease-vulcan-redis:6379"
+            value: "localhost:6379"
+          - name: REDIS_PASSWORD
+            value: ""
           - name: VULCAN_API
             value: http://myrelease-vulcan-api/api
           - name: VULCAN_API_EXTERNAL
@@ -1748,8 +1921,6 @@ spec:
           envFrom:
           - secretRef:
               name: myrelease-vulcan-metrics
-          - secretRef:
-              name: myrelease-vulcan-redis
       volumes:
 ---
 # Source: vulcan/templates/persistence/deployment.yaml
@@ -1866,7 +2037,7 @@ spec:
           - name: AWS_SQS_ENDPOINT
             value: "http://myrelease-vulcan-goaws"
           - name: AWS_S3_ENDPOINT
-            value: "http://myrelease-vulcans3"
+            value: "http://myrelease-minio"
           - name: PATH_STYLE
             value: "true"
           - name: AWS_S3_REGION
@@ -1898,42 +2069,6 @@ spec:
       - name: config-proxy
         configMap:
           name: myrelease-vulcan-persistence-proxy
----
-# Source: vulcan/templates/redis/deployment.yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: myrelease-vulcan-redis
-  labels:
-    helm.sh/chart: vulcan-0.3.0
-    app.kubernetes.io/instance: vulcan
-    app.kubernetes.io/version: "1.16.0"
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: redis
-spec:
-  selector:
-    matchLabels:
-      app.kubernetes.io/instance: vulcan
-      app.kubernetes.io/name: redis
-  template:
-    metadata:
-      labels:
-        app.kubernetes.io/instance: vulcan
-        app.kubernetes.io/name: redis
-      annotations:
-    spec:
-      containers:
-      - name: redis
-        image: "bitnami/redis:6.0.12"
-        imagePullPolicy: Always
-        envFrom:
-          - secretRef:
-              name: myrelease-vulcan-redis
-        ports:
-          - name: app
-            containerPort: 6379
-            protocol: TCP
-      volumes:
 ---
 # Source: vulcan/templates/reportsgenerator/deployment.yaml
 apiVersion: apps/v1
@@ -2203,7 +2338,7 @@ spec:
             value: "https://results.chart-example.local/v1"
           
           - name: AWS_S3_ENDPOINT
-            value: "http://myrelease-vulcans3"
+            value: "http://myrelease-minio"
           - name: PATH_STYLE
             value: "true"
           - name: AWS_S3_REGION
@@ -2462,7 +2597,7 @@ spec:
         app.kubernetes.io/instance: vulcan
         app.kubernetes.io/name: stream
       annotations:
-        checksum/secrets: 0a53ce4da23a0873bf3bb5b0cce3508bd436b11f830d34ceac8c371789c84f48
+        checksum/secrets: 5d84321825590cb742029580a1711d5626bc9fb605fb2da03f3c8dd978c7a411
         checksum/config-proxy: 843c59ca45320d3f07ae4b8b2d68209f6542e389e5b2b68d92f8142841fe0e72
         prometheus.io/scrape: 'true'
         prometheus.io/port: '9101'
@@ -2526,11 +2661,11 @@ spec:
           - name: LOG_LEVEL
             value: "DEBUG"
           - name: REDIS_HOST
-            value: "TBD"
+            value: "myrelease-redis-master"
+          - name: REDIS_USERNAME
+            value: ""
           - name: REDIS_PORT
-            value: "TDB"
-          - name: REDIS_USR
-            value: "TBD"
+            value: "6379"
           - name: REDIS_DB
             value: "0"
           - name: REDIS_TTL
@@ -2988,6 +3123,148 @@ spec:
             medium: Memory
             sizeLimit: 1Gi
         - name: data
+          emptyDir: {}
+---
+# Source: vulcan/charts/redis/templates/master/statefulset.yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: myrelease-redis-master
+  namespace: "ns"
+  labels:
+    app.kubernetes.io/name: redis
+    helm.sh/chart: redis-14.1.1
+    app.kubernetes.io/instance: myrelease
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: master
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: redis
+      app.kubernetes.io/instance: myrelease
+      app.kubernetes.io/component: master
+  serviceName: myrelease-redis-headless
+  updateStrategy:
+    rollingUpdate: {}
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: redis
+        helm.sh/chart: redis-14.1.1
+        app.kubernetes.io/instance: myrelease
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/component: master
+      annotations:
+        checksum/configmap: e23d100dbbfcfbc0fd68205bc6aa0fcc958f5cf684ff55525f89b0292071a821
+        checksum/health: 7cb28bef65202a1f913a1e922e94bb60f06cf9f10fc32021beb9c81812e045b3
+        checksum/scripts: 25dd89e85111f608015aca2216c4649896fb3d76a40f41df3558bf7615f891b6
+        checksum/secret: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+    spec:
+      
+      securityContext:
+        fsGroup: 1001
+      serviceAccountName: default
+      affinity:
+        podAffinity:
+          
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app.kubernetes.io/name: redis
+                    app.kubernetes.io/instance: myrelease
+                    app.kubernetes.io/component: master
+                namespaces:
+                  - "ns"
+                topologyKey: kubernetes.io/hostname
+              weight: 1
+        nodeAffinity:
+          
+      terminationGracePeriodSeconds: 30
+      containers:
+        - name: redis
+          image: docker.io/bitnami/redis:6.2.3-debian-10-r0
+          imagePullPolicy: "IfNotPresent"
+          securityContext:
+            runAsUser: 1001
+          command:
+            - /bin/bash
+          args:
+            - -c
+            - /opt/bitnami/scripts/start-scripts/start-master.sh
+          env:
+            - name: BITNAMI_DEBUG
+              value: "false"
+            - name: REDIS_REPLICATION_MODE
+              value: master
+            - name: ALLOW_EMPTY_PASSWORD
+              value: "yes"
+            - name: REDIS_TLS_ENABLED
+              value: "no"
+            - name: REDIS_PORT
+              value: "6379"
+          ports:
+            - name: redis
+              containerPort: 6379
+          livenessProbe:
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            # One second longer than command timeout should prevent generation of zombie processes.
+            timeoutSeconds: 6
+            successThreshold: 1
+            failureThreshold: 5
+            exec:
+              command:
+                - sh
+                - -c
+                - /health/ping_liveness_local.sh 5
+          readinessProbe:
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 2
+            successThreshold: 1
+            failureThreshold: 5
+            exec:
+              command:
+                - sh
+                - -c
+                - /health/ping_readiness_local.sh 1
+          resources:
+            limits: {}
+            requests: {}
+          volumeMounts:
+            - name: start-scripts
+              mountPath: /opt/bitnami/scripts/start-scripts
+            - name: health
+              mountPath: /health
+            - name: redis-data
+              mountPath: /data
+              subPath: 
+            - name: config
+              mountPath: /opt/bitnami/redis/mounted-etc
+            - name: redis-tmp-conf
+              mountPath: /opt/bitnami/redis/etc/
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: start-scripts
+          configMap:
+            name: myrelease-redis-scripts
+            defaultMode: 0755
+        - name: health
+          configMap:
+            name: myrelease-redis-health
+            defaultMode: 0755
+        - name: config
+          configMap:
+            name: myrelease-redis-configuration
+        - name: redis-tmp-conf
+          emptyDir: {}
+        - name: tmp
+          emptyDir: {}
+        - name: redis-data
           emptyDir: {}
 ---
 # Source: vulcan/templates/api/ingress.yaml

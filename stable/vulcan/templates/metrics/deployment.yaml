@@ -27,6 +27,13 @@ spec:
     spec:
       containers:
         {{- include "common-deployment-sidecars" . | nindent 8 }}
+        - name: redis
+          image: bitnami/redis:6.0.12
+          imagePullPolicy: Always
+          ports:
+          - containerPort: 6379
+            name: redis
+            protocol: TCP
         - name: {{ .Values.comp.name }}
           {{- include "common-container" . | nindent 10 }}
           env:
@@ -53,7 +60,9 @@ spec:
           - name: DEVHOSE_FINDINGS_SOURCE
             value: {{ .Values.comp.conf.devHoseFindingsSource | quote }}
           - name: REDIS_ADDR
-            value: {{ .Values.comp.conf.redisAddr | default (include "redis.url" .)| quote }}
+            value: "localhost:6379"
+          - name: REDIS_PASSWORD
+            value: ""
           - name: VULCAN_API
             value: {{ .Values.comp.conf.vulcanApi | default (include "api.url" .) }}
           - name: VULCAN_API_EXTERNAL
@@ -62,8 +71,6 @@ spec:
           envFrom:
           - secretRef:
               name: {{ include "metrics.fullname" . }}
-          - secretRef:
-              name: {{ include "redis.fullname" . }}
       volumes:
       {{- include "common-deployment-volumes" . | nindent 6 }}
     {{- include "common-deployment-spec" . | nindent 6 }}

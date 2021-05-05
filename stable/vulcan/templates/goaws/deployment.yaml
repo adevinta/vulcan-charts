@@ -18,6 +18,7 @@ spec:
       labels: {{- include "vulcan.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/name: goaws
       annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/goaws/config.yaml") . | sha256sum }}
         {{- with .Values.comp.annotations }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -35,7 +36,7 @@ spec:
             containerPort: {{ .Values.comp.containerPort }}
             protocol: TCP
         volumeMounts:
-        {{- if .Values.config }}
+        {{- if .Values.comp.config }}
         - name: goaws-config
           mountPath: /conf
         {{- end }}
