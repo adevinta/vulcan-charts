@@ -489,7 +489,7 @@ spec:
     spec:
       initContainers:
         - name: waitfordb
-          image: "postgres:9.6-alpine"
+          image: "postgres:9.6.21-alpine"
           imagePullPolicy: Always
           command: ['sh', '-c', 'until pg_isready -t 5; do echo WaitingDB; done;']
           env:
@@ -855,8 +855,7 @@ spec:
               name: dogstatsd
               protocol: UDP
         - name: redis
-          image: bitnami/redis:6.0.12
-          imagePullPolicy: Always
+          image: "bitnami/redis:6.2.3"
           ports:
           - containerPort: 6379
             name: redis
@@ -894,8 +893,6 @@ spec:
             value: "vulcan-findings"
           - name: REDIS_ADDR
             value: "localhost:6379"
-          - name: REDIS_PASSWORD
-            value: ""
           - name: VULCAN_API
             value: http://myrelease-vulcan-api/api
           - name: VULCAN_API_EXTERNAL
@@ -946,7 +943,7 @@ spec:
     spec:
       initContainers:
         - name: waitfordb
-          image: "postgres:9.6-alpine"
+          image: "postgres:9.6.21-alpine"
           imagePullPolicy: Always
           command: ['sh', '-c', 'until pg_isready -t 5; do echo WaitingDB; done;']
           env:
@@ -1060,7 +1057,7 @@ spec:
     spec:
       initContainers:
         - name: waitfordb
-          image: "postgres:9.6-alpine"
+          image: "postgres:9.6.21-alpine"
           imagePullPolicy: Always
           command: ['sh', '-c', 'until pg_isready -t 5; do echo WaitingDB; done;']
           env:
@@ -1315,7 +1312,7 @@ spec:
     spec:
       initContainers:
         - name: waitfordb
-          image: "postgres:9.6-alpine"
+          image: "postgres:9.6.21-alpine"
           imagePullPolicy: Always
           command: ['sh', '-c', 'until pg_isready -t 5; do echo WaitingDB; done;']
           env:
@@ -1684,7 +1681,7 @@ spec:
     spec:
       initContainers:
         - name: waitfordb
-          image: "postgres:9.6-alpine"
+          image: "postgres:9.6.21-alpine"
           imagePullPolicy: Always
           command: ['sh', '-c', 'until pg_isready -t 5; do echo WaitingDB; done;']
           env:
@@ -1767,7 +1764,7 @@ spec:
     spec:
       initContainers:
         - name: waitfordb
-          image: "postgres:9.6-alpine"
+          image: "postgres:9.6.21-alpine"
           imagePullPolicy: Always
           command: ['sh', '-c', 'until pg_isready -t 5; do echo WaitingDB; done;']
           env:

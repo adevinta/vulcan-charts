@@ -28,8 +28,7 @@ spec:
       containers:
         {{- include "common-deployment-sidecars" . | nindent 8 }}
         - name: redis
-          image: bitnami/redis:6.0.12
-          imagePullPolicy: Always
+          image: "{{ .Values.comp.redis.image }}"
           ports:
           - containerPort: 6379
             name: redis
@@ -61,8 +60,6 @@ spec:
             value: {{ .Values.comp.conf.devHoseFindingsSource | quote }}
           - name: REDIS_ADDR
             value: "localhost:6379"
-          - name: REDIS_PASSWORD
-            value: ""
           - name: VULCAN_API
             value: {{ .Values.comp.conf.vulcanApi | default (include "api.url" .) }}
           - name: VULCAN_API_EXTERNAL

@@ -1375,7 +1375,7 @@ spec:
     spec:
       initContainers:
         - name: waitfordb
-          image: "postgres:9.6-alpine"
+          image: "postgres:9.6.21-alpine"
           imagePullPolicy: Always
           command: ['sh', '-c', 'until pg_isready -t 5; do echo WaitingDB; done;']
           env:
@@ -1395,7 +1395,7 @@ spec:
               name: dogstatsd
               protocol: UDP
         - name: proxy
-          image: "haproxy:2.3-alpine"
+          image: "haproxy:2.3.10-alpine"
           imagePullPolicy: Always
           ports:
             - name: http
@@ -1559,7 +1559,7 @@ spec:
       containers:
         
         - name: proxy
-          image: "haproxy:2.3-alpine"
+          image: "haproxy:2.3.10-alpine"
           imagePullPolicy: Always
           ports:
             - name: http
@@ -1718,7 +1718,7 @@ spec:
       containers:
         
         - name: proxy
-          image: "haproxy:2.3-alpine"
+          image: "haproxy:2.3.10-alpine"
           imagePullPolicy: Always
           ports:
             - name: http
@@ -1860,8 +1860,7 @@ spec:
               name: dogstatsd
               protocol: UDP
         - name: redis
-          image: bitnami/redis:6.0.12
-          imagePullPolicy: Always
+          image: "bitnami/redis:6.2.3"
           ports:
           - containerPort: 6379
             name: redis
@@ -1899,8 +1898,6 @@ spec:
             value: "tbd"
           - name: REDIS_ADDR
             value: "localhost:6379"
-          - name: REDIS_PASSWORD
-            value: ""
           - name: VULCAN_API
             value: http://myrelease-vulcan-api/api
           - name: VULCAN_API_EXTERNAL
@@ -1952,7 +1949,7 @@ spec:
     spec:
       initContainers:
         - name: waitfordb
-          image: "postgres:9.6-alpine"
+          image: "postgres:9.6.21-alpine"
           imagePullPolicy: Always
           command: ['sh', '-c', 'until pg_isready -t 5; do echo WaitingDB; done;']
           env:
@@ -1972,7 +1969,7 @@ spec:
               name: dogstatsd
               protocol: UDP
         - name: proxy
-          image: "haproxy:2.3-alpine"
+          image: "haproxy:2.3.10-alpine"
           imagePullPolicy: Always
           ports:
             - name: http
@@ -2099,7 +2096,7 @@ spec:
     spec:
       initContainers:
         - name: waitfordb
-          image: "postgres:9.6-alpine"
+          image: "postgres:9.6.21-alpine"
           imagePullPolicy: Always
           command: ['sh', '-c', 'until pg_isready -t 5; do echo WaitingDB; done;']
           env:
@@ -2119,7 +2116,7 @@ spec:
               name: dogstatsd
               protocol: UDP
         - name: proxy
-          image: "haproxy:2.3-alpine"
+          image: "haproxy:2.3.10-alpine"
           imagePullPolicy: Always
           ports:
             - name: http
@@ -2282,7 +2279,7 @@ spec:
               name: dogstatsd
               protocol: UDP
         - name: proxy
-          image: "haproxy:2.3-alpine"
+          image: "haproxy:2.3.10-alpine"
           imagePullPolicy: Always
           ports:
             - name: http
@@ -2397,7 +2394,7 @@ spec:
     spec:
       initContainers:
         - name: waitfordb
-          image: "postgres:9.6-alpine"
+          image: "postgres:9.6.21-alpine"
           imagePullPolicy: Always
           command: ['sh', '-c', 'until pg_isready -t 5; do echo WaitingDB; done;']
           env:
@@ -2417,7 +2414,7 @@ spec:
               name: dogstatsd
               protocol: UDP
         - name: proxy
-          image: "haproxy:2.3-alpine"
+          image: "haproxy:2.3.10-alpine"
           imagePullPolicy: Always
           ports:
             - name: http
@@ -2614,7 +2611,7 @@ spec:
               name: dogstatsd
               protocol: UDP
         - name: proxy
-          image: "haproxy:2.3-alpine"
+          image: "haproxy:2.3.10-alpine"
           imagePullPolicy: Always
           ports:
             - name: http
@@ -2718,7 +2715,7 @@ spec:
       containers:
         
         - name: proxy
-          image: "haproxy:2.3-alpine"
+          image: "haproxy:2.3.10-alpine"
           imagePullPolicy: Always
           ports:
             - name: http
@@ -2814,7 +2811,7 @@ spec:
     spec:
       initContainers:
         - name: waitfordb
-          image: "postgres:9.6-alpine"
+          image: "postgres:9.6.21-alpine"
           imagePullPolicy: Always
           command: ['sh', '-c', 'until pg_isready -t 5; do echo WaitingDB; done;']
           env:
@@ -2900,7 +2897,7 @@ spec:
     spec:
       initContainers:
         - name: waitfordb
-          image: "postgres:9.6-alpine"
+          image: "postgres:9.6.21-alpine"
           imagePullPolicy: Always
           command: ['sh', '-c', 'until pg_isready -t 5; do echo WaitingDB; done;']
           env:
@@ -2911,7 +2908,7 @@ spec:
       containers:
         
         - name: proxy
-          image: "haproxy:2.3-alpine"
+          image: "haproxy:2.3.10-alpine"
           imagePullPolicy: Always
           ports:
             - name: http

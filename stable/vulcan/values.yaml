@@ -40,7 +40,7 @@ anchors:
       enabled: true
       image:
         repository: haproxy
-        tag: 2.3-alpine
+        tag: 2.3.10-alpine
       port: 9090
       metricsPort: 9101
       cache:
@@ -124,7 +124,7 @@ anchors:
 waitfordb:
   image:
     repository: postgres
-    tag: 9.6-alpine
+    tag: 9.6.21-alpine
 
 
 postgresql:
@@ -607,6 +607,10 @@ metrics:
     vulcanApi:    # http://host/api
     vulcanAPIToken: token
     vulcanAPIExternal:    # https://external/api
+
+  # : redis sidecar
+  redis:
+    image: bitnami/redis:6.2.3
 
   infra:
     sqs: true
