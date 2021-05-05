@@ -29,6 +29,9 @@ spec:
         {{- include "common-deployment-sidecars" . | nindent 8 }}
         - name: redis
           image: "{{ .Values.comp.redis.image }}"
+          env:
+          - name: ALLOW_EMPTY_PASSWORD
+            value: "yes"
           ports:
           - containerPort: 6379
             name: redis
