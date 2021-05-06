@@ -53,21 +53,21 @@ spec:
             value: {{ .Values.comp.conf.persistenceHost | default  (include "persistence.fullname" .) | quote }}
           - name: CHECKS_SQS_ARN
             value: {{ .Values.comp.conf.queueArn | quote }}
-          - name: "SCANS_SNS_ARN"
+          - name: SCANS_SNS_ARN
             value: {{ .Values.comp.conf.scansSNS.topicArn | quote }}
-          - name: "CHECKS_SNS_ARN"
+          - name: CHECKS_SNS_ARN
             value: {{ .Values.comp.conf.checksSNS.topicArn | quote }}
-          - name: "STREAM_URL"
+          - name: STREAM_URL
             value: {{ .Values.comp.conf.streamUrl | default  (include "stream.url" .) | quote }}
-          - name: "CHECKS_CREATOR_WORKERS"
+          - name: CHECKS_CREATOR_WORKERS
             value: {{ .Values.comp.conf.checkCreator.numOfWorkers | quote }}
-          - name: "CHECKS_CREATOR_PERIOD"
+          - name: CHECKS_CREATOR_PERIOD
             value: {{ .Values.comp.conf.checkCreator.period | quote }}
-          - name: "QUEUES_DEFAULT_ARN"
+          - name: QUEUES_DEFAULT_ARN
             value: {{ .Values.comp.conf.queues.default.arn | quote }}
-          - name: "QUEUES_NESSUS_ARN"
+          - name: QUEUES_NESSUS_ARN
             value: {{ .Values.comp.conf.queues.nessus.arn | quote }}
-          - name: "QUEUES_NESSUS_CHECKTYPES"
+          - name: QUEUES_NESSUS_CHECKTYPES
             value: {{ .Values.comp.conf.queues.nessus.checktypes | quote }}
         {{- include "common-container-envs" . | nindent 10 }}
           envFrom:

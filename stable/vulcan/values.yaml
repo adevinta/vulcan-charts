@@ -443,12 +443,12 @@ scanengine:
     scansSNS:
       topicArn: arn:aws:sns:local:012345678900:VulcanK8SScans
     checksSNS:
-      topicArn: arn:aws:sns:eu-west-1:012345678900:VulcanK8SScanEngineChecks
+      topicArn: arn:aws:sns:local:012345678900:VulcanK8SChecks
     queues:
       default:
-        arn: VulcanK8SChecksGeneric
+        arn: arn:aws:sqs:local:012345678900:VulcanK8SChecksGeneric
       nessus:
-        arn: VulcanK8SChecksTenable
+        arn: arn:aws:sqs:local:012345678900:VulcanK8SChecksTenable
         checktypes: '["vulcan-nessus"]'
     persistenceHost:
     streamUrl:

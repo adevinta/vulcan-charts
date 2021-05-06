@@ -140,15 +140,21 @@ app.kubernetes.io/instance: {{ include "vulcan.name" . }}
 {{- end -}}
 
 {{- define "minio.url" -}}
-{{- printf "http://%s-minio" .Release.Name -}}
+  {{- if .Values.goaws.enabled -}}
+    {{- printf "http://%s-minio" .Release.Name -}}
+  {{- end -}}
 {{- end -}}
 
 {{- define "sqs.url" -}}
-{{- printf "http://%s" (include "goaws.fullname" .) -}}
+  {{- if .Values.goaws.enabled -}}
+    {{- printf "http://%s" (include "goaws.fullname" .) -}}
+  {{- end -}}
 {{- end -}}
 
 {{- define "sns.url" -}}
-{{- printf "http://%s" (include "goaws.fullname" .) -}}
+  {{- if .Values.goaws.enabled -}}
+    {{- printf "http://%s" (include "goaws.fullname" .) -}}
+  {{- end -}}
 {{- end -}}
 
 

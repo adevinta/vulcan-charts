@@ -340,9 +340,9 @@ A Helm chart for deploying Vulcan
 | scanengine.conf.queueArn | string | `"arn:aws:sqs:local:012345678900:VulcanK8SScanEngineChecks"` |  |
 | scanengine.conf.queueName | string | `"VulcanK8SScanEngineChecks"` |  |
 | scanengine.conf.scansSNS.topicArn | string | `"arn:aws:sns:local:012345678900:VulcanK8SScans"` |  |
-| scanengine.conf.checksSNS.topicArn | string | `"arn:aws:sns:eu-west-1:012345678900:VulcanK8SScanEngineChecks"` |  |
-| scanengine.conf.queues.default.arn | string | `"VulcanK8SChecksGeneric"` |  |
-| scanengine.conf.queues.nessus.arn | string | `"VulcanK8SChecksTenable"` |  |
+| scanengine.conf.checksSNS.topicArn | string | `"arn:aws:sns:local:012345678900:VulcanK8SChecks"` |  |
+| scanengine.conf.queues.default.arn | string | `"arn:aws:sqs:local:012345678900:VulcanK8SChecksGeneric"` |  |
+| scanengine.conf.queues.nessus.arn | string | `"arn:aws:sqs:local:012345678900:VulcanK8SChecksTenable"` |  |
 | scanengine.conf.queues.nessus.checktypes | string | `"[\"vulcan-nessus\"]"` |  |
 | scanengine.conf.persistenceHost | string | `nil` |  |
 | scanengine.conf.streamUrl | string | `nil` |  |
@@ -615,7 +615,7 @@ A Helm chart for deploying Vulcan
 | sqsexporter.<<.tolerations | list | `[]` |  |
 | sqsexporter.<<.affinity | object | `{}` |  |
 | sqsexporter.image.repository | string | `"jesusfcr/sqs-prometheus-exporter"` |  |
-| sqsexporter.image.tag | string | `"0.2.0"` |  |
+| sqsexporter.image.tag | string | `"0.3.0"` |  |
 | sqsexporter.image.pullPolicy | string | `"Always"` |  |
 | sqsexporter.queueNamePrefix | string | `"VulcanK8S"` |  |
 | sqsexporter.infra.sqs | bool | `true` |  |

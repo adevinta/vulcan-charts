@@ -21,12 +21,12 @@
 - name: AWS_ACCESS_KEY_ID
   valueFrom:
     secretKeyRef:
-      name: "{{ printf "%s-minio" .Release.Name }}"
+      name: {{ printf "%s-minio" .Release.Name }}
       key: access-key
 - name: AWS_SECRET_ACCESS_KEY
   valueFrom:
     secretKeyRef:
-      name: "{{ printf "%s-minio" .Release.Name }}"
+      name: {{ printf "%s-minio" .Release.Name }}
       key: secret-key
 {{- $auth = 0 -}}
 {{- end }}

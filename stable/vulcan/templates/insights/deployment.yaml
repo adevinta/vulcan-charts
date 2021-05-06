@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
         {{- include "common-deployment-sidecars" . | nindent 8 }}
-        - name: "insights-private"
+        - name: insights-private
           {{- include "common-container" . | nindent 10 }}
           env:
             - name: AWS_REGION
@@ -46,7 +46,7 @@ spec:
             - name: private
               containerPort: {{ .Values.comp.containerPort }}
               protocol: TCP
-        - name: "insights-public"
+        - name: insights-public
           {{- include "common-container" . | nindent 10 }}
           env:
             - name: AWS_REGION

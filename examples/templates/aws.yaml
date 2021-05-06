@@ -906,7 +906,7 @@ spec:
           image: "datadog/dogstatsd:7.27.0"
           envFrom:
           - secretRef:
-              name: "myrelease-vulcan-dogstatsd"
+              name: myrelease-vulcan-dogstatsd
           ports:
             - containerPort: 8125
               name: dogstatsd
@@ -1183,7 +1183,7 @@ spec:
             preStop:
               exec:
                 command: ["/bin/sh","-c","sleep 30;"]
-        - name: "insights-private"
+        - name: insights-private
           
           image: "pottava/s3-proxy:2.0"
           imagePullPolicy: Always
@@ -1226,7 +1226,7 @@ spec:
             - name: private
               containerPort: 8080
               protocol: TCP
-        - name: "insights-public"
+        - name: insights-public
           
           image: "pottava/s3-proxy:2.0"
           imagePullPolicy: Always
@@ -1305,7 +1305,7 @@ spec:
           image: "datadog/dogstatsd:7.27.0"
           envFrom:
           - secretRef:
-              name: "myrelease-vulcan-dogstatsd"
+              name: myrelease-vulcan-dogstatsd
           ports:
             - containerPort: 8125
               name: dogstatsd
@@ -1416,7 +1416,7 @@ spec:
           image: "datadog/dogstatsd:7.27.0"
           envFrom:
           - secretRef:
-              name: "myrelease-vulcan-dogstatsd"
+              name: myrelease-vulcan-dogstatsd
           ports:
             - containerPort: 8125
               name: dogstatsd
@@ -1548,7 +1548,7 @@ spec:
           image: "datadog/dogstatsd:7.27.0"
           envFrom:
           - secretRef:
-              name: "myrelease-vulcan-dogstatsd"
+              name: myrelease-vulcan-dogstatsd
           ports:
             - containerPort: 8125
               name: dogstatsd
@@ -1730,7 +1730,7 @@ spec:
           image: "datadog/dogstatsd:7.27.0"
           envFrom:
           - secretRef:
-              name: "myrelease-vulcan-dogstatsd"
+              name: myrelease-vulcan-dogstatsd
           ports:
             - containerPort: 8125
               name: dogstatsd
@@ -1853,7 +1853,7 @@ spec:
           image: "datadog/dogstatsd:7.27.0"
           envFrom:
           - secretRef:
-              name: "myrelease-vulcan-dogstatsd"
+              name: myrelease-vulcan-dogstatsd
           ports:
             - containerPort: 8125
               name: dogstatsd
@@ -1921,21 +1921,21 @@ spec:
             value: "myrelease-vulcan-persistence"
           - name: CHECKS_SQS_ARN
             value: "arn:aws:sqs:eu-west-1:000000000000:ScanEngineCheckStatus"
-          - name: "SCANS_SNS_ARN"
+          - name: SCANS_SNS_ARN
             value: "arn:aws:sns:eu-west-1:000000000000:Scans"
-          - name: "CHECKS_SNS_ARN"
+          - name: CHECKS_SNS_ARN
             value: "arn:aws:sns:eu-west-1:000000000000:Checks"
-          - name: "STREAM_URL"
+          - name: STREAM_URL
             value: "http://myrelease-vulcan-stream"
-          - name: "CHECKS_CREATOR_WORKERS"
+          - name: CHECKS_CREATOR_WORKERS
             value: "3"
-          - name: "CHECKS_CREATOR_PERIOD"
+          - name: CHECKS_CREATOR_PERIOD
             value: "30"
-          - name: "QUEUES_DEFAULT_ARN"
+          - name: QUEUES_DEFAULT_ARN
             value: "arn:aws:sqs:eu-west-1:000000000000:V2ChecksGeneric"
-          - name: "QUEUES_NESSUS_ARN"
+          - name: QUEUES_NESSUS_ARN
             value: "arn:aws:sqs:eu-west-1:000000000000:V2ChecksTenable"
-          - name: "QUEUES_NESSUS_CHECKTYPES"
+          - name: QUEUES_NESSUS_CHECKTYPES
             value: "[\"vulcan-nessus\"]"
           
           - name: DOGSTATSD_ENABLED
@@ -1988,7 +1988,7 @@ spec:
       containers:
         - name: sqsexporter
           
-          image: "jesusfcr/sqs-prometheus-exporter:0.2.0"
+          image: "jesusfcr/sqs-prometheus-exporter:0.3.0"
           imagePullPolicy: Always
           lifecycle:
             preStop:
@@ -2045,7 +2045,7 @@ spec:
           image: "datadog/dogstatsd:7.27.0"
           envFrom:
           - secretRef:
-              name: "myrelease-vulcan-dogstatsd"
+              name: myrelease-vulcan-dogstatsd
           ports:
             - containerPort: 8125
               name: dogstatsd

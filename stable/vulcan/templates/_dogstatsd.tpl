@@ -6,7 +6,7 @@
   image: "{{ .Values.comp.dogstatsd.image.repository }}:{{ .Values.comp.dogstatsd.image.tag }}"
   envFrom:
   - secretRef:
-      name: "{{ template "vulcan.fullname" . }}-dogstatsd"
+      name: {{ template "vulcan.fullname" . }}-dogstatsd
   ports:
     - containerPort: 8125
       name: dogstatsd
