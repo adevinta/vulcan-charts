@@ -1,8 +1,16 @@
 minio:
   enabled: true
+  ingress:
+    enabled: true
+    hostname: minio.vulcan.local
 
 goaws:
   enabled: true
+  ingress:
+    enabled: true
+    hosts:
+      - host: goaws.vulcan.local
+        paths: [/]
 
 postgresql:
   enabled: true

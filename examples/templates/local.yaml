@@ -7,13 +7,14 @@ metadata:
   namespace: ns
   labels:
     app.kubernetes.io/name: minio
-    helm.sh/chart: minio-3.3.6
+    helm.sh/chart: minio-6.7.7
     app.kubernetes.io/instance: myrelease
     app.kubernetes.io/managed-by: Helm
 type: Opaque
 data:
   access-key: "QUtJQUlPU0ZPRE5ON0VYQU1QTEU="
   secret-key: "d0phbHJYVXRuRkVNSS9LN01ERU5HL2JQeFJmaUNZRVhBTVBMRUtFWQ=="
+  key.json: ""
 ---
 # Source: vulcan/charts/postgresql/templates/secrets.yaml
 apiVersion: v1
@@ -868,11 +869,13 @@ metadata:
   namespace: ns
   labels:
     app.kubernetes.io/name: minio
-    helm.sh/chart: minio-3.3.6
+    helm.sh/chart: minio-6.7.7
     app.kubernetes.io/instance: myrelease
     app.kubernetes.io/managed-by: Helm
 spec:
   type: NodePort
+  externalTrafficPolicy: "Cluster"
+  
   ports:
     - name: minio
       port: 80
@@ -1259,7 +1262,7 @@ spec:
       app.kubernetes.io/instance: vulcan
       app.kubernetes.io/name: vulndbapi
 ---
-# Source: vulcan/charts/minio/templates/deployment-standalone.yaml
+# Source: vulcan/charts/minio/templates/standalone/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -1267,11 +1270,11 @@ metadata:
   namespace: ns
   labels:
     app.kubernetes.io/name: minio
-    helm.sh/chart: minio-3.3.6
+    helm.sh/chart: minio-6.7.7
     app.kubernetes.io/instance: myrelease
     app.kubernetes.io/managed-by: Helm
 spec:
-  strategy: 
+  strategy:
     type: Recreate
   selector:
     matchLabels:
@@ -1281,23 +1284,43 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: minio
-        helm.sh/chart: minio-3.3.6
+        helm.sh/chart: minio-6.7.7
         app.kubernetes.io/instance: myrelease
         app.kubernetes.io/managed-by: Helm
+      annotations:
+        checksum/credentials-secret: 1bb07ae0622f73ad83a5bfb77e25fc0a8aa1ae8beb805d201ba44d6215d0c92c
     spec:
-      serviceAccountName: default
       
+      serviceAccountName: default
+      affinity:
+        podAffinity:
+          
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app.kubernetes.io/name: minio
+                    app.kubernetes.io/instance: myrelease
+                namespaces:
+                  - "ns"
+                topologyKey: kubernetes.io/hostname
+              weight: 1
+        nodeAffinity:
+          
       securityContext:
         fsGroup: 1001
       containers:
         - name: minio
-          image: docker.io/bitnami/minio:2020.4.23-debian-10-r0
+          image: docker.io/bitnami/minio:2021.4.22-debian-10-r6
           imagePullPolicy: "IfNotPresent"
           securityContext:
             runAsUser: 1001
           env:
             - name: BITNAMI_DEBUG
               value: "false"
+            - name: MINIO_FORCE_NEW_KEYS
+              value: "no"
             - name: MINIO_ACCESS_KEY
               valueFrom:
                 secretKeyRef:
@@ -1313,34 +1336,36 @@ spec:
             - name: MINIO_BROWSER
               value: "on"
             - name: MINIO_PROMETHEUS_AUTH_TYPE
-              value: public
+              value: "public"
             - name: MINIO_REGION_NAME
               value: local
+          envFrom:
           ports:
             - name: minio
               containerPort: 9000
+              protocol: TCP
           livenessProbe:
+            httpGet:
+              path: /minio/health/live
+              port: minio
             initialDelaySeconds: 5
             periodSeconds: 5
             timeoutSeconds: 5
             successThreshold: 1
             failureThreshold: 5
-            httpGet:
-              path: /minio/health/live
-              port: minio
           readinessProbe:
+            tcpSocket:
+              port: minio
             initialDelaySeconds: 5
             periodSeconds: 5
             timeoutSeconds: 1
             successThreshold: 1
             failureThreshold: 5
-            tcpSocket:
-              port: minio
-          resources: 
+          resources:
             limits: {}
             requests: {}
           volumeMounts:
-            - name: "data"
+            - name: data
               mountPath: /data
       volumes:
         - name: data
@@ -3267,6 +3292,31 @@ spec:
         - name: redis-data
           emptyDir: {}
 ---
+# Source: vulcan/charts/minio/templates/ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: myrelease-minio
+  namespace: ns
+  labels:
+    app.kubernetes.io/name: minio
+    helm.sh/chart: minio-6.7.7
+    app.kubernetes.io/instance: myrelease
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+spec:
+  rules:
+    - host: minio.vulcan.local
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: myrelease-minio
+                port:
+                  name: minio
+---
 # Source: vulcan/templates/api/ingress.yaml
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
@@ -3288,6 +3338,27 @@ spec:
           - path: /api
             backend:
               serviceName: myrelease-vulcan-api
+              servicePort: 80
+---
+# Source: vulcan/templates/goaws/ingress.yaml
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: myrelease-vulcan-goaws
+  labels:
+    helm.sh/chart: vulcan-0.3.0
+    app.kubernetes.io/instance: vulcan
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: goaws
+spec:
+  rules:
+    - host: "goaws.vulcan.local"
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: myrelease-vulcan-goaws
               servicePort: 80
 ---
 # Source: vulcan/templates/insights/ingress.yaml
