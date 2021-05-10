@@ -189,8 +189,8 @@ goaws:
           ReceiveMessageWaitTimeSeconds: 0
         Queues:
           - Name: VulcanK8SAPIScans
-          - Name: VulcanK8SChecksGeneric
-          - Name: VulcanK8SChecksTenable
+          - Name: VulcanK8SV2ChecksGeneric
+          - Name: VulcanK8SV2ChecksTenable
           - Name: VulcanK8SMetricsChecks
           - Name: VulcanK8SMetricsScans
           - Name: VulcanK8SMetricsFindings
@@ -446,9 +446,9 @@ scanengine:
       topicArn: arn:aws:sns:local:012345678900:VulcanK8SChecks
     queues:
       default:
-        arn: arn:aws:sqs:local:012345678900:VulcanK8SChecksGeneric
+        arn: arn:aws:sqs:local:012345678900:VulcanK8SV2ChecksGeneric
       nessus:
-        arn: arn:aws:sqs:local:012345678900:VulcanK8SChecksTenable
+        arn: arn:aws:sqs:local:012345678900:VulcanK8SV2ChecksTenable
         checktypes: '["vulcan-nessus"]'
     persistenceHost:
     streamUrl:

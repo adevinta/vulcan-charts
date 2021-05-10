@@ -462,8 +462,8 @@ data:
         ReceiveMessageWaitTimeSeconds: 0
       Queues:
         - Name: VulcanK8SAPIScans
-        - Name: VulcanK8SChecksGeneric
-        - Name: VulcanK8SChecksTenable
+        - Name: VulcanK8SV2ChecksGeneric
+        - Name: VulcanK8SV2ChecksTenable
         - Name: VulcanK8SMetricsChecks
         - Name: VulcanK8SMetricsScans
         - Name: VulcanK8SMetricsFindings
@@ -1696,7 +1696,7 @@ spec:
         app.kubernetes.io/instance: vulcan
         app.kubernetes.io/name: goaws
       annotations:
-        checksum/config: 06986fc846c642df41fe414a7d17e61fcc52e68fd7fc02a3988c9ff1559366bd
+        checksum/config: dbfdf501cec460c5bbb39d6ae5b11de800169487233ec12212c9dd40299c436e
     spec:
       containers:
       - name: goaws
@@ -2515,9 +2515,9 @@ spec:
           - name: CHECKS_CREATOR_PERIOD
             value: "20"
           - name: QUEUES_DEFAULT_ARN
-            value: "arn:aws:sqs:local:012345678900:VulcanK8SChecksGeneric"
+            value: "arn:aws:sqs:local:012345678900:VulcanK8SV2ChecksGeneric"
           - name: QUEUES_NESSUS_ARN
-            value: "arn:aws:sqs:local:012345678900:VulcanK8SChecksTenable"
+            value: "arn:aws:sqs:local:012345678900:VulcanK8SV2ChecksTenable"
           - name: QUEUES_NESSUS_CHECKTYPES
             value: "[\"vulcan-nessus\"]"
           - name: AWS_SNS_ENDPOINT
