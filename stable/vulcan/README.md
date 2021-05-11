@@ -131,7 +131,7 @@ A Helm chart for deploying Vulcan
 | results.dogstatsd.image.repository | string | `"datadog/dogstatsd"` |  |
 | results.dogstatsd.image.tag | string | `"7.27.0"` |  |
 | results.dogstatsd.enabled | bool | `true` |  |
-| results.infra.s3 | bool | `true` |  |
+| results.meta.s3 | bool | `true` |  |
 | persistence.enabled | bool | `true` |  |
 | persistence.name | string | `"persistence"` |  |
 | persistence.<<.replicaCount | string | `nil` |  |
@@ -159,9 +159,9 @@ A Helm chart for deploying Vulcan
 | persistence.image.tag | string | `"latest"` |  |
 | persistence.image.pullPolicy | string | `"Always"` |  |
 | persistence.healthcheckPath | string | `"/status"` |  |
-| persistence.infra.s3 | bool | `true` |  |
-| persistence.infra.sns | bool | `true` |  |
-| persistence.infra.sqs | bool | `true` |  |
+| persistence.meta.s3 | bool | `true` |  |
+| persistence.meta.sns | bool | `true` |  |
+| persistence.meta.sqs | bool | `true` |  |
 | persistence.db | object | `{"<<":{"ca":null,"host":null,"name":null,"password":"TBD","port":5432,"sslMode":"disable","user":null},"name":"persistence"}` | postgres database settings |
 | persistence.conf.logLevel | string | `"warn"` |  |
 | persistence.conf.secretKeyBase | string | `"TBDTBD"` |  |
@@ -232,9 +232,9 @@ A Helm chart for deploying Vulcan
 | api.image.repository | string | `"adevinta/vulcan-api"` |  |
 | api.image.tag | string | `"latest"` |  |
 | api.image.pullPolicy | string | `"Always"` |  |
-| api.infra.sqs | bool | `true` |  |
-| api.infra.sns | bool | `true` |  |
-| api.infra.s3 | bool | `true` |  |
+| api.meta.sqs | bool | `true` |  |
+| api.meta.sns | bool | `true` |  |
+| api.meta.s3 | bool | `true` |  |
 | api.healthcheckPath | string | `"/api/v1/healthcheck"` |  |
 | api.db | object | `{"<<":{"ca":null,"host":null,"name":null,"password":"TBD","port":5432,"sslMode":"disable","user":null},"name":"api"}` | postgres database settings |
 | api.conf.debug | string | `"false"` |  |
@@ -296,7 +296,7 @@ A Helm chart for deploying Vulcan
 | crontinuous.image.repository | string | `"adevinta/vulcan-crontinuous"` |  |
 | crontinuous.image.tag | string | `"latest"` |  |
 | crontinuous.image.pullPolicy | string | `"Always"` |  |
-| crontinuous.infra.s3 | bool | `true` |  |
+| crontinuous.meta.s3 | bool | `true` |  |
 | crontinuous.healthcheckPath | string | `"/healthcheck"` |  |
 | crontinuous.conf.region | string | `nil` |  |
 | crontinuous.conf.vulcanToken | string | `"TBDTBDTBD"` |  |
@@ -334,8 +334,8 @@ A Helm chart for deploying Vulcan
 | scanengine.image.tag | string | `"latest"` |  |
 | scanengine.image.pullPolicy | string | `"Always"` |  |
 | scanengine.healthcheckPath | string | `"/v1/healthcheck"` |  |
-| scanengine.infra.sqs | bool | `true` |  |
-| scanengine.infra.sns | bool | `true` |  |
+| scanengine.meta.sqs | bool | `true` |  |
+| scanengine.meta.sns | bool | `true` |  |
 | scanengine.conf.logLevel | string | `"error"` |  |
 | scanengine.conf.queueArn | string | `"arn:aws:sqs:local:012345678900:VulcanK8SScanEngineCheckStatus"` |  |
 | scanengine.conf.queueName | string | `"VulcanK8SScanEngineCheckStatus"` |  |
@@ -379,7 +379,7 @@ A Helm chart for deploying Vulcan
 | ui.image.tag | string | `"latest"` |  |
 | ui.image.pullPolicy | string | `"Always"` |  |
 | ui.healthcheckPath | string | `"/index.html"` |  |
-| ui.infra.sqs | bool | `false` |  |
+| ui.meta.sqs | bool | `false` |  |
 | ui.conf.apiUrl | string | `nil` |  |
 | ui.conf.docs.apiLink | string | `"https://docs.erxample.com/vulcan/vulcan-api/"` |  |
 | ui.conf.docs.whitelistingLink | string | `nil` |  |
@@ -450,7 +450,7 @@ A Helm chart for deploying Vulcan
 | reportsgenerator.image.tag | string | `"latest"` |  |
 | reportsgenerator.image.pullPolicy | string | `"Always"` |  |
 | reportsgenerator.healthcheckPath | string | `"/healthcheck"` |  |
-| reportsgenerator.infra.sqs | bool | `true` |  |
+| reportsgenerator.meta.sqs | bool | `true` |  |
 | reportsgenerator.conf.logLevel | string | `"error"` |  |
 | reportsgenerator.conf.queueArn | string | `"arn:aws:sqs:local:012345678900:VulcanK8SReportsGenerator"` |  |
 | reportsgenerator.conf.queueName | string | `"VulcanK8SReportsGenerator"` |  |
@@ -522,7 +522,7 @@ A Helm chart for deploying Vulcan
 | metrics.conf.vulcanAPIToken | string | `"token"` |  |
 | metrics.conf.vulcanAPIExternal | string | `nil` |  |
 | metrics.redis.image | string | `"bitnami/redis:6.2.3"` |  |
-| metrics.infra.sqs | bool | `true` |  |
+| metrics.meta.sqs | bool | `true` |  |
 | metrics.dogstatsd.image.repository | string | `"datadog/dogstatsd"` |  |
 | metrics.dogstatsd.image.tag | string | `"7.27.0"` |  |
 | metrics.dogstatsd.enabled | bool | `true` |  |
@@ -588,8 +588,8 @@ A Helm chart for deploying Vulcan
 | vulndb.conf.resultsUrl | string | `"http://vulcan-results.vulcan.com"` |  |
 | vulndb.conf.resultsInternalUrl | string | `nil` |  |
 | vulndb.proxy.enabled | bool | `false` |  |
-| vulndb.infra.sqs | bool | `true` |  |
-| vulndb.infra.sns | bool | `true` |  |
+| vulndb.meta.sqs | bool | `true` |  |
+| vulndb.meta.sns | bool | `true` |  |
 | vulndb.db | object | `{"<<":{"ca":null,"host":null,"name":null,"password":"TBD","port":5432,"sslMode":"disable","user":null},"name":"vulnerabilitydb"}` | postgres database settings |
 | sqsexporter.enabled | bool | `true` |  |
 | sqsexporter.name | string | `"sqsexporter"` |  |
@@ -618,7 +618,7 @@ A Helm chart for deploying Vulcan
 | sqsexporter.image.tag | string | `"0.3.0"` |  |
 | sqsexporter.image.pullPolicy | string | `"Always"` |  |
 | sqsexporter.queueNamePrefix | string | `"VulcanK8S"` |  |
-| sqsexporter.infra.sqs | bool | `true` |  |
+| sqsexporter.meta.sqs | bool | `true` |  |
 | dogstatsd.apiKey | string | `"TBD"` |  |
 | extraManifests | string | `nil` | Allows to inject custom manifests that would be processed as templates |
 

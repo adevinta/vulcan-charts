@@ -1,17 +1,17 @@
 {{- define "common-infra-envs" -}}
 {{- $auth := 0 -}}
-{{- if .Values.comp.infra -}}
-{{- if and  .Values.comp.infra.sns .Values.goaws.enabled -}}
+{{- if .Values.comp.meta -}}
+{{- if and  .Values.comp.meta.sns .Values.goaws.enabled -}}
 - name: AWS_SNS_ENDPOINT
   value: {{ include "sns.url" . | quote }}
 {{- $auth = 1 -}}
 {{- end -}}
-{{- if and .Values.comp.infra.sqs .Values.goaws.enabled }}
+{{- if and .Values.comp.meta.sqs .Values.goaws.enabled }}
 - name: AWS_SQS_ENDPOINT
   value: {{ include "sqs.url" . | quote }}
 {{- $auth = 1 -}}
 {{- end -}}
-{{- if and .Values.comp.infra.s3 .Values.minio.enabled }}
+{{- if and .Values.comp.meta.s3 .Values.minio.enabled }}
 - name: AWS_S3_ENDPOINT
   value: {{ include "minio.url" . | quote }}
 - name: PATH_STYLE
