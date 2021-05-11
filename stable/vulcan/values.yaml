@@ -680,3 +680,14 @@ sqsexporter:
 
 dogstatsd:
   apiKey: TBD
+
+
+# -- Allows to inject custom manifests that would be processed as templates
+extraManifests:
+  # config1: |
+  #   apiVersion: v1
+  #   kind: ConfigMap
+  #   ...
+  # config2: |
+  #   apiVersion: v1
+  #   ...

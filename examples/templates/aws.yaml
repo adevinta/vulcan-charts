@@ -241,7 +241,7 @@ data:
       http-request use-service prometheus-exporter if { path /metrics }
       monitor-uri /healthz
 ---
-# Source: vulcan/templates/custom-manifests.yaml
+# Source: vulcan/templates/extra-manifests.yaml
 apiVersion: v1
 kind: ConfigMap
 metadata:

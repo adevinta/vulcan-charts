@@ -1,3 +1,0 @@
-{{- if .Values.customTplManifests -}}
-{{ tpl .Values.customTplManifests . }}
-{{- end -}}

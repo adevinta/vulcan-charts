@@ -99,16 +99,17 @@ crontinuous:
     tag: tag-crontinuous
   imagePullSecrets:
   - name: pullsecretname
-customTplManifests: |
-  apiVersion: v1
-  kind: ConfigMap
-  metadata:
-    labels:
-      {{- include "vulcan.labels" . | nindent 4 }}
-    name: vulcan-custom-configmap
-  data:
-    custom.cfg: |
-      Example file
+extraManifests:
+  config: |
+    apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      labels:
+        {{- include "vulcan.labels" . | nindent 4 }}
+      name: vulcan-custom-configmap
+    data:
+      custom.cfg: |
+        Example file
 dogstatsd:
   apiKey: xxxxxxxxxxxxxxxxxxxxx
 insights:
