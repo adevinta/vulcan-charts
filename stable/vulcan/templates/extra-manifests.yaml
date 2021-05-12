@@ -1,5 +1,5 @@
 {{- $root := . -}}
-{{- with .Values.newextraManifests }}
+{{- with .Values.extraManifests }}
 {{- range (values .) }}
 ---
 {{- if typeIs "string" . }}

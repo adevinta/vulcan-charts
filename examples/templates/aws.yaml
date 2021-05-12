@@ -241,6 +241,20 @@ data:
       http-request use-service prometheus-exporter if { path /metrics }
       monitor-uri /healthz
 ---
+# Source: vulcan/templates/extra-manifests.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    helm.sh/chart: vulcan-0.3.0
+    app.kubernetes.io/instance: vulcan
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+  name: vulcan-custom-configmap
+data:
+  custom.cfg: |
+    Example file
+---
 # Source: vulcan/templates/insights/config-proxy.yaml
 apiVersion: v1
 kind: ConfigMap
