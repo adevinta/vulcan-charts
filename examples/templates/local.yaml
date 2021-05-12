@@ -139,21 +139,6 @@ type: Opaque
 data:
   PG_PASSWORD: "VEJE"
 ---
-# Source: vulcan/templates/stream/secrets.yaml
-apiVersion: v1
-kind: Secret
-metadata:
-  name: myrelease-vulcan-stream
-  labels:
-    helm.sh/chart: vulcan-0.3.0
-    app.kubernetes.io/instance: vulcan
-    app.kubernetes.io/version: "1.16.0"
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: stream
-type: Opaque
-data:
-  REDIS_PWD: ""
----
 # Source: vulcan/templates/vulndb/secrets.yaml
 apiVersion: v1
 kind: Secret
@@ -2616,7 +2601,6 @@ spec:
         app.kubernetes.io/instance: vulcan
         app.kubernetes.io/name: stream
       annotations:
-        checksum/secrets: 5d84321825590cb742029580a1711d5626bc9fb605fb2da03f3c8dd978c7a411
         checksum/config-proxy: 843c59ca45320d3f07ae4b8b2d68209f6542e389e5b2b68d92f8142841fe0e72
         prometheus.io/scrape: 'true'
         prometheus.io/port: '9101'
@@ -2681,7 +2665,7 @@ spec:
             value: "DEBUG"
           - name: REDIS_HOST
             value: "myrelease-redis-master"
-          - name: REDIS_USERNAME
+          - name: REDIS_USR
             value: ""
           - name: REDIS_PORT
             value: "6379"
@@ -2696,9 +2680,6 @@ spec:
             value: "localhost"
           - name: DOGSTATSD_PORT
             value: "8125"
-          envFrom:
-          - secretRef:
-              name: myrelease-vulcan-stream
           ports:
             - name: app
               containerPort: 8080

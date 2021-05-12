@@ -121,7 +121,7 @@ metadata:
     app.kubernetes.io/name: stream
 type: Opaque
 data:
-  REDIS_PWD: "PG5vIHZhbHVlPg=="
+  REDIS_PWD: "bXllbGFzdGljcHdk"
 ---
 # Source: vulcan/templates/vulndb/secrets.yaml
 apiVersion: v1
@@ -2033,7 +2033,7 @@ spec:
         app.kubernetes.io/instance: vulcan
         app.kubernetes.io/name: stream
       annotations:
-        checksum/secrets: a4fbab842aa42bb374547258c38878e1c26a140d49a26a99462ff24af0b7ad63
+        checksum/secrets: 4db4be8a6fadbc68fea17cc3e53cc27740b50fb034eb8fe601f1235bbf37916d
         checksum/config-proxy: 843c59ca45320d3f07ae4b8b2d68209f6542e389e5b2b68d92f8142841fe0e72
         prometheus.io/scrape: 'true'
         prometheus.io/port: '9101'
@@ -2099,7 +2099,7 @@ spec:
             value: "DEBUG"
           - name: REDIS_HOST
             value: "myelasticcache"
-          - name: REDIS_USERNAME
+          - name: REDIS_USR
             value: ""
           - name: REDIS_PORT
             value: "6379"

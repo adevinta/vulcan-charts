@@ -180,9 +180,9 @@ app.kubernetes.io/instance: {{ include "vulcan.name" . }}
 
 {{- define "pg.password" -}}
   {{- if .Values.postgresql.enabled -}}
-    {{- .Values.postgresql.postgresqlPassword -}}
+    {{- .Values.postgresql.postgresqlPassword | default "" -}}
   {{- else -}}
-    {{- .Values.comp.db.password -}}
+    {{- .Values.comp.db.password | default "" -}}
   {{- end -}}
 {{- end -}}
 
@@ -235,9 +235,9 @@ app.kubernetes.io/instance: {{ include "vulcan.name" . }}
 
 {{- define "redis.password" -}}
   {{- if and .Values.redis.enabled .Values.redis.auth -}}
-    {{- .Values.redis.auth.password -}}
+    {{- .Values.redis.auth.password | default "" -}}
   {{- else -}}
-    {{- .Values.comp.redis.password -}}
+    {{- .Values.comp.redis.password | default "" -}}
   {{- end -}}
 {{- end -}}
 

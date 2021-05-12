@@ -324,7 +324,8 @@ stream:
     ttl: 0
   redis:
     host: myelasticcache
-    pwd: myelasticpwd
+    port: 6379
+    password: myelasticpwd
   image:
     tag: tag-stream
   imagePullSecrets:

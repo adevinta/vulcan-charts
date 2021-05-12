@@ -20,7 +20,9 @@ spec:
       labels: {{- include "vulcan.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/name: stream
       annotations:
+        {{- if (include "redis.password" .) }}
         checksum/secrets: {{ include (print $.Template.BasePath "/stream/secrets.yaml") . | sha256sum }}
+        {{- end }}
         {{- include "common-annotations" . | nindent 8 }}
         {{- with .Values.comp.annotations }}
           {{- toYaml . | nindent 8 }}
@@ -37,7 +39,7 @@ spec:
             value: {{ .Values.comp.conf.logLevel | quote }}
           - name: REDIS_HOST
             value: {{ include "redis.host" . | quote }}
-          - name: REDIS_USERNAME
+          - name: REDIS_USR
             value: {{ include "redis.username" . | quote }}
           - name: REDIS_PORT
             value: {{ include "redis.port" . | quote }}
@@ -46,9 +48,11 @@ spec:
           - name: REDIS_TTL
             value: {{ .Values.comp.conf.ttl | quote }}
         {{- include "common-container-envs" . | nindent 10 }}
+        {{- if (include "redis.password" .) }}
           envFrom:
           - secretRef:
               name: {{ include "stream.fullname" . }}
+        {{- end }}
           ports:
             - name: {{ include "common-appPortName" . }}
               containerPort: {{ .Values.comp.containerPort }}
