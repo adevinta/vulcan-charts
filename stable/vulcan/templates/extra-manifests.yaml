@@ -1,6 +1,6 @@
 {{- $root := . -}}
-{{- if .Values.extraManifests }}
-{{- range (values .Values.extraManifests) }}
+{{- with .Values.extraManifests }}
+{{- range (values .) }}
 ---
 {{- if typeIs "string" . }}
 {{- tpl . $root }}
