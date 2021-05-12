@@ -1,2 +1,0 @@
-{{- $_ := (set .Values "comp" .Values.vulndb) -}}
-{{- include "common-service" . }}
