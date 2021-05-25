@@ -2331,7 +2331,7 @@ spec:
           - name: BUCKET_LOGS
             value: "logs"
           - name: LINK_BASE
-            value: "https://results.chart-example.local/v1"
+            value: "https://results.vulcan.local/v1"
           
           - name: AWS_S3_ENDPOINT
             value: "http://myrelease-minio"
