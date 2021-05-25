@@ -91,7 +91,6 @@ A Helm chart for deploying Vulcan
 | minio.serviceAccount.create | bool | `false` |  |
 | minio.persistence.enabled | bool | `false` |  |
 | minio.service.port | int | `80` |  |
-| minio.service.type | string | `"NodePort"` |  |
 | minio.accessKey.password | string | `"AKIAIOSFODNN7EXAMPLE"` |  |
 | minio.secretKey.password | string | `"wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"` |  |
 | minio.extraEnv[0].name | string | `"MINIO_REGION_NAME"` |  |
