@@ -20,7 +20,7 @@ redis:
 
 results:
   conf:
-    linkBase: https://results.chart-example.local
+    linkBase: https://results.vulcan.local
   ingress:
     enabled: true
     hosts:
