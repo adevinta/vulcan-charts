@@ -53,6 +53,8 @@ api:
   ingress:
     enabled: true
     annotations:
+      nginx.ingress.kubernetes.io/enable-cors: "true"
+      nginx.ingress.kubernetes.io/cors-allow-origin: "https://www.vulcan.local"
       nginx.ingress.kubernetes.io/proxy-body-size: 8m
     hosts:
       - host: www.vulcan.local

@@ -818,28 +818,6 @@ spec:
       app.kubernetes.io/instance: vulcan
       app.kubernetes.io/name: ui
 ---
-# Source: vulcan/templates/vulndb/service.yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: myrelease-vulcan-vulndb
-  labels:
-    helm.sh/chart: vulcan-0.3.1
-    app.kubernetes.io/instance: vulcan
-    app.kubernetes.io/version: "1.16.0"
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: vulndb
-spec:
-  type: ClusterIP
-  ports:
-    - port: 80
-      targetPort: http
-      protocol: TCP
-      name: http
-  selector:
-      app.kubernetes.io/instance: vulcan
-      app.kubernetes.io/name: vulndb
----
 # Source: vulcan/templates/vulndbapi/service.yaml
 apiVersion: v1
 kind: Service

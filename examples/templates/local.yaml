@@ -854,13 +854,13 @@ metadata:
     app.kubernetes.io/instance: myrelease
     app.kubernetes.io/managed-by: Helm
 spec:
-  type: NodePort
-  externalTrafficPolicy: "Cluster"
+  type: ClusterIP
   
   ports:
     - name: minio
       port: 80
       targetPort: minio
+      nodePort: null
   selector:
     app.kubernetes.io/name: minio
     app.kubernetes.io/instance: myrelease
@@ -1210,28 +1210,6 @@ spec:
   selector:
       app.kubernetes.io/instance: vulcan
       app.kubernetes.io/name: ui
----
-# Source: vulcan/templates/vulndb/service.yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: myrelease-vulcan-vulndb
-  labels:
-    helm.sh/chart: vulcan-0.3.1
-    app.kubernetes.io/instance: vulcan
-    app.kubernetes.io/version: "1.16.0"
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: vulndb
-spec:
-  type: ClusterIP
-  ports:
-    - port: 80
-      targetPort: http
-      protocol: TCP
-      name: http
-  selector:
-      app.kubernetes.io/instance: vulcan
-      app.kubernetes.io/name: vulndb
 ---
 # Source: vulcan/templates/vulndbapi/service.yaml
 apiVersion: v1
@@ -3351,6 +3329,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: api
   annotations:
+    nginx.ingress.kubernetes.io/cors-allow-origin: https://www.vulcan.local
+    nginx.ingress.kubernetes.io/enable-cors: "true"
     nginx.ingress.kubernetes.io/proxy-body-size: 8m
 spec:
   rules:
