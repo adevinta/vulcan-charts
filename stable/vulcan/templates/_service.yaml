@@ -8,7 +8,6 @@ kind: Service
 metadata:
   name: {{ template "vulcan.fullname" . }}-{{ .Values.comp.name }}
   labels: {{- include "vulcan.labels" . | nindent 4 }}
-    app.kubernetes.io/name: {{ .Values.comp.name }}
 spec:
   type: {{ .Values.comp.service.type }}
   ports:

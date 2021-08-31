@@ -632,7 +632,6 @@ metadata:
     app.kubernetes.io/name: api
     app.kubernetes.io/version: "1.16.0"
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: api
 spec:
   type: ClusterIP
   ports:
@@ -655,7 +654,6 @@ metadata:
     app.kubernetes.io/name: crontinuous
     app.kubernetes.io/version: "1.16.0"
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: crontinuous
 spec:
   type: ClusterIP
   ports:
@@ -678,7 +676,6 @@ metadata:
     app.kubernetes.io/name: insights
     app.kubernetes.io/version: "1.16.0"
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: insights
 spec:
   type: ClusterIP
   ports:
@@ -701,7 +698,6 @@ metadata:
     app.kubernetes.io/name: persistence
     app.kubernetes.io/version: "1.16.0"
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: persistence
 spec:
   type: ClusterIP
   ports:
@@ -724,7 +720,6 @@ metadata:
     app.kubernetes.io/name: reportsgenerator
     app.kubernetes.io/version: "1.16.0"
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: reportsgenerator
 spec:
   type: ClusterIP
   ports:
@@ -747,7 +742,6 @@ metadata:
     app.kubernetes.io/name: results
     app.kubernetes.io/version: "1.16.0"
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: results
 spec:
   type: ClusterIP
   ports:
@@ -770,7 +764,6 @@ metadata:
     app.kubernetes.io/name: scanengine
     app.kubernetes.io/version: "1.16.0"
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: scanengine
 spec:
   type: ClusterIP
   ports:
@@ -793,7 +786,6 @@ metadata:
     app.kubernetes.io/name: stream
     app.kubernetes.io/version: "1.16.0"
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: stream
 spec:
   type: ClusterIP
   ports:
@@ -816,7 +808,6 @@ metadata:
     app.kubernetes.io/name: ui
     app.kubernetes.io/version: "1.16.0"
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: ui
 spec:
   type: ClusterIP
   ports:
@@ -839,7 +830,6 @@ metadata:
     app.kubernetes.io/name: vulndbapi
     app.kubernetes.io/version: "1.16.0"
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: vulndbapi
 spec:
   type: ClusterIP
   ports:
@@ -2456,7 +2446,6 @@ metadata:
     app.kubernetes.io/name: api
     app.kubernetes.io/version: "1.16.0"
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: api
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
@@ -2481,7 +2470,6 @@ metadata:
     app.kubernetes.io/name: insights
     app.kubernetes.io/version: "1.16.0"
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: insights
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
@@ -2506,7 +2494,6 @@ metadata:
     app.kubernetes.io/name: persistence
     app.kubernetes.io/version: "1.16.0"
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: persistence
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
@@ -2531,7 +2518,6 @@ metadata:
     app.kubernetes.io/name: results
     app.kubernetes.io/version: "1.16.0"
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: results
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
@@ -2556,7 +2542,6 @@ metadata:
     app.kubernetes.io/name: scanengine
     app.kubernetes.io/version: "1.16.0"
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: scanengine
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
