@@ -4,6 +4,9 @@
 global:
   domain: vulcan.local
   region: local
+    # -- custom labels for all components
+  podLabels: {}
+    # foo: bar
 
 # -- Anchors
 anchors:
@@ -30,6 +33,10 @@ anchors:
     replicaCount:
     image:
       pullPolicy: Always
+
+    # -- custom extra labels
+    extraPodLabels: {}
+    # foo: bar
 
     # -- custom env variables
     extraEnv: {}
@@ -678,6 +685,7 @@ sqsexporter:
 
 
 dogstatsd:
+  name: dogstatsd
   apiKey: TBD
 
 

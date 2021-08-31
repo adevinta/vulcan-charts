@@ -17,6 +17,5 @@ spec:
       protocol: {{ .Values.comp.service.protocol | default "TCP" }}
       name: {{ .Values.comp.service.portName | default "http" }}
   selector: {{- include "vulcan.selectorLabels" . | nindent 6 }}
-      app.kubernetes.io/name: {{ .Values.comp.name }}
 {{- end -}}
 {{- end -}}

@@ -9,11 +9,9 @@ metadata:
 spec:
   selector:
     matchLabels: {{- include "vulcan.selectorLabels" . | nindent 6 }}
-      app.kubernetes.io/name: {{ .Values.comp.name }}
   template:
     metadata:
-      labels: {{- include "vulcan.selectorLabels" . | nindent 8 }}
-        app.kubernetes.io/name: {{ .Values.comp.name }}
+      labels: {{- include "vulcan.podLabels" . | nindent 8 }}
       annotations:
         prometheus.io/scrape: 'true'
         prometheus.io/port: {{ .Values.comp.containerPort | quote }}

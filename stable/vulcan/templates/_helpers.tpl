@@ -48,6 +48,21 @@ Selector labels
 */}}
 {{- define "vulcan.selectorLabels" -}}
 app.kubernetes.io/instance: {{ include "vulcan.name" . }}
+app.kubernetes.io/name: {{ .Values.comp.name }}
+{{- end -}}
+
+{{/*
+Pod labels
+*/}}
+{{- define "vulcan.podLabels" -}}
+{{- include "vulcan.selectorLabels" . -}}
+{{- $root := . -}}
+{{- with .Values.global.podLabels }}
+{{ tpl (toYaml .) $root }}
+{{- end }}
+{{- with .Values.comp.extraPodLabels }}
+{{ tpl (toYaml .) $root }}
+{{- end }}
 {{- end -}}
 
 {{- define "api.fullname" -}}

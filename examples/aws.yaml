@@ -1,6 +1,9 @@
 global:
   domain: example.vulcan.com
   region: eu-west-1
+  podLabels:
+    global-namespace: "{{ .Release.Namespace }}"
+    global-label: foo
 
 defaults:
   db: &db
@@ -35,6 +38,8 @@ defaults:
 api:
   annotations:
     iam.amazonaws.com/role: arn:aws:iam::000000000000:role/APIRole
+  extraPodLabels:
+    extra-label-tag: api-{{ .Values.comp.image.tag }}
   autoscaling:
     enabled: true
   conf:
@@ -87,6 +92,8 @@ api:
 crontinuous:
   annotations:
     iam.amazonaws.com/role: arn:aws:iam::000000000000:role/CrontinuousRole
+  extraPodLabels:
+    extra-label: crontinuous
   conf:
     crontinuousBucket: s3-vulcan-crontinuous
     enableTeamsWhitelistReport: "false"
