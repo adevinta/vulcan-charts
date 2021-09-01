@@ -6,12 +6,15 @@ metadata:
   name: {{ include "vulcan.fullname" . }}-{{ .Values.comp.name }}
   labels: {{- include "vulcan.labels" . | nindent 4 }}
     app.kubernetes.io/name: {{ .Values.comp.name }}
+    app.kubernetes.io/name: {{ .Values.comp.name }}
 spec:
   selector:
     matchLabels: {{- include "vulcan.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/name: {{ .Values.comp.name }}
   template:
     metadata:
       labels: {{- include "vulcan.podLabels" . | nindent 8 }}
+        app.kubernetes.io/name: {{ .Values.comp.name }}
       annotations:
         prometheus.io/scrape: 'true'
         prometheus.io/port: {{ .Values.comp.containerPort | quote }}

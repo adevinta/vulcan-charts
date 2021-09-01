@@ -48,7 +48,6 @@ Selector labels
 */}}
 {{- define "vulcan.selectorLabels" -}}
 app.kubernetes.io/instance: {{ include "vulcan.name" . }}
-app.kubernetes.io/name: {{ .Values.comp.name }}
 {{- end -}}
 
 {{/*
