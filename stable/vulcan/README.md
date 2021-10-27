@@ -38,8 +38,8 @@ A Helm chart for deploying Vulcan
 | anchors.comp.autoscaling | object | `{"enabled":false,"maxReplicas":5,"minReplicas":1,"targetCPUUtilizationPercentage":50,"targetMemoryUtilizationPercentage":null}` | autoscaling settings |
 | anchors.comp.service | object | `{"port":80,"portName":null,"protocol":"TCP","targetPort":null,"type":"ClusterIP"}` | service settings |
 | anchors.comp.ingress | object | `{"annotations":{},"enabled":false,"hosts":[],"tls":[]}` | ingress settings |
-| waitfordb.image.repository | string | `"postgres"` |  |
-| waitfordb.image.tag | string | `"9.6.21-alpine"` |  |
+| waitfordb.image.repository | string | `"busybox"` |  |
+| waitfordb.image.tag | string | `"1.34.0"` |  |
 | postgresql.enabled | bool | `false` |  |
 | postgresql.service.port | int | `5432` |  |
 | postgresql.postgresqlUsername | string | `"postgres"` |  |

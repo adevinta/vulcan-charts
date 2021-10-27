@@ -130,8 +130,8 @@ anchors:
 
 waitfordb:
   image:
-    repository: postgres
-    tag: 9.6.21-alpine
+    repository: busybox
+    tag: 1.34.0
 
 
 postgresql:

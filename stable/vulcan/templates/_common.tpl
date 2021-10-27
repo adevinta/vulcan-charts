@@ -129,7 +129,7 @@ http
 - name: waitfordb
   image: "{{ .Values.waitfordb.image.repository }}:{{ .Values.waitfordb.image.tag }}"
   imagePullPolicy: Always
-  command: ['sh', '-c', 'until pg_isready -t 5; do echo WaitingDB; done;']
+  command: ['sh', '-c', 'until nc -z "$PGHOST" "$PGPORT"; do echo WaitingDB && sleep 5; done;']
   env:
   - name: PGHOST
     value: {{ include "pg.host" . | quote }}

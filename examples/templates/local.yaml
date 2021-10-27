@@ -1371,9 +1371,9 @@ spec:
     spec:
       initContainers:
         - name: waitfordb
-          image: "postgres:9.6.21-alpine"
+          image: "busybox:1.34.0"
           imagePullPolicy: Always
-          command: ['sh', '-c', 'until pg_isready -t 5; do echo WaitingDB; done;']
+          command: ['sh', '-c', 'until nc -z "$PGHOST" "$PGPORT"; do echo WaitingDB && sleep 5; done;']
           env:
           - name: PGHOST
             value: "myrelease-postgresql"
@@ -1948,9 +1948,9 @@ spec:
     spec:
       initContainers:
         - name: waitfordb
-          image: "postgres:9.6.21-alpine"
+          image: "busybox:1.34.0"
           imagePullPolicy: Always
-          command: ['sh', '-c', 'until pg_isready -t 5; do echo WaitingDB; done;']
+          command: ['sh', '-c', 'until nc -z "$PGHOST" "$PGPORT"; do echo WaitingDB && sleep 5; done;']
           env:
           - name: PGHOST
             value: "myrelease-postgresql"
@@ -2095,9 +2095,9 @@ spec:
     spec:
       initContainers:
         - name: waitfordb
-          image: "postgres:9.6.21-alpine"
+          image: "busybox:1.34.0"
           imagePullPolicy: Always
-          command: ['sh', '-c', 'until pg_isready -t 5; do echo WaitingDB; done;']
+          command: ['sh', '-c', 'until nc -z "$PGHOST" "$PGPORT"; do echo WaitingDB && sleep 5; done;']
           env:
           - name: PGHOST
             value: "myrelease-postgresql"
@@ -2393,9 +2393,9 @@ spec:
     spec:
       initContainers:
         - name: waitfordb
-          image: "postgres:9.6.21-alpine"
+          image: "busybox:1.34.0"
           imagePullPolicy: Always
-          command: ['sh', '-c', 'until pg_isready -t 5; do echo WaitingDB; done;']
+          command: ['sh', '-c', 'until nc -z "$PGHOST" "$PGPORT"; do echo WaitingDB && sleep 5; done;']
           env:
           - name: PGHOST
             value: "myrelease-postgresql"
@@ -2807,9 +2807,9 @@ spec:
     spec:
       initContainers:
         - name: waitfordb
-          image: "postgres:9.6.21-alpine"
+          image: "busybox:1.34.0"
           imagePullPolicy: Always
-          command: ['sh', '-c', 'until pg_isready -t 5; do echo WaitingDB; done;']
+          command: ['sh', '-c', 'until nc -z "$PGHOST" "$PGPORT"; do echo WaitingDB && sleep 5; done;']
           env:
           - name: PGHOST
             value: "myrelease-postgresql"
@@ -2893,9 +2893,9 @@ spec:
     spec:
       initContainers:
         - name: waitfordb
-          image: "postgres:9.6.21-alpine"
+          image: "busybox:1.34.0"
           imagePullPolicy: Always
-          command: ['sh', '-c', 'until pg_isready -t 5; do echo WaitingDB; done;']
+          command: ['sh', '-c', 'until nc -z "$PGHOST" "$PGPORT"; do echo WaitingDB && sleep 5; done;']
           env:
           - name: PGHOST
             value: "myrelease-postgresql"
