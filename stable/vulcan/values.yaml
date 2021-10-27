@@ -47,7 +47,7 @@ anchors:
       enabled: true
       image:
         repository: haproxy
-        tag: 2.3.13-alpine
+        tag: 2.3.14-alpine3.14
       port: 9090
       metricsPort: 9101
       cache:
