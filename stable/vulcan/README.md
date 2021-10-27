@@ -27,7 +27,7 @@ A Helm chart for deploying Vulcan
 | global.domain | string | `"vulcan.local"` |  |
 | global.region | string | `"local"` |  |
 | global.podLabels | object | `{}` | custom labels for all components |
-| anchors | object | `{"comp":{"affinity":{},"autoscaling":{"enabled":false,"maxReplicas":5,"minReplicas":1,"targetCPUUtilizationPercentage":50,"targetMemoryUtilizationPercentage":null},"containerPort":8080,"extraEnv":{},"extraPodLabels":{},"fullnameOverride":"","image":{"pullPolicy":"Always"},"imagePullSecrets":[],"ingress":{"annotations":{},"enabled":false,"hosts":[],"tls":[]},"lifecycle":{"preStopSleep":30},"livenessProbe":{"enabled":true,"failureThreshold":10,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"nameOverride":"","nodeSelector":{},"podSecurityContext":{},"proxy":{"cache":{"enabled":false,"maxAge":240,"maxSize":64},"enabled":true,"image":{"repository":"haproxy","tag":"2.3.14-alpine3.14"},"lifecycle":{"preStopSleep":30},"metricsPort":9101,"port":9090,"probe":false,"probeInitialDelay":5,"probePath":"/healthz","probeTimeoutSeconds":3,"resources":{},"timeoutClient":null,"timeoutConnect":null,"timeoutServer":null,"timeoutTunnel":null},"readinessProbe":{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"replicaCount":null,"resources":{},"securityContext":{},"service":{"port":80,"portName":null,"protocol":"TCP","targetPort":null,"type":"ClusterIP"},"tolerations":[]},"db":{"ca":null,"host":null,"name":null,"password":"TBD","port":5432,"sslMode":"disable","user":null},"dogstatsd":{"enabled":true,"image":{"repository":"datadog/dogstatsd","tag":"7.27.0"}}}` | Anchors |
+| anchors | object | `{"comp":{"affinity":{},"autoscaling":{"enabled":false,"maxReplicas":5,"minReplicas":1,"targetCPUUtilizationPercentage":50,"targetMemoryUtilizationPercentage":null},"containerPort":8080,"extraEnv":{},"extraPodLabels":{},"fullnameOverride":"","image":{"pullPolicy":"Always"},"imagePullSecrets":[],"ingress":{"annotations":{},"enabled":false,"hosts":[],"tls":[]},"lifecycle":{"preStopSleep":30},"livenessProbe":{"enabled":true,"failureThreshold":10,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"nameOverride":"","nodeSelector":{},"podSecurityContext":{},"proxy":{"cache":{"enabled":false,"maxAge":240,"maxSize":64},"enabled":true,"image":{"repository":"haproxy","tag":"2.3.14-alpine3.14"},"lifecycle":{"preStopSleep":30},"metricsPort":9101,"port":9090,"probe":false,"probeInitialDelay":5,"probePath":"/healthz","probeTimeoutSeconds":3,"resources":{},"timeoutClient":null,"timeoutConnect":null,"timeoutServer":null,"timeoutTunnel":null},"readinessProbe":{"enabled":true,"failureThreshold":5,"initialDelaySeconds":5,"path":null,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":3},"replicaCount":null,"resources":{},"securityContext":{},"service":{"port":80,"portName":null,"protocol":"TCP","targetPort":null,"type":"ClusterIP"},"tolerations":[]},"db":{"ca":null,"host":null,"name":null,"password":"TBD","port":5432,"sslMode":"disable","user":null},"dogstatsd":{"enabled":true,"image":{"repository":"datadog/dogstatsd","tag":"7.31.0"}}}` | Anchors |
 | anchors.db | object | `{"ca":null,"host":null,"name":null,"password":"TBD","port":5432,"sslMode":"disable","user":null}` | postgres database settings |
 | anchors.comp.extraPodLabels | object | `{}` | custom extra labels |
 | anchors.comp.extraEnv | object | `{}` | custom env variables |
@@ -132,7 +132,7 @@ A Helm chart for deploying Vulcan
 | results.conf.linkBase | string | `"http://chart-example.local"` |  |
 | results.healthcheckPath | string | `"/healthcheck"` |  |
 | results.dogstatsd.image.repository | string | `"datadog/dogstatsd"` |  |
-| results.dogstatsd.image.tag | string | `"7.27.0"` |  |
+| results.dogstatsd.image.tag | string | `"7.31.0"` |  |
 | results.dogstatsd.enabled | bool | `true` |  |
 | results.meta.s3 | bool | `true` |  |
 | persistence.enabled | bool | `true` |  |
@@ -171,7 +171,7 @@ A Helm chart for deploying Vulcan
 | persistence.conf.secretKeyBase | string | `"TBDTBD"` |  |
 | persistence.conf.railsMaxThreads | int | `4` |  |
 | persistence.dogstatsd.image.repository | string | `"datadog/dogstatsd"` |  |
-| persistence.dogstatsd.image.tag | string | `"7.27.0"` |  |
+| persistence.dogstatsd.image.tag | string | `"7.31.0"` |  |
 | persistence.dogstatsd.enabled | bool | `true` |  |
 | stream.enabled | bool | `true` |  |
 | stream.name | string | `"stream"` |  |
@@ -209,7 +209,7 @@ A Helm chart for deploying Vulcan
 | stream.redis.password | string | `nil` |  |
 | stream.redis.db | int | `0` |  |
 | stream.dogstatsd.image.repository | string | `"datadog/dogstatsd"` |  |
-| stream.dogstatsd.image.tag | string | `"7.27.0"` |  |
+| stream.dogstatsd.image.tag | string | `"7.31.0"` |  |
 | stream.dogstatsd.enabled | bool | `true` |  |
 | api.enabled | bool | `true` |  |
 | api.name | string | `"api"` |  |
@@ -273,7 +273,7 @@ A Helm chart for deploying Vulcan
 | api.conf.awscatalogue.retries | int | `1` |  |
 | api.conf.awscatalogue.retry_interval | int | `2` |  |
 | api.dogstatsd.image.repository | string | `"datadog/dogstatsd"` |  |
-| api.dogstatsd.image.tag | string | `"7.27.0"` |  |
+| api.dogstatsd.image.tag | string | `"7.31.0"` |  |
 | api.dogstatsd.enabled | bool | `true` |  |
 | api.ingress.path | string | `"/api"` |  |
 | crontinuous.enabled | bool | `true` |  |
@@ -358,7 +358,7 @@ A Helm chart for deploying Vulcan
 | scanengine.conf.checkCreator.period | int | `20` |  |
 | scanengine.db | object | `{"<<":{"ca":null,"host":null,"name":null,"password":"TBD","port":5432,"sslMode":"disable","user":null},"name":"scanengine"}` | postgres database settings |
 | scanengine.dogstatsd.image.repository | string | `"datadog/dogstatsd"` |  |
-| scanengine.dogstatsd.image.tag | string | `"7.27.0"` |  |
+| scanengine.dogstatsd.image.tag | string | `"7.31.0"` |  |
 | scanengine.dogstatsd.enabled | bool | `true` |  |
 | ui.enabled | bool | `true` |  |
 | ui.name | string | `"ui"` |  |
@@ -488,7 +488,7 @@ A Helm chart for deploying Vulcan
 | reportsgenerator.conf.ses.cc | string | `"[\"tbd@tbd.com\"]"` |  |
 | reportsgenerator.db | object | `{"<<":{"ca":null,"host":null,"name":null,"password":"TBD","port":5432,"sslMode":"disable","user":null},"name":"reportsgenerator"}` | postgres database settings |
 | reportsgenerator.dogstatsd.image.repository | string | `"datadog/dogstatsd"` |  |
-| reportsgenerator.dogstatsd.image.tag | string | `"7.27.0"` |  |
+| reportsgenerator.dogstatsd.image.tag | string | `"7.31.0"` |  |
 | reportsgenerator.dogstatsd.enabled | bool | `true` |  |
 | metrics.enabled | bool | `true` |  |
 | metrics.name | string | `"metrics"` |  |
@@ -536,7 +536,7 @@ A Helm chart for deploying Vulcan
 | metrics.redis.image | string | `"bitnami/redis:6.2.6"` |  |
 | metrics.meta.sqs | bool | `true` |  |
 | metrics.dogstatsd.image.repository | string | `"datadog/dogstatsd"` |  |
-| metrics.dogstatsd.image.tag | string | `"7.27.0"` |  |
+| metrics.dogstatsd.image.tag | string | `"7.31.0"` |  |
 | metrics.dogstatsd.enabled | bool | `true` |  |
 | vulndbapi.enabled | bool | `true` |  |
 | vulndbapi.name | string | `"vulndbapi"` |  |
