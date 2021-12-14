@@ -371,8 +371,7 @@ api:
       issuer: http://okta/TBD
       callback:   # https://vulcan-api/api/v1/login/callback
       trustedDomains: '[]'  # '["vulcan-api"]'
-    log:
-      level: INFO
+    logLevel: INFO
     defaultOwners: '[]'  # '["owner1","owner2"]'
     vulndbapiUrl:   # http://vulnerabilitydbapi
     persistenceHost:
