@@ -450,6 +450,9 @@ scanengine:
       nessus:
         arn: arn:aws:sqs:local:012345678900:VulcanK8SV2ChecksTenable
         checktypes: '["vulcan-nessus"]'
+      burp:
+        arn: arn:aws:sqs:local:012345678900:VulcanK8SV2ChecksBurp
+        checktypes: '["vulcan-burp"]'
     persistenceHost:
     streamUrl:
     checkCreator:
