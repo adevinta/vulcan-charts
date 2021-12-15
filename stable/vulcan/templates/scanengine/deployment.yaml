@@ -69,6 +69,10 @@ spec:
             value: {{ .Values.comp.conf.queues.nessus.arn | quote }}
           - name: QUEUES_NESSUS_CHECKTYPES
             value: {{ .Values.comp.conf.queues.nessus.checktypes | quote }}
+          - name: QUEUES_BURP_ARN
+            value: {{ .Values.comp.conf.queues.burp.arn | quote }}
+          - name: QUEUES_BURP_CHECKTYPES
+            value: {{ .Values.comp.conf.queues.burp.checktypes | quote }}
         {{- include "common-container-envs" . | nindent 10 }}
           envFrom:
           - secretRef:

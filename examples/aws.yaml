@@ -306,6 +306,9 @@ scanengine:
       nessus:
         arn: arn:aws:sqs:eu-west-1:000000000000:V2ChecksTenable
         checktypes: '["vulcan-nessus"]'
+      burp:
+        arn: arn:aws:sqs:eu-west-1:000000000000:V2ChecksBurp
+        checktypes: '["vulcan-burp"]'
     scansSNS:
       topicArn: arn:aws:sns:eu-west-1:000000000000:Scans
     snsArn: arn:aws:sns:eu-west-1:000000000000:Scans

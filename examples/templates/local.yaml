@@ -2491,6 +2491,10 @@ spec:
             value: "arn:aws:sqs:local:012345678900:VulcanK8SV2ChecksTenable"
           - name: QUEUES_NESSUS_CHECKTYPES
             value: "[\"vulcan-nessus\"]"
+          - name: QUEUES_BURP_ARN
+            value: "arn:aws:sqs:local:012345678900:VulcanK8SV2ChecksBurp"
+          - name: QUEUES_BURP_CHECKTYPES
+            value: "[\"vulcan-burp\"]"
           - name: AWS_SNS_ENDPOINT
             value: "http://myrelease-vulcan-goaws"
           - name: AWS_SQS_ENDPOINT

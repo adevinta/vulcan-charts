@@ -352,6 +352,8 @@ A Helm chart for deploying Vulcan
 | scanengine.conf.queues.default.arn | string | `"arn:aws:sqs:local:012345678900:VulcanK8SV2ChecksGeneric"` |  |
 | scanengine.conf.queues.nessus.arn | string | `"arn:aws:sqs:local:012345678900:VulcanK8SV2ChecksTenable"` |  |
 | scanengine.conf.queues.nessus.checktypes | string | `"[\"vulcan-nessus\"]"` |  |
+| scanengine.conf.queues.burp.arn | string | `"arn:aws:sqs:local:012345678900:VulcanK8SV2ChecksBurp"` |  |
+| scanengine.conf.queues.burp.checktypes | string | `"[\"vulcan-burp\"]"` |  |
 | scanengine.conf.persistenceHost | string | `nil` |  |
 | scanengine.conf.streamUrl | string | `nil` |  |
 | scanengine.conf.checkCreator.numOfWorkers | int | `2` |  |

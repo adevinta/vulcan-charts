@@ -203,6 +203,7 @@ goaws:
           - Name: VulcanK8SScanEngineCheckStatus
           - Name: VulcanK8SV2ChecksGeneric
           - Name: VulcanK8SV2ChecksTenable
+          - Name: VulcanK8SV2ChecksBurp
           - Name: VulcanK8SVulnDBChecks
         Topics:
           - Name: VulcanK8SChecks
