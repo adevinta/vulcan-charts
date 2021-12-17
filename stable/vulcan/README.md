@@ -259,7 +259,7 @@ A Helm chart for deploying Vulcan
 | api.conf.saml.issuer | string | `"http://okta/TBD"` |  |
 | api.conf.saml.callback | string | `nil` |  |
 | api.conf.saml.trustedDomains | string | `"[]"` |  |
-| api.conf.log.level | string | `"INFO"` |  |
+| api.conf.logLevel | string | `"INFO"` |  |
 | api.conf.defaultOwners | string | `"[]"` |  |
 | api.conf.vulndbapiUrl | string | `nil` |  |
 | api.conf.persistenceHost | string | `nil` |  |

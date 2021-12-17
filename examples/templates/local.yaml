@@ -1448,7 +1448,7 @@ spec:
           - name: PG_CA_B64
             value: ""
           - name: LOG_LEVEL
-            value: 
+            value: "INFO"
           - name: COOKIE_DOMAIN
             value: "vulcan.local"
           - name: SAML_MEATADATA
