@@ -24,7 +24,7 @@ anchors:
   dogstatsd: &dogstatsd
     image:
       repository: datadog/dogstatsd
-      tag: 7.31.0
+      tag: 7.32.3
     enabled: true
 
   # Default values for all the components
@@ -47,7 +47,7 @@ anchors:
       enabled: true
       image:
         repository: haproxy
-        tag: 2.3.14-alpine3.14
+        tag: 2.3.16-alpine3.15
       port: 9090
       metricsPort: 9101
       cache:
@@ -131,7 +131,7 @@ anchors:
 waitfordb:
   image:
     repository: busybox
-    tag: 1.34.0
+    tag: 1.34.1
 
 
 postgresql:
@@ -675,7 +675,7 @@ sqsexporter:
   <<: *comp
   image:
     repository: jesusfcr/sqs-prometheus-exporter
-    tag: 0.3.0
+    tag: 0.4.0
     pullPolicy: Always
 
   queueNamePrefix: VulcanK8S

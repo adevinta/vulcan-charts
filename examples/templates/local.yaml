@@ -1371,7 +1371,7 @@ spec:
     spec:
       initContainers:
         - name: waitfordb
-          image: "busybox:1.34.0"
+          image: "busybox:1.34.1"
           imagePullPolicy: Always
           command: ['sh', '-c', 'until nc -z "$PGHOST" "$PGPORT"; do echo WaitingDB && sleep 5; done;']
           env:
@@ -1382,7 +1382,7 @@ spec:
       containers:
         
         - name: dogstatsd
-          image: "datadog/dogstatsd:7.31.0"
+          image: "datadog/dogstatsd:7.32.3"
           envFrom:
           - secretRef:
               name: myrelease-vulcan-dogstatsd
@@ -1391,7 +1391,7 @@ spec:
               name: dogstatsd
               protocol: UDP
         - name: proxy
-          image: "haproxy:2.3.14-alpine3.14"
+          image: "haproxy:2.3.16-alpine3.15"
           imagePullPolicy: Always
           ports:
             - name: http
@@ -1555,7 +1555,7 @@ spec:
       containers:
         
         - name: proxy
-          image: "haproxy:2.3.14-alpine3.14"
+          image: "haproxy:2.3.16-alpine3.15"
           imagePullPolicy: Always
           ports:
             - name: http
@@ -1714,7 +1714,7 @@ spec:
       containers:
         
         - name: proxy
-          image: "haproxy:2.3.14-alpine3.14"
+          image: "haproxy:2.3.16-alpine3.15"
           imagePullPolicy: Always
           ports:
             - name: http
@@ -1847,7 +1847,7 @@ spec:
       containers:
         
         - name: dogstatsd
-          image: "datadog/dogstatsd:7.31.0"
+          image: "datadog/dogstatsd:7.32.3"
           envFrom:
           - secretRef:
               name: myrelease-vulcan-dogstatsd
@@ -1948,7 +1948,7 @@ spec:
     spec:
       initContainers:
         - name: waitfordb
-          image: "busybox:1.34.0"
+          image: "busybox:1.34.1"
           imagePullPolicy: Always
           command: ['sh', '-c', 'until nc -z "$PGHOST" "$PGPORT"; do echo WaitingDB && sleep 5; done;']
           env:
@@ -1959,7 +1959,7 @@ spec:
       containers:
         
         - name: dogstatsd
-          image: "datadog/dogstatsd:7.31.0"
+          image: "datadog/dogstatsd:7.32.3"
           envFrom:
           - secretRef:
               name: myrelease-vulcan-dogstatsd
@@ -1968,7 +1968,7 @@ spec:
               name: dogstatsd
               protocol: UDP
         - name: proxy
-          image: "haproxy:2.3.14-alpine3.14"
+          image: "haproxy:2.3.16-alpine3.15"
           imagePullPolicy: Always
           ports:
             - name: http
@@ -2095,7 +2095,7 @@ spec:
     spec:
       initContainers:
         - name: waitfordb
-          image: "busybox:1.34.0"
+          image: "busybox:1.34.1"
           imagePullPolicy: Always
           command: ['sh', '-c', 'until nc -z "$PGHOST" "$PGPORT"; do echo WaitingDB && sleep 5; done;']
           env:
@@ -2106,7 +2106,7 @@ spec:
       containers:
         
         - name: dogstatsd
-          image: "datadog/dogstatsd:7.31.0"
+          image: "datadog/dogstatsd:7.32.3"
           envFrom:
           - secretRef:
               name: myrelease-vulcan-dogstatsd
@@ -2115,7 +2115,7 @@ spec:
               name: dogstatsd
               protocol: UDP
         - name: proxy
-          image: "haproxy:2.3.14-alpine3.14"
+          image: "haproxy:2.3.16-alpine3.15"
           imagePullPolicy: Always
           ports:
             - name: http
@@ -2269,7 +2269,7 @@ spec:
       containers:
         
         - name: dogstatsd
-          image: "datadog/dogstatsd:7.31.0"
+          image: "datadog/dogstatsd:7.32.3"
           envFrom:
           - secretRef:
               name: myrelease-vulcan-dogstatsd
@@ -2278,7 +2278,7 @@ spec:
               name: dogstatsd
               protocol: UDP
         - name: proxy
-          image: "haproxy:2.3.14-alpine3.14"
+          image: "haproxy:2.3.16-alpine3.15"
           imagePullPolicy: Always
           ports:
             - name: http
@@ -2393,7 +2393,7 @@ spec:
     spec:
       initContainers:
         - name: waitfordb
-          image: "busybox:1.34.0"
+          image: "busybox:1.34.1"
           imagePullPolicy: Always
           command: ['sh', '-c', 'until nc -z "$PGHOST" "$PGPORT"; do echo WaitingDB && sleep 5; done;']
           env:
@@ -2404,7 +2404,7 @@ spec:
       containers:
         
         - name: dogstatsd
-          image: "datadog/dogstatsd:7.31.0"
+          image: "datadog/dogstatsd:7.32.3"
           envFrom:
           - secretRef:
               name: myrelease-vulcan-dogstatsd
@@ -2413,7 +2413,7 @@ spec:
               name: dogstatsd
               protocol: UDP
         - name: proxy
-          image: "haproxy:2.3.14-alpine3.14"
+          image: "haproxy:2.3.16-alpine3.15"
           imagePullPolicy: Always
           ports:
             - name: http
@@ -2546,7 +2546,7 @@ spec:
       containers:
         - name: sqsexporter
           
-          image: "jesusfcr/sqs-prometheus-exporter:0.3.0"
+          image: "jesusfcr/sqs-prometheus-exporter:0.4.0"
           imagePullPolicy: Always
           lifecycle:
             preStop:
@@ -2601,7 +2601,7 @@ spec:
       containers:
         
         - name: dogstatsd
-          image: "datadog/dogstatsd:7.31.0"
+          image: "datadog/dogstatsd:7.32.3"
           envFrom:
           - secretRef:
               name: myrelease-vulcan-dogstatsd
@@ -2610,7 +2610,7 @@ spec:
               name: dogstatsd
               protocol: UDP
         - name: proxy
-          image: "haproxy:2.3.14-alpine3.14"
+          image: "haproxy:2.3.16-alpine3.15"
           imagePullPolicy: Always
           ports:
             - name: http
@@ -2711,7 +2711,7 @@ spec:
       containers:
         
         - name: proxy
-          image: "haproxy:2.3.14-alpine3.14"
+          image: "haproxy:2.3.16-alpine3.15"
           imagePullPolicy: Always
           ports:
             - name: http
@@ -2807,7 +2807,7 @@ spec:
     spec:
       initContainers:
         - name: waitfordb
-          image: "busybox:1.34.0"
+          image: "busybox:1.34.1"
           imagePullPolicy: Always
           command: ['sh', '-c', 'until nc -z "$PGHOST" "$PGPORT"; do echo WaitingDB && sleep 5; done;']
           env:
@@ -2893,7 +2893,7 @@ spec:
     spec:
       initContainers:
         - name: waitfordb
-          image: "busybox:1.34.0"
+          image: "busybox:1.34.1"
           imagePullPolicy: Always
           command: ['sh', '-c', 'until nc -z "$PGHOST" "$PGPORT"; do echo WaitingDB && sleep 5; done;']
           env:
@@ -2904,7 +2904,7 @@ spec:
       containers:
         
         - name: proxy
-          image: "haproxy:2.3.14-alpine3.14"
+          image: "haproxy:2.3.16-alpine3.15"
           imagePullPolicy: Always
           ports:
             - name: http
