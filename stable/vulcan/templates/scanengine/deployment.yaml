@@ -65,10 +65,12 @@ spec:
             value: {{ .Values.comp.conf.checkCreator.period | quote }}
           - name: QUEUES_DEFAULT_ARN
             value: {{ .Values.comp.conf.queues.default.arn | quote }}
-          - name: QUEUES_NESSUS_ARN
-            value: {{ .Values.comp.conf.queues.nessus.arn | quote }}
-          - name: QUEUES_NESSUS_CHECKTYPES
-            value: {{ .Values.comp.conf.queues.nessus.checktypes | quote }}
+          {{- range $index, $value := .Values.comp.conf.queues.other }}
+          - name: "QUEUES_{{ add1 $index }}_ARN"
+            value: {{ $value.arn | quote }}
+          - name: "QUEUES_{{ add1 $index }}_CHECKTYPES"
+            value: {{ $value.checktypes | quote }}
+          {{- end }}
         {{- include "common-container-envs" . | nindent 10 }}
           envFrom:
           - secretRef:

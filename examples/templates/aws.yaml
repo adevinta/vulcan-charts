@@ -1929,10 +1929,14 @@ spec:
             value: "30"
           - name: QUEUES_DEFAULT_ARN
             value: "arn:aws:sqs:eu-west-1:000000000000:V2ChecksGeneric"
-          - name: QUEUES_NESSUS_ARN
+          - name: "QUEUES_1_ARN"
             value: "arn:aws:sqs:eu-west-1:000000000000:V2ChecksTenable"
-          - name: QUEUES_NESSUS_CHECKTYPES
+          - name: "QUEUES_1_CHECKTYPES"
             value: "[\"vulcan-nessus\"]"
+          - name: "QUEUES_2_ARN"
+            value: "arn:aws:sqs:eu-west-1:000000000000:V2ChecksBurp"
+          - name: "QUEUES_2_CHECKTYPES"
+            value: "[\"vulcan-burp\"]"
           
           - name: DOGSTATSD_ENABLED
             value: "true"

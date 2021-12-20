@@ -303,9 +303,11 @@ scanengine:
     queues:
       default:
         arn: arn:aws:sqs:eu-west-1:000000000000:V2ChecksGeneric
-      nessus:
-        arn: arn:aws:sqs:eu-west-1:000000000000:V2ChecksTenable
+      other:
+      - arn: arn:aws:sqs:eu-west-1:000000000000:V2ChecksTenable
         checktypes: '["vulcan-nessus"]'
+      - arn: arn:aws:sqs:eu-west-1:000000000000:V2ChecksBurp
+        checktypes: '["vulcan-burp"]'
     scansSNS:
       topicArn: arn:aws:sns:eu-west-1:000000000000:Scans
     snsArn: arn:aws:sns:eu-west-1:000000000000:Scans

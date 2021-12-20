@@ -202,7 +202,9 @@ goaws:
           - Name: VulcanK8SReportsGenerator
           - Name: VulcanK8SScanEngineCheckStatus
           - Name: VulcanK8SV2ChecksGeneric
-          - Name: VulcanK8SV2ChecksTenable
+          {{- range $value := .Values.scanengine.conf.queues.other }}
+          - Name: {{ regexFind "[^:]+$" $value.arn }}
+          {{- end }}
           - Name: VulcanK8SVulnDBChecks
         Topics:
           - Name: VulcanK8SChecks
@@ -446,9 +448,12 @@ scanengine:
     queues:
       default:
         arn: arn:aws:sqs:local:012345678900:VulcanK8SV2ChecksGeneric
-      nessus:
-        arn: arn:aws:sqs:local:012345678900:VulcanK8SV2ChecksTenable
-        checktypes: '["vulcan-nessus"]'
+      # -- array of arn/checktypes
+      other:
+      # - arn: arn:aws:sqs:local:012345678900:VulcanK8SV2QueueZap
+      #   checktypes: '["vulcan-zap"]'
+      # - arn: arn:aws:sqs:local:012345678900:VulcanK8SV2QueueBurp
+      #   checktypes: '["vulcan-burp"]'
     persistenceHost:
     streamUrl:
     checkCreator:

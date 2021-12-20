@@ -455,7 +455,6 @@ data:
         - Name: VulcanK8SReportsGenerator
         - Name: VulcanK8SScanEngineCheckStatus
         - Name: VulcanK8SV2ChecksGeneric
-        - Name: VulcanK8SV2ChecksTenable
         - Name: VulcanK8SVulnDBChecks
       Topics:
         - Name: VulcanK8SChecks
@@ -1667,7 +1666,7 @@ spec:
         app.kubernetes.io/instance: vulcan
         app.kubernetes.io/name: goaws
       annotations:
-        checksum/config: 2b1ea29abed3c8502e2ba2be3b3740e63134a615095a92b5c8be9d6d42a304b3
+        checksum/config: 83f25ffff6448177da3fb4b7456af52343b71017ab59abdca1218632eedf6943
     spec:
       containers:
       - name: goaws
@@ -2487,10 +2486,6 @@ spec:
             value: "20"
           - name: QUEUES_DEFAULT_ARN
             value: "arn:aws:sqs:local:012345678900:VulcanK8SV2ChecksGeneric"
-          - name: QUEUES_NESSUS_ARN
-            value: "arn:aws:sqs:local:012345678900:VulcanK8SV2ChecksTenable"
-          - name: QUEUES_NESSUS_CHECKTYPES
-            value: "[\"vulcan-nessus\"]"
           - name: AWS_SNS_ENDPOINT
             value: "http://myrelease-vulcan-goaws"
           - name: AWS_SQS_ENDPOINT
