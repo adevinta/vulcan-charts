@@ -272,7 +272,7 @@ A Helm chart for deploying Vulcan
 | api.conf.awscatalogue.key | string | `"key"` |  |
 | api.conf.awscatalogue.retries | int | `1` |  |
 | api.conf.awscatalogue.retry_interval | int | `2` |  |
-| api.conf.globalPolicyConfig | string | `nil` | array of name/allowed_assettypes/blocked_assettypes/allowed_checks/blocked_checks/excluding_suffixes which allows to customise global program policies |
+| api.conf.globalPolicies | string | `nil` | array of name/allowedAssettypes/blockedAssettypes/allowedChecks/blockedChecks/excludingSuffixes which allows to customise global program policies |
 | api.dogstatsd.image.repository | string | `"datadog/dogstatsd"` |  |
 | api.dogstatsd.image.tag | string | `"7.32.3"` |  |
 | api.dogstatsd.enabled | bool | `true` |  |

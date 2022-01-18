@@ -49,14 +49,14 @@ api:
     saml:
       callback: https://www.vulcan.local/api/v1/login/callback
       trustedDomains: '["www.vulcan.local"]'
-    globalPolicyConfig:
+    globalPolicies:
       - name: web-scanning-global
-        allowed_assettypes:
-        blocked_assettypes:
-        allowed_checks:
+        allowedAssettypes:
+        blockedAssettypes:
+        allowedChecks:
           - vulcan-zap
-        blocked_checks:
-        excluding_suffixes:
+        blockedChecks:
+        excludingSuffixes:
           - experimental
   ingress:
     enabled: true

@@ -87,19 +87,19 @@ spec:
             value: {{ .Values.comp.conf.awscatalogue.retries | quote }}
           - name: AWSCATALOGUE_RETRY_INTERVAL
             value: {{ .Values.comp.conf.awscatalogue.retry_interval| quote }}
-          {{- range $index, $value := .Values.comp.conf.globalPolicyConfig }}
+          {{- range $index, $value := .Values.comp.conf.globalPolicies }}
           - name: "GPC_{{ add1 $index }}_NAME"
             value: {{ $value.name | quote }}
           - name: "GPC_{{ add1 $index }}_ALLOWED_ASSETTYPES"
-            value: {{ default list $value.allowed_asettypes | include "encodeJson2String" | quote }}
+            value: {{ default list $value.allowedAsettypes | toJson | quote }}
           - name: "GPC_{{ add1 $index }}_BLOCKED_ASSETTYPES"
-            value: {{ default list $value.blocked_asettypes | include "encodeJson2String" | quote }}
+            value: {{ default list $value.blockedAsettypes | toJson | quote }}
           - name: "GPC_{{ add1 $index }}_ALLOWED_CHECKS"
-            value: {{ default list $value.allowed_checks | include "encodeJson2String" | quote }}
+            value: {{ default list $value.allowedChecks | toJson | quote }}
           - name: "GPC_{{ add1 $index }}_BLOCKED_CHECKS"
-            value: {{ default list $value.blocked_checks | include "encodeJson2String" | quote }}
+            value: {{ default list $value.blockedChecks | toJson | quote }}
           - name: "GPC_{{ add1 $index }}_EXCLUDING_SUFFIXES"
-            value: {{ default list $value.excluding_suffixes | include "encodeJson2String" | quote }}
+            value: {{ default list $value.excludingSuffixes | toJson | quote }}
           {{- end }}
         {{- include "common-container-envs" . | nindent 10 }}
           envFrom:
