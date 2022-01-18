@@ -87,6 +87,20 @@ spec:
             value: {{ .Values.comp.conf.awscatalogue.retries | quote }}
           - name: AWSCATALOGUE_RETRY_INTERVAL
             value: {{ .Values.comp.conf.awscatalogue.retry_interval| quote }}
+          {{- range $index, $value := .Values.comp.conf.globalPolicyConfig }}
+          - name: "GPC_{{ add1 $index }}_NAME"
+            value: {{ $value.name | quote }}
+          - name: "GPC_{{ add1 $index }}_ALLOWED_ASSETTYPES"
+            value: {{ $value.allowed_assettypes | quote }}
+          - name: "GPC_{{ add1 $index }}_BLOCKED_ASSETTYPES"
+            value: {{ $value.blocked_assettypes | quote }}
+          - name: "GPC_{{ add1 $index }}_ALLOWED_CHECKS"
+            value: {{ $value.allowed_checks | quote }}
+          - name: "GPC_{{ add1 $index }}_BLOCKED_CHECKS"
+            value: {{ $value.blocked_checks | quote }}
+          - name: "GPC_{{ add1 $index }}_EXCLUDING_SUFFIXES"
+            value: {{ $value.excluding_suffixes | quote }}
+          {{- end }}
         {{- include "common-container-envs" . | nindent 10 }}
           envFrom:
           - secretRef:

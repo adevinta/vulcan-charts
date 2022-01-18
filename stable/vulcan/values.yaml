@@ -387,6 +387,13 @@ api:
       key: key
       retries: 1
       retry_interval: 2
+    # -- array of name/allowed_assettypes/blocked_assettypes/allowed_checks/blocked_checks/excluding_suffixes which allows to customise global program policies
+    globalPolicyConfig:
+      # - name: web-scanning-global
+      #   allowed_checks: '["vulcan-zap", "vulcan-burp"]'
+      #   excluding_suffixes: '["-experimental"]'
+      # - name: default-global
+      #   blocked_checks: '["vulcan-masscan", "vulcan-zap"]'
 
   dogstatsd: *dogstatsd
 

@@ -1486,6 +1486,18 @@ spec:
             value: "1"
           - name: AWSCATALOGUE_RETRY_INTERVAL
             value: "2"
+          - name: "GPC_1_NAME"
+            value: "web-scanning-global"
+          - name: "GPC_1_ALLOWED_ASSETTYPES"
+            value: "[]"
+          - name: "GPC_1_BLOCKED_ASSETTYPES"
+            value: "[]"
+          - name: "GPC_1_ALLOWED_CHECKS"
+            value: "[\"vulcan-zap\"]"
+          - name: "GPC_1_BLOCKED_CHECKS"
+            value: "[]"
+          - name: "GPC_1_EXCLUDING_SUFFIXES"
+            value: "[\"-experimental\"]"
           - name: AWS_SNS_ENDPOINT
             value: "http://myrelease-vulcan-goaws"
           - name: AWS_SQS_ENDPOINT
