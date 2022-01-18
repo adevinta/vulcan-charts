@@ -91,15 +91,15 @@ spec:
           - name: "GPC_{{ add1 $index }}_NAME"
             value: {{ $value.name | quote }}
           - name: "GPC_{{ add1 $index }}_ALLOWED_ASSETTYPES"
-            value: {{ $value.allowed_assettypes | quote }}
+            value: {{ default list $value.allowed_asettypes | include "encodeJson2String" | quote }}
           - name: "GPC_{{ add1 $index }}_BLOCKED_ASSETTYPES"
-            value: {{ $value.blocked_assettypes | quote }}
+            value: {{ default list $value.blocked_asettypes | include "encodeJson2String" | quote }}
           - name: "GPC_{{ add1 $index }}_ALLOWED_CHECKS"
-            value: {{ $value.allowed_checks | quote }}
+            value: {{ default list $value.allowed_checks | include "encodeJson2String" | quote }}
           - name: "GPC_{{ add1 $index }}_BLOCKED_CHECKS"
-            value: {{ $value.blocked_checks | quote }}
+            value: {{ default list $value.blocked_checks | include "encodeJson2String" | quote }}
           - name: "GPC_{{ add1 $index }}_EXCLUDING_SUFFIXES"
-            value: {{ $value.excluding_suffixes | quote }}
+            value: {{ default list $value.excluding_suffixes | include "encodeJson2String" | quote }}
           {{- end }}
         {{- include "common-container-envs" . | nindent 10 }}
           envFrom:

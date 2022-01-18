@@ -390,10 +390,15 @@ api:
     # -- array of name/allowed_assettypes/blocked_assettypes/allowed_checks/blocked_checks/excluding_suffixes which allows to customise global program policies
     globalPolicyConfig:
       # - name: web-scanning-global
-      #   allowed_checks: '["vulcan-zap", "vulcan-burp"]'
-      #   excluding_suffixes: '["-experimental"]'
+      #   allowed_checks:
+      #     - vulcan-zap
+      #     - vulcan-burp
+      #   excluding_suffixes:
+      #     - experimental
       # - name: default-global
-      #   blocked_checks: '["vulcan-masscan", "vulcan-zap"]'
+      #   blocked_checks:
+      #     - vulcan-masscan
+      #     - vulcan-zap
 
   dogstatsd: *dogstatsd
 

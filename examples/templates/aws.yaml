@@ -1000,7 +1000,7 @@ spec:
           - name: "GPC_1_BLOCKED_CHECKS"
             value: "[]"
           - name: "GPC_1_EXCLUDING_SUFFIXES"
-            value: "[\"-experimental\"]"
+            value: "[\"experimental\"]"
           
           - name: DOGSTATSD_ENABLED
             value: "true"

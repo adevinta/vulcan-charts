@@ -51,11 +51,13 @@ api:
       trustedDomains: '["www.vulcan.local"]'
     globalPolicyConfig:
       - name: web-scanning-global
-        allowed_assettypes: '[]'
-        blocked_assettypes: '[]'
-        allowed_checks: '["vulcan-zap"]'
-        blocked_checks: '[]'
-        excluding_suffixes: '["-experimental"]'
+        allowed_assettypes:
+        blocked_assettypes:
+        allowed_checks:
+          - vulcan-zap
+        blocked_checks:
+        excluding_suffixes:
+          - experimental
   ingress:
     enabled: true
     annotations:
