@@ -272,3 +272,12 @@ Pod labels
 {{- define "redis.url" -}}
 {{- printf "%s:%s" (include "redis.host" .) (include "redis.port" .) -}}
 {{- end -}}
+
+{{/*
+Converts toJson only if slice/map input.
+This is used to allow backward compatibility with json values encoded as string (i.e. '["a","b"]')
+This support will be deprecated anytime soon.
+*/}}
+{{- define "safeToJson" -}}
+{{- ternary (toJson .) . (any (kindIs "slice" .) (kindIs "map" .)) -}}
+{{- end -}}

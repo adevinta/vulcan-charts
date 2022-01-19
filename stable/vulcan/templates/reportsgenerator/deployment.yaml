@@ -56,7 +56,7 @@ spec:
           - name: SES_FROM
             value: {{ .Values.comp.conf.ses.from | quote }}
           - name: SES_CC
-            value: {{ .Values.comp.conf.ses.cc | quote }}
+            value: {{ default list .Values.comp.conf.ses.cc | include "safeToJson" | quote }}
           - name: SCAN_EMAIL_SUBJECT
             value: {{ .Values.comp.conf.generators.scan.emailSubject | quote }}
           - name: SCAN_S3_PUBLIC_BUCKET

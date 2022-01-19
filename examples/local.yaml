@@ -48,7 +48,7 @@ api:
   conf:
     saml:
       callback: https://www.vulcan.local/api/v1/login/callback
-      trustedDomains: '["www.vulcan.local"]'
+      trustedDomains: ["www.vulcan.local"]
     globalPolicies:
       - name: web-scanning-global
         allowedAssettypes:
@@ -70,8 +70,10 @@ api:
 
 crontinuous:
   conf:
-    teamsWhitelistScan: '["team1", "team2"]'
-    teamsWhitelistReport: '["team3"]'
+    teamsWhitelistScan:
+    - team1
+    - team2
+    teamsWhitelistReport: ["team3"]
   ingress:
     enabled: false
 
@@ -110,7 +112,7 @@ reportsgenerator:
         vulcanUi: http://www.vulcan.local/
         proxyEndpoint: http://insights.vulcan.local
     ses:
-      cc: '["tbd@tbd.com"]'
+      cc: ["tbd@tbd.com"]
   ingress:
     enabled: false
 

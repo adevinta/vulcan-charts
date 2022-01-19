@@ -372,9 +372,9 @@ api:
       metadata: https://okta/app/TBD/sso/saml/metadata
       issuer: http://okta/TBD
       callback:   # https://vulcan-api/api/v1/login/callback
-      trustedDomains: '[]'  # '["vulcan-api"]'
+      trustedDomains: []  # ["vulcan-api"]
     logLevel: INFO
-    defaultOwners: '[]'  # '["owner1","owner2"]'
+    defaultOwners: []  # ["owner1","owner2"]
     vulndbapiUrl:   # http://vulnerabilitydbapi
     persistenceHost:
     crontinuousUrl:
@@ -388,7 +388,7 @@ api:
       retries: 1
       retry_interval: 2
     # -- array of name/allowedAssettypes/blockedAssettypes/allowedChecks/blockedChecks/excludingSuffixes which allows to customise global program policies
-    globalPolicies:
+    globalPolicies: []
       # - name: web-scanning-global
       #   allowedChecks:
       #     - vulcan-zap
@@ -428,9 +428,9 @@ crontinuous:
     vulcanUser: tbd
     vulcanApi:    # http://host/api
     enableTeamsWhitelistScan: "false"
-    teamsWhitelistScan: '[]'
+    teamsWhitelistScan: []
     enableTeamsWhitelistReport: "false"
-    teamsWhitelistReport: '[]'
+    teamsWhitelistReport: []
 
 
 scanengine:
@@ -461,11 +461,11 @@ scanengine:
       default:
         arn: arn:aws:sqs:local:012345678900:VulcanK8SV2ChecksGeneric
       # -- array of arn/checktypes
-      other:
+      other: []
       # - arn: arn:aws:sqs:local:012345678900:VulcanK8SV2QueueZap
       #   checktypes: '["vulcan-zap"]'
       # - arn: arn:aws:sqs:local:012345678900:VulcanK8SV2QueueBurp
-      #   checktypes: '["vulcan-burp"]'
+      #   checktypes: [vulcan-burp]
     persistenceHost:
     streamUrl:
     checkCreator:
@@ -584,7 +584,8 @@ reportsgenerator:
     ses:
       region:
       from: tbd@tbd.com
-      cc: '["tbd@tbd.com"]'
+      cc: [] 
+      # - tbd@tbd.com
 
   # -- postgres database settings
   db:

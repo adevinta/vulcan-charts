@@ -69,7 +69,7 @@ spec:
           - name: "QUEUES_{{ add1 $index }}_ARN"
             value: {{ $value.arn | quote }}
           - name: "QUEUES_{{ add1 $index }}_CHECKTYPES"
-            value: {{ $value.checktypes | quote }}
+            value: {{ default list $value.checktypes | include "safeToJson" | quote }}
           {{- end }}
         {{- include "common-container-envs" . | nindent 10 }}
           envFrom:

@@ -60,7 +60,8 @@ api:
       callback: https://www.vulcan.example.com/api/v1/login/callback
       issuer: http://www.issuer.com/appcode
       metadata: https://org.issuer.com/app/appcode/sso/saml/metadata
-      trustedDomains: '["vulcan.example.com"]'
+      trustedDomains:
+      - vulcan.example.com
     secretKey: apisecretkey
     globalPolicies:
       - name: web-scanning-global
@@ -107,8 +108,8 @@ crontinuous:
     crontinuousBucket: s3-vulcan-crontinuous
     enableTeamsWhitelistReport: "false"
     enableTeamsWhitelistScan: "false"
-    teamsWhitelistReport: '[]'
-    teamsWhitelistScan: '[]'
+    teamsWhitelistReport: '["team1", "team2"]'
+    teamsWhitelistScan: [team1, team2]
     vulcanToken: supersecretvulcantoken
     vulcanUser: vulcanuser
   image:
@@ -236,7 +237,7 @@ reportsgenerator:
         vulcanUi: https://www.vulcan.example.com/
     queueArn: arn:aws:sqs:eu-west-1:000000000000:ReportsGenerator
     ses:
-      cc: '[''vulcan@example.com'']'
+      cc: '["vulcan@example.com"]'
       from: vulcan@example.com
   db:
     <<: *db
@@ -314,9 +315,9 @@ scanengine:
         arn: arn:aws:sqs:eu-west-1:000000000000:V2ChecksGeneric
       other:
       - arn: arn:aws:sqs:eu-west-1:000000000000:V2ChecksTenable
-        checktypes: '["vulcan-nessus"]'
+        checktypes: ["vulcan-nessus"]
       - arn: arn:aws:sqs:eu-west-1:000000000000:V2ChecksBurp
-        checktypes: '["vulcan-burp"]'
+        checktypes: ["vulcan-burp"]
     scansSNS:
       topicArn: arn:aws:sns:eu-west-1:000000000000:Scans
     snsArn: arn:aws:sns:eu-west-1:000000000000:Scans

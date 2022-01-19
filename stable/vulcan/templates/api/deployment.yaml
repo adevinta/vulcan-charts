@@ -58,9 +58,9 @@ spec:
           - name: SAML_CALLBACK
             value: {{ .Values.comp.conf.saml.callback | quote }}
           - name: SAML_TRUSTED_DOMAINS
-            value: {{ .Values.comp.conf.saml.trustedDomains | quote }}
+            value: {{ default list .Values.comp.conf.saml.trustedDomains | include "safeToJson" | quote }}
           - name: DEFAULT_OWNERS
-            value: {{ .Values.comp.conf.defaultOwners | quote }}
+            value: {{ default list .Values.comp.conf.defaultOwners | include "safeToJson" | quote }}
           - name: SCANENGINE_URL
             value: {{ .Values.comp.conf.scanengineUrl | default ( printf "%s/v1/" (include "scanengine.url" .) ) | quote }}
           - name: SCHEDULER_URL

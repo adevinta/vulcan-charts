@@ -44,11 +44,11 @@ spec:
           - name: ENABLE_TEAMS_WHITELIST_SCAN
             value: {{ .Values.comp.conf.enableTeamsWhitelistScan | quote }}
           - name: TEAMS_WHITELIST_SCAN
-            value: {{ .Values.comp.conf.teamsWhitelistScan | quote }}
+            value: {{ default list .Values.comp.conf.teamsWhitelistScan | include "safeToJson" | quote }}
           - name: ENABLE_TEAMS_WHITELIST_REPORT
             value: {{ .Values.comp.conf.enableTeamsWhitelistReport | quote }}
           - name: TEAMS_WHITELIST_REPORT
-            value: {{ .Values.comp.conf.teamsWhitelistReport | quote }}
+            value: {{ default list .Values.comp.conf.teamsWhitelistReport | include "safeToJson" | quote }}
         {{- include "common-container-envs" . | nindent 10 }}
           envFrom:
           - secretRef:

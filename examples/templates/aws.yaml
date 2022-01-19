@@ -1112,11 +1112,11 @@ spec:
           - name: ENABLE_TEAMS_WHITELIST_SCAN
             value: "false"
           - name: TEAMS_WHITELIST_SCAN
-            value: "[]"
+            value: "[\"team1\",\"team2\"]"
           - name: ENABLE_TEAMS_WHITELIST_REPORT
             value: "false"
           - name: TEAMS_WHITELIST_REPORT
-            value: "[]"
+            value: "[\"team1\", \"team2\"]"
           
           
           envFrom:
@@ -1644,7 +1644,7 @@ spec:
           - name: SES_FROM
             value: "vulcan@example.com"
           - name: SES_CC
-            value: "['vulcan@example.com']"
+            value: "[\"vulcan@example.com\"]"
           - name: SCAN_EMAIL_SUBJECT
             value: "Security Overview"
           - name: SCAN_S3_PUBLIC_BUCKET

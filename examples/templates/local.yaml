@@ -1621,7 +1621,7 @@ spec:
           - name: ENABLE_TEAMS_WHITELIST_SCAN
             value: "false"
           - name: TEAMS_WHITELIST_SCAN
-            value: "[\"team1\", \"team2\"]"
+            value: "[\"team1\",\"team2\"]"
           - name: ENABLE_TEAMS_WHITELIST_REPORT
             value: "false"
           - name: TEAMS_WHITELIST_REPORT

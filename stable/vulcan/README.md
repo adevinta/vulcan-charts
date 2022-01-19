@@ -258,9 +258,9 @@ A Helm chart for deploying Vulcan
 | api.conf.saml.metadata | string | `"https://okta/app/TBD/sso/saml/metadata"` |  |
 | api.conf.saml.issuer | string | `"http://okta/TBD"` |  |
 | api.conf.saml.callback | string | `nil` |  |
-| api.conf.saml.trustedDomains | string | `"[]"` |  |
+| api.conf.saml.trustedDomains | list | `[]` |  |
 | api.conf.logLevel | string | `"INFO"` |  |
-| api.conf.defaultOwners | string | `"[]"` |  |
+| api.conf.defaultOwners | list | `[]` |  |
 | api.conf.vulndbapiUrl | string | `nil` |  |
 | api.conf.persistenceHost | string | `nil` |  |
 | api.conf.crontinuousUrl | string | `nil` |  |
@@ -272,7 +272,7 @@ A Helm chart for deploying Vulcan
 | api.conf.awscatalogue.key | string | `"key"` |  |
 | api.conf.awscatalogue.retries | int | `1` |  |
 | api.conf.awscatalogue.retry_interval | int | `2` |  |
-| api.conf.globalPolicies | string | `nil` | array of name/allowedAssettypes/blockedAssettypes/allowedChecks/blockedChecks/excludingSuffixes which allows to customise global program policies |
+| api.conf.globalPolicies | list | `[]` | array of name/allowedAssettypes/blockedAssettypes/allowedChecks/blockedChecks/excludingSuffixes which allows to customise global program policies |
 | api.dogstatsd.image.repository | string | `"datadog/dogstatsd"` |  |
 | api.dogstatsd.image.tag | string | `"7.32.3"` |  |
 | api.dogstatsd.enabled | bool | `true` |  |
@@ -312,9 +312,9 @@ A Helm chart for deploying Vulcan
 | crontinuous.conf.vulcanUser | string | `"tbd"` |  |
 | crontinuous.conf.vulcanApi | string | `nil` |  |
 | crontinuous.conf.enableTeamsWhitelistScan | string | `"false"` |  |
-| crontinuous.conf.teamsWhitelistScan | string | `"[]"` |  |
+| crontinuous.conf.teamsWhitelistScan | list | `[]` |  |
 | crontinuous.conf.enableTeamsWhitelistReport | string | `"false"` |  |
-| crontinuous.conf.teamsWhitelistReport | string | `"[]"` |  |
+| crontinuous.conf.teamsWhitelistReport | list | `[]` |  |
 | scanengine.enabled | bool | `true` |  |
 | scanengine.name | string | `"scanengine"` |  |
 | scanengine.<<.replicaCount | string | `nil` |  |
@@ -351,7 +351,7 @@ A Helm chart for deploying Vulcan
 | scanengine.conf.scansSNS.topicArn | string | `"arn:aws:sns:local:012345678900:VulcanK8SScans"` |  |
 | scanengine.conf.checksSNS.topicArn | string | `"arn:aws:sns:local:012345678900:VulcanK8SChecks"` |  |
 | scanengine.conf.queues.default.arn | string | `"arn:aws:sqs:local:012345678900:VulcanK8SV2ChecksGeneric"` |  |
-| scanengine.conf.queues.other | string | `nil` | array of arn/checktypes |
+| scanengine.conf.queues.other | list | `[]` | array of arn/checktypes |
 | scanengine.conf.persistenceHost | string | `nil` |  |
 | scanengine.conf.streamUrl | string | `nil` |  |
 | scanengine.conf.checkCreator.numOfWorkers | int | `2` |  |
@@ -485,7 +485,7 @@ A Helm chart for deploying Vulcan
 | reportsgenerator.conf.generators.livereport.emailSubject | string | `nil` |  |
 | reportsgenerator.conf.ses.region | string | `nil` |  |
 | reportsgenerator.conf.ses.from | string | `"tbd@tbd.com"` |  |
-| reportsgenerator.conf.ses.cc | string | `"[\"tbd@tbd.com\"]"` |  |
+| reportsgenerator.conf.ses.cc | list | `[]` |  |
 | reportsgenerator.db | object | `{"<<":{"ca":null,"host":null,"name":null,"password":"TBD","port":5432,"sslMode":"disable","user":null},"name":"reportsgenerator"}` | postgres database settings |
 | reportsgenerator.dogstatsd.image.repository | string | `"datadog/dogstatsd"` |  |
 | reportsgenerator.dogstatsd.image.tag | string | `"7.32.3"` |  |
