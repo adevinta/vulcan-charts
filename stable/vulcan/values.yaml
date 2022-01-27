@@ -498,13 +498,15 @@ ui:
   conf:
     apiUrl:   # https://vulcan-api/api/v1/
     docs:
-      apiLink: https://docs.erxample.com/vulcan/vulcan-api/   # vulcan API doc
+      apiLink: https://docs.example.com/vulcan/vulcan-api/   # vulcan API doc
       whitelistingLink:   # vulcan scanner IPs
       discoveryLink: https://docs.example.com/vulcan/discovery  # vulcan asset discovery doc
       auditRoleLink: https://docs.example.com/vulcan/network-access  # vulcan AWS audit role doc
     contact:
       email: vulcan@example.com   # vulcan contact email
       slack: https://example.slack.com/archives/XXXXX    # vulcan slack channel
+    dashboard:
+      link: https://metrics.dashboard.example.com # vulcan metrics dashboard
 
 
 insights:

@@ -390,12 +390,13 @@ A Helm chart for deploying Vulcan
 | ui.healthcheckPath | string | `"/index.html"` |  |
 | ui.meta.sqs | bool | `false` |  |
 | ui.conf.apiUrl | string | `nil` |  |
-| ui.conf.docs.apiLink | string | `"https://docs.erxample.com/vulcan/vulcan-api/"` |  |
+| ui.conf.docs.apiLink | string | `"https://docs.example.com/vulcan/vulcan-api/"` |  |
 | ui.conf.docs.whitelistingLink | string | `nil` |  |
 | ui.conf.docs.discoveryLink | string | `"https://docs.example.com/vulcan/discovery"` |  |
 | ui.conf.docs.auditRoleLink | string | `"https://docs.example.com/vulcan/network-access"` |  |
 | ui.conf.contact.email | string | `"vulcan@example.com"` |  |
 | ui.conf.contact.slack | string | `"https://example.slack.com/archives/XXXXX"` |  |
+| ui.conf.dashboard.link | string | `"https://metrics.dashboard.example.com"` |  |
 | insights.enabled | bool | `true` |  |
 | insights.name | string | `"insights"` |  |
 | insights.<<.replicaCount | string | `nil` |  |

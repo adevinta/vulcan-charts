@@ -46,6 +46,8 @@ spec:
             value: {{ .Values.comp.conf.contact.email | quote }}
           - name: UI_CONTACT_SLACK
             value: {{ .Values.comp.conf.contact.slack | quote }}
+          - name: UI_DASHBOARD_LINK
+            value: {{ .Values.comp.conf.dashboard.link | quote }}
         {{- include "common-container-envs" . | nindent 10 }}
           ports:
             - name: {{ include "common-appPortName" . }}

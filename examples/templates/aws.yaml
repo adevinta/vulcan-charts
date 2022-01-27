@@ -2224,7 +2224,7 @@ spec:
           - name: API_URL
             value: "https://www.vulcan.example.com/api/v1/"
           - name: UI_DOCS_API_LINK
-            value: "https://docs.erxample.com/security/vulcan-api/"
+            value: "https://docs.example.com/security/vulcan-api/"
           - name: UI_DOCS_WHITELISTING_LINK
             value: "https://docs.example.com/security/vulcan-docs/network-access/"
           - name: UI_DOCS_DISCOVERY_LINK
@@ -2235,6 +2235,8 @@ spec:
             value: "vulcan@example.com"
           - name: UI_CONTACT_SLACK
             value: "https://org.slack.com/archives/XXXXXXXXXXXX"
+          - name: UI_DASHBOARD_LINK
+            value: "" # default UI dashboard
           
           
           ports:

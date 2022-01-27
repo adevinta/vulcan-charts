@@ -369,10 +369,12 @@ ui:
       email: vulcan@example.com
       slack: https://org.slack.com/archives/XXXXXXXXXXXX
     docs:
-      apiLink: https://docs.erxample.com/security/vulcan-api/
+      apiLink: https://docs.example.com/security/vulcan-api/
       auditRoleLink: https://confluence.example.com/x/code
       discoveryLink: https://docs.example.com/security/vulcan-docs/60-asset-auto-discovery/
       whitelistingLink: https://docs.example.com/security/vulcan-docs/network-access/
+    dashboard:
+      link: https://metrics.dashboard.example.com
   image:
     tag: tag-vulcan-ui
   imagePullSecrets:
