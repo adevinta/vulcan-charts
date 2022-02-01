@@ -506,7 +506,7 @@ ui:
       email: vulcan@example.com   # vulcan contact email
       slack: https://example.slack.com/archives/XXXXX    # vulcan slack channel
     dashboard:
-      link: https://metrics.dashboard.example.com # vulcan metrics dashboard
+      link: # vulcan metrics dashboard (if not set redirects to UI's dashboard.html)
 
 
 insights:

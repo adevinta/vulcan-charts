@@ -396,7 +396,7 @@ A Helm chart for deploying Vulcan
 | ui.conf.docs.auditRoleLink | string | `"https://docs.example.com/vulcan/network-access"` |  |
 | ui.conf.contact.email | string | `"vulcan@example.com"` |  |
 | ui.conf.contact.slack | string | `"https://example.slack.com/archives/XXXXX"` |  |
-| ui.conf.dashboard.link | string | `"https://metrics.dashboard.example.com"` |  |
+| ui.conf.dashboard.link | string | `"https://metrics.dashboard.example.com"` | If not set redirects to UI's dashboard.html |
 | insights.enabled | bool | `true` |  |
 | insights.name | string | `"insights"` |  |
 | insights.<<.replicaCount | string | `nil` |  |

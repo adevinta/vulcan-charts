@@ -2236,7 +2236,7 @@ spec:
           - name: UI_CONTACT_SLACK
             value: "https://org.slack.com/archives/XXXXXXXXXXXX"
           - name: UI_DASHBOARD_LINK
-            value: "" # default UI dashboard
+            value: 
           
           
           ports:
