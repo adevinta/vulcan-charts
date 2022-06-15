@@ -186,7 +186,7 @@ Pod labels
 
 {{- define "pg.username" -}}
   {{- if .Values.postgresql.enabled -}}
-    {{- .Values.postgresql.postgresqlUsername -}}
+    {{- .Values.postgresql.auth.username -}}
   {{- else -}}
     {{- .Values.comp.db.user -}}
   {{- end -}}
@@ -194,7 +194,7 @@ Pod labels
 
 {{- define "pg.password" -}}
   {{- if .Values.postgresql.enabled -}}
-    {{- .Values.postgresql.postgresqlPassword | default "" -}}
+    {{- .Values.postgresql.auth.postgresPassword | default "" -}}
   {{- else -}}
     {{- .Values.comp.db.password | default "" -}}
   {{- end -}}

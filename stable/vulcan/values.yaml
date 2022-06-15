@@ -138,36 +138,41 @@ postgresql:
   enabled: false
   service:
     port: 5432
-  postgresqlUsername: postgres
-  postgresqlPassword: TBD
-  postgresqlDatabase: persistence
-  initdbScripts:
-    initial-dbs.sql: |
-      CREATE DATABASE api;
-      CREATE DATABASE scanengine;
-      CREATE DATABASE reportsgenerator;
-      CREATE DATABASE vulnerabilitydb;
-  master:
+  auth:
+    username: postgres
+    postgresPassword: TBD
+    password: TBD
+    database: persistence
+  primary:
+    initdb:
+      scripts: 
+        initial-dbs.sql: |
+          CREATE DATABASE api;
+          CREATE DATABASE scanengine;
+          CREATE DATABASE reportsgenerator;
+          CREATE DATABASE vulnerabilitydb;
+    resources:
+      requests:
+        cpu: "0"
+        memory: "0"
+    persistence:
+      enabled: false
     annotations:
       prometheus.io/scrape: "true"
       prometheus.io/port: "9187"
-  resources:
-    requests:
-      cpu: "0"
-      memory: "0"
-  persistence:
-    enabled: false
   metrics:
     enabled: true
 
 redis:
   enabled: false
+  kubeVersion: "1.21"  # Avoid internalTrafficPolicy in 1.22
   architecture: standalone
   auth:
     enabled: false
   master:
     service:
-      port: 6379
+      ports:
+        redis: 6379
     persistence:
       enabled: false
   serviceAccount:
@@ -241,11 +246,11 @@ minio:
   persistence:
     enabled: false
   service:
-    port: 80
-  accessKey:
-    password: AKIAIOSFODNN7EXAMPLE
-  secretKey:
-    password: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+    ports:
+      api: 80
+  auth:
+    rootUser: AKIAIOSFODNN7EXAMPLE
+    rootPassword: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
   extraEnv:
     - name: MINIO_REGION_NAME
       value: local

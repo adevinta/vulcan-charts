@@ -22,12 +22,12 @@
   valueFrom:
     secretKeyRef:
       name: {{ printf "%s-minio" .Release.Name }}
-      key: access-key
+      key: root-user
 - name: AWS_SECRET_ACCESS_KEY
   valueFrom:
     secretKeyRef:
       name: {{ printf "%s-minio" .Release.Name }}
-      key: secret-key
+      key: root-password
 {{- $auth = 0 -}}
 {{- end }}
 {{- if eq $auth 1 }}

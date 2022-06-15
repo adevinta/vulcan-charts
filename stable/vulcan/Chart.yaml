@@ -16,7 +16,7 @@ type: application
 
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
-version: 0.4.1
+version: 0.4.2
 
 # This is the version number of the application being deployed. This version number should be
 # incremented each time you make changes to the application.
@@ -24,15 +24,15 @@ appVersion: 1.16.0
 
 dependencies:
 - name: postgresql
-  version: 10.4.3
+  version: 11.6.6
   repository: https://charts.bitnami.com/bitnami
   condition: postgresql.enabled
 - name: redis
-  version: 14.1.1
+  version: 16.12.1
   repository: https://charts.bitnami.com/bitnami
   condition: redis.enabled
 - name: minio
-  version: 6.7.8
+  version: 11.7.4
   repository: https://charts.bitnami.com/bitnami
   condition: minio.enabled
 
