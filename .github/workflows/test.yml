@@ -1,6 +1,9 @@
 name: Test
 
-on: pull_request
+on: push
+
+env:
+  CT_CHART_DIRS: stable
 
 jobs:
   lint-test:
@@ -22,6 +25,8 @@ jobs:
 
       - name: Set up chart-testing
         uses: helm/chart-testing-action@v2.2.1
+        with:
+          version: v3.6.0
 
       - name: Run chart-testing (list-changed)
         id: list-changed
@@ -36,7 +41,13 @@ jobs:
 
       - name: Create kind cluster
         uses: helm/kind-action@v1.2.0
+        with:
+          node_image: kindest/node:v1.19.16   # Test against this kubernetes release
         if: steps.list-changed.outputs.changed == 'true'
 
-      - name: Run chart-testing (install)
-        run: ct install
+      - name: Install in kind
+        if: steps.list-changed.outputs.changed == 'true'
+        run: |
+          helm repo add bitnami https://charts.bitnami.com/bitnami
+          helm repo update
+          ct install --helm-extra-set-args "-f examples/local.yaml --set=metrics.enabled=false --set=api.enabled=false"
