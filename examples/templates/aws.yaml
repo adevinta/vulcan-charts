@@ -893,7 +893,7 @@ spec:
               name: dogstatsd
               protocol: UDP
         - name: proxy
-          image: "haproxy:2.3.16-alpine3.15"
+          image: "haproxy:2.4.17-alpine3.16"
           imagePullPolicy: Always
           ports:
             - name: http
@@ -1057,7 +1057,7 @@ spec:
       containers:
         
         - name: proxy
-          image: "haproxy:2.3.16-alpine3.15"
+          image: "haproxy:2.4.17-alpine3.16"
           imagePullPolicy: Always
           ports:
             - name: http
@@ -1166,7 +1166,7 @@ spec:
       containers:
         
         - name: proxy
-          image: "haproxy:2.3.16-alpine3.15"
+          image: "haproxy:2.4.17-alpine3.16"
           imagePullPolicy: Always
           ports:
             - name: http
@@ -1424,7 +1424,7 @@ spec:
               name: dogstatsd
               protocol: UDP
         - name: proxy
-          image: "haproxy:2.3.16-alpine3.15"
+          image: "haproxy:2.4.17-alpine3.16"
           imagePullPolicy: Always
           ports:
             - name: http
@@ -1565,7 +1565,7 @@ spec:
                       cpu: 100m
                       memory: 128Mi
         - name: proxy
-          image: "haproxy:2.3.16-alpine3.15"
+          image: "haproxy:2.4.17-alpine3.16"
           imagePullPolicy: Always
           ports:
             - name: http
@@ -1742,7 +1742,7 @@ spec:
               name: dogstatsd
               protocol: UDP
         - name: proxy
-          image: "haproxy:2.3.16-alpine3.15"
+          image: "haproxy:2.4.17-alpine3.16"
           imagePullPolicy: Always
           ports:
             - name: http
@@ -1867,7 +1867,7 @@ spec:
               name: dogstatsd
               protocol: UDP
         - name: proxy
-          image: "haproxy:2.3.16-alpine3.15"
+          image: "haproxy:2.4.17-alpine3.16"
           imagePullPolicy: Always
           ports:
             - name: http
@@ -2068,7 +2068,7 @@ spec:
               name: dogstatsd
               protocol: UDP
         - name: proxy
-          image: "haproxy:2.3.16-alpine3.15"
+          image: "haproxy:2.4.17-alpine3.16"
           imagePullPolicy: Always
           ports:
             - name: http
@@ -2177,7 +2177,7 @@ spec:
       containers:
         
         - name: proxy
-          image: "haproxy:2.3.16-alpine3.15"
+          image: "haproxy:2.4.17-alpine3.16"
           imagePullPolicy: Always
           ports:
             - name: http
@@ -2377,7 +2377,7 @@ spec:
       containers:
         
         - name: proxy
-          image: "haproxy:2.3.16-alpine3.15"
+          image: "haproxy:2.4.17-alpine3.16"
           imagePullPolicy: Always
           ports:
             - name: http
