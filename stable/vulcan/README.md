@@ -536,7 +536,7 @@ A Helm chart for deploying Vulcan
 | metrics.conf.vulcanApi | string | `nil` |  |
 | metrics.conf.vulcanAPIToken | string | `"token"` |  |
 | metrics.conf.vulcanAPIExternal | string | `nil` |  |
-| metrics.redis.image | string | `"bitnami/redis:6.2.6"` |  |
+| metrics.redis.image | string | `"bitnami/redis:6.2.7"` |  |
 | metrics.meta.sqs | bool | `true` |  |
 | metrics.dogstatsd.image.repository | string | `"datadog/dogstatsd"` |  |
 | metrics.dogstatsd.image.tag | string | `"7.32.3"` |  |

@@ -634,7 +634,7 @@ metrics:
 
   # : redis sidecar
   redis:
-    image: bitnami/redis:6.2.6
+    image: bitnami/redis:6.2.7
 
   meta:
     sqs: true
