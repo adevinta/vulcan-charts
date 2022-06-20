@@ -145,7 +145,7 @@ postgresql:
     database: persistence
   primary:
     initdb:
-      scripts: 
+      scripts:
         initial-dbs.sql: |
           CREATE DATABASE api;
           CREATE DATABASE scanengine;
@@ -512,7 +512,7 @@ ui:
       slack: https://example.slack.com/archives/XXXXX    # vulcan slack channel
     dashboard:
       # -- if not set redirects to UI's dashboard.html
-      link: # vulcan metrics dashboard
+      link:   # vulcan metrics dashboard
 
 
 insights:
