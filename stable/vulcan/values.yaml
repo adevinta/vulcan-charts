@@ -131,7 +131,7 @@ anchors:
 waitfordb:
   image:
     repository: busybox
-    tag: 1.34.1
+    tag: 1.35.0
 
 
 postgresql:

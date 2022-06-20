@@ -873,7 +873,7 @@ spec:
     spec:
       initContainers:
         - name: waitfordb
-          image: "busybox:1.34.1"
+          image: "busybox:1.35.0"
           imagePullPolicy: Always
           command: ['sh', '-c', 'until nc -z "$PGHOST" "$PGPORT"; do echo WaitingDB && sleep 5; done;']
           env:
@@ -1404,7 +1404,7 @@ spec:
     spec:
       initContainers:
         - name: waitfordb
-          image: "busybox:1.34.1"
+          image: "busybox:1.35.0"
           imagePullPolicy: Always
           command: ['sh', '-c', 'until nc -z "$PGHOST" "$PGPORT"; do echo WaitingDB && sleep 5; done;']
           env:
@@ -1538,7 +1538,7 @@ spec:
     spec:
       initContainers:
         - name: waitfordb
-          image: "busybox:1.34.1"
+          image: "busybox:1.35.0"
           imagePullPolicy: Always
           command: ['sh', '-c', 'until nc -z "$PGHOST" "$PGPORT"; do echo WaitingDB && sleep 5; done;']
           env:
@@ -1847,7 +1847,7 @@ spec:
     spec:
       initContainers:
         - name: waitfordb
-          image: "busybox:1.34.1"
+          image: "busybox:1.35.0"
           imagePullPolicy: Always
           command: ['sh', '-c', 'until nc -z "$PGHOST" "$PGPORT"; do echo WaitingDB && sleep 5; done;']
           env:
@@ -2281,7 +2281,7 @@ spec:
     spec:
       initContainers:
         - name: waitfordb
-          image: "busybox:1.34.1"
+          image: "busybox:1.35.0"
           imagePullPolicy: Always
           command: ['sh', '-c', 'until nc -z "$PGHOST" "$PGPORT"; do echo WaitingDB && sleep 5; done;']
           env:
@@ -2366,7 +2366,7 @@ spec:
     spec:
       initContainers:
         - name: waitfordb
-          image: "busybox:1.34.1"
+          image: "busybox:1.35.0"
           imagePullPolicy: Always
           command: ['sh', '-c', 'until nc -z "$PGHOST" "$PGPORT"; do echo WaitingDB && sleep 5; done;']
           env:

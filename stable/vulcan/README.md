@@ -39,7 +39,7 @@ A Helm chart for deploying Vulcan
 | anchors.comp.service | object | `{"port":80,"portName":null,"protocol":"TCP","targetPort":null,"type":"ClusterIP"}` | service settings |
 | anchors.comp.ingress | object | `{"annotations":{},"enabled":false,"hosts":[],"tls":[]}` | ingress settings |
 | waitfordb.image.repository | string | `"busybox"` |  |
-| waitfordb.image.tag | string | `"1.34.1"` |  |
+| waitfordb.image.tag | string | `"1.35.0"` |  |
 | postgresql.enabled | bool | `false` |  |
 | postgresql.service.port | int | `5432` |  |
 | postgresql.auth.username | string | `"postgres"` |  |
