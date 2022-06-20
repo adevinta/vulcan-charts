@@ -1447,7 +1447,7 @@ spec:
       containers:
         
         - name: dogstatsd
-          image: "datadog/dogstatsd:7.32.3"
+          image: "datadog/dogstatsd:7.36.1"
           envFrom:
           - secretRef:
               name: myrelease-vulcan-dogstatsd
@@ -1924,7 +1924,7 @@ spec:
       containers:
         
         - name: dogstatsd
-          image: "datadog/dogstatsd:7.32.3"
+          image: "datadog/dogstatsd:7.36.1"
           envFrom:
           - secretRef:
               name: myrelease-vulcan-dogstatsd
@@ -2036,7 +2036,7 @@ spec:
       containers:
         
         - name: dogstatsd
-          image: "datadog/dogstatsd:7.32.3"
+          image: "datadog/dogstatsd:7.36.1"
           envFrom:
           - secretRef:
               name: myrelease-vulcan-dogstatsd
@@ -2183,7 +2183,7 @@ spec:
       containers:
         
         - name: dogstatsd
-          image: "datadog/dogstatsd:7.32.3"
+          image: "datadog/dogstatsd:7.36.1"
           envFrom:
           - secretRef:
               name: myrelease-vulcan-dogstatsd
@@ -2346,7 +2346,7 @@ spec:
       containers:
         
         - name: dogstatsd
-          image: "datadog/dogstatsd:7.32.3"
+          image: "datadog/dogstatsd:7.36.1"
           envFrom:
           - secretRef:
               name: myrelease-vulcan-dogstatsd
@@ -2481,7 +2481,7 @@ spec:
       containers:
         
         - name: dogstatsd
-          image: "datadog/dogstatsd:7.32.3"
+          image: "datadog/dogstatsd:7.36.1"
           envFrom:
           - secretRef:
               name: myrelease-vulcan-dogstatsd
@@ -2674,7 +2674,7 @@ spec:
       containers:
         
         - name: dogstatsd
-          image: "datadog/dogstatsd:7.32.3"
+          image: "datadog/dogstatsd:7.36.1"
           envFrom:
           - secretRef:
               name: myrelease-vulcan-dogstatsd
