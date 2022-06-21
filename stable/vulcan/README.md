@@ -125,7 +125,7 @@ A Helm chart for deploying Vulcan
 | results.<<.tolerations | list | `[]` |  |
 | results.<<.affinity | object | `{}` |  |
 | results.image.repository | string | `"adevinta/vulcan-results"` |  |
-| results.image.tag | string | `"latest"` |  |
+| results.image.tag | string | `"1.0"` |  |
 | results.image.pullPolicy | string | `"Always"` |  |
 | results.conf.debug | string | `"false"` |  |
 | results.conf.region | string | `nil` |  |
@@ -162,7 +162,7 @@ A Helm chart for deploying Vulcan
 | persistence.<<.tolerations | list | `[]` |  |
 | persistence.<<.affinity | object | `{}` |  |
 | persistence.image.repository | string | `"adevinta/vulcan-persistence"` |  |
-| persistence.image.tag | string | `"latest"` |  |
+| persistence.image.tag | string | `"1.0"` |  |
 | persistence.image.pullPolicy | string | `"Always"` |  |
 | persistence.healthcheckPath | string | `"/status"` |  |
 | persistence.meta.s3 | bool | `true` |  |
@@ -200,7 +200,7 @@ A Helm chart for deploying Vulcan
 | stream.<<.tolerations | list | `[]` |  |
 | stream.<<.affinity | object | `{}` |  |
 | stream.image.repository | string | `"adevinta/vulcan-stream"` |  |
-| stream.image.tag | string | `"latest"` |  |
+| stream.image.tag | string | `"1.0"` |  |
 | stream.image.pullPolicy | string | `"Always"` |  |
 | stream.healthcheckPath | string | `"/status"` |  |
 | stream.conf.logLevel | string | `"DEBUG"` |  |
@@ -238,7 +238,7 @@ A Helm chart for deploying Vulcan
 | api.<<.tolerations | list | `[]` |  |
 | api.<<.affinity | object | `{}` |  |
 | api.image.repository | string | `"adevinta/vulcan-api"` |  |
-| api.image.tag | string | `"latest"` |  |
+| api.image.tag | string | `"1.0"` |  |
 | api.image.pullPolicy | string | `"Always"` |  |
 | api.meta.sqs | bool | `true` |  |
 | api.meta.sns | bool | `true` |  |
@@ -304,7 +304,7 @@ A Helm chart for deploying Vulcan
 | crontinuous.<<.tolerations | list | `[]` |  |
 | crontinuous.<<.affinity | object | `{}` |  |
 | crontinuous.image.repository | string | `"adevinta/vulcan-crontinuous"` |  |
-| crontinuous.image.tag | string | `"latest"` |  |
+| crontinuous.image.tag | string | `"1.0"` |  |
 | crontinuous.image.pullPolicy | string | `"Always"` |  |
 | crontinuous.meta.s3 | bool | `true` |  |
 | crontinuous.healthcheckPath | string | `"/healthcheck"` |  |
@@ -342,7 +342,7 @@ A Helm chart for deploying Vulcan
 | scanengine.<<.tolerations | list | `[]` |  |
 | scanengine.<<.affinity | object | `{}` |  |
 | scanengine.image.repository | string | `"adevinta/vulcan-scan-engine"` |  |
-| scanengine.image.tag | string | `"latest"` |  |
+| scanengine.image.tag | string | `"1.0"` |  |
 | scanengine.image.pullPolicy | string | `"Always"` |  |
 | scanengine.healthcheckPath | string | `"/v1/healthcheck"` |  |
 | scanengine.meta.sqs | bool | `true` |  |
@@ -387,7 +387,7 @@ A Helm chart for deploying Vulcan
 | ui.<<.tolerations | list | `[]` |  |
 | ui.<<.affinity | object | `{}` |  |
 | ui.image.repository | string | `"adevinta/vulcan-ui"` |  |
-| ui.image.tag | string | `"latest"` |  |
+| ui.image.tag | string | `"1.0"` |  |
 | ui.image.pullPolicy | string | `"Always"` |  |
 | ui.healthcheckPath | string | `"/index.html"` |  |
 | ui.meta.sqs | bool | `false` |  |
@@ -461,7 +461,7 @@ A Helm chart for deploying Vulcan
 | reportsgenerator.<<.tolerations | list | `[]` |  |
 | reportsgenerator.<<.affinity | object | `{}` |  |
 | reportsgenerator.image.repository | string | `"adevinta/vulcan-reports-generator"` |  |
-| reportsgenerator.image.tag | string | `"latest"` |  |
+| reportsgenerator.image.tag | string | `"1.0"` |  |
 | reportsgenerator.image.pullPolicy | string | `"Always"` |  |
 | reportsgenerator.healthcheckPath | string | `"/healthcheck"` |  |
 | reportsgenerator.meta.sqs | bool | `true` |  |
@@ -518,7 +518,7 @@ A Helm chart for deploying Vulcan
 | metrics.<<.tolerations | list | `[]` |  |
 | metrics.<<.affinity | object | `{}` |  |
 | metrics.image.repository | string | `"containers.mpi-internal.com/spt-security/vulcan-metrics"` |  |
-| metrics.image.tag | string | `"latest"` |  |
+| metrics.image.tag | string | `"1.0"` |  |
 | metrics.image.pullPolicy | string | `"Always"` |  |
 | metrics.proxy.enabled | bool | `false` |  |
 | metrics.conf.region | string | `nil` |  |
@@ -566,7 +566,7 @@ A Helm chart for deploying Vulcan
 | vulndbapi.<<.tolerations | list | `[]` |  |
 | vulndbapi.<<.affinity | object | `{}` |  |
 | vulndbapi.image.repository | string | `"adevinta/vulnerability-db-api"` |  |
-| vulndbapi.image.tag | string | `"latest"` |  |
+| vulndbapi.image.tag | string | `"1.0"` |  |
 | vulndbapi.image.pullPolicy | string | `"Always"` |  |
 | vulndbapi.healthcheckPath | string | `"/healthcheck"` |  |
 | vulndbapi.conf.logLevel | string | `"info"` |  |
@@ -596,7 +596,7 @@ A Helm chart for deploying Vulcan
 | vulndb.<<.tolerations | list | `[]` |  |
 | vulndb.<<.affinity | object | `{}` |  |
 | vulndb.image.repository | string | `"adevinta/vulnerability-db"` |  |
-| vulndb.image.tag | string | `"latest"` |  |
+| vulndb.image.tag | string | `"1.0"` |  |
 | vulndb.image.pullPolicy | string | `"Always"` |  |
 | vulndb.conf.logLevel | string | `"error"` |  |
 | vulndb.conf.checksQueueArn | string | `"arn:aws:sqs:local:012345678900:VulcanK8SVulnDBChecks"` |  |

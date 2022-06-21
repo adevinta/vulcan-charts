@@ -1441,7 +1441,7 @@ spec:
                 command: ["/bin/sh","-c","sleep 30;"]
         - name: api
           
-          image: "adevinta/vulcan-api:latest"
+          image: "adevinta/vulcan-api:1.0"
           imagePullPolicy: Always
           lifecycle:
             preStop:
@@ -1616,7 +1616,7 @@ spec:
                 command: ["/bin/sh","-c","sleep 30;"]
         - name: crontinuous
           
-          image: "adevinta/vulcan-crontinuous:latest"
+          image: "adevinta/vulcan-crontinuous:1.0"
           imagePullPolicy: Always
           lifecycle:
             preStop:
@@ -1907,7 +1907,7 @@ spec:
             protocol: TCP
         - name: metrics
           
-          image: "containers.mpi-internal.com/spt-security/vulcan-metrics:latest"
+          image: "containers.mpi-internal.com/spt-security/vulcan-metrics:1.0"
           imagePullPolicy: Always
           lifecycle:
             preStop:
@@ -2025,7 +2025,7 @@ spec:
                 command: ["/bin/sh","-c","sleep 30;"]
         - name: persistence
           
-          image: "adevinta/vulcan-persistence:latest"
+          image: "adevinta/vulcan-persistence:1.0"
           imagePullPolicy: Always
           lifecycle:
             preStop:
@@ -2171,7 +2171,7 @@ spec:
                 command: ["/bin/sh","-c","sleep 30;"]
         - name: reportsgenerator
           
-          image: "adevinta/vulcan-reports-generator:latest"
+          image: "adevinta/vulcan-reports-generator:1.0"
           imagePullPolicy: Always
           lifecycle:
             preStop:
@@ -2333,7 +2333,7 @@ spec:
                 command: ["/bin/sh","-c","sleep 30;"]
         - name: results
           
-          image: "adevinta/vulcan-results:latest"
+          image: "adevinta/vulcan-results:1.0"
           imagePullPolicy: Always
           lifecycle:
             preStop:
@@ -2467,7 +2467,7 @@ spec:
                 command: ["/bin/sh","-c","sleep 30;"]
         - name: scanengine
           
-          image: "adevinta/vulcan-scan-engine:latest"
+          image: "adevinta/vulcan-scan-engine:1.0"
           imagePullPolicy: Always
           lifecycle:
             preStop:
@@ -2658,7 +2658,7 @@ spec:
                 command: ["/bin/sh","-c","sleep 30;"]
         - name: stream
           
-          image: "adevinta/vulcan-stream:latest"
+          image: "adevinta/vulcan-stream:1.0"
           imagePullPolicy: Always
           lifecycle:
             preStop:
@@ -2758,7 +2758,7 @@ spec:
                 command: ["/bin/sh","-c","sleep 30;"]
         - name: ui
           
-          image: "adevinta/vulcan-ui:latest"
+          image: "adevinta/vulcan-ui:1.0"
           imagePullPolicy: Always
           lifecycle:
             preStop:
@@ -2850,7 +2850,7 @@ spec:
         
         - name: vulndb
           
-          image: "adevinta/vulnerability-db:latest"
+          image: "adevinta/vulnerability-db:1.0"
           imagePullPolicy: Always
           lifecycle:
             preStop:
@@ -2951,7 +2951,7 @@ spec:
                 command: ["/bin/sh","-c","sleep 30;"]
         - name: vulndbapi
           
-          image: "adevinta/vulnerability-db-api:latest"
+          image: "adevinta/vulnerability-db-api:1.0"
           imagePullPolicy: Always
           lifecycle:
             preStop:
