@@ -20,7 +20,7 @@ spec:
       labels: {{- include "vulcan.podLabels" . | nindent 8 }}
         app.kubernetes.io/name: {{ .Values.comp.name }}
       annotations:
-        checksum/secrets: {{ include (print $.Template.BasePath "/vulndbapi/secrets.yaml") . | sha256sum }}
+        checksum/secrets: {{ include "vulndbapi-secrets" . | sha256sum }}
         {{- include "common-annotations" . | nindent 8 }}
         {{- with .Values.comp.annotations }}
           {{- toYaml . | nindent 8 }}

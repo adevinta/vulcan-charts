@@ -135,6 +135,20 @@ type: Opaque
 data:
   PG_PASSWORD: "VEJE"
 ---
+# Source: vulcan/templates/stream/secrets.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: myrelease-vulcan-stream
+  labels:
+    helm.sh/chart: vulcan-0.4.1
+    app.kubernetes.io/instance: vulcan
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: stream
+type: Opaque
+data:
+  REDIS_PWD: ""
+---
 # Source: vulcan/templates/vulndb/secrets.yaml
 apiVersion: v1
 kind: Secret
@@ -489,7 +503,7 @@ data:
         Min: 0
         Max: 0
 ---
-# Source: vulcan/templates/insights/config-proxy.yaml
+# Source: vulcan/templates/insights/config.yaml
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -505,7 +519,7 @@ data:
       daemon
       maxconn 64
       log stdout format raw daemon
-
+  
     defaults
       mode http
       timeout connect 5s
@@ -516,7 +530,7 @@ data:
     cache small
       total-max-size 64     # mb
       max-age 240           # seconds
-
+  
     frontend http
       bind *:9090
       log global
@@ -527,13 +541,13 @@ data:
       http-request capture req.hdr(User-Agent) len 100
       default_backend private
       use_backend public if { path -i -m beg /public }
-
+  
     backend private
       server app 127.0.0.1:8080
-
+  
     backend public
       server app 127.0.0.1:8081
-
+  
     frontend stats
       bind *:9101
       option http-use-htx
@@ -1397,7 +1411,7 @@ spec:
         app.kubernetes.io/instance: vulcan
         app.kubernetes.io/name: api
       annotations:
-        checksum/secrets: 0f00e150ecc597f7df9abcd9115091ac9027601ef91a0dcbdeb526025bb72a17
+        checksum/secrets: 334c1bcc1552336e9d4df7f38207ac0f0ed745e2609adb8897c924f761fef0e0
         checksum/config-proxy: 50b289164aaee5d9740e0a8a1ed839f1e6933e1ac12d57ceb0ae35beaccdf5ce
         prometheus.io/scrape: 'true'
         prometheus.io/port: '9101'
@@ -1749,7 +1763,7 @@ spec:
         app.kubernetes.io/instance: vulcan
         app.kubernetes.io/name: insights
       annotations:
-        checksum/config: f41e7b8fc6cd972bf6f10d9565e6cad100547fcf0812f15b35be5a85247ea07b
+        checksum/config: 81a6311e0ee5af8f9be60036d726af473fb4de232b8b7afe99ea6525ded53d31
         prometheus.io/scrape: 'true'
         prometheus.io/port: '9101'
     spec:
@@ -1883,6 +1897,7 @@ spec:
         app.kubernetes.io/instance: vulcan
         app.kubernetes.io/name: metrics
       annotations:
+        checksum/secrets: b0d413a0b3902a84c0f51e59f152d29668f629dd011d9d8462b70fd2cbd5a1c3
         
     spec:
       containers:
@@ -1981,7 +1996,7 @@ spec:
         app.kubernetes.io/instance: vulcan
         app.kubernetes.io/name: persistence
       annotations:
-        checksum/secrets: c06f14249c7268d23ee18ac551696c1abee14593b13cea4c97f6cd38e410fa35
+        checksum/secrets: f634e1e1ecf85a98c0459e4ec3b59cf5ea5006ae7d6d377cd9a474ec46fde4a7
         checksum/config-proxy: 6c67bb6c5068c8adb7e999168325747a1abf25d546eaa9ab3bccefe9eb7fd3d7
         prometheus.io/scrape: 'true'
         prometheus.io/port: '9101'
@@ -2127,7 +2142,7 @@ spec:
         app.kubernetes.io/instance: vulcan
         app.kubernetes.io/name: reportsgenerator
       annotations:
-        checksum/secrets: fb475f0c346c24c88fad3972d3d62f95408bd1682603c8c770ada7bd15e726ea
+        checksum/secrets: ff76b6caa4d4af25d5701d0fe380652c74ea9038f2eb3644af242192d8f68fc0
         checksum/config-proxy: 26dce9f124ceb377008594f444c91a10fe5a68b2ba04d8e3be5eda4d8812aa24
         prometheus.io/scrape: 'true'
         prometheus.io/port: '9101'
@@ -2423,7 +2438,7 @@ spec:
         app.kubernetes.io/instance: vulcan
         app.kubernetes.io/name: scanengine
       annotations:
-        checksum/secrets: 47a962018a4ec9a04b5be2f52d9962e0be6760e8d1d76ea11afea55d735bac9a
+        checksum/secrets: 6a98d86e2647d0c9b6bb9403aaf5a023ea894e2e305370d3d147cf9a60986fc9
         checksum/config-proxy: 661738336e8ae7617f1a7a5110f36024f9cff3df2effcfd62cc5faa93d5e8909
         prometheus.io/scrape: 'true'
         prometheus.io/port: '9101'
@@ -2833,7 +2848,7 @@ spec:
         app.kubernetes.io/instance: vulcan
         app.kubernetes.io/name: vulndb
       annotations:
-        checksum/secrets: 95438c5048f32106053d2c35287e87f84d94980a727b4ace057dfec4b7d7976b
+        checksum/secrets: ff76b6caa4d4af25d5701d0fe380652c74ea9038f2eb3644af242192d8f68fc0
         
     spec:
       initContainers:
@@ -2916,7 +2931,7 @@ spec:
         app.kubernetes.io/instance: vulcan
         app.kubernetes.io/name: vulndbapi
       annotations:
-        checksum/secrets: 3d64c262b5b5bd7ea4fcace2791505c831635185d44240fa9b7e7e8557a8e6e1
+        checksum/secrets: ff76b6caa4d4af25d5701d0fe380652c74ea9038f2eb3644af242192d8f68fc0
         checksum/config-proxy: ac9c854e845928f39557c9b2728c0438304971c28a0ba55e85507af9caf37222
         prometheus.io/scrape: 'true'
         prometheus.io/port: '9101'

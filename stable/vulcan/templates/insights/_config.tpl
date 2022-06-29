@@ -1,0 +1,54 @@
+{{- define "insights-config" -}}
+haproxy.cfg: |
+  global
+    daemon
+    maxconn {{ .Values.comp.proxy.maxconn | default 64 }}
+    log stdout format raw daemon
+
+  defaults
+    mode http
+    timeout connect {{ .Values.comp.proxy.timeoutConnect | default "5s" }}
+    timeout client {{ .Values.comp.proxy.timeoutClient | default "25s" }}
+    timeout server {{ .Values.comp.proxy.timeoutServer | default "25s" }}
+    timeout tunnel {{ .Values.comp.proxy.timeoutTunnel | default "3600s" }}
+    option  http-server-close
+
+  {{- if .Values.comp.proxy.cache.enabled }}
+  cache small
+    total-max-size 64     # mb
+    max-age 240           # seconds
+  {{- end }}
+
+  frontend http
+    bind *:{{ .Values.comp.proxy.port | default 80 }}
+    log global
+    option httplog clf
+  {{- if .Values.comp.proxy.cache.enabled }}
+    http-request cache-use small
+    http-response cache-store small
+  {{- end }}
+    http-request capture req.hdr(Host) len 50
+    http-request capture req.hdr(User-Agent) len 100
+    {{- if .Values.comp.conf.private.prefix }}
+    use_backend {{ .Values.comp.conf.private.name }} if { path -i -m beg {{ .Values.comp.conf.private.prefix }} }
+    {{- else }}
+    default_backend {{ .Values.comp.conf.private.name }}
+    {{- end }}
+    {{- if .Values.comp.conf.public.prefix }}
+    use_backend {{ .Values.comp.conf.public.name }} if { path -i -m beg {{ .Values.comp.conf.public.prefix }} }
+    {{- else }}
+    default_backend {{ .Values.comp.conf.public.name }}
+    {{- end }}
+
+  backend {{ .Values.comp.conf.private.name }}
+    server app 127.0.0.1:{{ .Values.comp.containerPort }}
+
+  backend {{ .Values.comp.conf.public.name }}
+    server app 127.0.0.1:{{ add .Values.comp.containerPort 1 }}
+
+  frontend stats
+    bind *:{{ .Values.comp.proxy.metricsPort }}
+    option http-use-htx
+    http-request use-service prometheus-exporter if { path /metrics }
+    monitor-uri {{ .Values.comp.proxy.probePath }}
+{{- end -}}

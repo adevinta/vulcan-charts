@@ -18,7 +18,7 @@ spec:
       labels: {{- include "vulcan.podLabels" . | nindent 8 }}
         app.kubernetes.io/name: {{ .Values.comp.name }}
       annotations:
-        checksum/config: {{ include (print $.Template.BasePath "/insights/config-proxy.yaml") . | sha256sum }}
+        checksum/config: {{ include "insights-config" . | sha256sum }}
         prometheus.io/scrape: 'true'
         prometheus.io/port: '{{ .Values.comp.proxy.metricsPort }}'
         {{- with .Values.comp.annotations }}

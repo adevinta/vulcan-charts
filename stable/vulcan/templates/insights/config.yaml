@@ -1,0 +1,2 @@
+{{- $_ := set .Values "comp" .Values.insights -}}
+{{- include "common-configmap" (merge (dict "Args" (dict "template" "insights-config" "suffix" "-proxy")) . ) -}}
