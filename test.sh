@@ -3,7 +3,7 @@
 set -e 
 
 BASEDIR=$(dirname "$0")
-KVERSION_LIST=${KVERSION_LIST:-"1.15.12 1.21.14"}
+KVERSION_LIST=${KVERSION_LIST:-"1.15.12 1.21.14 1.24.2"}
 KVERSION=${KVERSION:-${KVERSION_LIST%% *}}   # Use KVERSION or the first in the list to generate the examples.
 
 if [ -n "$1" ]
