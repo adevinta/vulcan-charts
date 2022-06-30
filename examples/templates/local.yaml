@@ -3362,7 +3362,7 @@ spec:
           emptyDir: {}
 ---
 # Source: vulcan/charts/minio/templates/ingress.yaml
-apiVersion: networking.k8s.io/v1
+apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   name: myrelease-minio
@@ -3379,12 +3379,9 @@ spec:
       http:
         paths:
           - path: /
-            pathType: ImplementationSpecific
             backend:
-              service:
-                name: myrelease-minio
-                port:
-                  name: minio-console
+              serviceName: myrelease-minio
+              servicePort: minio-console
 ---
 # Source: vulcan/templates/api/ingress.yaml
 apiVersion: networking.k8s.io/v1beta1

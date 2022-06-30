@@ -165,7 +165,6 @@ postgresql:
 
 redis:
   enabled: false
-  kubeVersion: "1.21"  # Avoid internalTrafficPolicy in 1.22
   architecture: standalone
   auth:
     enabled: false
