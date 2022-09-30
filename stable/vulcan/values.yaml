@@ -626,10 +626,6 @@ tracker:
     logLevel: "error"
     queueArn: arn:aws:sqs:local:012345678900:VulcanK8STracking
     queueName: VulcanK8STracking
-    api:
-      maxSize: 100
-      defaultSize: 20
-      port: 8080
     trackers:
       jira:
         - name: "Jira Instance 1"
