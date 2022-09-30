@@ -151,6 +151,7 @@ postgresql:
           CREATE DATABASE scanengine;
           CREATE DATABASE reportsgenerator;
           CREATE DATABASE vulnerabilitydb;
+          CREATE DATABASE tracker;
     resources:
       requests:
         cpu: "0"
@@ -206,6 +207,7 @@ goaws:
           - Name: VulcanK8SReportsGenerator
           - Name: VulcanK8SScanEngineCheckStatus
           - Name: VulcanK8SV2ChecksGeneric
+          - Name: VulcanK8STracker
           {{- range $value := .Values.scanengine.conf.queues.other }}
           - Name: {{ regexFind "[^:]+$" $value.arn }}
           {{- end }}
@@ -230,6 +232,10 @@ goaws:
           - Name: VulcanK8SVulnDBVulns
             Subscriptions:
               - QueueName: VulcanK8SMetricsFindings
+                Raw: true
+          - Name: VulcanK8STracker
+            Subscriptions:
+              - QueueName: VulcanK8STracker
                 Raw: true
         RandomLatency:
           Min: 0
@@ -597,6 +603,48 @@ reportsgenerator:
   db:
     <<: *db
     name: reportsgenerator
+
+  dogstatsd: *dogstatsd
+
+
+tracker:
+  enabled: true
+  name: tracker
+  <<: *comp
+
+  image:
+    repository: adevinta/vulcan-tracker
+    tag: "1.0"
+    pullPolicy: Always
+
+  healthcheckPath: /healthcheck
+
+  meta:
+    sqs: true
+
+  conf:
+    logLevel: "error"
+    queueArn: arn:aws:sqs:local:012345678900:VulcanK8STracking
+    queueName: VulcanK8STracking
+    api:
+      maxSize: 100
+      defaultSize: 20
+      port: 8080
+    trackers:
+      jira:
+        - name: "Jira Instance 1"
+          url: "https://jira1.example.com/"
+          username: TBD
+          password: TBD
+        - name: "Jira Instance 2"
+          url: "https://jira2.example.com/"
+          username: TBD
+          password: TBD
+
+  # -- postgres database settings
+  db:
+    <<: *db
+    name: tracker
 
   dogstatsd: *dogstatsd
 
