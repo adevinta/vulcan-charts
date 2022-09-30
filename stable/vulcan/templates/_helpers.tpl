@@ -89,6 +89,10 @@ Pod labels
 {{- printf "%s-%s" (include "vulcan.fullname" .) .Values.reportsgenerator.name -}}
 {{- end -}}
 
+{{- define "tracker.fullname" -}}
+{{- printf "%s-%s" (include "vulcan.fullname" .) .Values.tracker.name -}}
+{{- end -}}
+
 {{- define "results.fullname" -}}
 {{- printf "%s-%s" (include "vulcan.fullname" .) .Values.results.name -}}
 {{- end -}}

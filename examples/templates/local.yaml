@@ -149,6 +149,22 @@ type: Opaque
 data:
   REDIS_PWD: ""
 ---
+# Source: vulcan/templates/tracker/secrets.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: myrelease-vulcan-tracker
+  labels:
+    helm.sh/chart: vulcan-0.5.0
+    app.kubernetes.io/instance: vulcan
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: tracker
+type: Opaque
+data:
+  PG_PASSWORD: "VEJE"
+  JIRA_PASSWORD_1: "VEJE"
+  JIRA_PASSWORD_2: "VEJE"
+---
 # Source: vulcan/templates/vulndb/secrets.yaml
 apiVersion: v1
 kind: Secret
@@ -194,6 +210,7 @@ data:
     CREATE DATABASE scanengine;
     CREATE DATABASE reportsgenerator;
     CREATE DATABASE vulnerabilitydb;
+    CREATE DATABASE tracker;
 ---
 # Source: vulcan/charts/redis/templates/configmap.yaml
 apiVersion: v1
@@ -477,6 +494,7 @@ data:
         - Name: VulcanK8SReportsGenerator
         - Name: VulcanK8SScanEngineCheckStatus
         - Name: VulcanK8SV2ChecksGeneric
+        - Name: VulcanK8STracker
         - Name: VulcanK8SVulnDBChecks
       Topics:
         - Name: VulcanK8SChecks
@@ -498,6 +516,10 @@ data:
         - Name: VulcanK8SVulnDBVulns
           Subscriptions:
             - QueueName: VulcanK8SMetricsFindings
+              Raw: true
+        - Name: VulcanK8STracker
+          Subscriptions:
+            - QueueName: VulcanK8STracker
               Raw: true
       RandomLatency:
         Min: 0
@@ -736,6 +758,49 @@ metadata:
     app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: stream
+data:
+  haproxy.cfg: |
+    global
+      daemon
+      maxconn 64
+      log stdout format raw daemon
+  
+    defaults
+      mode http
+      timeout connect 5s
+      timeout client 25s
+      timeout server 25s
+      timeout tunnel 3600s
+      option  http-server-close
+  
+    frontend http
+      bind *:9090
+      log global
+      option httplog clf
+      http-request capture req.hdr(Host) len 50
+      http-request capture req.hdr(User-Agent) len 100
+  
+      default_backend app
+  
+    backend app
+      server app 127.0.0.1:8080
+  
+    frontend stats
+      bind *:9101
+      option http-use-htx
+      http-request use-service prometheus-exporter if { path /metrics }
+      monitor-uri /healthz
+---
+# Source: vulcan/templates/tracker/deployment.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: myrelease-vulcan-tracker-proxy
+  labels:
+    helm.sh/chart: vulcan-0.5.0
+    app.kubernetes.io/instance: vulcan
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: tracker
 data:
   haproxy.cfg: |
     global
@@ -1232,6 +1297,27 @@ spec:
     app.kubernetes.io/instance: vulcan
     app.kubernetes.io/name: stream
 ---
+# Source: vulcan/templates/tracker/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: myrelease-vulcan-tracker
+  labels:
+    helm.sh/chart: vulcan-0.5.0
+    app.kubernetes.io/instance: vulcan
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: tracker
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/instance: vulcan
+    app.kubernetes.io/name: tracker
+---
 # Source: vulcan/templates/ui/service.yaml
 apiVersion: v1
 kind: Service
@@ -1724,7 +1810,7 @@ spec:
         app.kubernetes.io/instance: vulcan
         app.kubernetes.io/name: goaws
       annotations:
-        checksum/config: 229ce28016c0f37732eb71051576466f8311404a628edbca3ea71d2ae006dbf0
+        checksum/config: 724122f0c7c5500bbc488c1c6a3b95ffb510e6538244aab7c1fe3e8ee2302155
     spec:
       containers:
       - name: goaws
@@ -2727,6 +2813,151 @@ spec:
       - name: config-proxy
         configMap:
           name: myrelease-vulcan-stream-proxy
+---
+# Source: vulcan/templates/tracker/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myrelease-vulcan-tracker
+  labels:
+    helm.sh/chart: vulcan-0.5.0
+    app.kubernetes.io/instance: vulcan
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: tracker
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: vulcan
+      app.kubernetes.io/name: tracker
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: vulcan
+        app.kubernetes.io/name: tracker
+      annotations:
+        checksum/secrets: 6bc95bd760a05e496c6be80c43a25c6b22a24a60f78a565317fefb0c05329d78
+        checksum/config-proxy: 4ba45566a092b043208fcf6bf26a0d842fc23e0e10b03c5802c85c930bb6e1c9
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '9101'
+    spec:
+      initContainers:
+        - name: waitfordb
+          image: "busybox:1.35.0"
+          imagePullPolicy: Always
+          command: ['sh', '-c', 'until nc -z "$PGHOST" "$PGPORT"; do echo WaitingDB && sleep 5; done;']
+          env:
+          - name: PGHOST
+            value: "myrelease-postgresql"
+          - name: PGPORT
+            value: "5432"
+      containers:
+        
+        - name: dogstatsd
+          image: "datadog/dogstatsd:7.37.1"
+          envFrom:
+          - secretRef:
+              name: myrelease-vulcan-dogstatsd
+          ports:
+            - containerPort: 8125
+              name: dogstatsd
+              protocol: UDP
+        - name: proxy
+          image: "haproxy:2.4.17-alpine3.16"
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 9090
+            - name: metrics
+              containerPort: 9101
+          volumeMounts:
+          - mountPath: /usr/local/etc/haproxy
+            readOnly: true
+            name: config-proxy
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","sleep 30;"]
+        - name: tracker
+          
+          image: "adevinta/vulcan-tracker:1.0"
+          imagePullPolicy: Always
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","sleep 30;"]
+          livenessProbe:
+            httpGet:
+              path: /healthcheck
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 10
+          readinessProbe:
+            httpGet:
+              path: /healthcheck
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 5
+          env:
+          - name: PORT
+            value: "8080"
+          - name: PG_HOST
+            value: "myrelease-postgresql"
+          - name: PG_NAME
+            value: "tracker"
+          - name: PG_USER
+            value: "postgres"
+          - name: PG_PORT
+            value: "5432"
+          - name: PG_SSLMODE
+            value: "disable"
+          - name: PG_CA_B64
+            value: ""
+          - name: LOG_LEVEL
+            value: "error"
+          - name: SQS_QUEUE_ARN
+            value: "arn:aws:sqs:local:012345678900:VulcanK8STracking"
+          - name: JIRA_NAME_1
+            value: "Jira Instance 1"
+          - name: JIRA_URL_1
+            value: "https://jira1.example.com/"
+          - name: JIRA_USERNAME_1
+            value: "jira.user@jira1.example.com"
+          - name: JIRA_NAME_2
+            value: "Jira Instance 2"
+          - name: JIRA_URL_2
+            value: "https://jira2.example.com/"
+          - name: JIRA_USERNAME_2
+            value: "jira.user@jira2.example.com"
+          
+          - name: AWS_SQS_ENDPOINT
+            value: "http://myrelease-vulcan-goaws"
+          - name: AWS_ACCESS_KEY_ID
+            value: ANYVALUE
+          - name: AWS_SECRET_ACCESS_KEY
+            value: ANYVALUE
+          - name: DOGSTATSD_ENABLED
+            value: "true"
+          - name: DOGSTATSD_HOST
+            value: "localhost"
+          - name: DOGSTATSD_PORT
+            value: "8125"
+          envFrom:
+          - secretRef:
+              name: myrelease-vulcan-tracker
+          ports:
+            - name: app
+              containerPort: 8080
+              protocol: TCP
+      volumes:
+      - name: config-proxy
+        configMap:
+          name: myrelease-vulcan-tracker-proxy
 ---
 # Source: vulcan/templates/ui/deployment.yaml
 apiVersion: apps/v1

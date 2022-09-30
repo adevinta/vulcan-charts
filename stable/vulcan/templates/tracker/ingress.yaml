@@ -1,2 +1,0 @@
-{{- $_ := (set .Values "comp" .Values.tracker) -}}
-{{- include "common-ingress" . }}

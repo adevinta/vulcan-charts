@@ -53,11 +53,11 @@ spec:
             value: {{ .Values.comp.conf.queueArn | quote }}
           {{- range $index, $value := .Values.comp.conf.trackers.jira }}
           - name: JIRA_NAME_{{ add1 $index }}
-            value: {{ $value.name | b64enc | quote }}
+            value: {{ $value.name | quote }}
           - name: JIRA_URL_{{ add1 $index }}
-            value: {{ $value.url | b64enc | quote }}
+            value: {{ $value.url | quote }}
           - name: JIRA_USERNAME_{{ add1 $index }}
-            value: {{ $value.username | b64enc | quote }}
+            value: {{ $value.username | quote }}
           {{- end }}
         {{- include "common-container-envs" . | nindent 10 }}
           envFrom:

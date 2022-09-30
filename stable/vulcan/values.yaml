@@ -634,11 +634,11 @@ tracker:
       jira:
         - name: "Jira Instance 1"
           url: "https://jira1.example.com/"
-          username: TBD
+          username: "jira.user@jira1.example.com"
           password: TBD
         - name: "Jira Instance 2"
           url: "https://jira2.example.com/"
-          username: TBD
+          username: "jira.user@jira2.example.com"
           password: TBD
 
   # -- postgres database settings
