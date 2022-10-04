@@ -71,6 +71,11 @@ api:
         blockedChecks:
         excludingSuffixes:
           - experimental
+    kafka:
+      broker: kafka-broker
+      username: kafka-user
+      password: kafka-pwd
+      topics: '{assets = "assets"}'
   db:
     <<: *db
     host: api.postgres.host

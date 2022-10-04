@@ -14,6 +14,7 @@ data:
   PG_PASSWORD: "cGFzc3dvcmRkYmFwaQ=="
   SECRET_KEY: "YXBpc2VjcmV0a2V5"
   AWSCATALOGUE_KEY: "YXdzY2F0YWxvZ2VrZXk="
+  KAFKA_PASS: "a2Fma2EtcHdk"
 ---
 # Source: vulcan/templates/crontinuous/secrets.yaml
 apiVersion: v1
@@ -833,7 +834,7 @@ spec:
         extra-label-tag: api-tag-api
         app.kubernetes.io/name: api
       annotations:
-        checksum/secrets: ad66f9a6edd60c589c1cce11bc905dd9779aad74e32c9e1fcbb1542f6b7d9eba
+        checksum/secrets: abb1a2d479995604ed0baf451ee7912dc72f43b7d06c0569be9c027e3c2d63c4
         checksum/config-proxy: 7d6d9738ee4a99fe9a9422ca87600bb95a6e2fe246ce0a0aa20c86644790669c
         prometheus.io/scrape: 'true'
         prometheus.io/port: '9101'
@@ -969,6 +970,12 @@ spec:
             value: "[]"
           - name: "GPC_1_EXCLUDING_SUFFIXES"
             value: "[\"experimental\"]"
+          - name: KAFKA_BROKER
+            value: "kafka-broker"
+          - name: KAFKA_USER
+            value: "kafka-user"
+          - name: KAFKA_TOPICS
+            value: "{assets = \"assets\"}"
           
           - name: DOGSTATSD_ENABLED
             value: "true"

@@ -1519,6 +1519,12 @@ spec:
             value: "[]"
           - name: "GPC_1_EXCLUDING_SUFFIXES"
             value: "[\"experimental\"]"
+          - name: KAFKA_BROKER
+            value: 
+          - name: KAFKA_USER
+            value: 
+          - name: KAFKA_TOPICS
+            value: 
           - name: AWS_SNS_ENDPOINT
             value: "http://myrelease-vulcan-goaws"
           - name: AWS_SQS_ENDPOINT

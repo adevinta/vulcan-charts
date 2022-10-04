@@ -101,6 +101,12 @@ spec:
           - name: "GPC_{{ add1 $index }}_EXCLUDING_SUFFIXES"
             value: {{ default list $value.excludingSuffixes | toJson | quote }}
           {{- end }}
+          - name: KAFKA_BROKER
+            value: {{ .Values.comp.conf.kafka.broker | quote }}
+          - name: KAFKA_USER
+            value: {{ .Values.comp.conf.kafka.username | quote }}
+          - name: KAFKA_TOPICS
+            value: {{ .Values.comp.conf.kafka.topics | quote }}
         {{- include "common-container-envs" . | nindent 10 }}
           envFrom:
           - secretRef:

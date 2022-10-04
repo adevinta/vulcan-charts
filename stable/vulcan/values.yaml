@@ -403,6 +403,11 @@ api:
       #   blockedChecks:
       #     - vulcan-masscan
       #     - vulcan-zap
+    kafka:
+      broker:
+      username:
+      password:
+      topics:     # '{assets = "assets"}'
 
   dogstatsd: *dogstatsd
 
