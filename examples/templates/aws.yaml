@@ -2410,7 +2410,7 @@ spec:
         - name: pullsecretname
 ---
 # Source: vulcan/templates/api/hpa.yaml
-apiVersion: autoscaling/v2beta1
+apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: myrelease-vulcan-api
@@ -2430,10 +2430,12 @@ spec:
     - type: Resource
       resource:
         name: cpu
-        targetAverageUtilization: 50
+        target:
+          type: Utilization
+          averageUtilization: 50
 ---
 # Source: vulcan/templates/insights/hpa.yaml
-apiVersion: autoscaling/v2beta1
+apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: myrelease-vulcan-insights
@@ -2453,10 +2455,12 @@ spec:
     - type: Resource
       resource:
         name: cpu
-        targetAverageUtilization: 50
+        target:
+          type: Utilization
+          averageUtilization: 50
 ---
 # Source: vulcan/templates/persistence/hpa.yaml
-apiVersion: autoscaling/v2beta1
+apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: myrelease-vulcan-persistence
@@ -2476,10 +2480,12 @@ spec:
     - type: Resource
       resource:
         name: cpu
-        targetAverageUtilization: 50
+        target:
+          type: Utilization
+          averageUtilization: 50
 ---
 # Source: vulcan/templates/results/hpa.yaml
-apiVersion: autoscaling/v2beta1
+apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: myrelease-vulcan-results
@@ -2499,10 +2505,12 @@ spec:
     - type: Resource
       resource:
         name: cpu
-        targetAverageUtilization: 50
+        target:
+          type: Utilization
+          averageUtilization: 50
 ---
 # Source: vulcan/templates/scanengine/hpa.yaml
-apiVersion: autoscaling/v2beta1
+apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: myrelease-vulcan-scanengine
@@ -2522,7 +2530,9 @@ spec:
     - type: Resource
       resource:
         name: cpu
-        targetAverageUtilization: 50
+        target:
+          type: Utilization
+          averageUtilization: 50
 ---
 # Source: vulcan/templates/api/ingress.yaml
 apiVersion: networking.k8s.io/v1
