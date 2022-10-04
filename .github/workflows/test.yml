@@ -51,4 +51,4 @@ jobs:
         run: |
           helm repo add bitnami https://charts.bitnami.com/bitnami
           helm repo update
-          ct install --helm-extra-set-args "-f examples/local.yaml --set=metrics.enabled=false --set=api.enabled=false --kube-version ${{ matrix.k8s }}"
+          ct install --helm-extra-set-args "-f examples/local.yaml --set=metrics.enabled=false --set=api.enabled=false"
