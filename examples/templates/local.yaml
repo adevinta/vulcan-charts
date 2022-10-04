@@ -1004,6 +1004,7 @@ metadata:
     app.kubernetes.io/component: master
 spec:
   type: ClusterIP
+  internalTrafficPolicy: Cluster
   sessionAffinity: None
   ports:
     - name: tcp-redis
@@ -3334,7 +3335,7 @@ spec:
           emptyDir: {}
 ---
 # Source: vulcan/charts/minio/templates/ingress.yaml
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: myrelease-minio
@@ -3351,12 +3352,15 @@ spec:
       http:
         paths:
           - path: /
+            pathType: ImplementationSpecific
             backend:
-              serviceName: myrelease-minio
-              servicePort: minio-console
+              service:
+                name: myrelease-minio
+                port:
+                  name: minio-console
 ---
 # Source: vulcan/templates/api/ingress.yaml
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: myrelease-vulcan-api
@@ -3375,12 +3379,15 @@ spec:
       http:
         paths:
           - path: /api
+            pathType: ImplementationSpecific
             backend:
-              serviceName: myrelease-vulcan-api
-              servicePort: 80
+              service:
+                name: myrelease-vulcan-api
+                port:
+                  number: 80
 ---
 # Source: vulcan/templates/goaws/ingress.yaml
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: myrelease-vulcan-goaws
@@ -3395,12 +3402,15 @@ spec:
       http:
         paths:
           - path: /
+            pathType: ImplementationSpecific
             backend:
-              serviceName: myrelease-vulcan-goaws
-              servicePort: 80
+              service:
+                name: myrelease-vulcan-goaws
+                port:
+                  number: 80
 ---
 # Source: vulcan/templates/insights/ingress.yaml
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: myrelease-vulcan-insights
@@ -3423,12 +3433,15 @@ spec:
       http:
         paths:
           - path: /
+            pathType: ImplementationSpecific
             backend:
-              serviceName: myrelease-vulcan-insights
-              servicePort: 80
+              service:
+                name: myrelease-vulcan-insights
+                port:
+                  number: 80
 ---
 # Source: vulcan/templates/persistence/ingress.yaml
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: myrelease-vulcan-persistence
@@ -3443,12 +3456,15 @@ spec:
       http:
         paths:
           - path: /
+            pathType: ImplementationSpecific
             backend:
-              serviceName: myrelease-vulcan-persistence
-              servicePort: 80
+              service:
+                name: myrelease-vulcan-persistence
+                port:
+                  number: 80
 ---
 # Source: vulcan/templates/results/ingress.yaml
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: myrelease-vulcan-results
@@ -3463,12 +3479,15 @@ spec:
       http:
         paths:
           - path: /
+            pathType: ImplementationSpecific
             backend:
-              serviceName: myrelease-vulcan-results
-              servicePort: 80
+              service:
+                name: myrelease-vulcan-results
+                port:
+                  number: 80
 ---
 # Source: vulcan/templates/stream/ingress.yaml
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: myrelease-vulcan-stream
@@ -3486,12 +3505,15 @@ spec:
       http:
         paths:
           - path: /
+            pathType: ImplementationSpecific
             backend:
-              serviceName: myrelease-vulcan-stream
-              servicePort: 80
+              service:
+                name: myrelease-vulcan-stream
+                port:
+                  number: 80
 ---
 # Source: vulcan/templates/ui/ingress.yaml
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: myrelease-vulcan-ui
@@ -3506,12 +3528,15 @@ spec:
       http:
         paths:
           - path: /
+            pathType: ImplementationSpecific
             backend:
-              serviceName: myrelease-vulcan-ui
-              servicePort: 80
+              service:
+                name: myrelease-vulcan-ui
+                port:
+                  number: 80
 ---
 # Source: vulcan/templates/vulndbapi/ingress.yaml
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: myrelease-vulcan-vulndbapi
@@ -3526,6 +3551,9 @@ spec:
       http:
         paths:
           - path: /
+            pathType: ImplementationSpecific
             backend:
-              serviceName: myrelease-vulcan-vulndbapi
-              servicePort: 80
+              service:
+                name: myrelease-vulcan-vulndbapi
+                port:
+                  number: 80
