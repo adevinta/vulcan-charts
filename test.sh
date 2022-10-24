@@ -30,8 +30,4 @@ do
   helm template myrelease --kube-version "$KVERSION" "$BASEDIR/stable/vulcan" --namespace ns -f "$f" > "$OUTDIR/$fn"
 done
 
-if [[ -x "$(which helm-docs)" ]]; then
-  helm-docs -s file
-else
-  echo "Unable to find helm-docs ... skipping"
-fi
+docker run --rm --volume "$(pwd):/helm-docs" -u "$(id -u)" jnorwood/helm-docs:v1.11.0 -s file
