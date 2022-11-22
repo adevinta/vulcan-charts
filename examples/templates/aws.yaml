@@ -2285,10 +2285,22 @@ spec:
             value: "arn:aws:sqs:eu-west-1:000000000000:VulnDBChecks"
           - name: SNS_TOPIC_ARN
             value: "arn:aws:sns:eu-west-1:000000000000:VulnDBVulns"
+          - name: SNS_ENABLED
+            value: "true"
           - name: RESULTS_URL
             value: https://results.vulcan.example.com
           - name: RESULTS_INTERNAL_URL
             value: "http://myrelease-vulcan-results"
+          - name: KAFKA_ENABLED
+            value: "false"
+          - name: KAFKA_USER
+            value: "kafka-user"
+          - name: KAFKA_PASSWORD
+            value: "kafka-pwd"
+          - name: KAFKA_BROKER_URL
+            value: "kafka-broker"
+          - name: KAFKA_TOPIC
+            value: "findings"
           
           
           envFrom:

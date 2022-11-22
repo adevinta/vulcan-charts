@@ -53,10 +53,22 @@ spec:
             value: {{ .Values.comp.conf.checksQueueArn | quote }}
           - name: SNS_TOPIC_ARN
             value: {{ .Values.comp.conf.vulnsTopicArn | quote }}
+          - name: SNS_ENABLED
+            value: {{ .Values.comp.conf.vulnsTopicEnabled | quote }}
           - name: RESULTS_URL
             value: {{ .Values.comp.conf.resultsUrl | default ( printf "https://%s" (include "results.fullname" .)) }}
           - name: RESULTS_INTERNAL_URL
             value: {{ .Values.comp.conf.resultsInternalUrl | default (include "results.url" .)| quote }}
+          - name: KAFKA_ENABLED
+            value: {{ .Values.comp.conf.kafka.enabled | quote }}
+          - name: KAFKA_USER
+            value: {{ .Values.comp.conf.kafka.username | quote }}
+          - name: KAFKA_PASSWORD
+            value: {{ .Values.comp.conf.kafka.password | quote }}
+          - name: KAFKA_BROKER_URL
+            value: {{ .Values.comp.conf.kafka.broker | quote }}
+          - name: KAFKA_TOPIC
+            value: {{ .Values.comp.conf.kafka.topic | quote }}
         {{- include "common-container-envs" . | nindent 10 }}
           envFrom:
           - secretRef:

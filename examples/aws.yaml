@@ -404,6 +404,13 @@ vulndb:
     logLevel: info
     resultsUrl: https://results.vulcan.example.com
     vulnsTopicArn: arn:aws:sns:eu-west-1:000000000000:VulnDBVulns
+    vulnsTopicEnabled: true
+    kafka:
+      enabled: false
+      broker: kafka-broker
+      username: kafka-user
+      password: kafka-pwd
+      topic: findings
   db:
     <<: *db
     host: vulnerabilitydb.postgres.host

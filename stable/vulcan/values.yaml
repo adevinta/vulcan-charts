@@ -681,9 +681,16 @@ vulndb:
     logLevel: "error"
     checksQueueArn: arn:aws:sqs:local:012345678900:VulcanK8SVulnDBChecks
     vulnsTopicArn: arn:aws:sns:local:012345678900:VulcanK8SVulnDBVulns
+    vulnsTopicEnabled: true
     maxEventAge: 365
     resultsUrl: http://vulcan-results.vulcan.com
     resultsInternalUrl:   # http://vulcan-results
+    kafka:
+      enabled: false
+      username:
+      password:
+      broker:
+      topic:
 
   proxy:
     enabled: false
