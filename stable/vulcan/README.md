@@ -16,9 +16,9 @@ A Helm chart for deploying Vulcan
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://charts.bitnami.com/bitnami | minio | 11.x.x |
-| https://charts.bitnami.com/bitnami | postgresql | 11.x.x |
-| https://charts.bitnami.com/bitnami | redis | 17.x.x |
+| https://charts.bitnami.com/bitnami | minio | 11.10.10 |
+| https://charts.bitnami.com/bitnami | postgresql | 11.9.11 |
+| https://charts.bitnami.com/bitnami | redis | 17.3.7 |
 
 ## Values
 
