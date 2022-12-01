@@ -33,7 +33,9 @@ helm upgrade -i vulcan vulcan/vulcan -f examples/local.yaml --namespace vulcan
 
 ## Contributors
 
-Before committing changes, increment the [chart version](https://github.com/adevinta/vulcan-charts/blob/ac8462e72859cde03093de9aa236b289d82c48c6/stable/vulcan/Chart.yaml#L17-L19) and execute the following commands:
+In order to generate a new release, increment the [chart version](https://github.com/adevinta/vulcan-charts/blob/master/stable/vulcan/Chart.yaml). The version increment can be postponed if more changes are pending to be applied to the chart before the release. Take into account, thought, that the release process in master will fail if changes are made in the chart and the version has not been updated.
+
+Before committing changes execute the following commands:
 
 ```sh
 # Update examples/templates and update the charts generated README.md files.
