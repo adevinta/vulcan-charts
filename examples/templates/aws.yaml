@@ -5,7 +5,7 @@ kind: Secret
 metadata:
   name: myrelease-vulcan-api
   labels:
-    helm.sh/chart: vulcan-0.5.3
+    helm.sh/chart: vulcan-0.5.4
     app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: api
@@ -22,7 +22,7 @@ kind: Secret
 metadata:
   name: myrelease-vulcan-crontinuous
   labels:
-    helm.sh/chart: vulcan-0.5.3
+    helm.sh/chart: vulcan-0.5.4
     app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: crontinuous
@@ -36,7 +36,7 @@ kind: Secret
 metadata:
   name: myrelease-vulcan-dogstatsd
   labels:
-    helm.sh/chart: vulcan-0.5.3
+    helm.sh/chart: vulcan-0.5.4
     app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: dogstatsd
@@ -50,7 +50,7 @@ kind: Secret
 metadata:
   name: myrelease-vulcan-metrics
   labels:
-    helm.sh/chart: vulcan-0.5.3
+    helm.sh/chart: vulcan-0.5.4
     app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics
@@ -65,7 +65,7 @@ kind: Secret
 metadata:
   name: myrelease-vulcan-persistence
   labels:
-    helm.sh/chart: vulcan-0.5.3
+    helm.sh/chart: vulcan-0.5.4
     app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: persistence
@@ -80,7 +80,7 @@ kind: Secret
 metadata:
   name: myrelease-vulcan-reportsgenerator
   labels:
-    helm.sh/chart: vulcan-0.5.3
+    helm.sh/chart: vulcan-0.5.4
     app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: reportsgenerator
@@ -94,7 +94,7 @@ kind: Secret
 metadata:
   name: myrelease-vulcan-scanengine
   labels:
-    helm.sh/chart: vulcan-0.5.3
+    helm.sh/chart: vulcan-0.5.4
     app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: scanengine
@@ -108,7 +108,7 @@ kind: Secret
 metadata:
   name: myrelease-vulcan-stream
   labels:
-    helm.sh/chart: vulcan-0.5.3
+    helm.sh/chart: vulcan-0.5.4
     app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: stream
@@ -122,7 +122,7 @@ kind: Secret
 metadata:
   name: myrelease-vulcan-vulndb
   labels:
-    helm.sh/chart: vulcan-0.5.3
+    helm.sh/chart: vulcan-0.5.4
     app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: vulndb
@@ -136,13 +136,14 @@ kind: Secret
 metadata:
   name: myrelease-vulcan-vulndbapi
   labels:
-    helm.sh/chart: vulcan-0.5.3
+    helm.sh/chart: vulcan-0.5.4
     app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: vulndbapi
 type: Opaque
 data:
   PG_PASSWORD: "eHh4eHh4eHh4eA=="
+  PG_PASSWORD_READ: "eHh4eHh4eHh4eA=="
 ---
 # Source: vulcan/templates/api/deployment.yaml
 apiVersion: v1
@@ -150,7 +151,7 @@ kind: ConfigMap
 metadata:
   name: myrelease-vulcan-api-proxy
   labels:
-    helm.sh/chart: vulcan-0.5.3
+    helm.sh/chart: vulcan-0.5.4
     app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: api
@@ -193,7 +194,7 @@ kind: ConfigMap
 metadata:
   name: myrelease-vulcan-crontinuous-proxy
   labels:
-    helm.sh/chart: vulcan-0.5.3
+    helm.sh/chart: vulcan-0.5.4
     app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: crontinuous
@@ -235,7 +236,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   labels:
-    helm.sh/chart: vulcan-0.5.3
+    helm.sh/chart: vulcan-0.5.4
     app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
   name: vulcan-custom-configmap
@@ -249,7 +250,7 @@ kind: ConfigMap
 metadata:
   name: myrelease-vulcan-insights-proxy
   labels:
-    helm.sh/chart: vulcan-0.5.3
+    helm.sh/chart: vulcan-0.5.4
     app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: insights
@@ -300,7 +301,7 @@ kind: ConfigMap
 metadata:
   name: myrelease-vulcan-persistence-proxy
   labels:
-    helm.sh/chart: vulcan-0.5.3
+    helm.sh/chart: vulcan-0.5.4
     app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: persistence
@@ -343,7 +344,7 @@ kind: ConfigMap
 metadata:
   name: myrelease-vulcan-reportsgenerator-proxy
   labels:
-    helm.sh/chart: vulcan-0.5.3
+    helm.sh/chart: vulcan-0.5.4
     app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: reportsgenerator
@@ -386,7 +387,7 @@ kind: ConfigMap
 metadata:
   name: myrelease-vulcan-results-proxy
   labels:
-    helm.sh/chart: vulcan-0.5.3
+    helm.sh/chart: vulcan-0.5.4
     app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: results
@@ -429,7 +430,7 @@ kind: ConfigMap
 metadata:
   name: myrelease-vulcan-scanengine-proxy
   labels:
-    helm.sh/chart: vulcan-0.5.3
+    helm.sh/chart: vulcan-0.5.4
     app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: scanengine
@@ -472,7 +473,7 @@ kind: ConfigMap
 metadata:
   name: myrelease-vulcan-stream-proxy
   labels:
-    helm.sh/chart: vulcan-0.5.3
+    helm.sh/chart: vulcan-0.5.4
     app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: stream
@@ -515,7 +516,7 @@ kind: ConfigMap
 metadata:
   name: myrelease-vulcan-ui-proxy
   labels:
-    helm.sh/chart: vulcan-0.5.3
+    helm.sh/chart: vulcan-0.5.4
     app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: ui
@@ -558,7 +559,7 @@ kind: ConfigMap
 metadata:
   name: myrelease-vulcan-vulndbapi-proxy
   labels:
-    helm.sh/chart: vulcan-0.5.3
+    helm.sh/chart: vulcan-0.5.4
     app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: vulndbapi
@@ -606,7 +607,7 @@ kind: Service
 metadata:
   name: myrelease-vulcan-api
   labels:
-    helm.sh/chart: vulcan-0.5.3
+    helm.sh/chart: vulcan-0.5.4
     app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: api
@@ -627,7 +628,7 @@ kind: Service
 metadata:
   name: myrelease-vulcan-crontinuous
   labels:
-    helm.sh/chart: vulcan-0.5.3
+    helm.sh/chart: vulcan-0.5.4
     app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: crontinuous
@@ -648,7 +649,7 @@ kind: Service
 metadata:
   name: myrelease-vulcan-insights
   labels:
-    helm.sh/chart: vulcan-0.5.3
+    helm.sh/chart: vulcan-0.5.4
     app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: insights
@@ -669,7 +670,7 @@ kind: Service
 metadata:
   name: myrelease-vulcan-persistence
   labels:
-    helm.sh/chart: vulcan-0.5.3
+    helm.sh/chart: vulcan-0.5.4
     app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: persistence
@@ -690,7 +691,7 @@ kind: Service
 metadata:
   name: myrelease-vulcan-reportsgenerator
   labels:
-    helm.sh/chart: vulcan-0.5.3
+    helm.sh/chart: vulcan-0.5.4
     app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: reportsgenerator
@@ -711,7 +712,7 @@ kind: Service
 metadata:
   name: myrelease-vulcan-results
   labels:
-    helm.sh/chart: vulcan-0.5.3
+    helm.sh/chart: vulcan-0.5.4
     app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: results
@@ -732,7 +733,7 @@ kind: Service
 metadata:
   name: myrelease-vulcan-scanengine
   labels:
-    helm.sh/chart: vulcan-0.5.3
+    helm.sh/chart: vulcan-0.5.4
     app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: scanengine
@@ -753,7 +754,7 @@ kind: Service
 metadata:
   name: myrelease-vulcan-stream
   labels:
-    helm.sh/chart: vulcan-0.5.3
+    helm.sh/chart: vulcan-0.5.4
     app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: stream
@@ -774,7 +775,7 @@ kind: Service
 metadata:
   name: myrelease-vulcan-ui
   labels:
-    helm.sh/chart: vulcan-0.5.3
+    helm.sh/chart: vulcan-0.5.4
     app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: ui
@@ -795,7 +796,7 @@ kind: Service
 metadata:
   name: myrelease-vulcan-vulndbapi
   labels:
-    helm.sh/chart: vulcan-0.5.3
+    helm.sh/chart: vulcan-0.5.4
     app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: vulndbapi
@@ -816,7 +817,7 @@ kind: Deployment
 metadata:
   name: myrelease-vulcan-api
   labels:
-    helm.sh/chart: vulcan-0.5.3
+    helm.sh/chart: vulcan-0.5.4
     app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: api
@@ -916,16 +917,6 @@ spec:
             value: "5432"
           - name: PG_SSLMODE
             value: "verify-full"
-          - name: PG_HOST_READ
-            value: "vulnerabilitydb.read.postgres.host"
-          - name: PG_NAME_READ
-            value: "vulcanapi"
-          - name: PG_USER_READ
-            value: "vulcan"
-          - name: PG_PORT_READ
-            value: "5432"
-          - name: PG_SSLMODE_READ
-            value: "verify-full"
           - name: PG_CA_B64
             value: "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUVCakNDQXU2Z0F3SUJBZ0lKQU1jMFp6YVNVSzUxTUEwR0NTcUdTSWIzRFFFQkN3VUFNSUdQTVFzd0NRWUQKVlFRR0V3SlZVekVRTUE0R0ExVUVCd3dIVTJWaGRIUnNaVEVUTUJFR0ExVUVDQXdLVjJGemFHbHVaM1J2YmpFaQpNQ0FHQTFVRUNnd1pRVzFoZW05dUlGZGxZaUJUWlhKMmFXTmxjeXdnU1c1akxqRVRNQkVHQTFVRUN3d0tRVzFoCmVtOXVJRkpFVXpFZ01CNEdBMVVFQXd3WFFXMWhlbTl1SUZKRVV5QlNiMjkwSURJd01Ua2dRMEV3SGhjTk1Ua3cKT0RJeU1UY3dPRFV3V2hjTk1qUXdPREl5TVRjd09EVXdXakNCanpFTE1Ba0dBMVVFQmhNQ1ZWTXhFREFPQmdOVgpCQWNNQjFObFlYUjBiR1V4RXpBUkJnTlZCQWdNQ2xkaGMyaHBibWQwYjI0eElqQWdCZ05WQkFvTUdVRnRZWHB2CmJpQlhaV0lnVTJWeWRtbGpaWE1zSUVsdVl5NHhFekFSQmdOVkJBc01Da0Z0WVhwdmJpQlNSRk14SURBZUJnTlYKQkFNTUYwRnRZWHB2YmlCU1JGTWdVbTl2ZENBeU1ERTVJRU5CTUlJQklqQU5CZ2txaGtpRzl3MEJBUUVGQUFPQwpBUThBTUlJQkNnS0NBUUVBclhuRi9FNi9RaCtrdTNoUVRTS1BNaFFRbENwb1d2bkl0aHpYNk1LM3A1YTBlWEtaCm9XSWpZY05ORzZVd0pqcDRmVVhsNmdscDUzSm9ibit0V05YODhkTkgybjhEVmJwcFN3U2NWRTJMcHVMKzk0dlkKMEVZRS9YeE43c3ZLZWE4WXZscnFrVUJLeXhMeFRqaCtVL0tyR09hSHh6OXYwbDZaTmxEYnVhWnczcUlXZEQvSQo2YU5iR2VSVVZ0cE02UCtiV0lveFZsL2NhUXlsUVM2Q0VZVWsrQ3BWeUpTa29wd0pselhUMDd0TW9ETDVXZ1g5Ck8wOEtWZ0ROejlxUC9JR3RBY1JkdVJjTmlvSDNFOXY5ODFRTzF6dC9HcGIyZjhOcUFqVVVDVVp6T25pajZteDkKTWNaKzljV1g4OENSelIwdlFPRFd1WnNjZ0kwOE52TTY5Rm4yU1FJREFRQUJvMk13WVRBT0JnTlZIUThCQWY4RQpCQU1DQVFZd0R3WURWUjBUQVFIL0JBVXdBd0VCL3pBZEJnTlZIUTRFRmdRVWMxOWcyTHpMQTVqMEt4YzBMalphCnBtRC92Qjh3SHdZRFZSMGpCQmd3Rm9BVWMxOWcyTHpMQTVqMEt4YzBMalphcG1EL3ZCOHdEUVlKS29aSWh2Y04KQVFFTEJRQURnZ0VCQUhBRzdXVG15anpQUklNODVyVmorZldIc0xJdnFwdzZET2JJak1Xb2twbGlDZU1JTlpGVgp5bmZnQktzZjFFeHdidkpOellGWFc2ZGlobmd1REc5Vk1QcGkydXAvY3RRVE44dG05bkRLT3kwOHVOWm9vZk1jCk5VWnhLQ0VrVktaditJTDRvSG9lYXl0OGVndHYzdWpKTTZWMTRBc3RNUTZTd3Z3dkE5M0VQL1VnMmU0V0FYSHUKY2JJMU5BYlVnVkRxcCtEUmRmdlprZ1lLcnlqVFdkLzArMWZTOFgxYkJaVld6bDdlaXJOVm5IYlNIMlpEcE51WQowU0JkOGRqNUY2bGQzdDU4eWRaYnJUSHplN0pKT2Q4aWp5U0FwNC9raXU5VWZaV3VUUEFCekRhL0RTZHo5RGsvCnpQVzRDWFh2aExtRTAyVEE5L0hlQ3czS0VISXdpY051RWZ3PQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg=="
           - name: LOG_LEVEL
@@ -1014,7 +1005,7 @@ kind: Deployment
 metadata:
   name: myrelease-vulcan-crontinuous
   labels:
-    helm.sh/chart: vulcan-0.5.3
+    helm.sh/chart: vulcan-0.5.4
     app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: crontinuous
@@ -1124,7 +1115,7 @@ kind: Deployment
 metadata:
   name: myrelease-vulcan-insights
   labels:
-    helm.sh/chart: vulcan-0.5.3
+    helm.sh/chart: vulcan-0.5.4
     app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: insights
@@ -1261,7 +1252,7 @@ kind: Deployment
 metadata:
   name: myrelease-vulcan-metrics
   labels:
-    helm.sh/chart: vulcan-0.5.3
+    helm.sh/chart: vulcan-0.5.4
     app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: metrics
@@ -1361,7 +1352,7 @@ kind: Deployment
 metadata:
   name: myrelease-vulcan-persistence
   labels:
-    helm.sh/chart: vulcan-0.5.3
+    helm.sh/chart: vulcan-0.5.4
     app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: persistence
@@ -1494,7 +1485,7 @@ kind: Deployment
 metadata:
   name: myrelease-vulcan-reportsgenerator
   labels:
-    helm.sh/chart: vulcan-0.5.3
+    helm.sh/chart: vulcan-0.5.4
     app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: reportsgenerator
@@ -1688,7 +1679,7 @@ kind: Deployment
 metadata:
   name: myrelease-vulcan-results
   labels:
-    helm.sh/chart: vulcan-0.5.3
+    helm.sh/chart: vulcan-0.5.4
     app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: results
@@ -1801,7 +1792,7 @@ kind: Deployment
 metadata:
   name: myrelease-vulcan-scanengine
   labels:
-    helm.sh/chart: vulcan-0.5.3
+    helm.sh/chart: vulcan-0.5.4
     app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: scanengine
@@ -1956,7 +1947,7 @@ kind: Deployment
 metadata:
   name: myrelease-vulcan-sqsexporter
   labels:
-    helm.sh/chart: vulcan-0.5.3
+    helm.sh/chart: vulcan-0.5.4
     app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: sqsexporter
@@ -2010,7 +2001,7 @@ kind: Deployment
 metadata:
   name: myrelease-vulcan-stream
   labels:
-    helm.sh/chart: vulcan-0.5.3
+    helm.sh/chart: vulcan-0.5.4
     app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: stream
@@ -2129,7 +2120,7 @@ kind: Deployment
 metadata:
   name: myrelease-vulcan-ui
   labels:
-    helm.sh/chart: vulcan-0.5.3
+    helm.sh/chart: vulcan-0.5.4
     app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: ui
@@ -2233,7 +2224,7 @@ kind: Deployment
 metadata:
   name: myrelease-vulcan-vulndb
   labels:
-    helm.sh/chart: vulcan-0.5.3
+    helm.sh/chart: vulcan-0.5.4
     app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: vulndb
@@ -2328,7 +2319,7 @@ kind: Deployment
 metadata:
   name: myrelease-vulcan-vulndbapi
   labels:
-    helm.sh/chart: vulcan-0.5.3
+    helm.sh/chart: vulcan-0.5.4
     app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: vulndbapi
@@ -2345,7 +2336,7 @@ spec:
         global-namespace: 'ns'
         app.kubernetes.io/name: vulndbapi
       annotations:
-        checksum/secrets: 766e2200ecd1fedbf5bc59975fada3271dfbfbba21a6b4538d3646195d3fda04
+        checksum/secrets: cf5ee02f1ad609b195bd22e9e2af3d445ac0e2139b57e5fe0a41eaa026811720
         checksum/config-proxy: 72ebd01141a03ed16ec65c6f03553608d7484add5632fae01dcbc280aacdc26b
         prometheus.io/scrape: 'true'
         prometheus.io/port: '9101'
@@ -2417,6 +2408,16 @@ spec:
             value: "5432"
           - name: PG_SSLMODE
             value: "verify-full"
+          - name: PG_HOST_READ
+            value: "vulnerabilitydb.read.postgres.host"
+          - name: PG_NAME_READ
+            value: "vulnerabilitydb"
+          - name: PG_USER_READ
+            value: "vulnerabilitydb"
+          - name: PG_PORT_READ
+            value: "5432"
+          - name: PG_SSLMODE_READ
+            value: "verify-full"
           - name: PG_CA_B64
             value: "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUVCakNDQXU2Z0F3SUJBZ0lKQU1jMFp6YVNVSzUxTUEwR0NTcUdTSWIzRFFFQkN3VUFNSUdQTVFzd0NRWUQKVlFRR0V3SlZVekVRTUE0R0ExVUVCd3dIVTJWaGRIUnNaVEVUTUJFR0ExVUVDQXdLVjJGemFHbHVaM1J2YmpFaQpNQ0FHQTFVRUNnd1pRVzFoZW05dUlGZGxZaUJUWlhKMmFXTmxjeXdnU1c1akxqRVRNQkVHQTFVRUN3d0tRVzFoCmVtOXVJRkpFVXpFZ01CNEdBMVVFQXd3WFFXMWhlbTl1SUZKRVV5QlNiMjkwSURJd01Ua2dRMEV3SGhjTk1Ua3cKT0RJeU1UY3dPRFV3V2hjTk1qUXdPREl5TVRjd09EVXdXakNCanpFTE1Ba0dBMVVFQmhNQ1ZWTXhFREFPQmdOVgpCQWNNQjFObFlYUjBiR1V4RXpBUkJnTlZCQWdNQ2xkaGMyaHBibWQwYjI0eElqQWdCZ05WQkFvTUdVRnRZWHB2CmJpQlhaV0lnVTJWeWRtbGpaWE1zSUVsdVl5NHhFekFSQmdOVkJBc01Da0Z0WVhwdmJpQlNSRk14SURBZUJnTlYKQkFNTUYwRnRZWHB2YmlCU1JGTWdVbTl2ZENBeU1ERTVJRU5CTUlJQklqQU5CZ2txaGtpRzl3MEJBUUVGQUFPQwpBUThBTUlJQkNnS0NBUUVBclhuRi9FNi9RaCtrdTNoUVRTS1BNaFFRbENwb1d2bkl0aHpYNk1LM3A1YTBlWEtaCm9XSWpZY05ORzZVd0pqcDRmVVhsNmdscDUzSm9ibit0V05YODhkTkgybjhEVmJwcFN3U2NWRTJMcHVMKzk0dlkKMEVZRS9YeE43c3ZLZWE4WXZscnFrVUJLeXhMeFRqaCtVL0tyR09hSHh6OXYwbDZaTmxEYnVhWnczcUlXZEQvSQo2YU5iR2VSVVZ0cE02UCtiV0lveFZsL2NhUXlsUVM2Q0VZVWsrQ3BWeUpTa29wd0pselhUMDd0TW9ETDVXZ1g5Ck8wOEtWZ0ROejlxUC9JR3RBY1JkdVJjTmlvSDNFOXY5ODFRTzF6dC9HcGIyZjhOcUFqVVVDVVp6T25pajZteDkKTWNaKzljV1g4OENSelIwdlFPRFd1WnNjZ0kwOE52TTY5Rm4yU1FJREFRQUJvMk13WVRBT0JnTlZIUThCQWY4RQpCQU1DQVFZd0R3WURWUjBUQVFIL0JBVXdBd0VCL3pBZEJnTlZIUTRFRmdRVWMxOWcyTHpMQTVqMEt4YzBMalphCnBtRC92Qjh3SHdZRFZSMGpCQmd3Rm9BVWMxOWcyTHpMQTVqMEt4YzBMalphcG1EL3ZCOHdEUVlKS29aSWh2Y04KQVFFTEJRQURnZ0VCQUhBRzdXVG15anpQUklNODVyVmorZldIc0xJdnFwdzZET2JJak1Xb2twbGlDZU1JTlpGVgp5bmZnQktzZjFFeHdidkpOellGWFc2ZGlobmd1REc5Vk1QcGkydXAvY3RRVE44dG05bkRLT3kwOHVOWm9vZk1jCk5VWnhLQ0VrVktaditJTDRvSG9lYXl0OGVndHYzdWpKTTZWMTRBc3RNUTZTd3Z3dkE5M0VQL1VnMmU0V0FYSHUKY2JJMU5BYlVnVkRxcCtEUmRmdlprZ1lLcnlqVFdkLzArMWZTOFgxYkJaVld6bDdlaXJOVm5IYlNIMlpEcE51WQowU0JkOGRqNUY2bGQzdDU4eWRaYnJUSHplN0pKT2Q4aWp5U0FwNC9raXU5VWZaV3VUUEFCekRhL0RTZHo5RGsvCnpQVzRDWFh2aExtRTAyVEE5L0hlQ3czS0VISXdpY051RWZ3PQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg=="
           - name: LOG_LEVEL
@@ -2444,7 +2445,7 @@ kind: HorizontalPodAutoscaler
 metadata:
   name: myrelease-vulcan-api
   labels:
-    helm.sh/chart: vulcan-0.5.3
+    helm.sh/chart: vulcan-0.5.4
     app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: api
@@ -2469,7 +2470,7 @@ kind: HorizontalPodAutoscaler
 metadata:
   name: myrelease-vulcan-insights
   labels:
-    helm.sh/chart: vulcan-0.5.3
+    helm.sh/chart: vulcan-0.5.4
     app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: insights
@@ -2494,7 +2495,7 @@ kind: HorizontalPodAutoscaler
 metadata:
   name: myrelease-vulcan-persistence
   labels:
-    helm.sh/chart: vulcan-0.5.3
+    helm.sh/chart: vulcan-0.5.4
     app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: persistence
@@ -2519,7 +2520,7 @@ kind: HorizontalPodAutoscaler
 metadata:
   name: myrelease-vulcan-results
   labels:
-    helm.sh/chart: vulcan-0.5.3
+    helm.sh/chart: vulcan-0.5.4
     app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: results
@@ -2544,7 +2545,7 @@ kind: HorizontalPodAutoscaler
 metadata:
   name: myrelease-vulcan-scanengine
   labels:
-    helm.sh/chart: vulcan-0.5.3
+    helm.sh/chart: vulcan-0.5.4
     app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: scanengine
@@ -2569,7 +2570,7 @@ kind: Ingress
 metadata:
   name: myrelease-vulcan-api
   labels:
-    helm.sh/chart: vulcan-0.5.3
+    helm.sh/chart: vulcan-0.5.4
     app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: api
@@ -2601,7 +2602,7 @@ kind: Ingress
 metadata:
   name: myrelease-vulcan-insights
   labels:
-    helm.sh/chart: vulcan-0.5.3
+    helm.sh/chart: vulcan-0.5.4
     app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: insights
@@ -2639,7 +2640,7 @@ kind: Ingress
 metadata:
   name: myrelease-vulcan-persistence
   labels:
-    helm.sh/chart: vulcan-0.5.3
+    helm.sh/chart: vulcan-0.5.4
     app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: persistence
@@ -2669,7 +2670,7 @@ kind: Ingress
 metadata:
   name: myrelease-vulcan-results
   labels:
-    helm.sh/chart: vulcan-0.5.3
+    helm.sh/chart: vulcan-0.5.4
     app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: results
@@ -2699,7 +2700,7 @@ kind: Ingress
 metadata:
   name: myrelease-vulcan-stream
   labels:
-    helm.sh/chart: vulcan-0.5.3
+    helm.sh/chart: vulcan-0.5.4
     app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: stream
@@ -2730,7 +2731,7 @@ kind: Ingress
 metadata:
   name: myrelease-vulcan-ui
   labels:
-    helm.sh/chart: vulcan-0.5.3
+    helm.sh/chart: vulcan-0.5.4
     app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: ui
