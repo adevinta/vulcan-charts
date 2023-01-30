@@ -51,6 +51,10 @@ spec:
             value: {{ .Values.comp.conf.logLevel | quote }}
           - name: SQS_QUEUE_ARN
             value: {{ .Values.comp.conf.queueArn | quote }}
+          {{- with .Values.comp.conf.sqsNumProcessors }}
+          - name: SQS_NUM_PROCESSORS
+            value: {{ . | quote }}
+          {{- end }}
           - name: SES_REGION
             value: {{ .Values.comp.conf.ses.region | default (include "region" .) | quote }}
           - name: SES_FROM

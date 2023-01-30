@@ -571,6 +571,7 @@ reportsgenerator:
     logLevel: "error"
     queueArn: arn:aws:sqs:local:012345678900:VulcanK8SReportsGenerator
     queueName: VulcanK8SReportsGenerator
+    sqsNumProcessors:
     scanengineUrl:
     resultsUrl:
     generators:
@@ -683,6 +684,7 @@ vulndb:
     logLevel: "error"
     checksQueueArn: arn:aws:sqs:local:012345678900:VulcanK8SVulnDBChecks
     vulnsTopicArn: arn:aws:sns:local:012345678900:VulcanK8SVulnDBVulns
+    sqsNumProcessors:
     vulnsTopicEnabled: true
     maxEventAge: 365
     resultsUrl: http://vulcan-results.vulcan.com

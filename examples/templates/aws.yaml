@@ -1611,6 +1611,8 @@ spec:
             value: "error"
           - name: SQS_QUEUE_ARN
             value: "arn:aws:sqs:eu-west-1:000000000000:ReportsGenerator"
+          - name: SQS_NUM_PROCESSORS
+            value: "3"
           - name: SES_REGION
             value: "eu-west-1"
           - name: SES_FROM
@@ -2284,6 +2286,8 @@ spec:
             value: "365"
           - name: SQS_QUEUE_ARN
             value: "arn:aws:sqs:eu-west-1:000000000000:VulnDBChecks"
+          - name: SQS_NUMBER_OF_PROCESSORS
+            value: "5"
           - name: SNS_TOPIC_ARN
             value: "arn:aws:sns:eu-west-1:000000000000:VulnDBVulns"
           - name: SNS_ENABLED

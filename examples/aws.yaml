@@ -247,6 +247,7 @@ reportsgenerator:
         publicBucket: s3-vulcan-public-insights
         vulcanUi: https://www.vulcan.example.com/
     queueArn: arn:aws:sqs:eu-west-1:000000000000:ReportsGenerator
+    sqsNumProcessors: 3
     ses:
       cc: '[''vulcan@example.com'']'
       from: vulcan@example.com
@@ -408,6 +409,7 @@ vulndb:
     iam.amazonaws.com/role: arn:aws:iam::000000000000:role/VulnDBRole
   conf:
     checksQueueArn: arn:aws:sqs:eu-west-1:000000000000:VulnDBChecks
+    sqsNumProcessors: 5
     logLevel: info
     resultsUrl: https://results.vulcan.example.com
     vulnsTopicArn: arn:aws:sns:eu-west-1:000000000000:VulnDBVulns
