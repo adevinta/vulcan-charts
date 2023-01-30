@@ -1892,7 +1892,7 @@ spec:
               name: dogstatsd
               protocol: UDP
         - name: redis
-          image: "bitnami/redis:6.2.7"
+          image: "bitnami/redis:6.2.10"
           env:
           - name: ALLOW_EMPTY_PASSWORD
             value: "yes"
