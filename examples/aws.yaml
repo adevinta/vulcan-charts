@@ -189,6 +189,13 @@ persistence:
     iam.amazonaws.com/role: arn:aws:iam::000000000000:role/PersistenceRole
   autoscaling:
     enabled: true
+    behavior:
+      scaleDown:
+        stabilizationWindowSeconds: 600
+        policies:
+        - type: Pods
+          value: 1
+          periodSeconds: 300
   conf:
     logLevel: info
     railsMaxThreads: 16

@@ -2506,6 +2506,13 @@ spec:
     name: myrelease-vulcan-persistence
   minReplicas: 1
   maxReplicas: 5
+  behavior:
+    scaleDown:
+      policies:
+      - periodSeconds: 300
+        type: Pods
+        value: 1
+      stabilizationWindowSeconds: 600
   metrics:
     - type: Resource
       resource:

@@ -20,6 +20,11 @@ spec:
     name: {{ template "vulcan.fullname" . }}-{{ .Values.comp.name }}
   minReplicas: {{ .Values.comp.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.comp.autoscaling.maxReplicas }}
+  {{- if semverCompare ">=1.23-0" (include "common.capabilities.kubeVersion" .) }}
+  {{- with .Values.comp.autoscaling.behavior }}
+  behavior: {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- end }}
   metrics:
     {{- if .Values.comp.autoscaling.targetCPUUtilizationPercentage }}
     - type: Resource
