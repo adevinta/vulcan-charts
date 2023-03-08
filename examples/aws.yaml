@@ -76,6 +76,7 @@ api:
       username: kafka-user
       password: kafka-pwd
       topics: '{assets = "assets"}'
+    vulcantrackerTeams: "team1,team2"
   db:
     <<: *db
     host: api.postgres.host
@@ -448,3 +449,23 @@ vulndbapi:
     cache:
       enabled: true
       maxAge: 600
+tracker:
+  enabled: true
+  name: tracker
+  image:
+    repository: adevinta/vulcan-tracker
+    tag: tag-tracker
+    pullPolicy: Always
+  healthcheckPath: /healthcheck
+  conf:
+    logLevel: "error"
+    awsServerCredentialKey: "/path/to/credentials/"
+  # -- postgres database settings
+  db:
+    <<: *db
+    host: vultrackerdb.postgres.host
+    name: vultrackerdb
+    password: xxxxxxxxxx
+    user: vultrackerdb
+  imagePullSecrets:
+    - name: pullsecretname

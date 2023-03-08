@@ -58,6 +58,7 @@ api:
         blockedChecks:
         excludingSuffixes:
           - experimental
+    vulcantrackerTeams: "team1,team2"
   ingress:
     enabled: true
     annotations:
@@ -122,3 +123,13 @@ vulndbapi:
         paths: [/]
   conf:
     readReplicaHost:
+
+tracker:
+  ingress:
+    enabled: true
+    hosts:
+      - host: tracker.vulcan.local
+        paths: [/]
+  conf:
+    logLevel: "error"
+    awsServerCredentialKey: "/path/to/credentials/"

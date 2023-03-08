@@ -158,6 +158,7 @@ postgresql:
           CREATE DATABASE scanengine;
           CREATE DATABASE reportsgenerator;
           CREATE DATABASE vulnerabilitydb;
+          CREATE DATABASE tracker;
     resources:
       requests:
         cpu: "0"
@@ -391,6 +392,8 @@ api:
     logLevel: INFO
     defaultOwners: '[]'  # '["owner1","owner2"]'
     vulndbapiUrl:   # http://vulnerabilitydbapi
+    vulcantrackerUrl:  # http://vulcantracker
+    vulcantrackerTeams: "team1,team2"
     persistenceHost:
     crontinuousUrl:
     reportsgeneratorUrl:
@@ -617,6 +620,31 @@ reportsgenerator:
   db:
     <<: *db
     name: reportsgenerator
+
+  dogstatsd: *dogstatsd
+
+
+tracker:
+  enabled: true
+  name: tracker
+  <<: *comp
+
+  image:
+    repository: adevinta/vulcan-tracker
+    tag: edge
+    pullPolicy: Always
+
+  healthcheckPath: /healthcheck
+
+  conf:
+    logLevel: "error"
+    awsServerCredentialKey: "/path/to/credentials/"
+    region:
+
+  # -- postgres database settings
+  db:
+    <<: *db
+    name: tracker
 
   dogstatsd: *dogstatsd
 

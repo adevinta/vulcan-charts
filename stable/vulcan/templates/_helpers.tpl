@@ -94,6 +94,10 @@ Pod labels
 {{- printf "%s-%s" (include "vulcan.fullname" .) .Values.reportsgenerator.name -}}
 {{- end -}}
 
+{{- define "tracker.fullname" -}}
+{{- printf "%s-%s" (include "vulcan.fullname" .) .Values.tracker.name -}}
+{{- end -}}
+
 {{- define "results.fullname" -}}
 {{- printf "%s-%s" (include "vulcan.fullname" .) .Values.results.name -}}
 {{- end -}}
@@ -117,7 +121,6 @@ Pod labels
 {{- define "vulndbapi.fullname" -}}
 {{- printf "%s-%s" (include "vulcan.fullname" .) .Values.vulndbapi.name -}}
 {{- end -}}
-
 
 {{- define "region" -}}
 {{- .Values.global.region -}}
@@ -149,6 +152,10 @@ Pod labels
 
 {{- define "vulndbapi.url" -}}
 {{- printf "http://%s/" (include "vulndbapi.fullname" .) -}}
+{{- end -}}
+
+{{- define "tracker.url" -}}
+{{- printf "http://%s/" (include "tracker.fullname" .) -}}
 {{- end -}}
 
 {{- define "stream.url" -}}
