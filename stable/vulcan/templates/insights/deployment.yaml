@@ -58,7 +58,7 @@ spec:
             - name: APP_PORT
               value: {{ add .Values.comp.containerPort 1 | quote }}
           ports:
-            - name: private
+            - name: public
               containerPort: {{ add .Values.comp.containerPort 1 }}
               protocol: TCP
       volumes:

@@ -1239,7 +1239,7 @@ spec:
             - name: APP_PORT
               value: "8081"
           ports:
-            - name: private
+            - name: public
               containerPort: 8081
               protocol: TCP
       volumes:
