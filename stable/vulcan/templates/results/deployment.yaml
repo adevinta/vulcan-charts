@@ -21,9 +21,6 @@ spec:
         app.kubernetes.io/name: {{ .Values.comp.name }}
       annotations:
         {{- include "common-annotations" . | nindent 8 }}
-        {{- with .Values.comp.annotations }}
-          {{- toYaml . | nindent 8 }}
-        {{- end }}
     spec:
       containers:
         {{- include "common-deployment-sidecars" . | nindent 8 }}

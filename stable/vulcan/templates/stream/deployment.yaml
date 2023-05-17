@@ -24,9 +24,6 @@ spec:
         checksum/secrets: {{ include "stream-secrets" . | sha256sum }}
         {{- end }}
         {{- include "common-annotations" . | nindent 8 }}
-        {{- with .Values.comp.annotations }}
-          {{- toYaml . | nindent 8 }}
-        {{- end }}
     spec:
       containers:
         {{- include "common-deployment-sidecars" . | nindent 8 }}

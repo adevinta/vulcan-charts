@@ -1,5 +1,5 @@
 {{- $_ := (set .Values "comp" .Values.sqsexporter) -}}
-{{- if .Values.sqsexporter.enabled -}}
+{{- if .Values.comp.enabled -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:

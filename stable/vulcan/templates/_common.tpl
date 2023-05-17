@@ -4,6 +4,10 @@
 
 {{- define "common-annotations" -}}
 {{- include "common-proxy-annotations" . }}
+{{- with .Values.comp.annotations }}
+{{ toYaml . }}
+{{- end -}}
+
 {{- end -}}
 
 {{/*

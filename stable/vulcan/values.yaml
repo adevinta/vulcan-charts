@@ -718,6 +718,9 @@ sqsexporter:
     tag: 0.4.0
     pullPolicy: Always
 
+  proxy:
+    enabled: false
+
   queueNamePrefix: VulcanK8S
   meta:
     sqs: true

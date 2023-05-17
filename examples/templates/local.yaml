@@ -1744,6 +1744,7 @@ spec:
         app.kubernetes.io/name: insights
       annotations:
         checksum/config: 81a6311e0ee5af8f9be60036d726af473fb4de232b8b7afe99ea6525ded53d31
+        checksum/config-proxy: 128c8840fae271a0ad3ef91f0c8f1f596ebbf45a405f91c257558be3243a911c
         prometheus.io/scrape: 'true'
         prometheus.io/port: '9101'
     spec:

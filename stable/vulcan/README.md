@@ -37,16 +37,16 @@ A Helm chart for deploying Vulcan
 | results.dogstatsd.image.repository | string | `"datadog/dogstatsd"` |  |
 | reportsgenerator.dogstatsd.image.repository | string | `"datadog/dogstatsd"` |  |
 | stream.dogstatsd.image.tag | string | `"7.42.0"` |  |
+| reportsgenerator.dogstatsd.image.tag | string | `"7.42.0"` |  |
 | api.dogstatsd.image.tag | string | `"7.42.0"` |  |
 | results.dogstatsd.image.tag | string | `"7.42.0"` |  |
-| reportsgenerator.dogstatsd.image.tag | string | `"7.42.0"` |  |
 | scanengine.dogstatsd.image.tag | string | `"7.42.0"` |  |
 | metrics.dogstatsd.image.tag | string | `"7.42.0"` |  |
 | persistence.dogstatsd.image.tag | string | `"7.42.0"` |  |
 | stream.dogstatsd.enabled | bool | `true` |  |
-| reportsgenerator.dogstatsd.enabled | bool | `true` |  |
 | api.dogstatsd.enabled | bool | `true` |  |
 | scanengine.dogstatsd.enabled | bool | `true` |  |
+| reportsgenerator.dogstatsd.enabled | bool | `true` |  |
 | results.dogstatsd.enabled | bool | `true` |  |
 | persistence.dogstatsd.enabled | bool | `true` |  |
 | metrics.dogstatsd.enabled | bool | `true` |  |
@@ -297,76 +297,76 @@ A Helm chart for deploying Vulcan
 | metrics.<<.service | object | `{"port":80,"portName":null,"protocol":"TCP","targetPort":null,"type":"ClusterIP"}` | service settings |
 | scanengine.<<.service | object | `{"port":80,"portName":null,"protocol":"TCP","targetPort":null,"type":"ClusterIP"}` | service settings |
 | sqsexporter.<<.ingress | object | `{"annotations":{},"enabled":false,"hosts":[],"tls":[]}` | ingress settings |
-| ui.<<.ingress | object | `{"annotations":{},"enabled":false,"hosts":[],"tls":[]}` | ingress settings |
-| metrics.<<.ingress | object | `{"annotations":{},"enabled":false,"hosts":[],"tls":[]}` | ingress settings |
-| insights.<<.ingress | object | `{"annotations":{},"enabled":false,"hosts":[],"tls":[]}` | ingress settings |
-| vulndb.<<.ingress | object | `{"annotations":{},"enabled":false,"hosts":[],"tls":[]}` | ingress settings |
-| crontinuous.<<.ingress | object | `{"annotations":{},"enabled":false,"hosts":[],"tls":[]}` | ingress settings |
-| reportsgenerator.<<.ingress | object | `{"annotations":{},"enabled":false,"hosts":[],"tls":[]}` | ingress settings |
-| stream.<<.ingress | object | `{"annotations":{},"enabled":false,"hosts":[],"tls":[]}` | ingress settings |
 | goaws.<<.ingress | object | `{"annotations":{},"enabled":false,"hosts":[],"tls":[]}` | ingress settings |
 | persistence.<<.ingress | object | `{"annotations":{},"enabled":false,"hosts":[],"tls":[]}` | ingress settings |
+| insights.<<.ingress | object | `{"annotations":{},"enabled":false,"hosts":[],"tls":[]}` | ingress settings |
+| metrics.<<.ingress | object | `{"annotations":{},"enabled":false,"hosts":[],"tls":[]}` | ingress settings |
+| crontinuous.<<.ingress | object | `{"annotations":{},"enabled":false,"hosts":[],"tls":[]}` | ingress settings |
+| stream.<<.ingress | object | `{"annotations":{},"enabled":false,"hosts":[],"tls":[]}` | ingress settings |
+| api.<<.ingress | object | `{"annotations":{},"enabled":false,"hosts":[],"tls":[]}` | ingress settings |
+| vulndb.<<.ingress | object | `{"annotations":{},"enabled":false,"hosts":[],"tls":[]}` | ingress settings |
+| ui.<<.ingress | object | `{"annotations":{},"enabled":false,"hosts":[],"tls":[]}` | ingress settings |
 | vulndbapi.<<.ingress | object | `{"annotations":{},"enabled":false,"hosts":[],"tls":[]}` | ingress settings |
 | results.<<.ingress | object | `{"annotations":{},"enabled":false,"hosts":[],"tls":[]}` | ingress settings |
-| api.<<.ingress | object | `{"annotations":{},"enabled":false,"hosts":[],"tls":[]}` | ingress settings |
-| anchors.comp.ingress | object | `{"annotations":{},"enabled":false,"hosts":[],"tls":[]}` | ingress settings |
 | scanengine.<<.ingress | object | `{"annotations":{},"enabled":false,"hosts":[],"tls":[]}` | ingress settings |
+| anchors.comp.ingress | object | `{"annotations":{},"enabled":false,"hosts":[],"tls":[]}` | ingress settings |
+| reportsgenerator.<<.ingress | object | `{"annotations":{},"enabled":false,"hosts":[],"tls":[]}` | ingress settings |
 | insights.<<.resources | object | `{}` |  |
+| results.<<.resources | object | `{}` |  |
 | scanengine.<<.resources | object | `{}` |  |
 | ui.<<.resources | object | `{}` |  |
-| metrics.<<.resources | object | `{}` |  |
 | stream.<<.resources | object | `{}` |  |
+| persistence.<<.resources | object | `{}` |  |
+| crontinuous.<<.resources | object | `{}` |  |
 | goaws.<<.resources | object | `{}` |  |
-| api.<<.resources | object | `{}` |  |
+| metrics.<<.resources | object | `{}` |  |
+| vulndbapi.<<.resources | object | `{}` |  |
 | sqsexporter.<<.resources | object | `{}` |  |
 | reportsgenerator.<<.resources | object | `{}` |  |
-| vulndbapi.<<.resources | object | `{}` |  |
-| crontinuous.<<.resources | object | `{}` |  |
-| persistence.<<.resources | object | `{}` |  |
+| api.<<.resources | object | `{}` |  |
 | vulndb.<<.resources | object | `{}` |  |
-| results.<<.resources | object | `{}` |  |
+| goaws.<<.nodeSelector | object | `{}` |  |
+| persistence.<<.nodeSelector | object | `{}` |  |
 | vulndbapi.<<.nodeSelector | object | `{}` |  |
-| vulndb.<<.nodeSelector | object | `{}` |  |
-| results.<<.nodeSelector | object | `{}` |  |
-| api.<<.nodeSelector | object | `{}` |  |
-| scanengine.<<.nodeSelector | object | `{}` |  |
-| stream.<<.nodeSelector | object | `{}` |  |
 | sqsexporter.<<.nodeSelector | object | `{}` |  |
 | ui.<<.nodeSelector | object | `{}` |  |
-| persistence.<<.nodeSelector | object | `{}` |  |
+| results.<<.nodeSelector | object | `{}` |  |
+| api.<<.nodeSelector | object | `{}` |  |
+| stream.<<.nodeSelector | object | `{}` |  |
+| crontinuous.<<.nodeSelector | object | `{}` |  |
 | reportsgenerator.<<.nodeSelector | object | `{}` |  |
 | metrics.<<.nodeSelector | object | `{}` |  |
-| crontinuous.<<.nodeSelector | object | `{}` |  |
+| scanengine.<<.nodeSelector | object | `{}` |  |
+| vulndb.<<.nodeSelector | object | `{}` |  |
 | insights.<<.nodeSelector | object | `{}` |  |
-| goaws.<<.nodeSelector | object | `{}` |  |
-| vulndb.<<.tolerations | list | `[]` |  |
-| results.<<.tolerations | list | `[]` |  |
-| ui.<<.tolerations | list | `[]` |  |
-| scanengine.<<.tolerations | list | `[]` |  |
-| reportsgenerator.<<.tolerations | list | `[]` |  |
-| vulndbapi.<<.tolerations | list | `[]` |  |
 | goaws.<<.tolerations | list | `[]` |  |
 | insights.<<.tolerations | list | `[]` |  |
+| vulndb.<<.tolerations | list | `[]` |  |
+| scanengine.<<.tolerations | list | `[]` |  |
 | crontinuous.<<.tolerations | list | `[]` |  |
-| sqsexporter.<<.tolerations | list | `[]` |  |
-| persistence.<<.tolerations | list | `[]` |  |
+| results.<<.tolerations | list | `[]` |  |
 | api.<<.tolerations | list | `[]` |  |
+| ui.<<.tolerations | list | `[]` |  |
+| sqsexporter.<<.tolerations | list | `[]` |  |
+| reportsgenerator.<<.tolerations | list | `[]` |  |
+| persistence.<<.tolerations | list | `[]` |  |
+| vulndbapi.<<.tolerations | list | `[]` |  |
 | metrics.<<.tolerations | list | `[]` |  |
 | stream.<<.tolerations | list | `[]` |  |
-| metrics.<<.affinity | object | `{}` |  |
+| sqsexporter.<<.affinity | object | `{}` |  |
 | crontinuous.<<.affinity | object | `{}` |  |
 | insights.<<.affinity | object | `{}` |  |
+| ui.<<.affinity | object | `{}` |  |
 | scanengine.<<.affinity | object | `{}` |  |
 | reportsgenerator.<<.affinity | object | `{}` |  |
-| results.<<.affinity | object | `{}` |  |
 | goaws.<<.affinity | object | `{}` |  |
-| sqsexporter.<<.affinity | object | `{}` |  |
+| metrics.<<.affinity | object | `{}` |  |
 | persistence.<<.affinity | object | `{}` |  |
 | stream.<<.affinity | object | `{}` |  |
-| vulndbapi.<<.affinity | object | `{}` |  |
 | api.<<.affinity | object | `{}` |  |
+| vulndbapi.<<.affinity | object | `{}` |  |
 | vulndb.<<.affinity | object | `{}` |  |
-| ui.<<.affinity | object | `{}` |  |
+| results.<<.affinity | object | `{}` |  |
 | waitfordb.image.repository | string | `"busybox"` |  |
 | waitfordb.image.tag | string | `"1.35.0"` |  |
 | postgresql.enabled | bool | `false` |  |
@@ -647,6 +647,7 @@ A Helm chart for deploying Vulcan
 | sqsexporter.image.repository | string | `"jesusfcr/sqs-prometheus-exporter"` |  |
 | sqsexporter.image.tag | string | `"0.4.0"` |  |
 | sqsexporter.image.pullPolicy | string | `"Always"` |  |
+| sqsexporter.proxy.enabled | bool | `false` |  |
 | sqsexporter.queueNamePrefix | string | `"VulcanK8S"` |  |
 | sqsexporter.meta.sqs | bool | `true` |  |
 | dogstatsd.name | string | `"dogstatsd"` |  |

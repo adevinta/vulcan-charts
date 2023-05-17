@@ -19,9 +19,6 @@ spec:
         app.kubernetes.io/name: {{ .Values.comp.name }}
       annotations:
         checksum/config: {{ include "goaws-config" . | sha256sum }}
-        {{- with .Values.comp.annotations }}
-          {{- toYaml . | nindent 8 }}
-        {{- end }}
     spec:
       containers:
       - name: {{ .Values.comp.name }}

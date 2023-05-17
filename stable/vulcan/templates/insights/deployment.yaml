@@ -19,11 +19,7 @@ spec:
         app.kubernetes.io/name: {{ .Values.comp.name }}
       annotations:
         checksum/config: {{ include "insights-config" . | sha256sum }}
-        prometheus.io/scrape: 'true'
-        prometheus.io/port: '{{ .Values.comp.proxy.metricsPort }}'
-        {{- with .Values.comp.annotations }}
-          {{- toYaml . | nindent 8 }}
-        {{- end }}
+        {{- include "common-annotations" . | nindent 8 }}
     spec:
       containers:
         {{- include "common-deployment-sidecars" . | nindent 8 }}
@@ -67,16 +63,5 @@ spec:
               protocol: TCP
       volumes:
       {{- include "common-deployment-volumes" . | nindent 6 }}
-      {{- with .Values.nodeSelector }}
-      nodeSelector:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-    {{- with .Values.comp.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-    {{- end }}
-    {{- with .Values.comp.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-    {{- end }}
+    {{- include "common-deployment-spec" . | nindent 6 }}
 {{- end -}}
