@@ -69,6 +69,10 @@ Pod labels
 {{- printf "%s-%s" (include "vulcan.fullname" .) .Values.crontinuous.name -}}
 {{- end -}}
 
+{{- define "minio.fullname" -}}
+{{- printf "%s-%s" (include "vulcan.fullname" .) .Values.minio.nameOverride -}}
+{{- end -}}
+
 {{- define "goaws.fullname" -}}
 {{- printf "%s-%s" (include "vulcan.fullname" .) .Values.goaws.name -}}
 {{- end -}}
@@ -151,8 +155,8 @@ Pod labels
 {{- end -}}
 
 {{- define "minio.url" -}}
-  {{- if .Values.goaws.enabled -}}
-    {{- printf "http://%s-minio" .Release.Name -}}
+  {{- if .Values.minio.enabled -}}
+    {{- printf "http://%s" (include "minio.fullname" .) -}}
   {{- end -}}
 {{- end -}}
 

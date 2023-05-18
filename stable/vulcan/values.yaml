@@ -551,6 +551,8 @@ insights:
       s3Bucket: public-insights
       prefix: "/public"
 
+  meta:
+    s3: true
 
 reportsgenerator:
   enabled: true

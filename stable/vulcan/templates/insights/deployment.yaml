@@ -38,6 +38,20 @@ spec:
               value: "/healthcheck"
             - name: APP_PORT
               value: {{ .Values.comp.containerPort | quote }}
+            {{- if and .Values.comp.meta.s3 .Values.minio.enabled }}
+            - name: AWS_API_ENDPOINT
+              value: {{ include "minio.url" . | quote }}
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "minio.fullname" . }}
+                  key: root-user
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "minio.fullname" . }}
+                  key: root-password
+            {{- end }}
           ports:
             - name: private
               containerPort: {{ .Values.comp.containerPort }}
@@ -57,6 +71,20 @@ spec:
               value: "/healthcheck"
             - name: APP_PORT
               value: {{ add .Values.comp.containerPort 1 | quote }}
+            {{- if and .Values.comp.meta.s3 .Values.minio.enabled }}
+            - name: AWS_API_ENDPOINT
+              value: {{ include "minio.url" . | quote }}
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "minio.fullname" . }}
+                  key: root-user
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "minio.fullname" . }}
+                  key: root-password
+            {{- end }}
           ports:
             - name: public
               containerPort: {{ add .Values.comp.containerPort 1 }}
