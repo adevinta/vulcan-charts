@@ -733,6 +733,19 @@ dogstatsd:
   apiKey: TBD
 
 
+pgadmin:
+  enabled: false
+  name: pgadmin
+  <<: *comp
+  image:
+    repository: dpage/pgadmin4
+    tag: latest
+
+  conf:
+    email: vulcan@example.com
+    password: vulcan
+
+
 # -- Allows to inject custom manifests that would be processed as templates
 extraManifests: {}
   # config1: |

@@ -1,0 +1,52 @@
+{{- $_ := set .Values "comp" .Values.pgadmin -}}
+{{- if .Values.comp.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "pgadmin.fullname" . }}
+  labels: {{- include "vulcan.labels" . | nindent 4 }}
+    app.kubernetes.io/name: {{ .Values.comp.name }}
+spec:
+  {{- if kindIs "int64" .Values.comp.replicaCount }}
+  replicas: {{ .Values.comp.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels: {{- include "vulcan.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/name: {{ .Values.comp.name }}
+  template:
+    metadata:
+      labels: {{- include "vulcan.podLabels" . | nindent 8 }}
+        app.kubernetes.io/name: {{ .Values.comp.name }}
+      annotations:
+        checksum/secrets: {{ include "pgadmin-secrets" . | sha256sum }}
+        {{- include "common-annotations" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ .Values.comp.name }}
+          {{- include "common-container" . | nindent 10 }}
+          env:
+          - name: PORT
+            value: {{ .Values.comp.containerPort | quote }}
+          - name: PGADMIN_LISTEN_PORT
+            value: "8080"
+          - name: PGADMIN_SERVER_JSON_FILE
+            value: /pgadmin4/servers.json
+          - name: PGADMIN_DISABLE_POSTFIX
+            value: "true"
+          envFrom:
+          - secretRef:
+              name: {{ include "pgadmin.fullname" . }}
+          ports:
+            - name: "http"
+              containerPort: {{ .Values.comp.containerPort }}
+              protocol: TCP
+          volumeMounts:
+          - name: config-servers
+            mountPath: /pgadmin4/servers.json
+            subPath: servers.json
+      volumes:
+      - name: config-servers
+        configMap:
+          name: {{ include "pgadmin.fullname" . }}servers
+    {{- include "common-deployment-spec" . | nindent 6 }}
+{{- end }}
