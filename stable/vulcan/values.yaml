@@ -271,7 +271,7 @@ results:
     region:
     bucketReports: reports
     bucketLogs: logs
-    linkBase: http://chart-example.local
+    linkBase: http://vulcan-results
 
   healthcheckPath: /healthcheck
 
