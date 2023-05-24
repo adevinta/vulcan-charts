@@ -162,7 +162,7 @@ postgresql:
       prometheus.io/scrape: "true"
       prometheus.io/port: "9187"
   metrics:
-    enabled: true
+    enabled: false
 
 redis:
   enabled: false
