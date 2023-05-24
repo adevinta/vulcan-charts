@@ -215,23 +215,23 @@ goaws:
           - Name: VulcanK8SChecks
             Subscriptions:
               - QueueName: VulcanK8SMetricsChecks
-                Raw: true
+                Raw: false
               - QueueName: VulcanK8SVulnDBChecks
-                Raw: true
+                Raw: false
           - Name: VulcanK8SScans
             Subscriptions:
               - QueueName: VulcanK8SAPIScans
-                Raw: true
+                Raw: false
               - QueueName: VulcanK8SMetricsScans
-                Raw: true
+                Raw: false
           - Name: VulcanK8SReportsGen
             Subscriptions:
               - QueueName: VulcanK8SReportsGenerator
-                Raw: true
+                Raw: false
           - Name: VulcanK8SVulnDBVulns
             Subscriptions:
               - QueueName: VulcanK8SMetricsFindings
-                Raw: true
+                Raw: false
         RandomLatency:
           Min: 0
           Max: 0
