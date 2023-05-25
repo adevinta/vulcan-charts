@@ -189,6 +189,10 @@ goaws:
     pullPolicy: Always
 
   containerPort: 8080
+
+  visibilityTimeout: 14400
+  receiveMessageWaitTimeSeconds: 0
+
   config:
     goaws.yaml: |
       Local:
@@ -197,8 +201,8 @@ goaws:
         AccountId: "012345678900"
         LogToFile: false
         QueueAttributeDefaults:
-          VisibilityTimeout: 30
-          ReceiveMessageWaitTimeSeconds: 0
+          VisibilityTimeout: {{ .Values.goaws.visibilityTimeout }}
+          ReceiveMessageWaitTimeSeconds: {{ .Values.goaws.receiveMessageWaitTimeSeconds }}
         Queues:
           - Name: VulcanK8SAPIScans
           - Name: VulcanK8SMetricsChecks
