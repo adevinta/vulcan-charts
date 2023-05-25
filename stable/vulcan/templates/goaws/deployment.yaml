@@ -35,7 +35,7 @@ spec:
         volumeMounts:
         {{- if .Values.comp.config }}
         - name: goaws-config
-          mountPath: /conf
+          mountPath: /app/conf
         {{- end }}
       volumes:
       {{- if .Values.comp.config }}

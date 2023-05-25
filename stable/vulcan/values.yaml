@@ -184,8 +184,8 @@ goaws:
   <<: *comp
 
   image:
-    repository: pafortin/goaws
-    tag: v0.3.1
+    repository: admiralpiett/goaws
+    tag: v0.4.1
     pullPolicy: Always
 
   containerPort: 8080
