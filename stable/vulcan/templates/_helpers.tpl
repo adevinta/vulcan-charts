@@ -232,7 +232,7 @@ Pod labels
 {{- end -}}
 
 
-{{- define "redis.host" -}}
+{{- define "vulcan.redis.host" -}}
   {{- if .Values.redis.enabled -}}
     {{- printf "%s-redis-master" .Release.Name -}}
   {{- else -}}
@@ -240,11 +240,11 @@ Pod labels
   {{- end -}}
 {{- end -}}
 
-{{- define "redis.db" -}}
+{{- define "vulcan.redis.db" -}}
   {{- .Values.comp.redis.db | default "0" -}}
 {{- end -}}
 
-{{- define "redis.username" -}}
+{{- define "vulcan.redis.username" -}}
   {{- if .Values.redis.enabled -}}
     {{- .Values.redis.username -}}
   {{- else -}}
@@ -252,7 +252,7 @@ Pod labels
   {{- end -}}
 {{- end -}}
 
-{{- define "redis.password" -}}
+{{- define "vulcan.redis.password" -}}
   {{- if and .Values.redis.enabled .Values.redis.auth -}}
     {{- .Values.redis.auth.password | default "" -}}
   {{- else -}}
@@ -260,7 +260,7 @@ Pod labels
   {{- end -}}
 {{- end -}}
 
-{{- define "redis.port" -}}
+{{- define "vulcan.redis.port" -}}
   {{- if .Values.redis.enabled -}}
     {{- .Values.redis.master.service.port | default "6379" -}}
   {{- else -}}
@@ -268,12 +268,12 @@ Pod labels
   {{- end -}}
 {{- end -}}
 
-{{- define "redis.encryptedPassword" -}}
-  {{- if (include "redis.password" .) -}}
-    {{- include "redis.password" . | b64enc -}}
+{{- define "vulcan.redis.encryptedPassword" -}}
+  {{- if (include "vulcan.redis.password" .) -}}
+    {{- include "vulcan.redis.password" . | b64enc -}}
   {{- end -}}
 {{- end -}}
 
-{{- define "redis.url" -}}
-{{- printf "%s:%s" (include "redis.host" .) (include "redis.port" .) -}}
+{{- define "vulcan.redis.url" -}}
+{{- printf "%s:%s" (include "vulcan.redis.host" .) (include "vulcan.redis.port" .) -}}
 {{- end -}}

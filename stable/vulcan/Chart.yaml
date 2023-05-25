@@ -24,15 +24,15 @@ appVersion: 1.0.0
 
 dependencies:
 - name: postgresql
-  version: 11.9.11
+  version: 12.5.5
   repository: https://charts.bitnami.com/bitnami
   condition: postgresql.enabled
 - name: redis
-  version: 17.3.7
+  version: 17.11.3
   repository: https://charts.bitnami.com/bitnami
   condition: redis.enabled
 - name: minio
-  version: 11.10.10
+  version: 12.6.2
   repository: https://charts.bitnami.com/bitnami
   condition: minio.enabled
 

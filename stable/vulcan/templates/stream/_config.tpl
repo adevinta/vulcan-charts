@@ -1,3 +1,3 @@
 {{- define "stream-secrets" -}}
-REDIS_PWD: {{ include "redis.encryptedPassword" . | quote }}
+REDIS_PWD: {{ include "vulcan.redis.encryptedPassword" . | quote }}
 {{- end -}}
