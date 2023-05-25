@@ -141,8 +141,8 @@ postgresql:
     port: 5432
   auth:
     username: postgres
-    postgresPassword: TBD
-    password: TBD
+    postgresPassword: secret
+    password: secret
     database: persistence
   primary:
     initdb:
@@ -253,8 +253,8 @@ minio:
     ports:
       api: 80
   auth:
-    rootUser: AKIAIOSFODNN7EXAMPLE
-    rootPassword: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+    rootUser: admin
+    rootPassword: adminsecret
   extraEnv:
     - name: MINIO_REGION_NAME
       value: local
