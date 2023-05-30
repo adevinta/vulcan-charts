@@ -1,2 +1,0 @@
-{{- $_ := set .Values "comp" .Values.pgadmin -}}
-{{- include "common-configmap" (merge (dict "Args" (dict "template" "pgadmin-servers" "suffix" "servers")) . ) -}}
