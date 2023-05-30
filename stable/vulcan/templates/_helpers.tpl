@@ -36,8 +36,9 @@ Common labels
 */}}
 {{- define "vulcan.labels" -}}
 helm.sh/chart: {{ include "vulcan.chart" . }}
-{{ include "vulcan.selectorLabels" . }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
+app.kubernetes.io/part-of: vulcan
+{{ include "vulcan.selectorLabels" . }}
 {{- end -}}
 
 {{/*
