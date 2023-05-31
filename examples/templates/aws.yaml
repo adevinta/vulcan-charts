@@ -6,8 +6,9 @@ metadata:
   name: myrelease-vulcan-api
   labels:
     helm.sh/chart: vulcan-0.5.5
-    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: vulcan
+    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/name: api
 type: Opaque
 data:
@@ -23,8 +24,9 @@ metadata:
   name: myrelease-vulcan-crontinuous
   labels:
     helm.sh/chart: vulcan-0.5.5
-    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: vulcan
+    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/name: crontinuous
 type: Opaque
 data:
@@ -37,8 +39,9 @@ metadata:
   name: myrelease-vulcan-dogstatsd
   labels:
     helm.sh/chart: vulcan-0.5.5
-    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: vulcan
+    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/name: dogstatsd
 type: Opaque
 data:
@@ -51,8 +54,9 @@ metadata:
   name: myrelease-vulcan-metrics
   labels:
     helm.sh/chart: vulcan-0.5.5
-    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: vulcan
+    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/name: metrics
 type: Opaque
 data:
@@ -66,8 +70,9 @@ metadata:
   name: myrelease-vulcan-persistence
   labels:
     helm.sh/chart: vulcan-0.5.5
-    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: vulcan
+    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/name: persistence
 type: Opaque
 data:
@@ -81,8 +86,9 @@ metadata:
   name: myrelease-vulcan-reportsgenerator
   labels:
     helm.sh/chart: vulcan-0.5.5
-    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: vulcan
+    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/name: reportsgenerator
 type: Opaque
 data:
@@ -95,8 +101,9 @@ metadata:
   name: myrelease-vulcan-scanengine
   labels:
     helm.sh/chart: vulcan-0.5.5
-    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: vulcan
+    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/name: scanengine
 type: Opaque
 data:
@@ -109,8 +116,9 @@ metadata:
   name: myrelease-vulcan-stream
   labels:
     helm.sh/chart: vulcan-0.5.5
-    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: vulcan
+    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/name: stream
 type: Opaque
 data:
@@ -123,8 +131,9 @@ metadata:
   name: myrelease-vulcan-vulndb
   labels:
     helm.sh/chart: vulcan-0.5.5
-    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: vulcan
+    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/name: vulndb
 type: Opaque
 data:
@@ -137,8 +146,9 @@ metadata:
   name: myrelease-vulcan-vulndbapi
   labels:
     helm.sh/chart: vulcan-0.5.5
-    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: vulcan
+    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/name: vulndbapi
 type: Opaque
 data:
@@ -152,8 +162,9 @@ metadata:
   name: myrelease-vulcan-api-proxy
   labels:
     helm.sh/chart: vulcan-0.5.5
-    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: vulcan
+    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/name: api
 data:
   haproxy.cfg: |
@@ -195,8 +206,9 @@ metadata:
   name: myrelease-vulcan-crontinuous-proxy
   labels:
     helm.sh/chart: vulcan-0.5.5
-    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: vulcan
+    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/name: crontinuous
 data:
   haproxy.cfg: |
@@ -237,8 +249,9 @@ kind: ConfigMap
 metadata:
   labels:
     helm.sh/chart: vulcan-0.5.5
-    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: vulcan
+    app.kubernetes.io/instance: vulcan
   name: vulcan-custom-configmap
 data:
   custom.cfg: |
@@ -251,8 +264,9 @@ metadata:
   name: myrelease-vulcan-insights-proxy
   labels:
     helm.sh/chart: vulcan-0.5.5
-    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: vulcan
+    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/name: insights
 data:
   haproxy.cfg: |
@@ -302,8 +316,9 @@ metadata:
   name: myrelease-vulcan-persistence-proxy
   labels:
     helm.sh/chart: vulcan-0.5.5
-    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: vulcan
+    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/name: persistence
 data:
   haproxy.cfg: |
@@ -345,8 +360,9 @@ metadata:
   name: myrelease-vulcan-reportsgenerator-proxy
   labels:
     helm.sh/chart: vulcan-0.5.5
-    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: vulcan
+    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/name: reportsgenerator
 data:
   haproxy.cfg: |
@@ -388,8 +404,9 @@ metadata:
   name: myrelease-vulcan-results-proxy
   labels:
     helm.sh/chart: vulcan-0.5.5
-    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: vulcan
+    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/name: results
 data:
   haproxy.cfg: |
@@ -431,8 +448,9 @@ metadata:
   name: myrelease-vulcan-scanengine-proxy
   labels:
     helm.sh/chart: vulcan-0.5.5
-    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: vulcan
+    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/name: scanengine
 data:
   haproxy.cfg: |
@@ -474,8 +492,9 @@ metadata:
   name: myrelease-vulcan-stream-proxy
   labels:
     helm.sh/chart: vulcan-0.5.5
-    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: vulcan
+    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/name: stream
 data:
   haproxy.cfg: |
@@ -517,8 +536,9 @@ metadata:
   name: myrelease-vulcan-ui-proxy
   labels:
     helm.sh/chart: vulcan-0.5.5
-    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: vulcan
+    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/name: ui
 data:
   haproxy.cfg: |
@@ -560,8 +580,9 @@ metadata:
   name: myrelease-vulcan-vulndbapi-proxy
   labels:
     helm.sh/chart: vulcan-0.5.5
-    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: vulcan
+    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/name: vulndbapi
 data:
   haproxy.cfg: |
@@ -608,8 +629,9 @@ metadata:
   name: myrelease-vulcan-api
   labels:
     helm.sh/chart: vulcan-0.5.5
-    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: vulcan
+    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/name: api
 spec:
   type: ClusterIP
@@ -629,8 +651,9 @@ metadata:
   name: myrelease-vulcan-crontinuous
   labels:
     helm.sh/chart: vulcan-0.5.5
-    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: vulcan
+    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/name: crontinuous
 spec:
   type: ClusterIP
@@ -650,8 +673,9 @@ metadata:
   name: myrelease-vulcan-insights
   labels:
     helm.sh/chart: vulcan-0.5.5
-    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: vulcan
+    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/name: insights
 spec:
   type: ClusterIP
@@ -671,8 +695,9 @@ metadata:
   name: myrelease-vulcan-persistence
   labels:
     helm.sh/chart: vulcan-0.5.5
-    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: vulcan
+    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/name: persistence
 spec:
   type: ClusterIP
@@ -692,8 +717,9 @@ metadata:
   name: myrelease-vulcan-reportsgenerator
   labels:
     helm.sh/chart: vulcan-0.5.5
-    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: vulcan
+    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/name: reportsgenerator
 spec:
   type: ClusterIP
@@ -713,8 +739,9 @@ metadata:
   name: myrelease-vulcan-results
   labels:
     helm.sh/chart: vulcan-0.5.5
-    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: vulcan
+    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/name: results
 spec:
   type: ClusterIP
@@ -734,8 +761,9 @@ metadata:
   name: myrelease-vulcan-scanengine
   labels:
     helm.sh/chart: vulcan-0.5.5
-    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: vulcan
+    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/name: scanengine
 spec:
   type: ClusterIP
@@ -755,8 +783,9 @@ metadata:
   name: myrelease-vulcan-stream
   labels:
     helm.sh/chart: vulcan-0.5.5
-    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: vulcan
+    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/name: stream
 spec:
   type: ClusterIP
@@ -776,8 +805,9 @@ metadata:
   name: myrelease-vulcan-ui
   labels:
     helm.sh/chart: vulcan-0.5.5
-    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: vulcan
+    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/name: ui
 spec:
   type: ClusterIP
@@ -797,8 +827,9 @@ metadata:
   name: myrelease-vulcan-vulndbapi
   labels:
     helm.sh/chart: vulcan-0.5.5
-    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: vulcan
+    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/name: vulndbapi
 spec:
   type: ClusterIP
@@ -818,8 +849,9 @@ metadata:
   name: myrelease-vulcan-api
   labels:
     helm.sh/chart: vulcan-0.5.5
-    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: vulcan
+    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/name: api
 spec:
   selector:
@@ -1006,8 +1038,9 @@ metadata:
   name: myrelease-vulcan-crontinuous
   labels:
     helm.sh/chart: vulcan-0.5.5
-    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: vulcan
+    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/name: crontinuous
 spec:
   selector:
@@ -1116,8 +1149,9 @@ metadata:
   name: myrelease-vulcan-insights
   labels:
     helm.sh/chart: vulcan-0.5.5
-    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: vulcan
+    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/name: insights
 spec:
   selector:
@@ -1257,8 +1291,9 @@ metadata:
   name: myrelease-vulcan-metrics
   labels:
     helm.sh/chart: vulcan-0.5.5
-    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: vulcan
+    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/name: metrics
 spec:
   selector:
@@ -1357,8 +1392,9 @@ metadata:
   name: myrelease-vulcan-persistence
   labels:
     helm.sh/chart: vulcan-0.5.5
-    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: vulcan
+    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/name: persistence
 spec:
   selector:
@@ -1490,8 +1526,9 @@ metadata:
   name: myrelease-vulcan-reportsgenerator
   labels:
     helm.sh/chart: vulcan-0.5.5
-    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: vulcan
+    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/name: reportsgenerator
 spec:
   selector:
@@ -1686,8 +1723,9 @@ metadata:
   name: myrelease-vulcan-results
   labels:
     helm.sh/chart: vulcan-0.5.5
-    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: vulcan
+    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/name: results
 spec:
   selector:
@@ -1799,8 +1837,9 @@ metadata:
   name: myrelease-vulcan-scanengine
   labels:
     helm.sh/chart: vulcan-0.5.5
-    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: vulcan
+    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/name: scanengine
 spec:
   selector:
@@ -1954,8 +1993,9 @@ metadata:
   name: myrelease-vulcan-sqsexporter
   labels:
     helm.sh/chart: vulcan-0.5.5
-    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: vulcan
+    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/name: sqsexporter
 spec:
   selector:
@@ -2007,8 +2047,9 @@ metadata:
   name: myrelease-vulcan-stream
   labels:
     helm.sh/chart: vulcan-0.5.5
-    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: vulcan
+    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/name: stream
 spec:
   selector:
@@ -2126,8 +2167,9 @@ metadata:
   name: myrelease-vulcan-ui
   labels:
     helm.sh/chart: vulcan-0.5.5
-    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: vulcan
+    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/name: ui
 spec:
   selector:
@@ -2230,8 +2272,9 @@ metadata:
   name: myrelease-vulcan-vulndb
   labels:
     helm.sh/chart: vulcan-0.5.5
-    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: vulcan
+    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/name: vulndb
 spec:
   selector:
@@ -2327,8 +2370,9 @@ metadata:
   name: myrelease-vulcan-vulndbapi
   labels:
     helm.sh/chart: vulcan-0.5.5
-    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: vulcan
+    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/name: vulndbapi
 spec:
   selector:
@@ -2453,8 +2497,9 @@ metadata:
   name: myrelease-vulcan-api
   labels:
     helm.sh/chart: vulcan-0.5.5
-    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: vulcan
+    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/name: api
 spec:
   scaleTargetRef:
@@ -2478,8 +2523,9 @@ metadata:
   name: myrelease-vulcan-insights
   labels:
     helm.sh/chart: vulcan-0.5.5
-    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: vulcan
+    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/name: insights
 spec:
   scaleTargetRef:
@@ -2503,8 +2549,9 @@ metadata:
   name: myrelease-vulcan-persistence
   labels:
     helm.sh/chart: vulcan-0.5.5
-    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: vulcan
+    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/name: persistence
 spec:
   scaleTargetRef:
@@ -2535,8 +2582,9 @@ metadata:
   name: myrelease-vulcan-results
   labels:
     helm.sh/chart: vulcan-0.5.5
-    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: vulcan
+    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/name: results
 spec:
   scaleTargetRef:
@@ -2560,8 +2608,9 @@ metadata:
   name: myrelease-vulcan-scanengine
   labels:
     helm.sh/chart: vulcan-0.5.5
-    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: vulcan
+    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/name: scanengine
 spec:
   scaleTargetRef:
@@ -2585,8 +2634,9 @@ metadata:
   name: myrelease-vulcan-api
   labels:
     helm.sh/chart: vulcan-0.5.5
-    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: vulcan
+    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/name: api
   annotations:
     certmanager.k8s.io/cluster-issuer: letsencrypt
@@ -2617,8 +2667,9 @@ metadata:
   name: myrelease-vulcan-insights
   labels:
     helm.sh/chart: vulcan-0.5.5
-    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: vulcan
+    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/name: insights
   annotations:
     certmanager.k8s.io/cluster-issuer: letsencrypt
@@ -2655,8 +2706,9 @@ metadata:
   name: myrelease-vulcan-persistence
   labels:
     helm.sh/chart: vulcan-0.5.5
-    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: vulcan
+    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/name: persistence
   annotations:
     certmanager.k8s.io/cluster-issuer: letsencrypt
@@ -2685,8 +2737,9 @@ metadata:
   name: myrelease-vulcan-results
   labels:
     helm.sh/chart: vulcan-0.5.5
-    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: vulcan
+    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/name: results
   annotations:
     certmanager.k8s.io/cluster-issuer: letsencrypt
@@ -2715,8 +2768,9 @@ metadata:
   name: myrelease-vulcan-stream
   labels:
     helm.sh/chart: vulcan-0.5.5
-    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: vulcan
+    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/name: stream
   annotations:
     certmanager.k8s.io/cluster-issuer: letsencrypt
@@ -2746,8 +2800,9 @@ metadata:
   name: myrelease-vulcan-ui
   labels:
     helm.sh/chart: vulcan-0.5.5
-    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: vulcan
+    app.kubernetes.io/instance: vulcan
     app.kubernetes.io/name: ui
   annotations:
     certmanager.k8s.io/cluster-issuer: letsencrypt
