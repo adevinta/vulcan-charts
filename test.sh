@@ -3,8 +3,7 @@
 set -e 
 
 BASEDIR=$(dirname "$0")
-KVERSION_LIST=${KVERSION_LIST:-"1.24.2 1.15.12 1.21.14"}
-KVERSION=${KVERSION:-${KVERSION_LIST%% *}}   # Use KVERSION or the first in the list to generate the examples.
+KVERSION_LIST=${KVERSION_LIST:-"1.19.16 1.25.9 1.26.4 1.27.2"}
 
 if [ -n "$1" ]
 then
@@ -12,22 +11,12 @@ then
   find "$BASEDIR/stable" -maxdepth 1 -mindepth 1 -type d -print -exec helm dep update {} \;
 fi
 
-helm lint $BASEDIR/stable/*
-
-OUTDIR=$BASEDIR/examples/templates
 for f in $BASEDIR/examples/*.yaml
 do
   for kv in $KVERSION_LIST
   do
     echo "Validating $f against $kv"
     helm template myrelease --kube-version "$kv" "$BASEDIR/stable/vulcan" --namespace ns -f "$f" --debug \
-      | kubeval --strict -v "$kv" -s https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master
+      | docker run -i ghcr.io/yannh/kubeconform:master -kubernetes-version "$kv" -strict -summary -output json
   done
-
-  # Generate the examples with the first version
-  fn=$(basename -- "$f")
-  echo "Generating examples in $OUTDIR/$fn based on $KVERSION"
-  helm template myrelease --kube-version "$KVERSION" "$BASEDIR/stable/vulcan" --namespace ns -f "$f" > "$OUTDIR/$fn"
 done
-
-docker run --rm --volume "$(pwd):/helm-docs" -u "$(id -u)" jnorwood/helm-docs:v1.11.0 -s file

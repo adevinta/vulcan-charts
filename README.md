@@ -37,8 +37,11 @@ In order to generate a new release, increment the [chart version](https://github
 Before committing changes execute the following commands:
 
 ```sh
-# Update examples/templates and update the charts generated README.md files.
+# Validate the charts.
 ./test.sh -f
+
+# Generate the example / README.md files.
+./build.sh
 
 # Review the updated files and add to the repository.
 git add .
