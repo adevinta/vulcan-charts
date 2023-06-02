@@ -1,0 +1,77 @@
+[agent]
+log_level = "debug"
+log_file = ""
+concurrent_jobs = 5
+# Time in seconds the agent will remain active without received any message.
+max_no_msgs_interval = 30
+max_message_processed_times = 3
+timeout = 3600
+
+[uploader]
+endpoint = "https://results.localhost.direct/v1/"
+timeout = 10
+
+[s3_writer]
+endpoint = "https://s3.localhost.direct"
+path_style = true
+link_base = "http://vulcan-results/v1/"
+bucket_reports = "reports"
+bucket_logs = "logs"
+region = "local"
+s3_link = false
+
+[stream]
+endpoint = "wss://stream.localhost.direct/stream"
+query_endpoint = "https://stream.localhost.direct/checks"
+timeout = 60
+retries = 15
+# interval in seconds between connection retries.
+retry_interval = 5
+
+[sqs_reader]
+endpoint = "https://goaws.localhost.direct"
+arn = "arn:aws:sqs:local:012345678900:VulcanK8SV2ChecksGeneric"
+polling_interval = 5
+visibility_timeout = 120
+process_quantum  = 45
+
+[sqs_writer]
+endpoint = "https://goaws.localhost.direct"
+arn = "arn:aws:sqs:local:012345678900:VulcanK8SScanEngineCheckStatus"
+
+[api]
+port = ":18080"
+iname = "en0"
+
+[check]
+abort_timeout = 60
+log_level = "info"
+
+[check.vars]
+NESSUS_ENDPOINT = "https://cloud.tenable.com"
+NESSUS_USERNAME = ""
+NESSUS_PASSWORD = ""
+NESSUS_POLICY_ID = "9"
+GITHUB_ENTERPRISE_ENDPOINT = "https://github.example.com/"
+GITHUB_ENTERPRISE_TOKEN = "a"
+VULCAN_ASSUME_ROLE_ENDPOINT = ""
+ROLE_NAME = "ExampleSecurityAuditRole"
+WPVULNDB_API_TOKEN = ""
+REGISTRY_DOMAIN = "docker.io"
+REGISTRY_USERNAME = "myuser"
+REGISTRY_PASSWORD = "mypwd"
+
+[runtime]
+[runtime.docker]
+[runtime.docker.registry]
+server = ""
+user = ""
+pass = ""
+backoff_interval = 5
+backoff_max_retries = 5
+backoff_jitter_factor = 0.5
+pull_policy = "Always"
+
+[datadog]
+metrics_enabled = false
+dogstatsd = "127.0.0.1:8125"

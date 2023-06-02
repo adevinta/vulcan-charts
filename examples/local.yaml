@@ -1,16 +1,15 @@
-minio:
-  enabled: true
-  ingress:
-    enabled: true
-    hostname: minio.vulcan.local
-
-goaws:
-  enabled: true
-  ingress:
-    enabled: true
-    hosts:
-      - host: goaws.vulcan.local
-        paths: [/]
+extraManifests:
+  # See https://get.localhost.direct/
+  tls: |
+    apiVersion: v1
+    kind: Secret
+    metadata:
+      name: localhost-direct-tls
+      labels: {{- include "vulcan.labels" . | nindent 4 }}
+    type: kubernetes.io/tls
+    data:
+      tls.crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUdWVENDQlQyZ0F3SUJBZ0lNQ01XYUQwa0ZBK2JIT2Q4U01BMEdDU3FHU0liM0RRRUJDd1VBTUV3eEN6QUoKQmdOVkJBWVRBa0pGTVJrd0Z3WURWUVFLRXhCSGJHOWlZV3hUYVdkdUlHNTJMWE5oTVNJd0lBWURWUVFERXhsQgpiSEJvWVZOVFRDQkRRU0F0SUZOSVFUSTFOaUF0SUVjME1CNFhEVEl6TURRd01URTJNemN5TlZvWERUSTBNRFV3Ck1qRTJNemN5TkZvd0hURWJNQmtHQTFVRUF3d1NLaTVzYjJOaGJHaHZjM1F1WkdseVpXTjBNSUlCSWpBTkJna3EKaGtpRzl3MEJBUUVGQUFPQ0FROEFNSUlCQ2dLQ0FRRUFuOFNNS2ZMOXE3c3FPMGtNc2JoelRIVVNqWnVoRTVEYwprMU91SmhycTdWcXU2M0RKbXZRTEJFZTN0NkJWZHBHRlZDTWFBVVd5NjVXSjhSSEZqTWhCNktSSnRpMlcyNmhqClJOMU95V1JocS9PRlRjbjdrVjZqVFAwSUVVWXorSWRrNnZYVS9RSGJqWlVIWlZRMU81SDhpYVJ6SDRlaHphbmMKMmJPUEVCRzZibnNxYXFNZ2ozcnhEV1N5cG0zb0lyQ1lmZ09IMzUwVHQ5TGVUQytldC9aSTV3Y29LTGlqVWtLUgpjRHpQODFQb0xnUWtkQ29FTVhaKzdxNEpLcEtreFBwUWpqcDFiMUNabE9KZ2ozRE5QdkVyMnFNODV0dEhNRCtWCnhHTTA0NWxBVXNoaEdYaG1VbTFCUXNSRGdyeXg1dnhVS2dyQmdKUEJxS1o0VW9kYXNEdUU4UUlEQVFBQm80SUQKWkRDQ0EyQXdEZ1lEVlIwUEFRSC9CQVFEQWdXZ01JR1RCZ2dyQmdFRkJRY0JBUVNCaGpDQmd6QkdCZ2dyQmdFRgpCUWN3QW9ZNmFIUjBjRG92TDNObFkzVnlaUzVuYkc5aVlXeHphV2R1TG1OdmJTOWpZV05sY25RdllXeHdhR0Z6CmMyeGpZWE5vWVRJMU5tYzBMbU55ZERBNUJnZ3JCZ0VGQlFjd0FZWXRhSFIwY0RvdkwyOWpjM0F1WjJ4dlltRnMKYzJsbmJpNWpiMjB2WVd4d2FHRnpjMnhqWVhOb1lUSTFObWMwTUZjR0ExVWRJQVJRTUU0d0NBWUdaNEVNQVFJQgpNRUlHQ2lzR0FRUUJvRElLQVFNd05EQXlCZ2dyQmdFRkJRY0NBUlltYUhSMGNITTZMeTkzZDNjdVoyeHZZbUZzCmMybG5iaTVqYjIwdmNtVndiM05wZEc5eWVTOHdDUVlEVlIwVEJBSXdBREJCQmdOVkhSOEVPakE0TURhZ05LQXkKaGpCb2RIUndPaTh2WTNKc0xtZHNiMkpoYkhOcFoyNHVZMjl0TDJGc2NHaGhjM05zWTJGemFHRXlOVFpuTkM1agpjbXd3THdZRFZSMFJCQ2d3Sm9JU0tpNXNiMk5oYkdodmMzUXVaR2x5WldOMGdoQnNiMk5oYkdodmMzUXVaR2x5ClpXTjBNQjBHQTFVZEpRUVdNQlFHQ0NzR0FRVUZCd01CQmdnckJnRUZCUWNEQWpBZkJnTlZIU01FR0RBV2dCUlAKeTZ5b3d1K3IzWU52YTcvT21EMWNXQ1YyRlRBZEJnTlZIUTRFRmdRVW9raVBPQ3hwcFVGUCs0Um9DOGsyS0ZrUwpZYmt3Z2dGL0Jnb3JCZ0VFQWRaNUFnUUNCSUlCYndTQ0FXc0JhUUIxQUhQWm5va2JUSlo0b0NCOVI1M21zc1ljCjBGRmVjUmtxakd1QUVIckJkM0sxQUFBQmh6MnVaRTBBQUFRREFFWXdSQUlnQi9jMEJ6dVVKdG5SdFBuNGFTUW4KM0NkUWpRL2FwVmpCWHBaNWl0VjhYamdDSUJDWG90TXU4M2w2RnJpdDhCMXV0NTFIclJZc3NsNVRKTDMrTnlpOAo0Vk84QUhjQVNMRGphOXFtUnpRUDVXb0MrcDB3Nnh4U0FjdFczU3lCMmJ1L3F6blloSE1BQUFHSFBhNWt6UUFBCkJBTUFTREJHQWlFQTFZNmZrZzBvOWY5M3VHbXRmVXFQS0x2enZRQVg3T1h0c2ZDbC9WZEtkeVFDSVFERjdET24KRFpwbFJkVmRrRTl4WldoZ0R3bElOdFJYOHlVWGlrVWc2ejZORWdCM0FPN04wR1RWMnhyT3hWeTNuYlRORTZJeQpoMFo4dk96ZXcxRklXVVp4SDdXYkFBQUJoejJ1WlJFQUFBUURBRWd3UmdJaEFMeDRON3dZVjNyTzVOejIxbjFxCjNRbk5WVW5jR3RQSTFaTW9ydU5xV25IaEFpRUE1aU9vN213b1JSWUduNzduWEVSYUlBVU9BNGlWNnB2emFZeEMKeWFVMXJFTXdEUVlKS29aSWh2Y05BUUVMQlFBRGdnRUJBSHowczk3ckVRWnJzV1FVRVpkaUhocjV4eUh0dFI3dAovMDkvbEVUMTU4aTNOM3hSQmhMUytpSEVPTGdhdnM4Q29GZkxwT21ySnVhNnpQczI2WGliM0cvT3pkNTRLMnN6CjF2VjJ5OVdKVFI0ZGNnOWlqaVZibUFLY2hlZG1UN1NxS3RicjFLc2hLQWoycThpelJWM2R1S1gxanNmaTN6UCsKYThQZTF2YloxcVVOSU5YQ3NqUjMyckcxbSt0d2x1TE13N2tONndiMlM1Qk4reVJHNTVYR0NZT0JMN0d2UEE0ZAowUlZrc2grVCtNMXNqaWNjRGU2bFcrVXZWYjJVM0xsS3VYekVGQTBHSnp3YU1aT0NzUjdnN3hvMFVGZVk5d1haCllmNWMzRHc5dml1SlZDVE0vWFc3QkpVaU1yQ21HZzg2NG1DZ0dGVkJnUnVnWmlrdXkxRVFmRTQ9Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0KLS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUVUVENDQXpXZ0F3SUJBZ0lMQkFBQUFBQUJSRTd3TmpFd0RRWUpLb1pJaHZjTkFRRUxCUUF3VnpFTE1Ba0cKQTFVRUJoTUNRa1V4R1RBWEJnTlZCQW9URUVkc2IySmhiRk5wWjI0Z2JuWXRjMkV4RURBT0JnTlZCQXNUQjFKdgpiM1FnUTBFeEd6QVpCZ05WQkFNVEVrZHNiMkpoYkZOcFoyNGdVbTl2ZENCRFFUQWVGdzB4TkRBeU1qQXhNREF3Ck1EQmFGdzB5TkRBeU1qQXhNREF3TURCYU1Fd3hDekFKQmdOVkJBWVRBa0pGTVJrd0Z3WURWUVFLRXhCSGJHOWkKWVd4VGFXZHVJRzUyTFhOaE1TSXdJQVlEVlFRREV4bEJiSEJvWVZOVFRDQkRRU0F0SUZOSVFUSTFOaUF0SUVjeQpNSUlCSWpBTkJna3Foa2lHOXcwQkFRRUZBQU9DQVE4QU1JSUJDZ0tDQVFFQTJnSHM1T3h6WVB0K2oycTN4aGZqCmttUXkxS3dBMmFJUHVlM3VhNHFHeXBKbjJYVFhYVWNDUEk5QTFwNXRGTTNEMmlrNXB3OEZDbWlpWmhvZXhMS0wKZGxqbHExMGRqMEN6T1l2dkhvTjlJdERqcVFBdTdGUFBZaG1GUkNoTXdDZkxldzdzRUdRQUVLUUZ6S0J5dmtGcwpNVnRJNUxIc3VTUHJWVTNRZldKS3BiU2xwRm1GeFNXUnB2Nm1DWjhHRUcyUGdReGtRRjV6QUpyZ0xtV1lWQkFBCmNKakk0ZTAwWDlpY3h3M0ExaU5aUmZ6K1ZYcUc3cFJnSXZHdTBlWlZSdmFaeFJzSWRGK3NzR1NFajRrNEhLR24Ka0NGUEFtNjk0R0ZuMVBoQ2h3OEs5OGtFYlNxcEwrOUNwZC9kbzFQYm1CNkIrWnB5ZTFyZVR6NS9vbGlnNGhldApad0lEQVFBQm80SUJJekNDQVI4d0RnWURWUjBQQVFIL0JBUURBZ0VHTUJJR0ExVWRFd0VCL3dRSU1BWUJBZjhDCkFRQXdIUVlEVlIwT0JCWUVGUFhOMVR3SVVQbHFUenEzbDlwV2crWnAwbWozTUVVR0ExVWRJQVErTUR3d09nWUUKVlIwZ0FEQXlNREFHQ0NzR0FRVUZCd0lCRmlSb2RIUndjem92TDNkM2R5NWhiSEJvWVhOemJDNWpiMjB2Y21WdwpiM05wZEc5eWVTOHdNd1lEVlIwZkJDd3dLakFvb0NhZ0pJWWlhSFIwY0RvdkwyTnliQzVuYkc5aVlXeHphV2R1CkxtNWxkQzl5YjI5MExtTnliREE5QmdnckJnRUZCUWNCQVFReE1DOHdMUVlJS3dZQkJRVUhNQUdHSVdoMGRIQTYKTHk5dlkzTndMbWRzYjJKaGJITnBaMjR1WTI5dEwzSnZiM1J5TVRBZkJnTlZIU01FR0RBV2dCUmdlMllhUlEyWAp5b2xRTDMwRXpUU28vL3o5U3pBTkJna3Foa2lHOXcwQkFRc0ZBQU9DQVFFQVlFQm9Ga2ZuRm8zYlhLRldLc3YwClhKdXdIcUpMOWNzQ1AvZ0xvZktuUXRTM1RPdmpab0R6SlVONExoc1hWZ2RTR012UnFPem0rM00rcEdLTWdMVFMKeFJKem85UDZBamkrWXoyRXVKbkI4YnIzbjhOQTBWZ1lVOEZpM2E4WVFuODBUc1ZEMVhHd01BREg0NUN1UDFlRwpsODdxREJLT0luRGpacWRVZnk0b3k5UlUwTE1lWW1jSStTZmh5K05tdUNRYmlXcUpSR1h5MlV6U1dCeU1Uc0NWCm9kVHZaeTg0SU9ndS81WlI4THJZUFpKd1IyVWNubk55dEdBTVhPTFJjM2JncjA3aTVUZWxSUytLSXo2SHh6RG0KTVRoODlOMVN5dk5UQkNWWFZtYVU2QXZ1NWdNVVR1NzliWlJrbmw3T2VkU3lwczlBc1VTb1BvY1pYdW40SVJaWgpVdz09IAotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+      tls.key: LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JSUV2QUlCQURBTkJna3Foa2lHOXcwQkFRRUZBQVNDQktZd2dnU2lBZ0VBQW9JQkFRQ2Z4SXdwOHYycnV5bzcKU1F5eHVITk1kUktObTZFVGtOeVRVNjRtR3VydFdxN3JjTW1hOUFzRVI3ZTNvRlYya1lWVUl4b0JSYkxybFlueApFY1dNeUVIb3BFbTJMWmJicUdORTNVN0paR0dyODRWTnlmdVJYcU5NL1FnUlJqUDRoMlRxOWRUOUFkdU5sUWRsClZEVTdrZnlKcEhNZmg2SE5xZHpaczQ4UUVicHVleXBxb3lDUGV2RU5aTEttYmVnaXNKaCtBNGZmblJPMzB0NU0KTDU2Mzlram5CeWdvdUtOU1FwRndQTS96VStndUJDUjBLZ1F4ZG43dXJna3FrcVRFK2xDT09uVnZVSm1VNG1DUApjTTArOFN2YW96em0yMGN3UDVYRVl6VGptVUJTeUdFWmVHWlNiVUZDeEVPQ3ZMSG0vRlFxQ3NHQWs4R29wbmhTCmgxcXdPNFR4QWdNQkFBRUNnZ0VBZTZKaWdOZmIrN2ZqcjJzUkdycE01djYxczhXYU9ZVGhYRlRtTC9DbW1iU1MKSmZucTJURS9FVG5hYm92eGRzYVhzWXRVUldYRlZrOHJKdFVFMWJQbVpQdzFXbmdmQks1aTIxaVM3bi95b1ZqYQpjRjc4Z1BzR1RiNkZMckR2Nk1RRmtWbFpUOHpQTk5uOWxpazY1SFZOUXNweW1CU2lYbit6T3ZpYm5laktKMUdKCmVQQ2dnSE1UOHkxQ3JlWHIyQmtEak5VUis0ZXhkOVFhdEpiZlNTZG15YytGcytnWFoydytJclcxMTRyTTZHUWIKcDU2TGZLREkyUjNkSDB6Yy8xZzUzY2dvTDdNZ3ZxeHVnZ2p6SUFTR3c0WG8zZHlzeHN4QmdweXNCMHk3QVlyTAo3SnQxbkU5UVQ2QVQwRjVzdS8yUTJnM0ltVFRpWHF1bVB6TzhUWXRDQVFLQmdRREt1b09BSlR5SHVxRVRQd1huCjRRRlFNZEhjem1aVUVvYmVIdVdIbmlkeThIVjBBdzNjWDVaeFJxWmNoMUR3OWZPT1luYTZLSkthcTJZdzVHaHoKRGNxbEUxY1A2UW1pbThibUQ0L3o3NjMvSUlKNVQ4SjE4cDNBS0V3NS9CcituYldwOE43Wk1Eejl4YTYrcWtybQpOZnI5eE1HZFdRaDVPeXUrU2tudzJFdHhrUUtCZ1FESndCTDZ4OWV2dENhT09HbkEvMHZwc29GTWFGWDBTQngrCk5SQ3Y1ZWhySFc1RDg4UHk4OE8weW1SSElFVmFNTWtuZ2hsY1RVbG41OEtZcmswa3pxaE5Mb1pZWlZmNml2cHQKOXFRYVJuSVVneThrcmxyRGl5dm40T0ZuaGZoNURObS9uZCt3aWtQSkV3Y0kxcTB6OFI3K2c5eTNSS0NOTDZzMgpIUUczSmo4dFlRS0JnRW9CVkVmUFVBMXNQNmk2OVBqMDFubmo5ZXhaSEZuTWVaZFVTQTM5MmdESGJ0anUxSHlDCkdIVTVpVGwxM0VKYVJwTFB0dSsySis1MmExT2x6Y3RTV1l0eFIvTHk2eVdGSUZLVGs4VkUxWXV3M25CU2dYWjEKSHNrcTdNaXVFMXluVGMyL3RGb3NsZGM5OXRCN2NlUWdDSVBpODVyeENYclg4dHdBV29XbEw4VkJBb0dBUGcwNgppVEdBRUVXTGVrQzFuaXVuY0poN2xrR2M5a1picFNHeklUYklWbkcxNFdhUFJTRmVkek9zeGdlUjdSeUdNZ1djCndUdndNT29pZXcxWkl0SUJCOFFnZy8yZm9xcXVQYllYWVJGN3N2MXFPWkQ2ejV2MWhCc3htTUttMnF4dUtMWm8KLzRaM05OZ0tXTmlXYXh4bFdRaTdrUTZsaHVjN2RLaFZSN3lXditFQ2dZQXVNMmd0VDgzRHlSNHltU083UTZkdgpkVC9VT2J6cmtQZkRta1JXMnk0UFVxQUM2UGEvOSs0SGJCZ0hHcHRhMG1JdTdqd3pTZUR6dktoT2YzOVRPZEdkCnJncUM4Y29hblUzS1VRMGhRM3F4YzMxc0swNHhkMG9MN0lsSE44NHJhWWFranBsZFJjR0RhNXJNQnZ1QWhYN2wKVXR6S1hYUmFXTm9SeTBEZlJXem95dz09Ci0tLS0tRU5EIFBSSVZBVEUgS0VZLS0tLS0K
 
 postgresql:
   enabled: true
@@ -18,107 +17,251 @@ postgresql:
 redis:
   enabled: true
 
-results:
-  conf:
-    linkBase: https://results.vulcan.local
+minio:
+  enabled: true
+  ingress:
+    enabled: true
+    hostname: minio.localhost.direct
+    extraTls:
+    - secretName: localhost-direct-tls
+  apiIngress:
+    enabled: true
+    hostname: s3.localhost.direct
+    tls: true
+    extraTls:
+    - secretName: localhost-direct-tls
+
+goaws:
+  enabled: true
   ingress:
     enabled: true
     hosts:
-      - host: results.vulcan.local
-        paths: [/]
+    - host: goaws.localhost.direct
+      paths: [/]
+    tls:
+      - secretName: localhost-direct-tls
+        hosts:
+        - goaws.localhost.direct
+
+results:
+  enabled: true
+  image:
+    tag: latest
+  proxy: &proxy
+    enabled: false
+  dogstatsd: &dogstatsd
+    enabled: false
+  ingress:
+    enabled: true
+    hosts:
+    - host: results.localhost.direct
+      paths: [/]
+    tls:
+      - secretName: localhost-direct-tls
+        hosts:
+        - results.localhost.direct
 
 stream:
+  enabled: true
+  image:
+    tag: latest
+  proxy: *proxy
+  dogstatsd: *dogstatsd
   ingress:
-    annotations:
-      nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
-      nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
     enabled: true
     hosts:
-      - host: stream.vulcan.local
-        paths: [/]
+    - host: stream.localhost.direct
+      paths: [/]
+    tls:
+      - secretName: localhost-direct-tls
+        hosts:
+        - stream.localhost.direct
 
 persistence:
+  enabled: true
+  image:
+    tag: latest
+  proxy: *proxy
+  dogstatsd: *dogstatsd
   ingress:
     enabled: true
     hosts:
-      - host: persistence.vulcan.local
-        paths: [/]
+    - host: persistence.localhost.direct
+      paths: [/]
+    tls:
+      - secretName: localhost-direct-tls
+        hosts:
+        - persistence.localhost.direct
 
 api:
+  enabled: true
+  image:
+    tag: latest
   conf:
+    cookieDomain: localhost.direct
+    secretKey: mysecretkey
     saml:
-      callback: https://www.vulcan.local/api/v1/login/callback
-      trustedDomains: '["www.vulcan.local"]'
+      # Setup your SAML 
+      # Okta format
+      metadata: https://example.okta.com/app/yourclientid/sso/saml/metadata
+      issuer: http://www.okta.com/yourclientid
+      # auth0 format
+      # metadata: https://example.eu.auth0.com/samlp/metadata/yourclientid
+      # issuer: urn:example.eu.auth0.com
+      callback: https://www.localhost.direct/api/v1/login/callback
+      trustedDomains: '["www.localhost.direct"]'
     globalPolicies:
-      - name: web-scanning-global
-        allowedAssettypes:
-        blockedAssettypes:
+      - name: default-global
         allowedChecks:
-          - vulcan-zap
-        blockedChecks:
-        excludingSuffixes:
-          - experimental
+          # - vulcan-aws-alerts
+          # - vulcan-aws-trusted-advisor
+          # - vulcan-dmarc
+          # - vulcan-drupal
+          # - vulcan-exposed-bgp
+          # - vulcan-exposed-db
+          - vulcan-exposed-http
+          - vulcan-exposed-ssh
+          # - vulcan-github-alerts
+          # - vulcan-gitleaks
+          # - vulcan-heartbleed
+          # - vulcan-host-discovery
+          - vulcan-http-headers
+          # - vulcan-ipv6
+          # - vulcan-mx
+          # - vulcan-nessus
+          # - vulcan-prowler
+          - vulcan-retirejs
+          - vulcan-semgrep
+          - vulcan-smtp-open-relay
+          # - vulcan-spf
+          - vulcan-trivy
+          # - vulcan-vulners
+          # - vulcan-wpscan
+          # - vulcan-blast-radius
+          # - vulcan-nuclei
+      - name: web-scanning-global
+        allowedChecks:
+          # - vulcan-zap
+          # - vulcan-burp
+  proxy: *proxy
+  dogstatsd: *dogstatsd
   ingress:
     enabled: true
-    annotations:
-      nginx.ingress.kubernetes.io/enable-cors: "true"
-      nginx.ingress.kubernetes.io/cors-allow-origin: "https://www.vulcan.local"
-      nginx.ingress.kubernetes.io/proxy-body-size: 8m
     hosts:
-      - host: www.vulcan.local
-        paths: [/api]
+    - host: www.localhost.direct
+      paths: [/api]
+    tls:
+      - secretName: localhost-direct-tls
+        hosts:
+        - www.localhost.direct
 
 crontinuous:
-  conf:
-    teamsWhitelistScan: '["team1", "team2"]'
-    teamsWhitelistReport: '["team3"]'
-  ingress:
-    enabled: false
+  enabled: true
+  image:
+    tag: latest
+  proxy: *proxy
 
 scanengine:
+  enabled: true
+  image:
+    tag: latest
+  proxy: *proxy
+  dogstatsd: *dogstatsd
   ingress:
-    enabled: false
+    enabled: true
+    hosts:
+    - host: scanengine.localhost.direct
+      paths: [/]
+    tls:
+      - secretName: localhost-direct-tls
+        hosts:
+        - scanengine.localhost.direct
 
 ui:
+  enabled: true
+  image:
+    tag: latest
+  proxy: *proxy
   conf:
-    apiUrl: https://www.vulcan.local/api/v1/
+    apiUrl: https://www.localhost.direct/api/v1/
+
   ingress:
     enabled: true
     hosts:
-      - host: www.vulcan.local
-        paths: [/]
+    - host: www.localhost.direct
+      paths: [/]
+    tls:
+      - secretName: localhost-direct-tls
+        hosts:
+        - www.localhost.direct
 
 insights:
+  enabled: true
+  image:
+    tag: latest
+  proxy:
+    enabled: true
+  conf:
+    log: true
   ingress:
     enabled: true
-    annotations:
-      nginx.ingress.kubernetes.io/configuration-snippet: |
-        more_set_headers "X-Frame-Options: SAMEORIGIN";
-        more_set_headers "X-Content-Type-Options: nosniff";
-        more_set_headers "X-Frame-Options: DENY";
-        more_set_headers "X-Xss-Protection: 1";
-        more_set_headers "Strict-Transport-Security: max-age=31536000; includeSubDomains";
-        more_set_headers "Content-Security-Policy: default-src 'none'; script-src 'self' 'unsafe-inline' https://insights.vulcan.local https://www.google-analytics.com; font-src 'self' https://insights.vulcan.local; connect-src 'self' https://insights.vulcan.local; img-src 'self' https://insights.vulcan.local https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://insights.vulcan.local; object-src 'none'";
     hosts:
-      - host: insights.vulcan.local
-        paths: [/]
+    - host: insights.localhost.direct
+      paths: [/]
+    tls:
+      - secretName: localhost-direct-tls
+        hosts:
+        - insights.localhost.direct
+
+metrics:
+  enabled: false
 
 reportsgenerator:
+  enabled: true
+  image:
+    tag: latest
+  proxy:
+    enabled: false
+  dogstatsd: *dogstatsd
+
   conf:
     generators:
       scan:
-        vulcanUi: http://www.vulcan.local/
-        proxyEndpoint: http://insights.vulcan.local
-    ses:
-      cc: '["tbd@tbd.com"]'
-  ingress:
-    enabled: false
+        proxyEndpoint: https://insights.localhost.direct
+        vulcanUi: https://www.localhost.direct/
 
-vulndbapi:
   ingress:
     enabled: true
     hosts:
-      - host: vulndbapi.vulcan.local
-        paths: [/]
+    - host: reportsgenerator.localhost.direct
+      paths: [/]
+    tls:
+      - secretName: localhost-direct-tls
+        hosts:
+        - reportsgenerator.localhost.direct
+
+vulndb:
+  enabled: true
+  image:
+    tag: latest
+
+vulndbapi:
+  enabled: true
+  image:
+    tag: latest
+  proxy: *proxy
+  dogstatsd: *dogstatsd
   conf:
     readReplicaHost:
+  ingress:
+    enabled: true
+    hosts:
+    - host: vulndbapi.localhost.direct
+      paths: [/]
+    tls:
+      - secretName: localhost-direct-tls
+        hosts:
+        - vulndbapi.localhost.direct
+
+sqsexporter:
+  enabled: false
