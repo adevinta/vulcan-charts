@@ -14,7 +14,7 @@ prometheus.io/port: '{{ .Values.comp.proxy.metricsPort | default 9101 }}'
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "vulcan.fullname" . }}-{{ .Values.comp.name }}-proxy
+  name: {{ include "comp.fullname" . }}-proxy
   labels: {{- include "vulcan.labels" . | nindent 4 }}
     app.kubernetes.io/name: {{ .Values.comp.name }}
 data:
@@ -116,6 +116,6 @@ haproxy.cfg: |
 {{- if .Values.comp.proxy.enabled -}}
 - name: config-proxy
   configMap:
-    name: {{ include "vulcan.fullname" . }}-{{ .Values.comp.name }}-proxy
+    name: {{ include "comp.fullname" . }}-proxy
 {{- end -}}
 {{- end -}}

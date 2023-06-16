@@ -6,7 +6,7 @@ Override names
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "vulcan.fullname" . }}-{{ .Values.comp.name }}
+  name: {{ include  "comp.fullname" . }}
   labels: {{- include "vulcan.labels" . | nindent 4 }}
     app.kubernetes.io/name: {{ .Values.comp.name }}
 spec:

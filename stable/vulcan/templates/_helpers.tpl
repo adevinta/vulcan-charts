@@ -62,6 +62,50 @@ Pod labels
 {{- end }}
 {{- end -}}
 
+{{- define "ingress.endpoint" -}}
+{{- printf "%s://%s/" (ternary .Values.comp.ingress.tls "http" "https") (include "ingress.hostname" .) -}}
+{{- end -}}
+
+{{- define "ingress.hostname" -}}
+{{- .Values.comp.ingress.hostname | default (printf "%s.%s" (default .Values.comp.name .Values.comp.ingress.subdomain) .Values.global.domain) -}}
+{{- end -}}
+
+{{- define "api.hostname" -}}
+{{- .Values.api.ingress.hostname | default (printf "%s.%s" (default .Values.api.name .Values.api.ingress.subdomain) .Values.global.domain) -}}
+{{- end -}}
+
+{{- define "api.endpoint" -}}
+{{- printf "%s://%s" (ternary "https" "http" .Values.api.ingress.tls) (include "api.hostname" .) -}}
+{{- end -}}
+
+{{- define "insights.hostname" -}}
+{{- .Values.insights.ingress.hostname | default (printf "%s.%s" (default .Values.insights.name .Values.insights.ingress.subdomain) .Values.global.domain) -}}
+{{- end -}}
+
+{{- define "insights.endpoint" -}}
+{{- printf "%s://%s" (ternary "https" "http" .Values.insights.ingress.tls) (include "insights.hostname" .) -}}
+{{- end -}}
+
+{{- define "results.hostname" -}}
+{{- .Values.results.ingress.hostname | default (printf "%s.%s" (default .Values.results.name .Values.results.ingress.subdomain) .Values.global.domain) -}}
+{{- end -}}
+
+{{- define "results.endpoint" -}}
+{{- printf "%s://%s" (ternary "https" "http" .Values.results.ingress.tls) (include "results.hostname" .) -}}
+{{- end -}}
+
+{{- define "ui.hostname" -}}
+{{- .Values.ui.ingress.hostname | default (printf "%s.%s" (default .Values.ui.name .Values.ui.ingress.subdomain) .Values.global.domain) -}}
+{{- end -}}
+
+{{- define "ui.endpoint" -}}
+{{- printf "%s://%s" (ternary "https" "http" .Values.ui.ingress.tls) (include "ui.hostname" .) -}}
+{{- end -}}
+
+{{- define "comp.fullname" -}}
+{{- printf "%s-%s" (include "vulcan.fullname" .) .Values.comp.name -}}
+{{- end -}}
+
 {{- define "api.fullname" -}}
 {{- printf "%s-%s" (include "vulcan.fullname" .) .Values.api.name -}}
 {{- end -}}
@@ -273,4 +317,13 @@ Pod labels
 
 {{- define "vulcan.redis.url" -}}
 {{- printf "%s:%s" (include "vulcan.redis.host" .) (include "vulcan.redis.port" .) -}}
+{{- end -}}
+
+{{/*
+Converts toJson only if slice/map input.
+This is used to allow backward compatibility with json values encoded as string (i.e. '["a","b"]')
+This support will be deprecated anytime soon.
+*/}}
+{{- define "safeToJson" -}}
+{{- ternary (toJson .) . (any (kindIs "slice" .) (kindIs "map" .)) -}}
 {{- end -}}

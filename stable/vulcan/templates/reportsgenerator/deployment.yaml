@@ -5,7 +5,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "reportsgenerator.fullname" . }}
+  name: {{ include "comp.fullname" . }}
   labels: {{- include "vulcan.labels" . | nindent 4 }}
     app.kubernetes.io/name: {{ .Values.comp.name }}
 spec:
@@ -83,13 +83,13 @@ spec:
           - name: PERSISTENCE_ENDPOINT  # We keep this PERSISTENCE variable for compatibility
             value: {{ .Values.comp.conf.scanengineUrl | default (include "scanengine.url" .) | quote }}
           - name: RESULTS_ENDPOINT
-            value: {{ .Values.comp.conf.resultsUrl | default (include "results.url" .) | quote }}
+            value: {{ .Values.comp.conf.resultsUrl | default (include "results.endpoint" .) | quote }}
           - name: SCAN_PROXY_ENDPOINT
-            value: {{ .Values.comp.conf.generators.scan.proxyEndpoint | quote }}
+            value: {{ .Values.comp.conf.generators.scan.proxyEndpoint | default (include "insights.endpoint" .) | quote }}
           - name: VULCAN_UI
-            value: {{ .Values.comp.conf.generators.scan.vulcanUi | quote }}
+            value: {{ .Values.comp.conf.generators.scan.vulcanUi | default (include "ui.endpoint" .) | quote }}
           - name: SCAN_VIEW_REPORT
-            value: {{ printf "%sapi/v1/report?team_id=%s&scan_id=%s" .Values.comp.conf.generators.scan.vulcanUi "%s" "%s" | quote }}
+            value: {{ printf "%s%s/v1/report?team_id=%s&scan_id=%s" (include "api.endpoint" .) .Values.api.ingress.path "%s" "%s" | quote }}
           {{- if .Values.comp.conf.generators.scan.redirectUrl }}
           - name: SCAN_REDIRECT_URL
             value: {{ .Values.comp.conf.generators.scan.redirectUrl | quote }}
@@ -99,7 +99,7 @@ spec:
         {{- include "common-container-envs" . | nindent 10 }}
           envFrom:
           - secretRef:
-              name: {{ include "reportsgenerator.fullname" . }}
+              name: {{ include "comp.fullname" . }}
           ports:
             - name: {{ include "common-appPortName" . }}
               containerPort: {{ .Values.comp.containerPort }}

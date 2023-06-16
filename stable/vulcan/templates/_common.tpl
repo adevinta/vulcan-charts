@@ -19,7 +19,9 @@ securityContext:
   {{- toYaml . | nindent 2 }}
 {{- end }}
 image: "{{ .Values.comp.image.repository }}:{{ .Values.comp.image.tag }}"
-imagePullPolicy: {{ .Values.comp.image.pullPolicy }}
+{{- with .Values.comp.image.pullPolicy }}
+imagePullPolicy: {{ . }}
+{{- end -}}
 {{- with .Values.comp.lifecycle }}
 {{- if or .preStopCommand .preStopSleep }}
 lifecycle:

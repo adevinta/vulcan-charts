@@ -5,7 +5,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "results.fullname" . }}
+  name: {{ include "comp.fullname" . }}
   labels: {{- include "vulcan.labels" . | nindent 4 }}
     app.kubernetes.io/name: {{ .Values.comp.name }}
 spec:
@@ -38,7 +38,7 @@ spec:
           - name: BUCKET_LOGS
             value: {{ .Values.comp.conf.bucketLogs | quote }}
           - name: LINK_BASE
-            value: "{{ .Values.comp.conf.linkBase }}/v1"
+            value: "{{ .Values.comp.conf.linkBase | default (include "results.endpoint" .) }}/v1"
         {{- include "common-container-envs" . | nindent 10 }}
           ports:
             - name: {{ include "common-appPortName" . }}

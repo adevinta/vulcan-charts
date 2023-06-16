@@ -5,7 +5,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "api.fullname" . }}
+  name: {{ include "comp.fullname" . }}
   labels: {{- include "vulcan.labels" . | nindent 4 }}
     app.kubernetes.io/name: {{ .Values.comp.name }}
 spec:
@@ -53,9 +53,9 @@ spec:
           - name: SAML_ISSUER
             value: {{ .Values.comp.conf.saml.issuer | quote }}
           - name: SAML_CALLBACK
-            value: {{ .Values.comp.conf.saml.callback | quote }}
+            value: {{ .Values.comp.conf.saml.callback | default ( printf "%s/api/v1/login/callback" (include "api.endpoint" .) )       quote }}
           - name: SAML_TRUSTED_DOMAINS
-            value: {{ .Values.comp.conf.saml.trustedDomains | quote }}
+            value: {{ .Values.comp.conf.saml.trustedDomains | default (list (include "ui.hostname" .)) | toJson | quote }}
           - name: DEFAULT_OWNERS
             value: {{ .Values.comp.conf.defaultOwners | quote }}
           - name: SCANENGINE_URL
@@ -107,7 +107,7 @@ spec:
         {{- include "common-container-envs" . | nindent 10 }}
           envFrom:
           - secretRef:
-              name: {{ include "api.fullname" . }}
+              name: {{ include "comp.fullname" . }}
           ports:
             - name: {{ include "common-appPortName" . }}
               containerPort: {{ .Values.comp.containerPort }}

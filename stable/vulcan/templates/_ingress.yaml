@@ -3,81 +3,59 @@ Override names
 */}}
 {{- define "common-ingress" -}}
 {{- if and .Values.comp.enabled .Values.comp.ingress.enabled -}}
-{{- $fullName := printf "%s-%s" (include "vulcan.fullname" . ) .Values.comp.name -}}
-{{- $svcPort := .Values.comp.service.port -}}
-{{- if and .Values.comp.ingress.className (not (semverCompare ">=1.18-0" (include "common.capabilities.kubeVersion" .))) }}
-  {{- if not (hasKey .Values.comp.ingress.annotations "kubernetes.io/ingress.class") }}
-  {{- $_ := set .Values.comp.ingress.annotations "kubernetes.io/ingress.class" .Values.comp.ingress.className}}
-  {{- end }}
-{{- end }}
-{{- if semverCompare ">=1.19-0" (include "common.capabilities.kubeVersion" .) -}}
 apiVersion: networking.k8s.io/v1
-{{- else if semverCompare ">=1.14-0" (include "common.capabilities.kubeVersion" .) -}}
-apiVersion: networking.k8s.io/v1beta1
-{{- else -}}
-apiVersion: extensions/v1beta1
-{{- end }}
 kind: Ingress
 metadata:
-  name: {{ $fullName }}
+  name: {{ include "comp.fullname" . }}
   labels: {{- include "vulcan.labels" . | nindent 4 }}
     app.kubernetes.io/name: {{ .Values.comp.name }}
-  {{- with .Values.comp.ingress.annotations }}
+  {{- if .Values.comp.ingress.annotations }}
   annotations:
-    {{- toYaml . | nindent 4 }}
+    {{- tpl (toYaml .Values.comp.ingress.annotations) . | nindent 4 }}
   {{- end }}
 spec:
-  {{- if and .Values.comp.ingress.className (semverCompare ">=1.18-0" (include "common.capabilities.kubeVersion" .)) }}
-  ingressClassName: {{ .Values.comp.ingress.className }}
-  {{- end }}
-  {{- if .Values.comp.ingress.tls }}
-  tls:
-    {{- range .Values.comp.ingress.tls }}
-    - hosts:
-        {{- range .hosts }}
-        - {{ . | quote }}
-        {{- end }}
-      secretName: {{ .secretName }}
-    {{- end }}
+  {{- if .Values.comp.ingress.className }}
+  ingressClassName: {{ .Values.comp.ingress.className | quote }}
   {{- end }}
   rules:
-    {{- range .Values.comp.ingress.hosts }}
-    - host: {{ .host | quote }}
+    - host: {{ include "ingress.hostname" . }}
       http:
         paths:
-          {{- range .paths }}
-          {{- if kindIs "string" . }}
-          - path: {{ . }}
-            {{- if semverCompare ">=1.18-0" (include "common.capabilities.kubeVersion" $) }}
-            pathType: ImplementationSpecific
-            {{- end }}
-            backend:
-              {{- if semverCompare ">=1.19-0" (include "common.capabilities.kubeVersion" $) }}
-              service:
-                name: {{ $fullName }}
-                port:
-                  number: {{ $svcPort }}
-              {{- else }}
-              serviceName: {{ $fullName }}
-              servicePort: {{ $svcPort }}
-              {{- end }}
-          {{- else }}
-          - path: {{ .path }}
-            {{- if and .pathType (semverCompare ">=1.18-0" (include "common.capabilities.kubeVersion" $)) }}
-            pathType: {{ .pathType }}
-            {{- end }}
-            backend:
-              {{- if semverCompare ">=1.19-0" (include "common.capabilities.kubeVersion" $) }}
-              service:
-                name: {{ $fullName }}
-                port:
-                  number: {{ $svcPort }}
-              {{- else }}
-              serviceName: {{ $fullName }}
-              servicePort: {{ $svcPort }}
-              {{- end }}
+          {{- if .Values.comp.ingress.extraPaths }}
+          {{- toYaml .Values.comp.ingress.extraPaths | nindent 10 }}
           {{- end }}
-          {{- end }}
+          - path: {{ .Values.comp.ingress.path | default "/" }}
+            pathType: {{ .Values.comp.ingress.pathType | default "ImplementationSpecific" }}
+            backend:
+              service:
+                name: {{ include "comp.fullname" . }}
+                port:
+                  number: {{ .Values.comp.service.port }}
+    {{- range .Values.comp.ingress.extraHosts }}
+    - host: {{ tpl .name $ | quote }}
+      http:
+        paths:
+          - path: {{ default "/" .path }}
+            pathType: {{ default "ImplementationSpecific" .pathType }}
+            backend:
+              service:
+                name: {{ include "comp.fullname" $ }}
+                port:
+                  number: {{ $.Values.comp.service.port }}
+    {{- end }}
+    {{- if .Values.comp.ingress.extraRules }}
+    {{- tpl (toYaml .Values.comp.ingress.extraRules) . | nindent 4 }}
+    {{- end }}
+  {{- if or .Values.comp.ingress.tls .Values.comp.ingress.extraTls }}
+  tls:
+    {{- if .Values.comp.ingress.tls }}
+    - hosts:
+      - {{ include "ingress.hostname" . }}
+      secretName: {{ .Values.comp.ingress.secretName | default (printf "%s-tls" (include "comp.fullname" . )) }}
+    {{- end }}
+    {{- if .Values.comp.ingress.extraTls }}
+    {{- tpl (toYaml .Values.comp.ingress.extraTls) . | nindent 4 }}
     {{- end }}
   {{- end }}
+{{- end -}}
 {{- end -}}

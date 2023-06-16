@@ -5,7 +5,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "vulndb.fullname" . }}
+  name: {{ include "comp.fullname" . }}
   labels: {{- include "vulcan.labels" . | nindent 4 }}
     app.kubernetes.io/name: {{ .Values.comp.name }}
 spec:
@@ -57,9 +57,9 @@ spec:
           - name: SNS_ENABLED
             value: {{ .Values.comp.conf.vulnsTopicEnabled | quote }}
           - name: RESULTS_URL
-            value: {{ .Values.comp.conf.resultsUrl | default ( printf "https://%s" (include "results.fullname" .)) }}
+            value: {{ .Values.comp.conf.resultsUrl | default (include "results.endpoint" .) | quote }}
           - name: RESULTS_INTERNAL_URL
-            value: {{ .Values.comp.conf.resultsInternalUrl | default (include "results.url" .)| quote }}
+            value: {{ .Values.comp.conf.resultsInternalUrl | default (include "results.url" .) | quote }}
           - name: KAFKA_ENABLED
             value: {{ .Values.comp.conf.kafka.enabled | quote }}
           - name: KAFKA_USER
@@ -73,7 +73,7 @@ spec:
         {{- include "common-container-envs" . | nindent 10 }}
           envFrom:
           - secretRef:
-              name: {{ include "vulndb.fullname" . }}
+              name: {{ include "comp.fullname" . }}
       volumes:
       {{- include "common-deployment-volumes" . | nindent 6 }}
     {{- include "common-deployment-spec" . | nindent 6 }}

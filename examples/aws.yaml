@@ -1,5 +1,5 @@
 global:
-  domain: example.vulcan.com
+  domain: vulcan.example.com
   region: eu-west-1
   podLabels:
     global-namespace: "{{ .Release.Namespace }}"
@@ -60,7 +60,6 @@ api:
       callback: https://www.vulcan.example.com/api/v1/login/callback
       issuer: http://www.issuer.com/appcode
       metadata: https://org.issuer.com/app/appcode/sso/saml/metadata
-      trustedDomains: '["vulcan.example.com"]'
     secretKey: apisecretkey
     globalPolicies:
       - name: web-scanning-global
@@ -93,14 +92,6 @@ api:
       nginx.ingress.kubernetes.io/enable-cors: "true"
       nginx.ingress.kubernetes.io/proxy-body-size: 8m
     enabled: true
-    hosts:
-    - host: www.vulcan.example.com
-      paths:
-      - /api
-    tls:
-    - hosts:
-      - www.vulcan.example.com
-      secretName: vulcan-api-tls
   proxy:
     timeoutServer: 50s
 crontinuous:
@@ -146,6 +137,8 @@ insights:
   imagePullSecrets:
   - name: pullsecretname
   ingress:
+    enabled: true
+    tls: true
     annotations:
       certmanager.k8s.io/cluster-issuer: letsencrypt
       nginx.ingress.kubernetes.io/configuration-snippet: |
@@ -157,15 +150,6 @@ insights:
         more_set_headers "Content-Security-Policy: default-src 'none'; script-src 'self' 'unsafe-inline' https://insights.vulcan.example.com https://www.google-analytics.com; font-src 'self' https://insights.vulcan.example.com; connect-src 'self' https://insights.vulcan.example.com; img-src 'self' https://insights.vulcan.example.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://insights.vulcan.example.com; object-src 'none'";
       nginx.ingress.kubernetes.io/cors-allow-origin: '*'
       nginx.ingress.kubernetes.io/enable-cors: "true"
-    enabled: true
-    hosts:
-    - host: insights.vulcan.example.com
-      paths:
-      - /
-    tls:
-    - hosts:
-      - insights.vulcan.example.com
-      secretName: vulcan-insights-tls
 metrics:
   annotations:
     iam.amazonaws.com/role: arn:aws:iam::000000000000:role/MetricsRole
@@ -178,7 +162,6 @@ metrics:
     devHoseURL: http://devhosehost.com/devhose
     findingsQueueArn: arn:aws:sqs:eu-west-1:000000000000:MetricsFindings
     scansQueueArn: arn:aws:sqs:eu-west-1:000000000000:MetricsScans
-    vulcanAPIExternal: https://api.vulcan.example.com/api
     vulcanAPIToken: supersecretvulcantoken
   image:
     tag: tag-metrics
@@ -211,18 +194,11 @@ persistence:
   imagePullSecrets:
   - name: pullsecretname
   ingress:
+    enabled: true
+    tls: true
     annotations:
       certmanager.k8s.io/cluster-issuer: letsencrypt
       nginx.ingress.kubernetes.io/proxy-body-size: 8m
-    enabled: true
-    hosts:
-    - host: persistence.vulcan.example.com
-      paths:
-      - /
-    tls:
-    - hosts:
-      - persistence.vulcan.example.com
-      secretName: vulcan-persistence-tls
 reportsgenerator:
   annotations:
     iam.amazonaws.com/role: arn:aws:iam::000000000000:role/ReportsGeneratorRole
@@ -298,18 +274,11 @@ results:
   imagePullSecrets:
   - name: pullsecretname
   ingress:
+    enabled: true
+    tls: true
     annotations:
       certmanager.k8s.io/cluster-issuer: letsencrypt
       nginx.ingress.kubernetes.io/proxy-body-size: 8m
-    enabled: true
-    hosts:
-    - host: results.vulcan.example.com
-      paths:
-      - /
-    tls:
-    - hosts:
-      - results.vulcan.example.com
-      secretName: vulcan-results-tls
 scanengine:
   annotations:
     iam.amazonaws.com/role: arn:aws:iam::000000000000:role/ScanEngineRole
@@ -362,19 +331,12 @@ stream:
   imagePullSecrets:
   - name: pullsecretname
   ingress:
+    enabled: true
+    tls: true
     annotations:
       certmanager.k8s.io/cluster-issuer: letsencrypt
       nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
       nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
-    enabled: true
-    hosts:
-    - host: stream.vulcan.example.com
-      paths:
-      - /
-    tls:
-    - hosts:
-      - stream.vulcan.example.com
-      secretName: vulcan-stream-tls
 ui:
   conf:
     apiUrl: https://www.vulcan.example.com/api/v1/
@@ -393,17 +355,11 @@ ui:
   imagePullSecrets:
   - name: pullsecretname
   ingress:
+    enabled: true
+    tls: true
     annotations:
       certmanager.k8s.io/cluster-issuer: letsencrypt
     enabled: true
-    hosts:
-    - host: www.vulcan.example.com
-      paths:
-      - /
-    tls:
-    - hosts:
-      - www.vulcan.example.com
-      secretName: vulcan-ui-tls
 vulndb:
   annotations:
     iam.amazonaws.com/role: arn:aws:iam::000000000000:role/VulnDBRole
@@ -411,7 +367,6 @@ vulndb:
     checksQueueArn: arn:aws:sqs:eu-west-1:000000000000:VulnDBChecks
     sqsNumProcessors: 5
     logLevel: info
-    resultsUrl: https://results.vulcan.example.com
     vulnsTopicArn: arn:aws:sns:eu-west-1:000000000000:VulnDBVulns
     vulnsTopicEnabled: true
     kafka:

@@ -5,7 +5,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "metrics.fullname" . }}
+  name: {{ include "comp.fullname" . }}
   labels: {{- include "vulcan.labels" . | nindent 4 }}
     app.kubernetes.io/name: {{ .Values.comp.name }}
 spec:
@@ -64,11 +64,11 @@ spec:
           - name: VULCAN_API
             value: {{ .Values.comp.conf.vulcanApi | default (include "api.url" .) }}
           - name: VULCAN_API_EXTERNAL
-            value: {{ .Values.comp.conf.vulcanAPIExternal | quote }}
+            value: {{ .Values.comp.conf.vulcanAPIExternal | default (include "api.endpoint" . ) | quote }}
         {{- include "common-container-envs" . | nindent 10 }}
           envFrom:
           - secretRef:
-              name: {{ include "metrics.fullname" . }}
+              name: {{ include "comp.fullname" . }}
       volumes:
       {{- include "common-deployment-volumes" . | nindent 6 }}
     {{- include "common-deployment-spec" . | nindent 6 }}

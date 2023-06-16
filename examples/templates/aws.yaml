@@ -954,15 +954,15 @@ spec:
           - name: LOG_LEVEL
             value: "INFO"
           - name: COOKIE_DOMAIN
-            value: "example.vulcan.com"
+            value: "vulcan.example.com"
           - name: SAML_MEATADATA
             value: "https://org.issuer.com/app/appcode/sso/saml/metadata"
           - name: SAML_ISSUER
             value: "http://www.issuer.com/appcode"
           - name: SAML_CALLBACK
-            value: "https://www.vulcan.example.com/api/v1/login/callback"
+            value: http://www.vulcan.example.com/api/v1/login/callback
           - name: SAML_TRUSTED_DOMAINS
-            value: "[\"vulcan.example.com\"]"
+            value: "[\"www.vulcan.example.com\"]"
           - name: DEFAULT_OWNERS
             value: "[\"aaaaaaaa-xxxx-yyyy-zzzz-bbbbbbbbbbbb\"]"
           - name: SCANENGINE_URL
@@ -1368,7 +1368,7 @@ spec:
           - name: VULCAN_API
             value: http://myrelease-vulcan-api/api
           - name: VULCAN_API_EXTERNAL
-            value: "https://api.vulcan.example.com/api"
+            value: "http://www.vulcan.example.com"
           
           - name: DOGSTATSD_ENABLED
             value: "true"
@@ -1685,13 +1685,13 @@ spec:
           - name: PERSISTENCE_ENDPOINT  # We keep this PERSISTENCE variable for compatibility
             value: "http://myrelease-vulcan-scanengine"
           - name: RESULTS_ENDPOINT
-            value: "http://myrelease-vulcan-results"
+            value: "https://results.vulcan.example.com"
           - name: SCAN_PROXY_ENDPOINT
             value: "https://insights.vulcan.example.com"
           - name: VULCAN_UI
             value: "https://www.vulcan.example.com/"
           - name: SCAN_VIEW_REPORT
-            value: "https://www.vulcan.example.com/api/v1/report?team_id=%s&scan_id=%s"
+            value: "http://www.vulcan.example.com/api/v1/report?team_id=%s&scan_id=%s"
           - name: LIVEREPORT_EMAIL_SUBJECT
             value: "Vulcan Digest"
           
@@ -2339,7 +2339,7 @@ spec:
           - name: SNS_ENABLED
             value: "true"
           - name: RESULTS_URL
-            value: https://results.vulcan.example.com
+            value: "https://results.vulcan.example.com"
           - name: RESULTS_INTERNAL_URL
             value: "http://myrelease-vulcan-results"
           - name: KAFKA_ENABLED
@@ -2644,12 +2644,8 @@ metadata:
     nginx.ingress.kubernetes.io/enable-cors: "true"
     nginx.ingress.kubernetes.io/proxy-body-size: 8m
 spec:
-  tls:
-    - hosts:
-        - "www.vulcan.example.com"
-      secretName: vulcan-api-tls
   rules:
-    - host: "www.vulcan.example.com"
+    - host: www.vulcan.example.com
       http:
         paths:
           - path: /api
@@ -2683,12 +2679,8 @@ metadata:
     nginx.ingress.kubernetes.io/cors-allow-origin: '*'
     nginx.ingress.kubernetes.io/enable-cors: "true"
 spec:
-  tls:
-    - hosts:
-        - "insights.vulcan.example.com"
-      secretName: vulcan-insights-tls
   rules:
-    - host: "insights.vulcan.example.com"
+    - host: insights.vulcan.example.com
       http:
         paths:
           - path: /
@@ -2698,6 +2690,10 @@ spec:
                 name: myrelease-vulcan-insights
                 port:
                   number: 80
+  tls:
+    - hosts:
+      - insights.vulcan.example.com
+      secretName: myrelease-vulcan-insights-tls
 ---
 # Source: vulcan/templates/persistence/ingress.yaml
 apiVersion: networking.k8s.io/v1
@@ -2714,12 +2710,8 @@ metadata:
     certmanager.k8s.io/cluster-issuer: letsencrypt
     nginx.ingress.kubernetes.io/proxy-body-size: 8m
 spec:
-  tls:
-    - hosts:
-        - "persistence.vulcan.example.com"
-      secretName: vulcan-persistence-tls
   rules:
-    - host: "persistence.vulcan.example.com"
+    - host: persistence.vulcan.example.com
       http:
         paths:
           - path: /
@@ -2729,6 +2721,10 @@ spec:
                 name: myrelease-vulcan-persistence
                 port:
                   number: 80
+  tls:
+    - hosts:
+      - persistence.vulcan.example.com
+      secretName: myrelease-vulcan-persistence-tls
 ---
 # Source: vulcan/templates/results/ingress.yaml
 apiVersion: networking.k8s.io/v1
@@ -2745,12 +2741,8 @@ metadata:
     certmanager.k8s.io/cluster-issuer: letsencrypt
     nginx.ingress.kubernetes.io/proxy-body-size: 8m
 spec:
-  tls:
-    - hosts:
-        - "results.vulcan.example.com"
-      secretName: vulcan-results-tls
   rules:
-    - host: "results.vulcan.example.com"
+    - host: results.vulcan.example.com
       http:
         paths:
           - path: /
@@ -2760,6 +2752,10 @@ spec:
                 name: myrelease-vulcan-results
                 port:
                   number: 80
+  tls:
+    - hosts:
+      - results.vulcan.example.com
+      secretName: myrelease-vulcan-results-tls
 ---
 # Source: vulcan/templates/stream/ingress.yaml
 apiVersion: networking.k8s.io/v1
@@ -2777,12 +2773,8 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
     nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
 spec:
-  tls:
-    - hosts:
-        - "stream.vulcan.example.com"
-      secretName: vulcan-stream-tls
   rules:
-    - host: "stream.vulcan.example.com"
+    - host: stream.vulcan.example.com
       http:
         paths:
           - path: /
@@ -2792,6 +2784,10 @@ spec:
                 name: myrelease-vulcan-stream
                 port:
                   number: 80
+  tls:
+    - hosts:
+      - stream.vulcan.example.com
+      secretName: myrelease-vulcan-stream-tls
 ---
 # Source: vulcan/templates/ui/ingress.yaml
 apiVersion: networking.k8s.io/v1
@@ -2807,12 +2803,8 @@ metadata:
   annotations:
     certmanager.k8s.io/cluster-issuer: letsencrypt
 spec:
-  tls:
-    - hosts:
-        - "www.vulcan.example.com"
-      secretName: vulcan-ui-tls
   rules:
-    - host: "www.vulcan.example.com"
+    - host: www.vulcan.example.com
       http:
         paths:
           - path: /
@@ -2822,3 +2814,7 @@ spec:
                 name: myrelease-vulcan-ui
                 port:
                   number: 80
+  tls:
+    - hosts:
+      - www.vulcan.example.com
+      secretName: myrelease-vulcan-ui-tls

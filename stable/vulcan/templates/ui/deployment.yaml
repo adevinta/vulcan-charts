@@ -30,7 +30,7 @@ spec:
           - name: PORT
             value: {{ .Values.comp.containerPort | quote }}
           - name: API_URL
-            value: {{ .Values.comp.conf.apiUrl | quote }}
+            value: {{ .Values.comp.conf.apiUrl | default (printf "%s%s/v1/" (include "api.endpoint" . ) .Values.api.ingress.path ) | quote }}
           - name: UI_DOCS_API_LINK
             value: {{ .Values.comp.conf.docs.apiLink | quote }}
           - name: UI_DOCS_WHITELISTING_LINK
