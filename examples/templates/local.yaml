@@ -7,7 +7,7 @@ metadata:
   namespace: "ns"
   labels:
     app.kubernetes.io/name: minio
-    helm.sh/chart: minio-12.6.2
+    helm.sh/chart: minio-12.6.4
     app.kubernetes.io/instance: myrelease
     app.kubernetes.io/managed-by: Helm
 type: Opaque
@@ -23,7 +23,7 @@ metadata:
   namespace: "ns"
   labels:
     app.kubernetes.io/name: postgresql
-    helm.sh/chart: postgresql-12.5.5
+    helm.sh/chart: postgresql-12.5.7
     app.kubernetes.io/instance: myrelease
     app.kubernetes.io/managed-by: Helm
 type: Opaque
@@ -195,7 +195,7 @@ metadata:
   namespace: "ns"
   labels:
     app.kubernetes.io/name: postgresql
-    helm.sh/chart: postgresql-12.5.5
+    helm.sh/chart: postgresql-12.5.7
     app.kubernetes.io/instance: myrelease
     app.kubernetes.io/managed-by: Helm
 data:
@@ -213,7 +213,7 @@ metadata:
   namespace: "ns"
   labels:
     app.kubernetes.io/name: redis
-    helm.sh/chart: redis-17.11.3
+    helm.sh/chart: redis-17.11.5
     app.kubernetes.io/instance: myrelease
     app.kubernetes.io/managed-by: Helm
 data:
@@ -245,7 +245,7 @@ metadata:
   namespace: "ns"
   labels:
     app.kubernetes.io/name: redis
-    helm.sh/chart: redis-17.11.3
+    helm.sh/chart: redis-17.11.5
     app.kubernetes.io/instance: myrelease
     app.kubernetes.io/managed-by: Helm
 data:
@@ -352,7 +352,7 @@ metadata:
   namespace: "ns"
   labels:
     app.kubernetes.io/name: redis
-    helm.sh/chart: redis-17.11.3
+    helm.sh/chart: redis-17.11.5
     app.kubernetes.io/instance: myrelease
     app.kubernetes.io/managed-by: Helm
 data:
@@ -883,7 +883,7 @@ metadata:
   namespace: "ns"
   labels:
     app.kubernetes.io/name: minio
-    helm.sh/chart: minio-12.6.2
+    helm.sh/chart: minio-12.6.4
     app.kubernetes.io/instance: myrelease
     app.kubernetes.io/managed-by: Helm
 spec:
@@ -909,7 +909,7 @@ metadata:
   namespace: "ns"
   labels:
     app.kubernetes.io/name: postgresql
-    helm.sh/chart: postgresql-12.5.5
+    helm.sh/chart: postgresql-12.5.7
     app.kubernetes.io/instance: myrelease
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/component: primary
@@ -942,7 +942,7 @@ metadata:
   namespace: "ns"
   labels:
     app.kubernetes.io/name: postgresql
-    helm.sh/chart: postgresql-12.5.5
+    helm.sh/chart: postgresql-12.5.7
     app.kubernetes.io/instance: myrelease
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/component: primary
@@ -967,7 +967,7 @@ metadata:
   namespace: "ns"
   labels:
     app.kubernetes.io/name: redis
-    helm.sh/chart: redis-17.11.3
+    helm.sh/chart: redis-17.11.5
     app.kubernetes.io/instance: myrelease
     app.kubernetes.io/managed-by: Helm
   annotations:
@@ -991,7 +991,7 @@ metadata:
   namespace: "ns"
   labels:
     app.kubernetes.io/name: redis
-    helm.sh/chart: redis-17.11.3
+    helm.sh/chart: redis-17.11.5
     app.kubernetes.io/instance: myrelease
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/component: master
@@ -1259,7 +1259,7 @@ metadata:
   namespace: "ns"
   labels:
     app.kubernetes.io/name: minio
-    helm.sh/chart: minio-12.6.2
+    helm.sh/chart: minio-12.6.4
     app.kubernetes.io/instance: myrelease
     app.kubernetes.io/managed-by: Helm
 spec:
@@ -1273,11 +1273,11 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: minio
-        helm.sh/chart: minio-12.6.2
+        helm.sh/chart: minio-12.6.4
         app.kubernetes.io/instance: myrelease
         app.kubernetes.io/managed-by: Helm
       annotations:
-        checksum/credentials-secret: 7c73198cc99d1fc5ad76747f52a71898bfa5f9984f87bc5eed24327dbcdce405
+        checksum/credentials-secret: 709cac14eb168e01128c3fa8d1797872328f2fb303ae73196ee20a2c47ba6eee
     spec:
       
       serviceAccountName: default
@@ -3072,7 +3072,7 @@ metadata:
   namespace: "ns"
   labels:
     app.kubernetes.io/name: postgresql
-    helm.sh/chart: postgresql-12.5.5
+    helm.sh/chart: postgresql-12.5.7
     app.kubernetes.io/instance: myrelease
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/component: primary
@@ -3095,7 +3095,7 @@ spec:
       name: myrelease-postgresql
       labels:
         app.kubernetes.io/name: postgresql
-        helm.sh/chart: postgresql-12.5.5
+        helm.sh/chart: postgresql-12.5.7
         app.kubernetes.io/instance: myrelease
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/component: primary
@@ -3123,7 +3123,7 @@ spec:
       hostIPC: false
       containers:
         - name: postgresql
-          image: docker.io/bitnami/postgresql:15.3.0-debian-11-r4
+          image: docker.io/bitnami/postgresql:15.3.0-debian-11-r7
           imagePullPolicy: "IfNotPresent"
           securityContext:
             runAsUser: 1001
@@ -3224,7 +3224,7 @@ metadata:
   namespace: "ns"
   labels:
     app.kubernetes.io/name: redis
-    helm.sh/chart: redis-17.11.3
+    helm.sh/chart: redis-17.11.5
     app.kubernetes.io/instance: myrelease
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/component: master
@@ -3242,14 +3242,14 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: redis
-        helm.sh/chart: redis-17.11.3
+        helm.sh/chart: redis-17.11.5
         app.kubernetes.io/instance: myrelease
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/component: master
       annotations:
-        checksum/configmap: 50fcb858d778ad9b9fa940755ebece606cb680279df923790ab97f0775a24e51
-        checksum/health: d3f34299363300dae693f7bebc76ab12dd1edb64d9764970afe3f10f6a225bdc
-        checksum/scripts: cbc854d70784fa41deb14588f6964770493a0059dd9e95e8d2f4d6a22ec37955
+        checksum/configmap: 307ed11af6e8fc02e14fcf225fb6b474ffe05854c2a1a64b31b508f5e15ae116
+        checksum/health: e47ca9c35bacf063026f3ad0f0987687aadc737a281bb524a1de54fbf1545706
+        checksum/scripts: a2e06ea8e94b932d7192b0d319fc8c9fc473b1ff6061563521d7a46ae98834bc
         checksum/secret: 01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b
     spec:
       
@@ -3274,7 +3274,7 @@ spec:
       terminationGracePeriodSeconds: 30
       containers:
         - name: redis
-          image: docker.io/bitnami/redis:7.0.11-debian-11-r12
+          image: docker.io/bitnami/redis:7.0.11-debian-11-r20
           imagePullPolicy: "IfNotPresent"
           securityContext:
             runAsUser: 1001
@@ -3363,7 +3363,7 @@ metadata:
   namespace: "ns"
   labels:
     app.kubernetes.io/name: minio
-    helm.sh/chart: minio-12.6.2
+    helm.sh/chart: minio-12.6.4
     app.kubernetes.io/instance: myrelease
     app.kubernetes.io/managed-by: Helm
   annotations:
