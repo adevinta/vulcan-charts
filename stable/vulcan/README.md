@@ -628,7 +628,7 @@ A Helm chart for deploying Vulcan
 | metrics.conf.vulcanApi | string | `nil` |  |
 | metrics.conf.vulcanAPIToken | string | `"token"` |  |
 | metrics.conf.vulcanAPIExternal | string | `nil` |  |
-| metrics.redis.image | string | `"bitnami/redis:6.2.10"` |  |
+| metrics.redis.image | string | `"bitnami/redis:6.2.12"` |  |
 | metrics.meta.sqs | bool | `true` |  |
 | vulndbapi.enabled | bool | `true` |  |
 | vulndbapi.name | string | `"vulndbapi"` |  |
