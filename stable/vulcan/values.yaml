@@ -625,7 +625,7 @@ reportsgenerator:
 
 
 tracker:
-  enabled: true
+  enabled: false
   name: tracker
   <<: *comp
 

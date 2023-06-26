@@ -76,10 +76,12 @@ spec:
             value: {{ .Values.comp.conf.persistenceHost | default  (include "persistence.fullname" .) | quote }}
           - name: VULNERABILITYDB_URL
             value: {{ .Values.comp.conf.vulndbapiUrl | default  (include "vulndbapi.url" .) | quote }}
+          {{- if .Values.tracker.enabled }}
           - name: VULCANTRACKER_URL
             value: {{ .Values.comp.conf.vulcantrackerUrl | default  (include "tracker.url" .) | quote }}
           - name: VULCANTRACKER_TEAMS
-            value: {{ .Values.comp.conf.vulcantrackerTeams | quote }}
+            value: {{.Values.comp.conf.vulcantrackerTeams | quote }}
+          {{- end }}
           - name: AWSCATALOGUE_KIND
             value: {{ .Values.comp.conf.awscatalogue.kind | quote }}
           - name: AWSCATALOGUE_URL
