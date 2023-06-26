@@ -635,7 +635,7 @@ A Helm chart for deploying Vulcan
 | reportsgenerator.conf.ses.from | string | `"tbd@tbd.com"` |  |
 | reportsgenerator.conf.ses.cc | string | `"[\"tbd@tbd.com\"]"` |  |
 | reportsgenerator.db | object | `{"<<":{"ca":null,"host":null,"name":null,"password":"TBD","port":5432,"sslMode":"disable","user":null},"name":"reportsgenerator"}` | postgres database settings |
-| tracker.enabled | bool | `true` |  |
+| tracker.enabled | bool | `false` |  |
 | tracker.name | string | `"tracker"` |  |
 | tracker.image.repository | string | `"adevinta/vulcan-tracker"` |  |
 | tracker.image.tag | string | `"edge"` |  |
