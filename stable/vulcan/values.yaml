@@ -48,6 +48,17 @@ anchors:
     extraEnv: {}
     #   FOO: BAR
 
+    # -- custom extra volume mounts
+    extraVolumeMounts: []
+    # - name: cache-volume
+    #   mountPath: /cache
+
+    # -- custom extra volumes
+    extraVolumes: []
+    # - name: cache-volume
+    #   emptyDir:
+    #     sizeLimit: 500Mi
+
     # -- proxy settings
     proxy: &proxy
       enabled: true

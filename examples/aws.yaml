@@ -393,6 +393,13 @@ ui:
     tag: tag-vulcan-ui
   imagePullSecrets:
   - name: pullsecretname
+  extraVolumes:
+    - name: cache-volume
+      emptyDir:
+        sizeLimit: 500Mi
+  extraVolumeMounts:
+    - name: cache-volume
+      mountPath: /cache
   ingress:
     annotations:
       certmanager.k8s.io/cluster-issuer: letsencrypt

@@ -117,7 +117,18 @@ tolerations:
 {{- end -}}
 
 {{- define "common-deployment-volumes" -}}
-{{- include "common-proxy-volumes" . }}
+{{- if .Values.comp.extraVolumes }}
+{{- $value := typeIs "string" .Values.comp.extraVolumes | ternary .Values.comp.extraVolumes (.Values.comp.extraVolumes | toYaml) }}
+{{- tpl $value . }}
+{{- end }}
+{{ include "common-proxy-volumes" . }}
+{{- end -}}
+
+{{- define "common-deployment-volumeMounts" -}}
+{{- if .Values.comp.extraVolumeMounts }}
+{{- $value := typeIs "string" .Values.comp.extraVolumeMounts | ternary .Values.comp.extraVolumeMounts (.Values.comp.extraVolumeMounts | toYaml) }}
+{{- tpl $value . }}
+{{- end }}
 {{- end -}}
 
 {{- define "common-appPortName" -}}

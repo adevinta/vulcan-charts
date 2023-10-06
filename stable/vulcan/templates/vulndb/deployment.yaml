@@ -74,6 +74,8 @@ spec:
           envFrom:
           - secretRef:
               name: {{ include "vulndb.fullname" . }}
+          volumeMounts:
+          {{- include "common-deployment-volumeMounts" . | nindent 12 }}
       volumes:
       {{- include "common-deployment-volumes" . | nindent 6 }}
     {{- include "common-deployment-spec" . | nindent 6 }}

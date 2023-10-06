@@ -1562,7 +1562,10 @@ spec:
             - name: app
               containerPort: 8080
               protocol: TCP
+          volumeMounts:
+            
       volumes:
+      
       - name: config-proxy
         configMap:
           name: myrelease-vulcan-api-proxy
@@ -1682,7 +1685,10 @@ spec:
             - name: app
               containerPort: 8080
               protocol: TCP
+          volumeMounts:
+            
       volumes:
+      
       - name: config-proxy
         configMap:
           name: myrelease-vulcan-crontinuous-proxy
@@ -1827,6 +1833,8 @@ spec:
             - name: private
               containerPort: 8080
               protocol: TCP
+          volumeMounts:
+            
         - name: insights-public
           
           image: "pottava/s3-proxy:2.0"
@@ -1882,7 +1890,10 @@ spec:
             - name: public
               containerPort: 8081
               protocol: TCP
+          volumeMounts:
+            
       volumes:
+      
       - name: config-proxy
         configMap:
           name: myrelease-vulcan-insights-proxy
@@ -1985,6 +1996,8 @@ spec:
           envFrom:
           - secretRef:
               name: myrelease-vulcan-metrics
+          volumeMounts:
+            
       volumes:
 ---
 # Source: vulcan/templates/persistence/deployment.yaml
@@ -2129,7 +2142,10 @@ spec:
             - name: app
               containerPort: 8080
               protocol: TCP
+          volumeMounts:
+            
       volumes:
+      
       - name: config-proxy
         configMap:
           name: myrelease-vulcan-persistence-proxy
@@ -2315,7 +2331,10 @@ spec:
             - name: app
               containerPort: 8080
               protocol: TCP
+          volumeMounts:
+            
       volumes:
+      
       - name: config-proxy
         configMap:
           name: myrelease-vulcan-reportsgenerator-proxy
@@ -2439,7 +2458,10 @@ spec:
             - name: app
               containerPort: 8080
               protocol: TCP
+          volumeMounts:
+            
       volumes:
+      
       - name: config-proxy
         configMap:
           name: myrelease-vulcan-results-proxy
@@ -2588,7 +2610,10 @@ spec:
             - name: app
               containerPort: 8080
               protocol: TCP
+          volumeMounts:
+            
       volumes:
+      
       - name: config-proxy
         configMap:
           name: myrelease-vulcan-scanengine-proxy
@@ -2752,7 +2777,10 @@ spec:
             - name: app
               containerPort: 8080
               protocol: TCP
+          volumeMounts:
+            
       volumes:
+      
       - name: config-proxy
         configMap:
           name: myrelease-vulcan-stream-proxy
@@ -2852,7 +2880,10 @@ spec:
             - name: app
               containerPort: 8080
               protocol: TCP
+          volumeMounts:
+            
       volumes:
+      
       - name: config-proxy
         configMap:
           name: myrelease-vulcan-ui-proxy
@@ -2951,6 +2982,8 @@ spec:
           envFrom:
           - secretRef:
               name: myrelease-vulcan-vulndb
+          volumeMounts:
+            
       volumes:
 ---
 # Source: vulcan/templates/vulndbapi/deployment.yaml
@@ -3060,7 +3093,10 @@ spec:
             - name: app
               containerPort: 8080
               protocol: TCP
+          volumeMounts:
+            
       volumes:
+      
       - name: config-proxy
         configMap:
           name: myrelease-vulcan-vulndbapi-proxy

@@ -44,6 +44,8 @@ spec:
             - name: {{ include "common-appPortName" . }}
               containerPort: {{ .Values.comp.containerPort }}
               protocol: TCP
+          volumeMounts:
+          {{- include "common-deployment-volumeMounts" . | nindent 12 }}
       volumes:
       {{- include "common-deployment-volumes" . | nindent 6 }}
     {{- include "common-deployment-spec" . | nindent 6 }}
