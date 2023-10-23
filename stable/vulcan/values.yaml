@@ -660,7 +660,6 @@ metrics:
     devHoseURL: http://devhose/devhose
     devHoseToken: token
     devHoseTenant: tbd
-    devHoseMetricsSource: tbd
     devHoseFindingsSource: tbd
     vulcanApi:    # http://host/api
     vulcanAPIToken: token

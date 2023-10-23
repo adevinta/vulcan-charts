@@ -1451,8 +1451,6 @@ spec:
             value: "http://devhosehost.com/devhose"
           - name: DEVHOSE_TENANT
             value: "purple"
-          - name: DEVHOSE_METRICS_SOURCE
-            value: "usage"
           - name: DEVHOSE_FINDINGS_SOURCE
             value: "vulcan-findings"
           - name: REDIS_ADDR

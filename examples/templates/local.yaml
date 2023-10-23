@@ -1963,8 +1963,6 @@ spec:
             value: "http://devhose/devhose"
           - name: DEVHOSE_TENANT
             value: "tbd"
-          - name: DEVHOSE_METRICS_SOURCE
-            value: "tbd"
           - name: DEVHOSE_FINDINGS_SOURCE
             value: "tbd"
           - name: REDIS_ADDR

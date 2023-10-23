@@ -55,8 +55,6 @@ spec:
             value: {{ .Values.comp.conf.devHoseURL | quote }}
           - name: DEVHOSE_TENANT
             value: {{ .Values.comp.conf.devHoseTenant | quote }}
-          - name: DEVHOSE_METRICS_SOURCE
-            value: {{ .Values.comp.conf.devHoseMetricsSource | quote }}
           - name: DEVHOSE_FINDINGS_SOURCE
             value: {{ .Values.comp.conf.devHoseFindingsSource | quote }}
           - name: REDIS_ADDR
