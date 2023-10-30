@@ -222,9 +222,6 @@ goaws:
           VisibilityTimeout: {{ .Values.goaws.visibilityTimeout }}
           ReceiveMessageWaitTimeSeconds: {{ .Values.goaws.receiveMessageWaitTimeSeconds }}
         Queues:
-          - Name: VulcanK8SMetricsChecks
-          - Name: VulcanK8SMetricsFindings
-          - Name: VulcanK8SMetricsScans
           - Name: VulcanK8SReportsGenerator
           - Name: VulcanK8SScanEngineCheckStatus
           - Name: VulcanK8SV2ChecksGeneric
@@ -235,22 +232,14 @@ goaws:
         Topics:
           - Name: VulcanK8SChecks
             Subscriptions:
-              - QueueName: VulcanK8SMetricsChecks
-                Raw: false
               - QueueName: VulcanK8SVulnDBChecks
                 Raw: false
           - Name: VulcanK8SScans
-            Subscriptions:
-              - QueueName: VulcanK8SMetricsScans
-                Raw: false
           - Name: VulcanK8SReportsGen
             Subscriptions:
               - QueueName: VulcanK8SReportsGenerator
                 Raw: false
           - Name: VulcanK8SVulnDBVulns
-            Subscriptions:
-              - QueueName: VulcanK8SMetricsFindings
-                Raw: false
         RandomLatency:
           Min: 0
           Max: 0
@@ -632,46 +621,6 @@ tracker:
   db:
     <<: *db
     name: tracker
-
-  dogstatsd: *dogstatsd
-
-
-metrics:
-  enabled: true
-  name: metrics
-  <<: *comp
-
-  image:
-    repository: containers.mpi-internal.com/spt-security/vulcan-metrics
-    tag: "1.0"
-    pullPolicy: Always
-
-  proxy:
-    enabled: false
-
-  conf:
-    region:
-    logLevel: warn
-    sqsPollingInterval: 10
-    checksQueueArn: arn:aws:sqs:local:012345678900:VulcanK8SMetricsChecks
-    scansQueueArn: arn:aws:sqs:local:012345678900:VulcanK8SMetricsScans
-    findingsQueueArn: arn:aws:sqs:local:012345678900:VulcanK8SMetricsFindings
-    resultsScheme: http
-    devHoseURL: http://devhose/devhose
-    devHoseToken: token
-    devHoseTenant: tbd
-    devHoseMetricsSource: tbd
-    devHoseFindingsSource: tbd
-    vulcanApi:    # http://host/api
-    vulcanAPIToken: token
-    vulcanAPIExternal:    # https://external/api
-
-  # : redis sidecar
-  redis:
-    image: bitnami/redis:6.2.12
-
-  meta:
-    sqs: true
 
   dogstatsd: *dogstatsd
 

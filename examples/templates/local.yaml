@@ -79,22 +79,6 @@ type: Opaque
 data:
   DD_API_KEY: "VEJE"
 ---
-# Source: vulcan/templates/metrics/secrets.yaml
-apiVersion: v1
-kind: Secret
-metadata:
-  name: myrelease-vulcan-metrics
-  labels:
-    helm.sh/chart: vulcan-1.0.0
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/part-of: vulcan
-    app.kubernetes.io/instance: vulcan
-    app.kubernetes.io/name: metrics
-type: Opaque
-data:
-  DEVHOSE_TOKEN: "dG9rZW4="
-  VULCAN_API_TOKEN: "dG9rZW4="
----
 # Source: vulcan/templates/persistence/secrets.yaml
 apiVersion: v1
 kind: Secret
@@ -483,9 +467,6 @@ data:
         VisibilityTimeout: 14400
         ReceiveMessageWaitTimeSeconds: 0
       Queues:
-        - Name: VulcanK8SMetricsChecks
-        - Name: VulcanK8SMetricsFindings
-        - Name: VulcanK8SMetricsScans
         - Name: VulcanK8SReportsGenerator
         - Name: VulcanK8SScanEngineCheckStatus
         - Name: VulcanK8SV2ChecksGeneric
@@ -493,22 +474,14 @@ data:
       Topics:
         - Name: VulcanK8SChecks
           Subscriptions:
-            - QueueName: VulcanK8SMetricsChecks
-              Raw: false
             - QueueName: VulcanK8SVulnDBChecks
               Raw: false
         - Name: VulcanK8SScans
-          Subscriptions:
-            - QueueName: VulcanK8SMetricsScans
-              Raw: false
         - Name: VulcanK8SReportsGen
           Subscriptions:
             - QueueName: VulcanK8SReportsGenerator
               Raw: false
         - Name: VulcanK8SVulnDBVulns
-          Subscriptions:
-            - QueueName: VulcanK8SMetricsFindings
-              Raw: false
       RandomLatency:
         Min: 0
         Max: 0
@@ -1708,7 +1681,7 @@ spec:
         app.kubernetes.io/instance: vulcan
         app.kubernetes.io/name: goaws
       annotations:
-        checksum/config: 91280277b3911db6b6142a3bb962f821a31a7800b116b4071d53694717d2c7dc
+        checksum/config: c7afb2dbe26006b24c2f2212c42aeac26102488554c9e63728ccd1be4e3d44ff
     spec:
       containers:
       - name: goaws
@@ -1890,108 +1863,6 @@ spec:
       - name: config-proxy
         configMap:
           name: myrelease-vulcan-insights-proxy
----
-# Source: vulcan/templates/metrics/deployment.yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: myrelease-vulcan-metrics
-  labels:
-    helm.sh/chart: vulcan-1.0.0
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/part-of: vulcan
-    app.kubernetes.io/instance: vulcan
-    app.kubernetes.io/name: metrics
-spec:
-  selector:
-    matchLabels:
-      app.kubernetes.io/instance: vulcan
-      app.kubernetes.io/name: metrics
-  template:
-    metadata:
-      labels:
-        app.kubernetes.io/instance: vulcan
-        app.kubernetes.io/name: metrics
-      annotations:
-        checksum/secrets: b0d413a0b3902a84c0f51e59f152d29668f629dd011d9d8462b70fd2cbd5a1c3
-        
-    spec:
-      containers:
-        
-        - name: dogstatsd
-          image: "datadog/dogstatsd:7.42.2"
-          envFrom:
-          - secretRef:
-              name: myrelease-vulcan-dogstatsd
-          ports:
-            - containerPort: 8125
-              name: dogstatsd
-              protocol: UDP
-        - name: redis
-          image: "bitnami/redis:6.2.12"
-          env:
-          - name: ALLOW_EMPTY_PASSWORD
-            value: "yes"
-          ports:
-          - containerPort: 6379
-            name: redis
-            protocol: TCP
-        - name: metrics
-          
-          image: "containers.mpi-internal.com/spt-security/vulcan-metrics:1.0"
-          imagePullPolicy: Always
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh","-c","sleep 30;"]
-          env:
-          - name: LOG_LEVEL
-            value: "warn"
-          - name: SQS_POLLING_INTERVAL
-            value: "10"
-          - name: CHECKS_SQS_QUEUE_ARN
-            value: "arn:aws:sqs:local:012345678900:VulcanK8SMetricsChecks"
-          - name: SCANS_SQS_QUEUE_ARN
-            value: "arn:aws:sqs:local:012345678900:VulcanK8SMetricsScans"
-          - name: FINDINGS_SQS_QUEUE_ARN
-            value: "arn:aws:sqs:local:012345678900:VulcanK8SMetricsFindings"
-          - name: RESULTS_HOST
-            value: "myrelease-vulcan-results"
-          - name: RESULTS_SCHEME
-            value: "http"
-          - name: DEVHOSE_URL
-            value: "http://devhose/devhose"
-          - name: DEVHOSE_TENANT
-            value: "tbd"
-          - name: DEVHOSE_METRICS_SOURCE
-            value: "tbd"
-          - name: DEVHOSE_FINDINGS_SOURCE
-            value: "tbd"
-          - name: REDIS_ADDR
-            value: "localhost:6379"
-          - name: VULCAN_API
-            value: http://myrelease-vulcan-api/api
-          - name: VULCAN_API_EXTERNAL
-            value: 
-          
-          - name: AWS_SQS_ENDPOINT
-            value: "http://myrelease-vulcan-goaws"
-          - name: AWS_ACCESS_KEY_ID
-            value: ANYVALUE
-          - name: AWS_SECRET_ACCESS_KEY
-            value: ANYVALUE
-          - name: DOGSTATSD_ENABLED
-            value: "true"
-          - name: DOGSTATSD_HOST
-            value: "localhost"
-          - name: DOGSTATSD_PORT
-            value: "8125"
-          envFrom:
-          - secretRef:
-              name: myrelease-vulcan-metrics
-          volumeMounts:
-            
-      volumes:
 ---
 # Source: vulcan/templates/persistence/deployment.yaml
 apiVersion: apps/v1
