@@ -39,7 +39,7 @@ jobs:
         run: ./test.sh 1
 
       - name: Set up chart-testing
-        uses: helm/chart-testing-action@v2.4.0
+        uses: helm/chart-testing-action@v2.5.0
 
       - name: Run chart-testing (lint)
         run: |
