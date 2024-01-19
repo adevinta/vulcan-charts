@@ -44,6 +44,7 @@ jobs:
       - name: Run chart-testing (lint)
         run: |
           helm repo add bitnami https://charts.bitnami.com/bitnami
+          helm repo add localstack https://localstack.github.io/helm-charts
           ct lint --check-version-increment=false
 
       - name: Run chart-testing (list-changed)
@@ -65,7 +66,6 @@ jobs:
       - name: Install in kind
         if: steps.changed.outputs.changed != ''
         run: |
-          helm repo add bitnami https://charts.bitnami.com/bitnami
           ct install --since ${{ steps.changed.outputs.since }} \
             --helm-extra-set-args "-f examples/local.yaml --set=metrics.enabled=false --set=api.enabled=false"
 
