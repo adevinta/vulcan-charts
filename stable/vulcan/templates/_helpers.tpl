@@ -170,13 +170,13 @@ Pod labels
 
 {{- define "sqs.url" -}}
   {{- if .Values.localstack.enabled -}}
-    {{- printf "http://%s:%s" (include "mylocalstack.fullname" .) (toString .Values.localstack.port) -}}
+    {{- printf "http://%s:%s" (include "mylocalstack.fullname" .) (toString .Values.localstack.service.edgeService.targetPort) -}}
   {{- end -}}
 {{- end -}}
 
 {{- define "sns.url" -}}
   {{- if .Values.localstack.enabled -}}
-    {{- printf "http://%s:%s" (include "mylocalstack.fullname" .) (toString .Values.localstack.port) -}}
+    {{- printf "http://%s:%s" (include "mylocalstack.fullname" .) (toString .Values.localstack.service.edgeService.targetPort) -}}
   {{- end -}}
 {{- end -}}
 
