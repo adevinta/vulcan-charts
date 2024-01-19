@@ -412,7 +412,7 @@ A Helm chart for deploying Vulcan
 | localstack.enabled | bool | `false` |  |
 | localstack.name | string | `"localstack"` |  |
 | localstack.port | int | `4566` |  |
-| localstack.startServices | string | `"sqs,sns"` |  |
+| localstack.startServices | string | `"sqs,sns,s3"` |  |
 | localstack.enableStartupScripts | bool | `true` |  |
 | localstack.startupScriptContent | string | `"#!/bin/bash\n\nAWS_DEFAULT_REGION=us-east-1\nLOCALSTACK_DUMMY_ID=000000000000\n\nawslocal sqs create-queue --queue-name VulcanK8SReportsGenerator\nawslocal sqs create-queue --queue-name VulcanK8SScanEngineCheckStatus\nawslocal sqs create-queue --queue-name VulcanK8SV2ChecksGeneric\nawslocal sqs create-queue --queue-name VulcanK8SV2ChecksBurp\nawslocal sqs create-queue --queue-name VulcanK8SV2ChecksTenable\nawslocal sqs create-queue --queue-name VulcanK8SVulnDBChecks\n\nawslocal sns create-topic --name VulcanK8SChecks\nawslocal sns subscribe --topic-arn \"arn:aws:sns:${AWS_DEFAULT_REGION}:${LOCALSTACK_DUMMY_ID}:VulcanK8SChecks\" --protocol sqs --notification-endpoint \"arn:aws:sqs:${AWS_DEFAULT_REGION}:${LOCALSTACK_DUMMY_ID}:VulcanK8SVulnDBChecks\"\n\nawslocal sns create-topic --name VulcanK8SScans\nawslocal sns create-topic --name VulcanK8SReportsGen\nawslocal sns subscribe --topic-arn \"arn:aws:sns:${AWS_DEFAULT_REGION}:${LOCALSTACK_DUMMY_ID}:VulcanK8SReportsGen\" --protocol sqs --notification-endpoint \"arn:aws:sqs:${AWS_DEFAULT_REGION}:${LOCALSTACK_DUMMY_ID}:VulcanK8SReportsGenerator\"\n\nawslocal sns create-topic --name VulcanK8SVulnDBVulns\n"` |  |
 | localstack.extraEnvVars[0].name | string | `"LOCALSTACK_HOST"` |  |

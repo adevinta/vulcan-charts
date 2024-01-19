@@ -177,7 +177,7 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: myrelease-localstack-localstack-init-scripts-config
+  name: myrelease-localstack-init-scripts-config
   namespace: "ns"
   labels:
     helm.sh/chart: localstack-0.6.7
@@ -188,7 +188,7 @@ metadata:
   annotations:
     
 data:
-  myrelease-localstack-localstack-init-scripts-config.sh: |
+  myrelease-localstack-init-scripts-config.sh: |
     #!/bin/bash
     
     AWS_DEFAULT_REGION=us-east-1
@@ -852,7 +852,7 @@ data:
 apiVersion: v1
 kind: Service
 metadata:
-  name: myrelease-localstack-localstack
+  name: myrelease-localstack
   namespace: "ns"
   labels:
     helm.sh/chart: localstack-0.6.7
@@ -1235,7 +1235,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: myrelease-localstack-localstack
+  name: myrelease-localstack
   namespace: "ns"
   labels:
     helm.sh/chart: localstack-0.6.7
@@ -1293,13 +1293,13 @@ spec:
           resources:
             {}
           volumeMounts:
-              - name: myrelease-localstack-localstack-init-scripts-config
+              - name: myrelease-localstack-init-scripts-config
                 mountPath: /etc/localstack/init/ready.d
           env:
             - name: DEBUG
               value: "0"
             - name: LOCALSTACK_K8S_SERVICE_NAME
-              value: myrelease-localstack-localstack
+              value: myrelease-localstack
             - name: LOCALSTACK_K8S_NAMESPACE
               valueFrom:
                 fieldRef:
@@ -1313,15 +1313,15 @@ spec:
             - name: EAGER_SERVICE_LOADING
               value: "1"
             - name: SERVICES
-              value: "sqs,sns"
+              value: "sqs,sns,s3"
             - name: OVERRIDE_IN_DOCKER
               value: "1"
             - name: LOCALSTACK_HOST
               value: vulcan-localstack:4566
       volumes:
-      - name: myrelease-localstack-localstack-init-scripts-config
+      - name: myrelease-localstack-init-scripts-config
         configMap:
-          name: myrelease-localstack-localstack-init-scripts-config
+          name: myrelease-localstack-init-scripts-config
           defaultMode: 0755
 ---
 # Source: vulcan/charts/minio/templates/standalone/deployment.yaml
@@ -3296,7 +3296,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: myrelease-localstack-localstack
+  name: myrelease-localstack
   namespace: "ns"
   labels:
     helm.sh/chart: localstack-0.6.7
@@ -3315,7 +3315,7 @@ spec:
             pathType: ImplementationSpecific
             backend:
               service:
-                name: myrelease-localstack-localstack
+                name: myrelease-localstack
                 port:
                   number: 4566
 ---
@@ -3532,7 +3532,7 @@ spec:
 apiVersion: v1
 kind: Pod
 metadata:
-  name: "myrelease-localstack-localstack-test-connection"
+  name: "myrelease-localstack-test-connection"
   labels:
     app.kubernetes.io/name: localstack
     helm.sh/chart: localstack-0.6.7
@@ -3546,14 +3546,14 @@ spec:
     - name: wget-edge
       image: busybox
       command: ['wget']
-      args: ['-q', '--server-response', '--output-document', '-', 'myrelease-localstack-localstack:4566/_localstack/health']
+      args: ['-q', '--server-response', '--output-document', '-', 'myrelease-localstack:4566/_localstack/health']
   restartPolicy: Never
 ---
 # Source: vulcan/charts/localstack/templates/tests/test-s3.yaml
 apiVersion: v1
 kind: Pod
 metadata:
-  name: "myrelease-localstack-localstack-test-s3"
+  name: "myrelease-localstack-test-s3"
   labels:
     app.kubernetes.io/name: localstack
     helm.sh/chart: localstack-0.6.7
@@ -3566,7 +3566,7 @@ spec:
   containers:
     - name: awscli-s3
       image: amazon/aws-cli
-      args: ['--debug', '--endpoint-url', 'http://myrelease-localstack-localstack:4566', 's3', 'ls']
+      args: ['--debug', '--endpoint-url', 'http://myrelease-localstack:4566', 's3', 'ls']
       env:
       - name: AWS_ACCESS_KEY_ID
         value: test

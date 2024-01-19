@@ -200,7 +200,7 @@ localstack:
   enabled: false
   name: localstack
   port: 4566
-  startServices: sqs,sns
+  startServices: sqs,sns,s3       # s3 activated to pass the localstack tests.
   enableStartupScripts: true
   startupScriptContent: |
     #!/bin/bash
