@@ -1,12 +1,12 @@
 {{- define "common-infra-envs" -}}
 {{- $auth := 0 -}}
 {{- if .Values.comp.meta -}}
-{{- if and  .Values.comp.meta.sns .Values.goaws.enabled -}}
+{{- if and  .Values.comp.meta.sns .Values.localstack.enabled -}}
 - name: AWS_SNS_ENDPOINT
   value: {{ include "sns.url" . | quote }}
 {{- $auth = 1 -}}
 {{- end -}}
-{{- if and .Values.comp.meta.sqs .Values.goaws.enabled }}
+{{- if and .Values.comp.meta.sqs .Values.localstack.enabled }}
 - name: AWS_SQS_ENDPOINT
   value: {{ include "sqs.url" . | quote }}
 {{- $auth = 1 -}}

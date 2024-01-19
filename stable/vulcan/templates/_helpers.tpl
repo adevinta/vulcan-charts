@@ -74,8 +74,8 @@ Pod labels
 {{- printf "%s-%s" (include "vulcan.fullname" .) .Values.minio.nameOverride -}}
 {{- end -}}
 
-{{- define "goaws.fullname" -}}
-{{- printf "%s-%s" (include "vulcan.fullname" .) .Values.goaws.name -}}
+{{- define "localstack.fullname" -}}
+{{- printf "%s-%s" (include "vulcan.fullname" .) "localstack" -}}
 {{- end -}}
 
 {{- define "insights.fullname" -}}
@@ -169,14 +169,14 @@ Pod labels
 {{- end -}}
 
 {{- define "sqs.url" -}}
-  {{- if .Values.goaws.enabled -}}
-    {{- printf "http://%s" (include "goaws.fullname" .) -}}
+  {{- if .Values.localstack.enabled -}}
+    {{- printf "http://%s:%s" (include "localstack.fullname" .) (toString .Values.localstack.port) -}}
   {{- end -}}
 {{- end -}}
 
 {{- define "sns.url" -}}
-  {{- if .Values.goaws.enabled -}}
-    {{- printf "http://%s" (include "goaws.fullname" .) -}}
+  {{- if .Values.localstack.enabled -}}
+    {{- printf "http://%s:%s" (include "localstack.fullname" .) (toString .Values.localstack.port) -}}
   {{- end -}}
 {{- end -}}
 
