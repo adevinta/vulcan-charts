@@ -180,7 +180,7 @@ metadata:
   name: myrelease-localstack-init-scripts-config
   namespace: "ns"
   labels:
-    helm.sh/chart: localstack-0.6.7
+    helm.sh/chart: localstack-0.6.8
     app.kubernetes.io/name: localstack
     app.kubernetes.io/instance: myrelease
     app.kubernetes.io/version: "latest"
@@ -191,14 +191,14 @@ data:
   myrelease-localstack-init-scripts-config.sh: |
     #!/bin/bash
     
-    AWS_DEFAULT_REGION=us-east-1
+    AWS_DEFAULT_REGION=eu-west-1
     LOCALSTACK_DUMMY_ID=000000000000
     
     awslocal sqs create-queue --queue-name VulcanK8SReportsGenerator
     awslocal sqs create-queue --queue-name VulcanK8SScanEngineCheckStatus
     awslocal sqs create-queue --queue-name VulcanK8SV2ChecksGeneric
-    awslocal sqs create-queue --queue-name VulcanK8SV2ChecksBurp
     awslocal sqs create-queue --queue-name VulcanK8SV2ChecksTenable
+    awslocal sqs create-queue --queue-name VulcanK8SV2ChecksBurp
     awslocal sqs create-queue --queue-name VulcanK8SVulnDBChecks
     
     awslocal sns create-topic --name VulcanK8SChecks
@@ -855,7 +855,7 @@ metadata:
   name: myrelease-localstack
   namespace: "ns"
   labels:
-    helm.sh/chart: localstack-0.6.7
+    helm.sh/chart: localstack-0.6.8
     app.kubernetes.io/name: localstack
     app.kubernetes.io/instance: myrelease
     app.kubernetes.io/version: "latest"
@@ -1238,7 +1238,7 @@ metadata:
   name: myrelease-localstack
   namespace: "ns"
   labels:
-    helm.sh/chart: localstack-0.6.7
+    helm.sh/chart: localstack-0.6.8
     app.kubernetes.io/name: localstack
     app.kubernetes.io/instance: myrelease
     app.kubernetes.io/version: "latest"
@@ -1316,8 +1316,6 @@ spec:
               value: "sqs,sns,s3"
             - name: OVERRIDE_IN_DOCKER
               value: "1"
-            - name: LOCALSTACK_HOST
-              value: vulcan-localstack:4566
       volumes:
       - name: myrelease-localstack-init-scripts-config
         configMap:
@@ -3299,7 +3297,7 @@ metadata:
   name: myrelease-localstack
   namespace: "ns"
   labels:
-    helm.sh/chart: localstack-0.6.7
+    helm.sh/chart: localstack-0.6.8
     app.kubernetes.io/name: localstack
     app.kubernetes.io/instance: myrelease
     app.kubernetes.io/version: "latest"
@@ -3535,7 +3533,7 @@ metadata:
   name: "myrelease-localstack-test-connection"
   labels:
     app.kubernetes.io/name: localstack
-    helm.sh/chart: localstack-0.6.7
+    helm.sh/chart: localstack-0.6.8
     app.kubernetes.io/instance: myrelease
     app.kubernetes.io/managed-by: Helm
   annotations:
@@ -3556,7 +3554,7 @@ metadata:
   name: "myrelease-localstack-test-s3"
   labels:
     app.kubernetes.io/name: localstack
-    helm.sh/chart: localstack-0.6.7
+    helm.sh/chart: localstack-0.6.8
     app.kubernetes.io/instance: myrelease
     app.kubernetes.io/managed-by: Helm
   annotations:

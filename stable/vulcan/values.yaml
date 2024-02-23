@@ -204,14 +204,14 @@ localstack:
   startupScriptContent: |
     #!/bin/bash
 
-    AWS_DEFAULT_REGION=us-east-1
+    AWS_DEFAULT_REGION=eu-west-1
     LOCALSTACK_DUMMY_ID=000000000000
 
     awslocal sqs create-queue --queue-name VulcanK8SReportsGenerator
     awslocal sqs create-queue --queue-name VulcanK8SScanEngineCheckStatus
     awslocal sqs create-queue --queue-name VulcanK8SV2ChecksGeneric
-    awslocal sqs create-queue --queue-name VulcanK8SV2ChecksBurp
     awslocal sqs create-queue --queue-name VulcanK8SV2ChecksTenable
+    awslocal sqs create-queue --queue-name VulcanK8SV2ChecksBurp
     awslocal sqs create-queue --queue-name VulcanK8SVulnDBChecks
 
     awslocal sns create-topic --name VulcanK8SChecks
@@ -229,9 +229,6 @@ localstack:
   ##     value: "us-east-1"
   ##   - name: SERVICES
   ##     value: "serverless,sqs,es"
-  extraEnvVars:
-    - name: LOCALSTACK_HOST
-      value: vulcan-localstack:4566
   ingress:
     enabled: false
   service:
