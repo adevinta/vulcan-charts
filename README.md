@@ -38,7 +38,13 @@ Before committing changes execute the following commands:
 
 ```sh
 # Validate the charts.
-./test.sh -f
+./test.sh true
+
+# Compare against the latest chart version updating deps
+./compare.sh latest true
+
+# Compare against the latest chart version without updating deps
+./compare.sh latest false
 
 # Compare against a release
 ./compare.sh 1.1.0 true

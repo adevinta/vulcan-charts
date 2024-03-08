@@ -44,7 +44,7 @@ jobs:
       - name: Test
         env:
           KVERSION_LIST: ${{ matrix.k8s }}
-        run: ./test.sh 1
+        run: ./test.sh true
 
       - name: Set up chart-testing
         uses: helm/chart-testing-action@v2.6.1
@@ -100,4 +100,4 @@ jobs:
 
       - name: Compare
         run: |
-          ./compare.sh base/stable/vulcan update
+          ./compare.sh base/stable/vulcan true
