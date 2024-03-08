@@ -3,7 +3,9 @@
 # Declare variables to be passed into your templates.
 global:
   domain: vulcan.local
-  region: local
+  region: eu-west-1
+  accountId: "000000000000"
+
     # -- custom labels for all components
   podLabels: {}
     # foo: bar
@@ -196,53 +198,56 @@ redis:
   serviceAccount:
     create: false
 
-goaws:
+localstack:
   enabled: false
-  name: goaws
-  <<: *comp
+  name: localstack
+  startServices: sqs,sns,s3       # s3 activated to pass the localstack tests.
+  enableStartupScripts: true
+  startupScriptContent: |
+    #!/bin/bash
 
-  image:
-    repository: admiralpiett/goaws
-    tag: v0.4.1
-    pullPolicy: Always
+    export AWS_DEFAULT_REGION={{ .Values.global.region }}
 
-  containerPort: 8080
+    awslocal sqs create-queue --queue-name VulcanK8SReportsGenerator
+    awslocal sqs create-queue --queue-name VulcanK8SScanEngineCheckStatus
+    awslocal sqs create-queue --queue-name VulcanK8SV2ChecksGeneric
+    awslocal sqs create-queue --queue-name VulcanK8SVulnDBChecks
 
-  visibilityTimeout: 14400
-  receiveMessageWaitTimeSeconds: 0
+    awslocal sns create-topic --name VulcanK8SChecks
+    awslocal sns subscribe --topic-arn "arn:aws:sns:${AWS_DEFAULT_REGION}:{{ .Values.global.accountId }}:VulcanK8SChecks" --protocol sqs --notification-endpoint "arn:aws:sqs:${AWS_DEFAULT_REGION}:${LOCALSTACK_DUMMY_ID}:VulcanK8SVulnDBChecks"
 
-  config:
-    goaws.yaml: |
-      Local:
-        Host: {{ include "goaws.fullname" . }}
-        Port: {{ .Values.goaws.containerPort }}
-        AccountId: "012345678900"
-        LogToFile: false
-        QueueAttributeDefaults:
-          VisibilityTimeout: {{ .Values.goaws.visibilityTimeout }}
-          ReceiveMessageWaitTimeSeconds: {{ .Values.goaws.receiveMessageWaitTimeSeconds }}
-        Queues:
-          - Name: VulcanK8SReportsGenerator
-          - Name: VulcanK8SScanEngineCheckStatus
-          - Name: VulcanK8SV2ChecksGeneric
-          {{- range $value := .Values.scanengine.conf.queues.other }}
-          - Name: {{ regexFind "[^:]+$" $value.arn }}
-          {{- end }}
-          - Name: VulcanK8SVulnDBChecks
-        Topics:
-          - Name: VulcanK8SChecks
-            Subscriptions:
-              - QueueName: VulcanK8SVulnDBChecks
-                Raw: false
-          - Name: VulcanK8SScans
-          - Name: VulcanK8SReportsGen
-            Subscriptions:
-              - QueueName: VulcanK8SReportsGenerator
-                Raw: false
-          - Name: VulcanK8SVulnDBVulns
-        RandomLatency:
-          Min: 0
-          Max: 0
+    awslocal sns create-topic --name VulcanK8SScans
+    awslocal sns create-topic --name VulcanK8SReportsGen
+    awslocal sns subscribe --topic-arn "arn:aws:sns:${AWS_DEFAULT_REGION}:{{ .Values.global.accountId }}:VulcanK8SReportsGen" --protocol sqs --notification-endpoint "arn:aws:sqs:${AWS_DEFAULT_REGION}:${LOCALSTACK_DUMMY_ID}:VulcanK8SReportsGenerator"
+
+    awslocal sns create-topic --name VulcanK8SVulnDBVulns
+    {{- with .Values.extraStartupScriptContent }}
+
+    # FROM extraStartupScriptContent
+
+    {{ . }}
+    {{- end }}
+
+  # extraStartupScriptContent: |
+  #   awslocal sqs create-queue --queue-name VulcanK8SV2ChecksGeneric
+  #   awslocal sqs create-queue --queue-name VulcanK8SVulnDBChecks
+
+  ## Ref. https://docs.localstack.cloud/references/configuration/
+  ## extraEnvVars:
+  ##   - name: SERVICES
+  ##     value: "serverless,sqs,es"
+  ingress:
+    enabled: false
+  service:
+    type: ClusterIP
+    externalServicePorts:
+      start: 0
+      end: 0
+  serviceAccount:
+    create: false
+  role:
+    create: false
+
 
 minio:
   enabled: false
@@ -372,7 +377,7 @@ api:
     bucketReports: reports
     bucketLogs: logs
     reports:
-      snsArn: arn:aws:sns:local:012345678900:VulcanK8SReportsGen
+      snsArn: arn:aws:sns:{{.Values.global.region}}:{{ .Values.global.accountId }}:VulcanK8SReportsGen
       vulcanUIUrl:
     secretKey: TBDTBD
     cookieDomain:     # default .Values.global.domain
@@ -466,20 +471,20 @@ scanengine:
 
   conf:
     logLevel: "error"
-    queueArn: arn:aws:sqs:local:012345678900:VulcanK8SScanEngineCheckStatus
+    queueArn: arn:aws:sqs:{{ .Values.global.region }}:{{ .Values.global.accountId }}:VulcanK8SScanEngineCheckStatus
     queueName: VulcanK8SScanEngineCheckStatus
     scansSNS:
-      topicArn: arn:aws:sns:local:012345678900:VulcanK8SScans
+      topicArn: arn:aws:sns:{{ .Values.global.region }}:{{ .Values.global.accountId }}:VulcanK8SScans
     checksSNS:
-      topicArn: arn:aws:sns:local:012345678900:VulcanK8SChecks
+      topicArn: arn:aws:sns:{{ .Values.global.region }}:{{ .Values.global.accountId }}:VulcanK8SChecks
     queues:
       default:
-        arn: arn:aws:sqs:local:012345678900:VulcanK8SV2ChecksGeneric
+        arn: arn:aws:sqs:{{ .Values.global.region }}:{{ .Values.global.accountId }}:VulcanK8SV2ChecksGeneric
       # -- array of arn/checktypes
       other:
-      # - arn: arn:aws:sqs:local:012345678900:VulcanK8SV2QueueZap
+      # - arn: arn:aws:sqs:{{ .Values.global.region }}:{{ .Values.global.accountId }}:VulcanK8SV2QueueZap
       #   checktypes: '["vulcan-zap"]'
-      # - arn: arn:aws:sqs:local:012345678900:VulcanK8SV2QueueBurp
+      # - arn: arn:aws:sqs:{{ .Values.global.region }}:{{ .Values.global.accountId }}:VulcanK8SV2QueueBurp
       #   checktypes: '["vulcan-burp"]'
     persistenceHost:
     streamUrl:
@@ -543,7 +548,7 @@ reportsgenerator:
 
   conf:
     logLevel: "error"
-    queueArn: arn:aws:sqs:local:012345678900:VulcanK8SReportsGenerator
+    queueArn: arn:aws:sqs:{{ .Values.global.region }}:{{ .Values.global.accountId }}:VulcanK8SReportsGenerator
     queueName: VulcanK8SReportsGenerator
     sqsNumProcessors:
     scanengineUrl:
@@ -623,8 +628,8 @@ vulndb:
 
   conf:
     logLevel: "error"
-    checksQueueArn: arn:aws:sqs:local:012345678900:VulcanK8SVulnDBChecks
-    vulnsTopicArn: arn:aws:sns:local:012345678900:VulcanK8SVulnDBVulns
+    checksQueueArn: arn:aws:sqs:{{ .Values.global.region }}:{{ .Values.global.accountId }}:VulcanK8SVulnDBChecks
+    vulnsTopicArn: arn:aws:sns:{{ .Values.global.region }}:{{ .Values.global.accountId }}:VulcanK8SVulnDBVulns
     sqsNumProcessors:
     vulnsTopicEnabled: true
     maxEventAge: 365

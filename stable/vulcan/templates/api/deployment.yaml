@@ -63,7 +63,7 @@ spec:
           - name: SCHEDULER_URL
             value: {{ .Values.comp.conf.schedulerUrl | default (include "crontinuous.url" .) | quote }}
           - name: REPORTS_SNS_ARN
-            value: {{ .Values.comp.conf.reports.snsArn | quote }}
+            value: {{ tpl .Values.comp.conf.reports.snsArn . | quote }}
           - name: REPORTS_API_URL
             value: {{ .Values.comp.conf.reports.apiUrl | default (include "reportsgenerator.url" .) | quote }}
           - name: VULCAN_UI_URL

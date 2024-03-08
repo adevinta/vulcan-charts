@@ -47,13 +47,13 @@ spec:
           - name: MAX_EVENT_AGE
             value: {{ .Values.comp.conf.maxEventAge | quote }}
           - name: SQS_QUEUE_ARN
-            value: {{ .Values.comp.conf.checksQueueArn | quote }}
+            value: {{ tpl .Values.comp.conf.checksQueueArn . | quote }}
           {{- with .Values.comp.conf.sqsNumProcessors }}
           - name: SQS_NUMBER_OF_PROCESSORS
             value: {{ . | quote }}
           {{- end }}
           - name: SNS_TOPIC_ARN
-            value: {{ .Values.comp.conf.vulnsTopicArn | quote }}
+            value: {{ tpl .Values.comp.conf.vulnsTopicArn . | quote }}
           - name: SNS_ENABLED
             value: {{ .Values.comp.conf.vulnsTopicEnabled | quote }}
           - name: RESULTS_URL

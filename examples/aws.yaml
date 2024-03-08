@@ -1,6 +1,7 @@
 global:
   domain: example.vulcan.com
   region: eu-west-1
+  accountId: "012345678901"
   podLabels:
     global-namespace: "{{ .Release.Namespace }}"
     global-label: foo
@@ -37,7 +38,7 @@ defaults:
 
 api:
   annotations:
-    iam.amazonaws.com/role: arn:aws:iam::000000000000:role/APIRole
+    iam.amazonaws.com/role: arn:aws:iam::012345678901:role/APIRole
   extraPodLabels:
     extra-label-tag: api-{{ .Values.comp.image.tag }}
   autoscaling:
@@ -52,9 +53,9 @@ api:
     bucketLogs: s3-vulcan-logs
     bucketReports: s3-vulcan-reports
     defaultOwners: '["aaaaaaaa-xxxx-yyyy-zzzz-bbbbbbbbbbbb"]'
-    queueArn: arn:aws:sqs:eu-west-1:000000000000:APIScans
+    queueArn: arn:aws:sqs:eu-west-1:012345678901:APIScans
     reports:
-      snsArn: arn:aws:sns:eu-west-1:000000000000:ReportsGen
+      snsArn: arn:aws:sns:eu-west-1:012345678901:ReportsGen
       vulcanUIUrl: https://www.vulcan.example.com
     saml:
       callback: https://www.vulcan.example.com/api/v1/login/callback
@@ -106,7 +107,7 @@ api:
     timeoutServer: 50s
 crontinuous:
   annotations:
-    iam.amazonaws.com/role: arn:aws:iam::000000000000:role/CrontinuousRole
+    iam.amazonaws.com/role: arn:aws:iam::012345678901:role/CrontinuousRole
   extraPodLabels:
     extra-label: crontinuous
   conf:
@@ -136,7 +137,7 @@ dogstatsd:
   apiKey: xxxxxxxxxxxxxxxxxxxxx
 persistence:
   annotations:
-    iam.amazonaws.com/role: arn:aws:iam::000000000000:role/PersistenceRole
+    iam.amazonaws.com/role: arn:aws:iam::012345678901:role/PersistenceRole
   autoscaling:
     enabled: true
     behavior:
@@ -175,9 +176,9 @@ persistence:
       secretName: vulcan-persistence-tls
 reportsgenerator:
   annotations:
-    iam.amazonaws.com/role: arn:aws:iam::000000000000:role/ReportsGeneratorRole
+    iam.amazonaws.com/role: arn:aws:iam::012345678901:role/ReportsGeneratorRole
   conf:
-    queueArn: arn:aws:sqs:eu-west-1:000000000000:ReportsGenerator
+    queueArn: arn:aws:sqs:eu-west-1:012345678901:ReportsGenerator
     sqsNumProcessors: 3
     ses:
       cc: '[''vulcan@example.com'']'
@@ -217,7 +218,7 @@ reportsgenerator:
       memory: 2Gi
 results:
   annotations:
-    iam.amazonaws.com/role: arn:aws:iam::000000000000:role/ResultsRole
+    iam.amazonaws.com/role: arn:aws:iam::012345678901:role/ResultsRole
   autoscaling:
     enabled: true
   conf:
@@ -243,7 +244,7 @@ results:
       secretName: vulcan-results-tls
 scanengine:
   annotations:
-    iam.amazonaws.com/role: arn:aws:iam::000000000000:role/ScanEngineRole
+    iam.amazonaws.com/role: arn:aws:iam::012345678901:role/ScanEngineRole
   autoscaling:
     enabled: true
   conf:
@@ -251,19 +252,19 @@ scanengine:
       numOfWorkers: 3
       period: 30
     checksSNS:
-      topicArn: arn:aws:sns:eu-west-1:000000000000:Checks
-    queueArn: arn:aws:sqs:eu-west-1:000000000000:ScanEngineCheckStatus
+      topicArn: arn:aws:sns:eu-west-1:012345678901:Checks
+    queueArn: arn:aws:sqs:eu-west-1:012345678901:ScanEngineCheckStatus
     queues:
       default:
-        arn: arn:aws:sqs:eu-west-1:000000000000:V2ChecksGeneric
+        arn: arn:aws:sqs:eu-west-1:012345678901:V2ChecksGeneric
       other:
-      - arn: arn:aws:sqs:eu-west-1:000000000000:V2ChecksTenable
+      - arn: arn:aws:sqs:eu-west-1:012345678901:V2ChecksTenable
         checktypes: '["vulcan-nessus"]'
-      - arn: arn:aws:sqs:eu-west-1:000000000000:V2ChecksBurp
+      - arn: arn:aws:sqs:eu-west-1:012345678901:V2ChecksBurp
         checktypes: '["vulcan-burp"]'
     scansSNS:
-      topicArn: arn:aws:sns:eu-west-1:000000000000:Scans
-    snsArn: arn:aws:sns:eu-west-1:000000000000:Scans
+      topicArn: arn:aws:sns:eu-west-1:012345678901:Scans
+    snsArn: arn:aws:sns:eu-west-1:012345678901:Scans
   db:
     <<: *db
     host: scanengine.postgres.host
@@ -276,12 +277,12 @@ scanengine:
   - name: pullsecretname
 sqsexporter:
   annotations:
-    iam.amazonaws.com/role: arn:aws:iam::000000000000:role/SQSExporterRole
+    iam.amazonaws.com/role: arn:aws:iam::012345678901:role/SQSExporterRole
   imagePullSecrets:
   - name: pullsecretname
 stream:
   annotations:
-    iam.amazonaws.com/role: arn:aws:iam::000000000000:role/StreamRole
+    iam.amazonaws.com/role: arn:aws:iam::012345678901:role/StreamRole
   conf:
     ttl: 0
   redis:
@@ -344,13 +345,13 @@ ui:
       secretName: vulcan-ui-tls
 vulndb:
   annotations:
-    iam.amazonaws.com/role: arn:aws:iam::000000000000:role/VulnDBRole
+    iam.amazonaws.com/role: arn:aws:iam::012345678901:role/VulnDBRole
   conf:
-    checksQueueArn: arn:aws:sqs:eu-west-1:000000000000:VulnDBChecks
+    checksQueueArn: arn:aws:sqs:eu-west-1:012345678901:VulnDBChecks
     sqsNumProcessors: 5
     logLevel: info
     resultsUrl: https://results.vulcan.example.com
-    vulnsTopicArn: arn:aws:sns:eu-west-1:000000000000:VulnDBVulns
+    vulnsTopicArn: arn:aws:sns:eu-west-1:012345678901:VulnDBVulns
     vulnsTopicEnabled: true
     kafka:
       enabled: false

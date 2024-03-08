@@ -35,6 +35,10 @@ dependencies:
   version: 12.6.4
   repository: https://charts.bitnami.com/bitnami
   condition: minio.enabled
+- name: localstack
+  version: 0.6.9
+  repository: https://localstack.github.io/helm-charts
+  condition: localstack.enabled
 
 maintainers:
   - email: vulcan@adevinta.com

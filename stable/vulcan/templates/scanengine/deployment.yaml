@@ -49,11 +49,11 @@ spec:
           - name: PERSISTENCE_HOST
             value: {{ .Values.comp.conf.persistenceHost | default  (include "persistence.fullname" .) | quote }}
           - name: CHECKS_SQS_ARN
-            value: {{ .Values.comp.conf.queueArn | quote }}
+            value: {{ tpl .Values.comp.conf.queueArn . | quote }}
           - name: SCANS_SNS_ARN
-            value: {{ .Values.comp.conf.scansSNS.topicArn | quote }}
+            value: {{ tpl .Values.comp.conf.scansSNS.topicArn . | quote }}
           - name: CHECKS_SNS_ARN
-            value: {{ .Values.comp.conf.checksSNS.topicArn | quote }}
+            value: {{ tpl .Values.comp.conf.checksSNS.topicArn . | quote }}
           - name: STREAM_URL
             value: {{ .Values.comp.conf.streamUrl | default  (include "stream.url" .) | quote }}
           - name: CHECKS_CREATOR_WORKERS
@@ -61,10 +61,10 @@ spec:
           - name: CHECKS_CREATOR_PERIOD
             value: {{ .Values.comp.conf.checkCreator.period | quote }}
           - name: QUEUES_DEFAULT_ARN
-            value: {{ .Values.comp.conf.queues.default.arn | quote }}
+            value: {{ tpl .Values.comp.conf.queues.default.arn .| quote }}
           {{- range $index, $value := .Values.comp.conf.queues.other }}
           - name: "QUEUES_{{ add1 $index }}_ARN"
-            value: {{ $value.arn | quote }}
+            value: {{ tpl $value.arn $ | quote }}
           - name: "QUEUES_{{ add1 $index }}_CHECKTYPES"
             value: {{ $value.checktypes | quote }}
           {{- end }}
