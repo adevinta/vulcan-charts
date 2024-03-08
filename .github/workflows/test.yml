@@ -1,6 +1,14 @@
 name: Test
 
-on: push
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - '*'
+  pull_request:
+    branches:
+      - master
 
 env:
   CT_CHART_DIRS: stable
@@ -69,19 +77,27 @@ jobs:
           ct install --since ${{ steps.changed.outputs.since }} \
             --helm-extra-set-args "-f examples/local.yaml --set=metrics.enabled=false --set=api.enabled=false"
 
-  build:
+  compare:
 
     runs-on: ubuntu-latest
+
+    if: github.event_name == 'pull_request'
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Checkout base for comparision
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.base_ref }}
+          path: base
 
       - name: Set up Helm
         uses: azure/setup-helm@v4
         with:
           version: v3.12.0
 
-      - name: Build
-        env:
-          KVERSION: "1.25.9"
-        run: ./build.sh 1
+      - name: Compare
+        run: |
+          ./compare.sh base/stable/vulcan update

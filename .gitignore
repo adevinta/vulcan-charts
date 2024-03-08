@@ -3,3 +3,5 @@ Chart.lock
 *.swp
 *.swo
 .idea
+base
+examples/templates
