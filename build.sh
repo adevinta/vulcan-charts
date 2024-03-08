@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e 
+set -e
 
 KVERSION="${KVERSION:-"1.25.9"}"
 
@@ -19,9 +19,7 @@ for f in "$BASEDIR"/examples/*.yaml; do
   helm template myrelease --kube-version "$KVERSION" "$BASEDIR/stable/vulcan" --namespace ns -f "$f" > "$OUTDIR/$fn"
 done
 
-docker run --rm --volume "$(pwd)/stable:/helm-docs" -u "$(id -u)" jnorwood/helm-docs:v1.11.0 -s file
-
-if [[ "$(git status --porcelain | grep -Ec '^ M (examples/templates|stable/.+/README.md)')" != 0 ]]; then 
+if [[ "$(git status --porcelain | grep -Ec '^ M (examples/templates|stable/.+/README.md)')" != 0 ]]; then
   echo "Changes detected, remember to commit them"
   git diff
   exit 1
