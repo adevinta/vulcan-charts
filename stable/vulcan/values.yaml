@@ -373,7 +373,6 @@ api:
     name: api
 
   conf:
-    debug: "false"
     bucketReports: reports
     bucketLogs: logs
     reports:
@@ -555,11 +554,11 @@ reportsgenerator:
     resultsUrl:
     generators:
       livereport:
-        emailSubject:   # Vulcan Digest
+        emailSubject: Vulcan Digest
     ses:
       region:
-      from: tbd@tbd.com
-      cc: '["tbd@tbd.com"]'
+      from: vulcan@example.com
+      cc: '["security@example.com"]'
 
   # -- postgres database settings
   db:
