@@ -276,7 +276,7 @@ results:
 
   image:
     repository: adevinta/vulcan-results
-    tag: "1.0"
+    tag: edge
     pullPolicy: Always
 
   conf:
@@ -301,7 +301,7 @@ persistence:
 
   image:
     repository: adevinta/vulcan-persistence
-    tag: "1.0"
+    tag: edge
     pullPolicy: Always
 
   healthcheckPath: /status
@@ -331,7 +331,7 @@ stream:
 
   image:
     repository: adevinta/vulcan-stream
-    tag: "1.0"
+    tag: edge
     pullPolicy: Always
 
   healthcheckPath: /status
@@ -357,7 +357,7 @@ api:
 
   image:
     repository: adevinta/vulcan-api
-    tag: "1.0"
+    tag: edge
     pullPolicy: Always
 
   meta:
@@ -433,7 +433,7 @@ crontinuous:
 
   image:
     repository: adevinta/vulcan-crontinuous
-    tag: "1.0"
+    tag: edge
     pullPolicy: Always
 
   meta:
@@ -460,7 +460,7 @@ scanengine:
 
   image:
     repository: adevinta/vulcan-scan-engine
-    tag: "1.0"
+    tag: edge
     pullPolicy: Always
 
   healthcheckPath: /v1/healthcheck
@@ -507,7 +507,7 @@ ui:
 
   image:
     repository: adevinta/vulcan-ui
-    tag: "1.0"
+    tag: edge
     pullPolicy: Always
 
   healthcheckPath: /index.html
@@ -537,7 +537,7 @@ reportsgenerator:
 
   image:
     repository: adevinta/vulcan-reports-generator
-    tag: "1.0"
+    tag: edge
     pullPolicy: Always
 
   healthcheckPath: /healthcheck
@@ -601,7 +601,7 @@ vulndbapi:
 
   image:
     repository: adevinta/vulnerability-db-api
-    tag: "1.0"
+    tag: edge
     pullPolicy: Always
 
   healthcheckPath: /healthcheck
@@ -623,7 +623,7 @@ vulndb:
 
   image:
     repository: adevinta/vulnerability-db
-    tag: "1.0"
+    tag: edge
     pullPolicy: Always
 
   conf:
