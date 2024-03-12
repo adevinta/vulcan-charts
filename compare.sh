@@ -42,5 +42,10 @@ for f in "$BASEDIR"/examples/*.yaml; do
   echo "Generating examples in $OUTDIR/$fn based on $KVERSION from ${ARGS[*]}"
   helm template myrelease --kube-version "$KVERSION" "$BASEDIR/stable/vulcan" --namespace ns -f "$f" > "$OUTDIR/$fn"
   helm template myrelease --kube-version "$KVERSION" "${ARGS[@]}" --namespace ns -f "$f" > "$OUTDIR/base-$fn"
-  diff --color "$OUTDIR/base-$fn" "$OUTDIR/$fn" || true
+
+  if dyff version &> /dev/null; then
+    dyff between "$OUTDIR/base-$fn" "$OUTDIR/$fn"
+  else
+    diff -u "$OUTDIR/base-$fn" "$OUTDIR/$fn" || true
+  fi
 done

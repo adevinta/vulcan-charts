@@ -100,4 +100,9 @@ jobs:
 
       - name: Compare
         run: |
+          # Install latest binary of dyff
+          wget -qO- https://github.com/homeport/dyff/releases/download/v1.7.1/dyff_1.7.1_linux_amd64.tar.gz | tar xvz dyff
+          chmod +x dyff
+          sudo mv dyff /usr/local/bin/
+
           ./compare.sh base/stable/vulcan true
