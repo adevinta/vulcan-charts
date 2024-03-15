@@ -25,6 +25,10 @@ spec:
         {{- end }}
         {{- include "common-annotations" . | nindent 8 }}
     spec:
+      {{- if .Values.comp.initContainers }}
+      initContainers:
+        {{ tpl (toYaml .Values.comp.initContainers) . | nindent 8 }}
+      {{- end }}
       containers:
         {{- include "common-deployment-sidecars" . | nindent 8 }}
         - name: {{ .Values.comp.name }}

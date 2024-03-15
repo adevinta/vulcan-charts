@@ -21,6 +21,10 @@ spec:
           {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
+      {{- if .Values.comp.initContainers }}
+      initContainers:
+        {{ tpl (toYaml .Values.comp.initContainers) . | nindent 8 }}
+      {{- end }}
       containers:
         - name: {{ .Values.comp.name }}
           {{- include "common-container" . | nindent 10 }}

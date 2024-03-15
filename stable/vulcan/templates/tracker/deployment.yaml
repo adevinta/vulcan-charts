@@ -26,8 +26,10 @@ spec:
           {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
+      {{- if .Values.comp.initContainers }}
       initContainers:
-        {{- include "common-deployment-init-waitfordb" . | nindent 8 }}
+        {{ tpl (toYaml .Values.comp.initContainers) . | nindent 8 }}
+      {{- end }}
       containers:
         {{- include "common-deployment-sidecars" . | nindent 8 }}
         - name: {{ .Values.comp.name }}
