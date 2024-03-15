@@ -1,22 +1,11 @@
 {{/*
-Override names
+Standard ingress definition
 */}}
 {{- define "common-ingress" -}}
 {{- if and .Values.comp.enabled .Values.comp.ingress.enabled -}}
 {{- $fullName := printf "%s-%s" (include "vulcan.fullname" . ) .Values.comp.name -}}
 {{- $svcPort := .Values.comp.service.port -}}
-{{- if and .Values.comp.ingress.className (not (semverCompare ">=1.18-0" (include "common.capabilities.kubeVersion" .))) }}
-  {{- if not (hasKey .Values.comp.ingress.annotations "kubernetes.io/ingress.class") }}
-  {{- $_ := set .Values.comp.ingress.annotations "kubernetes.io/ingress.class" .Values.comp.ingress.className}}
-  {{- end }}
-{{- end }}
-{{- if semverCompare ">=1.19-0" (include "common.capabilities.kubeVersion" .) -}}
 apiVersion: networking.k8s.io/v1
-{{- else if semverCompare ">=1.14-0" (include "common.capabilities.kubeVersion" .) -}}
-apiVersion: networking.k8s.io/v1beta1
-{{- else -}}
-apiVersion: extensions/v1beta1
-{{- end }}
 kind: Ingress
 metadata:
   name: {{ $fullName }}
@@ -27,8 +16,8 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  {{- if and .Values.comp.ingress.className (semverCompare ">=1.18-0" (include "common.capabilities.kubeVersion" .)) }}
-  ingressClassName: {{ .Values.comp.ingress.className }}
+  {{- if .Values.comp.ingress.className }}
+  ingressClassName: {{ .Values.comp.ingress.className | quote }}
   {{- end }}
   {{- if .Values.comp.ingress.tls }}
   tls:
@@ -48,34 +37,20 @@ spec:
           {{- range .paths }}
           {{- if kindIs "string" . }}
           - path: {{ . }}
-            {{- if semverCompare ">=1.18-0" (include "common.capabilities.kubeVersion" $) }}
             pathType: ImplementationSpecific
-            {{- end }}
             backend:
-              {{- if semverCompare ">=1.19-0" (include "common.capabilities.kubeVersion" $) }}
               service:
                 name: {{ $fullName }}
                 port:
                   number: {{ $svcPort }}
-              {{- else }}
-              serviceName: {{ $fullName }}
-              servicePort: {{ $svcPort }}
-              {{- end }}
           {{- else }}
           - path: {{ .path }}
-            {{- if and .pathType (semverCompare ">=1.18-0" (include "common.capabilities.kubeVersion" $)) }}
-            pathType: {{ .pathType }}
-            {{- end }}
+            pathType: {{ default "ImplementationSpecific" .pathType }}
             backend:
-              {{- if semverCompare ">=1.19-0" (include "common.capabilities.kubeVersion" $) }}
               service:
                 name: {{ $fullName }}
                 port:
                   number: {{ $svcPort }}
-              {{- else }}
-              serviceName: {{ $fullName }}
-              servicePort: {{ $svcPort }}
-              {{- end }}
           {{- end }}
           {{- end }}
     {{- end }}

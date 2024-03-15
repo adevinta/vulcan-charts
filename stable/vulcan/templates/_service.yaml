@@ -1,5 +1,5 @@
 {{/*
-Override names
+Standard service definition
 */}}
 {{- define "common-service" -}}
 {{- if and .Values.comp.enabled -}}
