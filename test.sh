@@ -5,7 +5,7 @@ set -e
 dep_update="${1?Update dependencies true/false}"
 
 BASEDIR=$(dirname "$0")
-KVERSION_LIST=${KVERSION_LIST:-"1.19.16 1.25.9 1.26.4 1.27.2"}
+KVERSION_LIST=${KVERSION_LIST:-"1.19.16 1.26.14 1.29.2"}
 
 if [[ "$dep_update" == "true" ]]; then
   find "$BASEDIR/stable" -type f -name "*.tgz" -print -delete
