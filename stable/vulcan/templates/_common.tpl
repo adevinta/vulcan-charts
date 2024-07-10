@@ -1,5 +1,24 @@
 {{- define "common-manifests" -}}
 {{- include "common-proxy-config-map" . }}
+{{- include "common-serviceaccount" . }}
+{{- end -}}
+
+
+{{- define "common-serviceaccount" -}}
+{{- if .Values.comp.serviceAccount.create}}
+---
+apiVersion: v1
+kind: ServiceAccount
+automountServiceAccountToken: {{ .Values.comp.serviceAccount.automountServiceAccountToken }}
+metadata:
+  name: {{ template "vulcan.fullname" . }}-{{ .Values.comp.name }}
+  labels: {{- include "vulcan.labels" . | nindent 4 }}
+    app.kubernetes.io/name: {{ .Values.comp.name }}
+  {{- if .Values.comp.serviceAccount.annotations }}
+  annotations:
+    {{- toYaml .Values.comp.serviceAccount.annotations | nindent 4 }}
+  {{- end }}
+{{- end }}
 {{- end -}}
 
 {{- define "common-annotations" -}}
@@ -76,6 +95,10 @@ resources:
 
 
 {{- define "common-deployment-spec" -}}
+{{- if .Values.comp.serviceAccount.create }}
+serviceAccountName: {{ template "vulcan.fullname" . }}-{{ .Values.comp.name }}
+{{- end }}
+automountServiceAccountToken: {{ .Values.comp.automountServiceAccountToken }}
 {{- with .Values.comp.terminationGracePeriodSeconds }}
 terminationGracePeriodSeconds: {{ . }}
 {{- end -}}

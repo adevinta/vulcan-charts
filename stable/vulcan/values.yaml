@@ -66,6 +66,13 @@ anchors:
     #   emptyDir:
     #     sizeLimit: 500Mi
 
+    serviceAccount:
+      create: false
+      automountServiceAccountToken: false
+      annotations: {}
+
+    automountServiceAccountToken: false
+
     # -- proxy settings
     proxy: &proxy
       enabled: true
