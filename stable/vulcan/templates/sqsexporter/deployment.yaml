@@ -1,5 +1,7 @@
 {{- $_ := (set .Values "comp" .Values.sqsexporter) -}}
 {{- if .Values.comp.enabled -}}
+{{- include "common-manifests" . }}
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:

@@ -280,6 +280,12 @@ sqsexporter:
     iam.amazonaws.com/role: arn:aws:iam::012345678901:role/SQSExporterRole
   imagePullSecrets:
   - name: pullsecretname
+  serviceAccount:
+    create: true
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::1234567890:role/sqs-exporter-role
+    automountServiceAccountToken: true
+  automountServiceAccountToken: false
 stream:
   annotations:
     iam.amazonaws.com/role: arn:aws:iam::012345678901:role/StreamRole
