@@ -8,12 +8,6 @@ https://adevinta.github.io/vulcan-charts
 
 ## Vulcan Charts
 
-Add the Vulcan repository to Helm:
-
-```sh
-helm repo add vulcan https://adevinta.github.io/vulcan-charts
-```
-
 ### Vulcan
 
 Create the `vulcan` namespace:
@@ -27,7 +21,12 @@ Create a `values.yaml` config file with the parameters or choose one of the file
 Install vulcan application:
 
 ```sh
+# Based on a helm http repository
+helm repo add vulcan https://adevinta.github.io/vulcan-charts
 helm upgrade -i vulcan vulcan/vulcan -f examples/local.yaml --namespace vulcan
+
+# Based on OCI (recommended)
+helm upgrade -i vulcan oci://ghcr.io/adevinta/vulcan-charts/vulcan -f examples/local.yaml --namespace vulcan
 ```
 
 ## Contributors
