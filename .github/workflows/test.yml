@@ -50,7 +50,6 @@ jobs:
 
       - name: Run chart-testing (lint)
         run: |
-          helm repo add bitnami https://charts.bitnami.com/bitnami
           helm repo add localstack https://localstack.github.io/helm-charts
           ct lint --check-version-increment=false
 
