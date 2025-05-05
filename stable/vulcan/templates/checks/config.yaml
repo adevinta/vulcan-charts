@@ -1,0 +1,2 @@
+{{- $_ := set .Values "comp" .Values.checks -}}
+{{- include "common-configmap" (merge (dict "Args" (dict "template" "checks-config")) . ) -}}

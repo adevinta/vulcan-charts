@@ -1,0 +1,249 @@
+{{- $_ := (set .Values "comp" .Values.checks) -}}
+{{- if .Values.checks.gateway.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "vulcan.fullname" $ }}-checkgw
+  labels: {{- include "vulcan.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: {{ include "vulcan.fullname" $ }}-checkgw
+spec:
+  selector:
+    matchLabels: {{- include "vulcan.selectorLabels" $ | nindent 6 }}
+      app.kubernetes.io/name: {{ include "vulcan.fullname" $ }}-checkgw  
+  template:
+    metadata:
+      labels: {{- include "vulcan.podLabels" $ | nindent 8 }}
+        app.kubernetes.io/name: {{ include "vulcan.fullname" $ }}-checkgw
+      annotations:
+        checksum/config: {{ include "checks-config" . | sha256sum }}
+    spec:
+      {{- with .Values.checks.gateway.imagePullSecrets }}
+      imagePullSecrets:
+      {{- toYaml . | nindent 6 }}
+      {{- end }}
+      {{- with .Values.checks.gateway.serviceAccount }}
+      serviceAccountName: {{ . }}
+      {{- end }}
+      containers:
+      - name: checkgw
+        image:  {{ .Values.checks.gateway.image.repository }}:{{ .Values.checks.gateway.image.tag }}
+        imagePullPolicy: Always
+        env:
+          - name: REDIS_HOST
+            value: {{ include "vulcan.redis.host" $ | quote }}
+          - name: REDIS_USR
+            value: {{ include "vulcan.redis.username" $ | quote }}
+          - name: REDIS_PORT
+            value: {{ include "vulcan.redis.port" $ | quote }}
+          - name: REDIS_DB
+            value: {{ include "vulcan.redis.db" $ | quote }}
+          - name: AWS_DEFAULT_REGION
+            value: {{ $.Values.global.region | quote }}
+          - name: CHECKS_SQS_ARN
+            value: {{ tpl $.Values.checks.gateway.queueArn $ | quote }}
+          - name: PERSISTENCE_PORT
+            value: "8080"
+          - name: CHECKTYPES_PATH
+            value: /config/checktypes.json
+          {{- include "common-container-envs" $ | nindent 10 }}
+        volumeMounts:
+        - name: config-volume
+          mountPath: /config
+        ports:
+        - name: http
+          containerPort: 8080
+          protocol: TCP
+      volumes:
+        - name: config-volume
+          configMap:
+            name: {{ include "vulcan.fullname" $ }}-checks
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "vulcan.fullname" $ }}-checkgw
+  labels: {{- include "vulcan.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: {{ include "vulcan.fullname" $ }}-checkgw
+spec:
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector: {{- include "vulcan.selectorLabels" $ | nindent 4 }}
+    app.kubernetes.io/name: {{ include "vulcan.fullname" $ }}-checkgw
+---
+{{- end }}
+{{- range $key, $value := .Values.checks.checks }}
+{{- if $value.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "vulcan.fullname" $ }}-check-{{ $key }}
+  labels: {{- include "vulcan.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: {{ include "vulcan.fullname" $ }}-check-{{ $key }}
+spec:
+  selector:
+    matchLabels: {{- include "vulcan.selectorLabels" $ | nindent 6 }}
+      app.kubernetes.io/name: {{ include "vulcan.fullname" $ }}-check-{{ $key }}
+  template:
+    metadata:
+      labels: {{- include "vulcan.podLabels" $ | nindent 8 }}
+        app.kubernetes.io/name: {{ include "vulcan.fullname" $ }}-check-{{ $key }}
+      {{- with $.Values.checks.annotations }}
+      annotations:
+        {{ toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      {{- with $value.imagePullSecrets }}
+      imagePullSecrets:
+      {{- toYaml . | nindent 6 }}
+      {{- end }}
+      {{- with $value.serviceAccount }}
+      serviceAccountName: {{ . }}
+      {{- end }}
+      {{- with $value.shutdownTimeout }}
+      terminationGracePeriodSeconds: {{ . }}
+      {{- end }}
+      containers:
+      - name: check
+        image:  {{ $value.image.repository }}:{{ $value.image.tag }}
+        imagePullPolicy: Always
+        env:
+        - name: VULCAN_HTTP_PORT
+          value: "8080"
+        {{- with $value.shutdownTimeout }}
+        - name: VULCAN_HTTP_SHUTDOWN_TIMEOUT
+          value: {{ . | quote }}
+        {{- end }}
+        {{- range $i, $v := $value.vars }}
+        - name: {{ $v }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ $.Values.checks.secretVars }}
+              key: {{ $v }}
+        {{- end }}
+        - name: VULCAN_CHECKTYPE_NAME
+          value: {{ $value.image.repository }}
+        - name: VULCAN_CHECKTYPE_VERSION
+          value: {{ $value.image.tag }}
+        ports:
+        - name: http
+          containerPort: 8080
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: http
+          initialDelaySeconds: 3
+          periodSeconds: 5
+          failureThreshold: 3
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: http
+          initialDelaySeconds: 3
+          periodSeconds: 5
+          failureThreshold: 5
+        {{- with $value.resources }}
+        resources:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+      initContainers:
+      - name: controller
+        image:  {{ $.Values.checks.controller.image.repository }}:{{ $.Values.checks.controller.image.tag }}
+        imagePullPolicy: Always
+        restartPolicy: Always
+        env:
+          - name: REDIS_HOST
+            value: {{ include "vulcan.redis.host" $ | quote }}
+          - name: REDIS_USR
+            value: {{ include "vulcan.redis.username" $ | quote }}
+          - name: REDIS_PORT
+            value: {{ include "vulcan.redis.port" $ | quote }}
+          - name: REDIS_DB
+            value: {{ include "vulcan.redis.db" $ | quote }}
+          - name: CHECK_NAME
+            value: {{ $key }}
+          - name: CHECK_ENDPOINT
+            value: http://localhost:8080
+          - name: CONCURRENCY
+            value: {{ $value.concurrency | quote }}
+          - name: AWS_DEFAULT_REGION
+            value: {{ $.Values.global.region | quote }}
+          - name: CHECKS_SQS_ARN
+            value: {{ tpl $.Values.checks.controller.queueArn $| quote }}
+          - name: AWS_S3_BUCKET
+            value: {{ $.Values.checks.controller.bucketReports | quote }}
+          - name: AWS_S3_PATH_TEMPLATE
+            value: {{ $.Values.checks.controller.pathTemplate | quote }}
+          - name: CHECKTYPE_NAME
+            value: {{ $value.image.repository }}
+          - name: CHECKTYPE_VERSION
+            value: {{ $value.image.tag }}
+          {{- include "common-container-envs" $ | nindent 10 }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "vulcan.fullname" $ }}-check-{{ $key }}
+  labels: {{- include "vulcan.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: {{ include "vulcan.fullname" $ }}-check-{{ $key }}
+spec:
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector: {{- include "vulcan.selectorLabels" $ | nindent 4 }}
+    app.kubernetes.io/name: {{ include "vulcan.fullname" $ }}-check-{{ $key }}
+{{- if $.Values.checks.ingresEnabled }}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "vulcan.fullname" $ }}-check-{{ $key }}
+  labels: {{- include "vulcan.labels" $ | nindent 4 }}
+    app.kubernetes.io/name: {{ include "vulcan.fullname" $ }}-check-{{ $key }}
+spec:
+  rules:
+  - host: {{ $key }}-check.localhost.direct
+    http:
+      paths:
+      - backend:
+          service:
+            name: {{ include "vulcan.fullname" $ }}-check-{{ $key }}
+            port:
+              number: 80
+        path: /
+        pathType: ImplementationSpecific
+  tls:
+  - hosts:
+    - {{ $key }}-checks.localhost.direct
+    secretName: localhost-direct-tls
+{{- end }}
+{{- if $.Values.checks.keda.enabled }}
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: {{ include "vulcan.fullname" $ }}-check-{{ $key }}
+spec:
+  minReplicaCount: {{ $value.minReplicaCount | default 0 }}
+  maxReplicaCount: {{ $value.maxReplicaCount | default 5 }}
+  scaleTargetRef:
+    name: {{ include "vulcan.fullname" $ }}-check-{{ $key }}
+  triggers:
+    - type: redis
+      metadata:
+        address: {{ printf "%s:%s" (include "vulcan.redis.host" $) (include "vulcan.redis.port" $) }}
+        databaseIndex: {{ include "vulcan.redis.db" $ | quote }}
+        listName: {{ printf "asynq:{%s}:pending" $key }}
+        listLength: {{ $value.listLength | default 5 | quote }}
+        activationListLength: "1" # optional
+        enableTLS: "false" # optional
+        unsafeSsl: "false" # optional
+        usernameFromEnv: REDIS_USR
+{{- end }}
+{{- end }}
+{{- end }}

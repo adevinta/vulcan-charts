@@ -70,6 +70,16 @@ spec:
           - name: "QUEUES_{{ add1 $index }}_CHECKTYPES"
             value: {{ $value.checktypes | quote }}
           {{- end }}
+          {{- if .Values.comp.conf.queues.redisEnabled }}
+          - name: REDIS_HOST
+            value: {{ include "vulcan.redis.host" . | quote }}
+          - name: REDIS_USR
+            value: {{ include "vulcan.redis.username" . | quote }}
+          - name: REDIS_PORT
+            value: {{ include "vulcan.redis.port" . | quote }}
+          - name: REDIS_DB
+            value: {{ include "vulcan.redis.db" . | quote }}
+          {{- end }}
         {{- include "common-container-envs" . | nindent 10 }}
           envFrom:
           - secretRef:

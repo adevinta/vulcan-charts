@@ -483,6 +483,7 @@ scanengine:
     checksSNS:
       topicArn: arn:aws:sns:{{ .Values.global.region }}:{{ .Values.global.accountId }}:VulcanK8SChecks
     queues:
+      enableRedis: false
       default:
         arn: arn:aws:sqs:{{ .Values.global.region }}:{{ .Values.global.accountId }}:VulcanK8SV2ChecksGeneric
       # -- array of arn/checktypes
@@ -501,6 +502,13 @@ scanengine:
   db:
     <<: *db
     name: scanengine
+
+  redis:
+    host:
+    port:
+    username:
+    password:
+    db:
 
   dogstatsd: *dogstatsd
 
@@ -691,3 +699,63 @@ extraManifests: {}
   # config2: |
   #   apiVersion: v1
   #   ...
+
+checks:
+  enabled: false
+  name: checks
+
+  meta:
+    s3: true
+    sqs: true
+
+  redis:
+    host:
+    port:
+    username:
+    password:
+    db:
+
+  gateway:
+    enabled: false
+    imagePullSecrets: []
+    # - name: xxx
+    serviceAccount:
+    image:
+      repository: checks-gateway
+      tag: dev
+    queueArn:   # arn:aws:sqs:{{ .Values.global.region }}:{{ .Values.global.accountId }}:VulcanK8SV2ChecksGeneric
+  controller:
+    image:
+      repository: checks-controller
+      tag: dev
+    queueArn:  # arn:aws:sqs:{{ .Values.global.region }}:{{ .Values.global.accountId }}:VulcanK8SScanEngineCheckStatus
+    bucketReports: reports
+    pathTemplate: dt={{.Dt}}/{{.CheckID}}/{{.CheckID}}.json
+  annotations:
+  keda:
+    enabled: false
+  ingressEnabled: false
+
+  # secretVars is a secret with all the vars for the checks.
+  # TODO: Define at check level to allow more flexibility, or just a raw extraEnv.
+  secretVars: vulcan-agent-vars
+
+  checks:
+    vulca-sleep:
+      enabled: false
+      image:
+        repository: vulcansec/vulcan-sleep
+        tag: edge
+      serviceAccount: ""
+      imagePullSecrets:
+      - name: foo
+      concurrency: 3
+      vars: []
+      assets: []
+      timeout: 20
+      options:   # OR options: "{\"sleep_time\":10}"
+        sleep_time: 10
+      minReplicaCount: 0
+      maxReplicaCount: 5
+      shutdownTimeout: 10
+      resources: {}
