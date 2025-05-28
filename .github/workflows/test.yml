@@ -46,18 +46,18 @@ jobs:
         run: ./test.sh true
 
       - name: Set up chart-testing
-        uses: helm/chart-testing-action@v2.6.1
+        uses: helm/chart-testing-action@v2.7.0
 
       - name: Run chart-testing (lint)
         run: |
           helm repo add localstack https://localstack.github.io/helm-charts
-          ct lint --check-version-increment=false
+          ct lint --check-version-increment=false --target-branch master
 
       - name: Run chart-testing (list-changed)
         id: changed
         run: |
           since=$(git describe --tags --abbrev=0 || git rev-list --max-parents=0 --first-parent HEAD)
-          changed="$(ct list-changed --since "$since")"
+          changed="$(ct list-changed --since "$since" --target-branch master)"
           echo "since=$since changed=$changed"
           echo "changed=$changed" >> $GITHUB_OUTPUT
           echo "since=$since" >> $GITHUB_OUTPUT
@@ -72,7 +72,7 @@ jobs:
       - name: Install in kind
         if: steps.changed.outputs.changed != ''
         run: |
-          ct install --since ${{ steps.changed.outputs.since }} \
+          ct install --since ${{ steps.changed.outputs.since }} --target-branch master \
             --helm-extra-set-args "-f examples/local.yaml --set=api.enabled=false"
 
   compare:
