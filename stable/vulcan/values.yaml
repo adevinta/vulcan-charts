@@ -26,7 +26,7 @@ anchors:
   dogstatsd: &dogstatsd
     image:
       repository: datadog/dogstatsd
-      tag: 7.51.1
+      tag: 7.66.0
     enabled: true
 
   # Default values for all the components
