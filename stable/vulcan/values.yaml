@@ -632,7 +632,7 @@ vulndb:
     pullPolicy: Always
 
   conf:
-    logLevel: "error"
+    logLevel: info
     checksQueueArn: arn:aws:sqs:{{ .Values.global.region }}:{{ .Values.global.accountId }}:VulcanK8SVulnDBChecks
     vulnsTopicArn: arn:aws:sns:{{ .Values.global.region }}:{{ .Values.global.accountId }}:VulcanK8SVulnDBVulns
     sqsNumProcessors:
@@ -640,6 +640,8 @@ vulndb:
     maxEventAge: 365
     resultsUrl: http://vulcan-results.vulcan.com
     resultsInternalUrl:   # http://vulcan-results
+    taskPurgeCron:    # "40 5 * * SAT"
+    taskExpireCron:   # "15 3 * * *"
     kafka:
       enabled: false
       username:

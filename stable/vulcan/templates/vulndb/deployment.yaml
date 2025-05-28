@@ -62,6 +62,14 @@ spec:
             value: {{ .Values.comp.conf.resultsUrl | default ( printf "https://%s" (include "results.fullname" .)) }}
           - name: RESULTS_INTERNAL_URL
             value: {{ .Values.comp.conf.resultsInternalUrl | default (include "results.url" .)| quote }}
+          {{- with .Values.comp.conf.taskPurgeCron }}
+          - name: TASK_PURGE_CRON
+            value: {{ . | quote }}
+          {{- end }}
+          {{- with .Values.comp.conf.taskExpireCron }}
+          - name: TASK_EXPIRE_CRON
+            value: {{ . | quote }}
+          {{- end }}
           - name: KAFKA_ENABLED
             value: {{ .Values.comp.conf.kafka.enabled | quote }}
           - name: KAFKA_USER
