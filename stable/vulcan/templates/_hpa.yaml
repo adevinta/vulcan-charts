@@ -10,14 +10,14 @@ apiVersion: autoscaling/v2
 {{- end }}
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ template "vulcan.fullname" . }}-{{ .Values.comp.name }}
+  name: {{ template "comp.fullname" . }}
   labels: {{- include "vulcan.labels" . | nindent 4 }}
     app.kubernetes.io/name: {{ .Values.comp.name }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ template "vulcan.fullname" . }}-{{ .Values.comp.name }}
+    name: {{ template "comp.fullname" . }}
   minReplicas: {{ .Values.comp.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.comp.autoscaling.maxReplicas }}
   {{- if semverCompare ">=1.23-0" (include "common.capabilities.kubeVersion" .) }}
