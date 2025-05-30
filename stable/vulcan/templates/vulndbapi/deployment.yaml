@@ -47,7 +47,7 @@ spec:
           - name: PG_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: {{ coalesce .Values.comp.db.existingSecret (include "comp.fullname" .) }}
+                name: {{ coalesce (tpl .Values.comp.db.existingSecret .) (include "comp.fullname" .) }}
                 key: {{ .Values.comp.db.existingSecretPasswordKey | default "PG_PASSWORD" }}
       {{- if .Values.comp.conf.readReplicaHost}}
           - name: PG_HOST_READ
@@ -60,10 +60,10 @@ spec:
             value: {{ include "pg.port" . | quote }}
           - name: PG_SSLMODE_READ
             value: {{ include "pg.sslMode" . | quote }}
-          - name: PG_PASSWORD
+          - name: PG_PASSWORD_READ
             valueFrom:
               secretKeyRef:
-                name: {{ coalesce .Values.comp.db.existingSecret (include "comp.fullname" .) }}
+                name: {{ coalesce (tpl .Values.comp.db.existingSecret .) (include "comp.fullname" .) }}
                 key: {{ .Values.comp.db.existingSecretPasswordKey | default "PG_PASSWORD_READ" }}
       {{- end }}
           - name: PG_CA_B64

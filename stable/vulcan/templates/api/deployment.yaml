@@ -49,7 +49,7 @@ spec:
           - name: PG_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: {{ coalesce .Values.comp.db.existingSecret (include "comp.fullname" .) }}
+                name: {{ coalesce (tpl .Values.comp.db.existingSecret .) (include "comp.fullname" .) }}
                 key: {{ .Values.comp.db.existingSecretPasswordKey | default "PG_PASSWORD" }}
           - name: LOG_LEVEL
             value: {{ .Values.comp.conf.logLevel | quote }}
@@ -58,7 +58,7 @@ spec:
           - name: SECRET_KEY
             valueFrom:
               secretKeyRef:
-                name: {{ coalesce .Values.comp.conf.existingSecret (include "comp.fullname" .) }}
+                name: {{ coalesce (tpl .Values.comp.conf.existingSecret .) (include "comp.fullname" .) }}
                 key: {{ .Values.comp.conf.existingSecretSecretKeyKey | default "SECRET_KEY" }}
           - name: SAML_MEATADATA
             value: {{ .Values.comp.conf.saml.metadata | quote }}
@@ -101,7 +101,7 @@ spec:
           - name: AWSCATALOGUE_KEY
             valueFrom:
               secretKeyRef:
-                name: {{ coalesce .Values.comp.conf.awscatalogue.existingSecret (include "comp.fullname" .) }}
+                name: {{ coalesce (tpl .Values.comp.conf.awscatalogue.existingSecret .) (include "comp.fullname" .) }}
                 key: {{ .Values.comp.conf.awscatalogue.existingSecretKeyKey | default "AWSCATALOGUE_KEY" }}
           {{- range $index, $value := .Values.comp.conf.globalPolicies }}
           - name: "GPC_{{ add1 $index }}_NAME"
@@ -125,7 +125,7 @@ spec:
           - name: KAFKA_PASS
             valueFrom:
               secretKeyRef:
-                name: {{ coalesce .Values.comp.conf.kafka.existingSecret (include "comp.fullname" .) }}
+                name: {{ coalesce (tpl .Values.comp.conf.kafka.existingSecret .) (include "comp.fullname" .) }}
                 key: {{ .Values.comp.conf.kafka.existingSecretPasswordKey | default "KAFKA_PASS" }}
           - name: KAFKA_TOPICS
             value: {{ .Values.comp.conf.kafka.topics | quote }}

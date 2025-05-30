@@ -44,6 +44,11 @@ spec:
             value: {{ include "pg.sslMode" . | quote }}
           - name: PG_CA_B64
             value: {{ include "pg.b64ca" . | quote }}
+          - name: PG_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ coalesce (tpl .Values.comp.db.existingSecret .) (include "comp.fullname" .) }}
+                key: {{ .Values.comp.db.existingSecretPasswordKey | default "PG_PASSWORD" }}
           - name: LOG_LEVEL
             value: {{ .Values.comp.conf.logLevel | quote }}
           - name: MAX_EVENT_AGE

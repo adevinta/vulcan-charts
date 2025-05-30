@@ -50,7 +50,7 @@ stream:
 
 persistence:
   db:
-    existingSecret: vulcan-postgresql
+    existingSecret: "{{ .Release.Name }}-postgresql"
     existingSecretPasswordKey: postgres-password
   ingress:
     enabled: true
@@ -94,7 +94,7 @@ scanengine:
   ingress:
     enabled: false
   db:
-    existingSecret: vulcan-postgresql
+    existingSecret: "{{ .Release.Name }}-postgresql"
     existingSecretPasswordKey: postgres-password
   conf:
     queues:
@@ -115,7 +115,7 @@ ui:
 
 reportsgenerator:
   db:
-    existingSecret: vulcan-postgresql
+    existingSecret: "{{ .Release.Name }}-postgresql"
     existingSecretPasswordKey: postgres-password
   ingress:
     enabled: false
@@ -129,7 +129,7 @@ vulndbapi:
   conf:
     readReplicaHost:
   db:
-    existingSecret: vulcan-postgresql
+    existingSecret: "{{ .Release.Name }}-postgresql"
     existingSecretPasswordKey: postgres-password
 
 tracker:
@@ -142,5 +142,5 @@ tracker:
     logLevel: "error"
     awsServerCredentialKey: "/path/to/credentials/"
   db:
-    existingSecret: vulcan-postgresql
+    existingSecret: "{{ .Release.Name }}-postgresql"
     existingSecretPasswordKey: postgres-password

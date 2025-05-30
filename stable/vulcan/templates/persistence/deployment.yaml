@@ -49,7 +49,7 @@ spec:
           - name: POSTGRES_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: {{ coalesce .Values.comp.db.existingSecret (include "comp.fullname" .) }}
+                name: {{ coalesce (tpl .Values.comp.db.existingSecret .) (include "comp.fullname" .) }}
                 key: {{ .Values.comp.db.existingSecretPasswordKey | default "POSTGRES_PASSWORD" }}
           - name: LOG_LEVEL
             value: {{ .Values.comp.conf.logLevel | quote }}
@@ -58,8 +58,8 @@ spec:
           - name: SECRET_KEY_BASE
             valueFrom:
               secretKeyRef:
-                name: {{ coalesce .Values.comp.existingSecret (include "comp.fullname" .) }}
-                key: {{ .Values.comp.db.existingSecretSecretKeyBaseKey | default "SECRET_KEY_BASE" }}
+                name: {{ coalesce (tpl .Values.comp.conf.existingSecret .) (include "comp.fullname" .) }}
+                key: {{ .Values.comp.conf.existingSecretSecretKeyBaseKey | default "SECRET_KEY_BASE" }}
         {{- include "common-container-envs" . | nindent 10 }}
           ports:
             - name: {{ include "common-appPortName" . }}

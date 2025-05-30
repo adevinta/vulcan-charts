@@ -52,7 +52,7 @@ spec:
           - name: REDIS_PWD
             valueFrom:
               secretKeyRef:
-                name: {{ coalesce .Values.comp.redis.existingSecret (include "comp.fullname" .) }}
+                name: {{ coalesce (tpl .Values.comp.redis.existingSecret .) (include "comp.fullname" .) }}
                 key: {{ .Values.comp.redis.existingSecretPasswordKey | default "REDIS_PWD" }}
         {{- end }}
         {{- include "common-container-envs" . | nindent 10 }}

@@ -43,7 +43,7 @@ spec:
           - name: VULCAN_TOKEN
             valueFrom:
               secretKeyRef:
-                name: {{ coalesce .Values.comp.conf.existingSecret (include "comp.fullname" .) }}
+                name: {{ coalesce (tpl .Values.comp.conf.existingSecret .) (include "comp.fullname" .) }}
                 key: {{ .Values.comp.conf.existingSecretVulcanTokenKey | default "VULCAN_TOKEN" }}
           - name: VULCAN_USER
             value: {{ .Values.comp.conf.vulcanUser }}

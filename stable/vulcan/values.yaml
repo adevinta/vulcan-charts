@@ -18,8 +18,8 @@ anchors:
     host:
     name:
     user:
-    existingSecret:
-    existingSecretPasswordKey:
+    existingSecret: ""
+    existingSecretPasswordKey: ""
     password: TBD
     port: 5432
     sslMode: disable
@@ -333,9 +333,9 @@ persistence:
 
     # -- Name of the existing sectret that contains the secretKeyBase
     # -- If set the secretKeyBase will be ignored
-    existingSecret:
+    existingSecret: ""
     # -- Name of the key in the secret that contains the secretKeyBase
-    existingSecretSecretKeyBaseKey: SECRET_KEY_BASE
+    existingSecretSecretKeyBaseKey:
 
     railsMaxThreads: 4
 
@@ -362,7 +362,7 @@ stream:
     host:
     port:
     username:
-    existingSecret:
+    existingSecret: ""
     existingSecretPasswordKey:
     password:
     db: 0   # default
@@ -399,7 +399,7 @@ api:
       snsArn: arn:aws:sns:{{.Values.global.region}}:{{ .Values.global.accountId }}:VulcanK8SReportsGen
       vulcanUIUrl:
 
-    existingSecret:
+    existingSecret: ""
     existingSecretSecretKeyKey:
     secretKey: TBDTBD
 
@@ -423,7 +423,7 @@ api:
       kind: None
       url: http://catalogue.example.com
       key: key
-      existingSecret:
+      existingSecret: ""
       existingSecretKeyKey:
       retries: 1
       retry_interval: 2
@@ -444,7 +444,7 @@ api:
       username:
 
       password:
-      existingSecret:
+      existingSecret: ""
       existingSecretPasswordKey:
 
       topics:     # '{assets = "assets"}'
@@ -473,7 +473,7 @@ crontinuous:
   conf:
     region:
 
-    existingSecret:
+    existingSecret: ""
     existingSecretVulcanTokenKey:
     vulcanToken: TBDTBDTBD
 
