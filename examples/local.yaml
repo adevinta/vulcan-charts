@@ -93,6 +93,9 @@ crontinuous:
 scanengine:
   ingress:
     enabled: false
+  db:
+    existingSecret: vulcan-postgresql
+    existingSecretPasswordKey: postgres-password
   conf:
     queues:
       other:
@@ -111,6 +114,9 @@ ui:
         paths: [/]
 
 reportsgenerator:
+  db:
+    existingSecret: vulcan-postgresql
+    existingSecretPasswordKey: postgres-password
   ingress:
     enabled: false
 
@@ -122,6 +128,9 @@ vulndbapi:
         paths: [/]
   conf:
     readReplicaHost:
+  db:
+    existingSecret: vulcan-postgresql
+    existingSecretPasswordKey: postgres-password
 
 tracker:
   ingress:
@@ -132,3 +141,6 @@ tracker:
   conf:
     logLevel: "error"
     awsServerCredentialKey: "/path/to/credentials/"
+  db:
+    existingSecret: vulcan-postgresql
+    existingSecretPasswordKey: postgres-password
