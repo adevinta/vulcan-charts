@@ -46,6 +46,11 @@ spec:
             value: {{ include "pg.sslMode" . | quote }}
           - name: PG_CA_B64
             value: {{ include "pg.b64ca" . | quote }}
+          - name: PG_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ coalesce .Values.comp.db.existingSecret (include "comp.fullname" .) }}
+                key: {{ .Values.comp.db.existingSecretPasswordKey | default "PG_PASSWORD" }}
           - name: LOG_LEVEL
             value: {{ .Values.comp.conf.logLevel | quote }}
           - name: SQS_QUEUE_ARN
@@ -63,9 +68,6 @@ spec:
           - name: LIVEREPORT_EMAIL_SUBJECT
             value: {{ .Values.comp.conf.generators.livereport.emailSubject | quote }}
         {{- include "common-container-envs" . | nindent 10 }}
-          envFrom:
-          - secretRef:
-              name: {{ include "comp.fullname" . }}
           ports:
             - name: {{ include "common-appPortName" . }}
               containerPort: {{ .Values.comp.containerPort }}

@@ -44,6 +44,11 @@ spec:
             value: {{ include "pg.port" . | quote }}
           - name: PG_SSLMODE
             value: {{ include "pg.sslMode" . | quote }}
+          - name: PG_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ coalesce .Values.comp.db.existingSecret (include "comp.fullname" .) }}
+                key: {{ .Values.comp.db.existingSecretPasswordKey | default "PG_PASSWORD" }}
       {{- if .Values.comp.conf.readReplicaHost}}
           - name: PG_HOST_READ
             value: {{ .Values.comp.conf.readReplicaHost | quote }}
@@ -55,15 +60,17 @@ spec:
             value: {{ include "pg.port" . | quote }}
           - name: PG_SSLMODE_READ
             value: {{ include "pg.sslMode" . | quote }}
+          - name: PG_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ coalesce .Values.comp.db.existingSecret (include "comp.fullname" .) }}
+                key: {{ .Values.comp.db.existingSecretPasswordKey | default "PG_PASSWORD_READ" }}
       {{- end }}
           - name: PG_CA_B64
             value: {{ include "pg.b64ca" . | quote }}
           - name: LOG_LEVEL
             value: {{ .Values.comp.conf.logLevel | quote }}
         {{- include "common-container-envs" . | nindent 10 }}
-          envFrom:
-          - secretRef:
-              name: {{ include "comp.fullname" . }}
           ports:
             - name: {{ include "common-appPortName" . }}
               containerPort: {{ .Values.comp.containerPort }}

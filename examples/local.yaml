@@ -49,6 +49,9 @@ stream:
         paths: [/]
 
 persistence:
+  db:
+    existingSecret: vulcan-postgresql
+    existingSecretPasswordKey: postgres-password
   ingress:
     enabled: true
     hosts:

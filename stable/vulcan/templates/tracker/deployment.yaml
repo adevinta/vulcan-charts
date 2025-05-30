@@ -56,9 +56,6 @@ spec:
           - name: AWS_REGION
             value: {{ .Values.comp.conf.region | default (include "region" .) | quote }}
         {{- include "common-container-envs" . | nindent 10 }}
-          envFrom:
-          - secretRef:
-              name: {{ include "comp.fullname" . }}
           ports:
             - name: {{ include "common-appPortName" . }}
               containerPort: {{ .Values.comp.containerPort }}

@@ -81,9 +81,6 @@ spec:
           - name: KAFKA_TOPIC
             value: {{ .Values.comp.conf.kafka.topic | quote }}
         {{- include "common-container-envs" . | nindent 10 }}
-          envFrom:
-          - secretRef:
-              name: {{ include "comp.fullname" . }}
           volumeMounts:
           {{- include "common-deployment-volumeMounts" . | nindent 12 }}
       volumes:

@@ -40,6 +40,11 @@ spec:
             value: {{ .Values.comp.conf.crontinuousBucket }}
           - name: VULCAN_API
             value: {{ .Values.comp.conf.vulcanApi | default (include "api.url" .) }}
+          - name: VULCAN_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: {{ coalesce .Values.comp.conf.existingSecret (include "comp.fullname" .) }}
+                key: {{ .Values.comp.conf.existingSecretVulcanTokenKey | default "VULCAN_TOKEN" }}
           - name: VULCAN_USER
             value: {{ .Values.comp.conf.vulcanUser }}
           - name: ENABLE_TEAMS_WHITELIST_SCAN
@@ -51,9 +56,6 @@ spec:
           - name: TEAMS_WHITELIST_REPORT
             value: {{ .Values.comp.conf.teamsWhitelistReport | quote }}
         {{- include "common-container-envs" . | nindent 10 }}
-          envFrom:
-          - secretRef:
-              name: {{ include "comp.fullname" . }}
           ports:
             - name: {{ include "common-appPortName" . }}
               containerPort: {{ .Values.comp.containerPort }}

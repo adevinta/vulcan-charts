@@ -2,7 +2,7 @@
 Creates an standard Secret with the content of .Args.template template and an optional .Args.suffix name.
 */}}
 {{- define "common-secret" -}}
-{{- if and .Values.comp.enabled }}
+{{- if and .Values.comp.enabled (include .Args.template .) }}
 apiVersion: v1
 kind: Secret
 metadata:
