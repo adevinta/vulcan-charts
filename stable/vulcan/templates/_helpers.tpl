@@ -114,6 +114,10 @@ Pod labels
 {{- printf "%s-%s" (include "vulcan.fullname" .) .Values.vulndbapi.name -}}
 {{- end -}}
 
+{{- define "comp.fullname" -}}
+{{- printf "%s-%s" (include "vulcan.fullname" .) .Values.comp.name -}}
+{{- end -}}
+
 {{- define "region" -}}
 {{- .Values.global.region -}}
 {{- end -}}

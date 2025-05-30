@@ -6,7 +6,7 @@ Creates an standard Secret with the content of .Args.template template and an op
 apiVersion: v1
 kind: Secret
 metadata:
-  name: {{ template "vulcan.fullname" . }}-{{ .Values.comp.name }}{{ .Args.suffix | default "" }}
+  name: {{ template "comp.fullname" . }}{{ .Args.suffix | default "" }}
   labels: {{- include "vulcan.labels" . | nindent 4 }}
     app.kubernetes.io/name: {{ .Values.comp.name }}
 type: Opaque

@@ -5,7 +5,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "stream.fullname" . }}
+  name: {{ include "comp.fullname" . }}
   labels: {{- include "vulcan.labels" . | nindent 4 }}
     app.kubernetes.io/name: {{ .Values.comp.name }}
 spec:
@@ -52,7 +52,7 @@ spec:
         {{- if (include "vulcan.redis.password" .) }}
           envFrom:
           - secretRef:
-              name: {{ include "stream.fullname" . }}
+              name: {{ include "comp.fullname" . }}
         {{- end }}
           ports:
             - name: {{ include "common-appPortName" . }}
