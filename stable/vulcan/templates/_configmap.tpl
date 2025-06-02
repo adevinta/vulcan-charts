@@ -6,7 +6,7 @@ Creates an standard ConfigMap with the content of .Args.template template and an
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "vulcan.fullname" . }}-{{ .Values.comp.name }}{{ .Args.suffix | default "" }}
+  name: {{ template "comp.fullname" . }}{{ .Args.suffix | default "" }}
   labels: {{- include "vulcan.labels" . | nindent 4 }}
     app.kubernetes.io/name: {{ .Values.comp.name }}
 data:
