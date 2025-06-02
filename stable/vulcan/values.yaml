@@ -316,8 +316,8 @@ persistence:
 
   meta:
     s3: true
-    sns: true
-    sqs: true
+    sns: false
+    sqs: false
 
   # -- postgres database settings
   db:
