@@ -5,7 +5,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "api.fullname" . }}
+  name: {{ include "comp.fullname" . }}
   labels: {{- include "vulcan.labels" . | nindent 4 }}
     app.kubernetes.io/name: {{ .Values.comp.name }}
 spec:
@@ -46,10 +46,20 @@ spec:
             value: {{ include "pg.sslMode" . | quote }}
           - name: PG_CA_B64
             value: {{ include "pg.b64ca" . | quote }}
+          - name: PG_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "pg.secretName" . }}
+                key: {{ include "pg.passwordKey" . }}
           - name: LOG_LEVEL
             value: {{ .Values.comp.conf.logLevel | quote }}
           - name: COOKIE_DOMAIN
             value: {{ .Values.comp.conf.cookieDomain | default (include "domain" .) | quote }}
+          - name: SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                name: {{ default (include "comp.fullname" .) .Values.comp.conf.existingSecret }}
+                key: {{ .Values.comp.conf.secretKeyKey }}
           - name: SAML_MEATADATA
             value: {{ .Values.comp.conf.saml.metadata | quote }}
           - name: SAML_ISSUER
@@ -87,7 +97,12 @@ spec:
           - name: AWSCATALOGUE_RETRIES
             value: {{ .Values.comp.conf.awscatalogue.retries | quote }}
           - name: AWSCATALOGUE_RETRY_INTERVAL
-            value: {{ .Values.comp.conf.awscatalogue.retry_interval| quote }}
+            value: {{ .Values.comp.conf.awscatalogue.retry_interval | quote }}
+          - name: AWSCATALOGUE_KEY
+            valueFrom:
+              secretKeyRef:
+                name: {{ default (include "comp.fullname" .) .Values.comp.conf.awscatalogue.existingSecret }}
+                key: {{ .Values.comp.conf.awscatalogue.keyKey }}
           {{- range $index, $value := .Values.comp.conf.globalPolicies }}
           - name: "GPC_{{ add1 $index }}_NAME"
             value: {{ $value.name | quote }}
@@ -102,16 +117,20 @@ spec:
           - name: "GPC_{{ add1 $index }}_EXCLUDING_SUFFIXES"
             value: {{ default list $value.excludingSuffixes | toJson | quote }}
           {{- end }}
+          {{- if .Values.comp.conf.kafka.broker }}
           - name: KAFKA_BROKER
             value: {{ .Values.comp.conf.kafka.broker | quote }}
           - name: KAFKA_USER
             value: {{ .Values.comp.conf.kafka.username | quote }}
+          - name: KAFKA_PASS
+            valueFrom:
+              secretKeyRef:
+                name: {{ default (include "comp.fullname" .) .Values.comp.conf.kafka.existingSecret }}
+                key: {{ .Values.comp.conf.kafka.passwordKey }}
           - name: KAFKA_TOPICS
             value: {{ .Values.comp.conf.kafka.topics | quote }}
+          {{- end }}
         {{- include "common-container-envs" . | nindent 10 }}
-          envFrom:
-          - secretRef:
-              name: {{ include "api.fullname" . }}
           ports:
             - name: {{ include "common-appPortName" . }}
               containerPort: {{ .Values.comp.containerPort }}

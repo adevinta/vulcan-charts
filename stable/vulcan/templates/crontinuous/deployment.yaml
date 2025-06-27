@@ -5,7 +5,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "crontinuous.fullname" . }}
+  name: {{ include "comp.fullname" . }}
   labels: {{- include "vulcan.labels" . | nindent 4 }}
     app.kubernetes.io/name: {{ .Values.comp.name }}
 spec:
@@ -40,6 +40,11 @@ spec:
             value: {{ .Values.comp.conf.crontinuousBucket }}
           - name: VULCAN_API
             value: {{ .Values.comp.conf.vulcanApi | default (include "api.url" .) }}
+          - name: VULCAN_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: {{ default (include "comp.fullname" .) .Values.comp.conf.existingSecret }}
+                key: {{ .Values.comp.conf.vulcanTokenKey }}
           - name: VULCAN_USER
             value: {{ .Values.comp.conf.vulcanUser }}
           - name: ENABLE_TEAMS_WHITELIST_SCAN
@@ -51,9 +56,6 @@ spec:
           - name: TEAMS_WHITELIST_REPORT
             value: {{ .Values.comp.conf.teamsWhitelistReport | quote }}
         {{- include "common-container-envs" . | nindent 10 }}
-          envFrom:
-          - secretRef:
-              name: {{ include "crontinuous.fullname" . }}
           ports:
             - name: {{ include "common-appPortName" . }}
               containerPort: {{ .Values.comp.containerPort }}

@@ -1,4 +1,5 @@
 {{- define "vulndbapi-secrets" -}}
-PG_PASSWORD: {{ include "pg.encryptedPassword" . | quote }}
-PG_PASSWORD_READ: {{ include "pg.encryptedPassword" . | quote }}
+{{- if and (not .Values.postgresql.enabled) (not .Values.comp.db.existingSecret) }}
+{{ .Values.comp.db.passwordKey }}: {{ .Values.comp.db.password | b64enc | quote }}
+{{- end }}
 {{- end -}}

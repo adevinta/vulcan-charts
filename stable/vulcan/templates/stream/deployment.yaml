@@ -5,7 +5,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "stream.fullname" . }}
+  name: {{ include "comp.fullname" . }}
   labels: {{- include "vulcan.labels" . | nindent 4 }}
     app.kubernetes.io/name: {{ .Values.comp.name }}
 spec:
@@ -48,12 +48,12 @@ spec:
             value: {{ include "vulcan.redis.db" . | quote }}
           - name: REDIS_TTL
             value: {{ .Values.comp.conf.ttl | quote }}
+          - name: REDIS_PWD
+            valueFrom:
+              secretKeyRef:
+                name: {{ default (include "comp.fullname" .) .Values.comp.redis.existingSecret }}
+                key: {{ .Values.comp.redis.passwordKey }}
         {{- include "common-container-envs" . | nindent 10 }}
-        {{- if (include "vulcan.redis.password" .) }}
-          envFrom:
-          - secretRef:
-              name: {{ include "stream.fullname" . }}
-        {{- end }}
           ports:
             - name: {{ include "common-appPortName" . }}
               containerPort: {{ .Values.comp.containerPort }}

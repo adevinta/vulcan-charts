@@ -5,7 +5,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "vulndbapi.fullname" . }}
+  name: {{ include "comp.fullname" . }}
   labels: {{- include "vulcan.labels" . | nindent 4 }}
     app.kubernetes.io/name: {{ .Values.comp.name }}
 spec:
@@ -44,6 +44,11 @@ spec:
             value: {{ include "pg.port" . | quote }}
           - name: PG_SSLMODE
             value: {{ include "pg.sslMode" . | quote }}
+          - name: PG_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "pg.secretName" . }}
+                key: {{ include "pg.passwordKey" . }}
       {{- if .Values.comp.conf.readReplicaHost}}
           - name: PG_HOST_READ
             value: {{ .Values.comp.conf.readReplicaHost | quote }}
@@ -55,15 +60,17 @@ spec:
             value: {{ include "pg.port" . | quote }}
           - name: PG_SSLMODE_READ
             value: {{ include "pg.sslMode" . | quote }}
+          - name: PG_PASSWORD_READ
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "pg.secretName" . }}
+                key: {{ include "pg.passwordKey" . }}
       {{- end }}
           - name: PG_CA_B64
             value: {{ include "pg.b64ca" . | quote }}
           - name: LOG_LEVEL
             value: {{ .Values.comp.conf.logLevel | quote }}
         {{- include "common-container-envs" . | nindent 10 }}
-          envFrom:
-          - secretRef:
-              name: {{ include "vulndbapi.fullname" . }}
           ports:
             - name: {{ include "common-appPortName" . }}
               containerPort: {{ .Values.comp.containerPort }}

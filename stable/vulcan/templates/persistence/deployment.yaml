@@ -5,7 +5,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "persistence.fullname" . }}
+  name: {{ include "comp.fullname" . }}
   labels: {{- include "vulcan.labels" . | nindent 4 }}
     app.kubernetes.io/name: {{ .Values.comp.name }}
 spec:
@@ -46,14 +46,21 @@ spec:
             value: {{ include "pg.sslMode" . | quote }}
           - name: POSTGRES_CA_B64
             value: {{ include "pg.b64ca" . | quote }}
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "pg.secretName" . }}
+                key: {{ include "pg.passwordKey" . }}
           - name: LOG_LEVEL
             value: {{ .Values.comp.conf.logLevel | quote }}
           - name: RAILS_MAX_THREADS
             value: {{ .Values.comp.conf.railsMaxThreads | quote }}
+          - name: SECRET_KEY_BASE
+            valueFrom:
+              secretKeyRef:
+                name: {{ default (include "comp.fullname" .) .Values.comp.conf.existingSecret }}
+                key: {{ .Values.comp.conf.secretKeyBaseKey }}
         {{- include "common-container-envs" . | nindent 10 }}
-          envFrom:
-          - secretRef:
-              name: {{ include "persistence.fullname" . }}
           ports:
             - name: {{ include "common-appPortName" . }}
               containerPort: {{ .Values.comp.containerPort }}

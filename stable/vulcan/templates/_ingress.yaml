@@ -3,7 +3,7 @@ Standard ingress definition
 */}}
 {{- define "common-ingress" -}}
 {{- if and .Values.comp.enabled .Values.comp.ingress.enabled -}}
-{{- $fullName := printf "%s-%s" (include "vulcan.fullname" . ) .Values.comp.name -}}
+{{- $fullName := (include "comp.fullname" . ) -}}
 {{- $svcPort := .Values.comp.service.port -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
