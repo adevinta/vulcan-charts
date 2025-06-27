@@ -18,8 +18,8 @@ anchors:
     host:
     name:
     user:
-    existingSecret: ""
-    existingSecretPasswordKey: ""
+    existingSecret:
+    passwordKey: PG_PASSWORD
     password: TBD
     port: 5432
     sslMode: disable
@@ -333,9 +333,9 @@ persistence:
 
     # -- Name of the existing sectret that contains the secretKeyBase
     # -- If set the secretKeyBase will be ignored
-    existingSecret: ""
-    # -- Name of the key in the secret that contains the secretKeyBase
-    existingSecretSecretKeyBaseKey:
+    existingSecret:
+    # -- Name of the key in the secret that contains the secretKeyBase. Default SECRET_KEY_BASE.
+    secretKeyBaseKey: SECRET_KEY_BASE
 
     railsMaxThreads: 4
 
@@ -362,8 +362,8 @@ stream:
     host:
     port:
     username:
-    existingSecret: ""
-    existingSecretPasswordKey:
+    existingSecret:
+    passwordKey: REDIS_PWD
     password:
     db: 0   # default
 
@@ -399,8 +399,8 @@ api:
       snsArn: arn:aws:sns:{{.Values.global.region}}:{{ .Values.global.accountId }}:VulcanK8SReportsGen
       vulcanUIUrl:
 
-    existingSecret: ""
-    existingSecretSecretKeyKey:
+    existingSecret:
+    secretKeyKey: SECRET_KEY
     secretKey: TBDTBD
 
     cookieDomain:     # default .Values.global.domain
@@ -423,8 +423,8 @@ api:
       kind: None
       url: http://catalogue.example.com
       key: key
-      existingSecret: ""
-      existingSecretKeyKey:
+      existingSecret:
+      keyKey: AWSCATALOGUE_KEY
       retries: 1
       retry_interval: 2
     # -- array of name/allowedAssettypes/blockedAssettypes/allowedChecks/blockedChecks/excludingSuffixes which allows to customise global program policies
@@ -443,9 +443,9 @@ api:
       broker:
       username:
 
-      password:
-      existingSecret: ""
-      existingSecretPasswordKey:
+      password: foo
+      existingSecret:
+      passwordKey: KAFKA_PASS
 
       topics:     # '{assets = "assets"}'
 
@@ -473,9 +473,9 @@ crontinuous:
   conf:
     region:
 
-    existingSecret: ""
-    existingSecretVulcanTokenKey:
     vulcanToken: TBDTBDTBD
+    existingSecret:
+    vulcanTokenKey: VULCAN_TOKEN
 
     crontinuousBucket: crontinuous
     vulcanUser: tbd

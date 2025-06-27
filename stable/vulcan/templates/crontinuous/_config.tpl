@@ -1,5 +1,5 @@
 {{- define "crontinuous-secrets" -}}
 {{- if not .Values.comp.conf.existingSecret }}
-VULCAN_TOKEN: {{ .Values.comp.conf.vulcanToken | b64enc | quote }}
+{{ .Values.comp.conf.vulcanTokenKey }}: {{ .Values.comp.conf.vulcanToken | b64enc }}
 {{- end }}
 {{- end -}}

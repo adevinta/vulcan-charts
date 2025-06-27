@@ -178,11 +178,7 @@ Pod labels
 
 
 {{- define "pg.host" -}}
-  {{- if .Values.postgresql.enabled -}}
-    {{- printf "%s-postgresql" .Release.Name -}}
-  {{- else -}}
-    {{- .Values.comp.db.host -}}
-  {{- end -}}
+{{- ternary (printf "%s-postgresql" .Release.Name) .Values.comp.db.host .Values.postgresql.enabled -}}
 {{- end -}}
 
 {{- define "pg.database" -}}
@@ -190,11 +186,7 @@ Pod labels
 {{- end -}}
 
 {{- define "pg.username" -}}
-  {{- if .Values.postgresql.enabled -}}
-    {{- .Values.postgresql.auth.username -}}
-  {{- else -}}
-    {{- .Values.comp.db.user -}}
-  {{- end -}}
+{{- ternary .Values.postgresql.auth.username .Values.comp.db.user .Values.postgresql.enabled -}}
 {{- end -}}
 
 {{- define "pg.password" -}}
@@ -206,19 +198,11 @@ Pod labels
 {{- end -}}
 
 {{- define "pg.port" -}}
-  {{- if .Values.postgresql.enabled -}}
-    {{- .Values.postgresql.service.port | default "5432" -}}
-  {{- else -}}
-    {{- .Values.comp.db.port | default "5432" -}}
-  {{- end -}}
+{{- ternary .Values.postgresql.service.port .Values.comp.db.port .Values.postgresql.enabled | default "5432" -}}
 {{- end -}}
 
 {{- define "pg.sslMode" -}}
-  {{- if .Values.postgresql.enabled -}}
-    {{- "disable" -}}
-  {{- else -}}
-    {{- .Values.comp.db.sslMode | default "allow" -}}
-  {{- end -}}
+{{- ternary "disable" (.Values.comp.db.sslMode | default "allow") .Values.postgresql.enabled -}}
 {{- end -}}
 
 {{- define "pg.b64ca" -}}
@@ -231,13 +215,28 @@ Pod labels
   {{- include "pg.password" . | b64enc -}}
 {{- end -}}
 
+{{- define "pg.secretName" -}}
+{{- if .Values.postgresql.enabled -}}
+    {{- default (printf "%s-postgresql" .Release.Name) (tpl .Values.postgresql.auth.existingSecret $) -}}
+{{- else -}}
+    {{- default (include "comp.fullname" $) .Values.comp.db.existingSecret -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "pg.passwordKey" -}}
+{{- if .Values.postgresql.enabled -}}
+    {{- print "postgres-password" -}}
+{{- else -}}
+    {{- if .Values.comp.db.existingSecret -}}
+        {{- printf "%s" .Values.comp.db.secretKey -}}
+    {{- else -}}
+        {{- print "password" -}}
+    {{- end -}}
+{{- end -}}
+{{- end -}}
 
 {{- define "vulcan.redis.host" -}}
-  {{- if .Values.redis.enabled -}}
-    {{- printf "%s-redis-master" .Release.Name -}}
-  {{- else -}}
-    {{- .Values.comp.redis.host -}}
-  {{- end -}}
+{{- ternary (printf "%s-redis-master" .Release.Name) .Values.comp.redis.host .Values.redis.enabled -}}
 {{- end -}}
 
 {{- define "vulcan.redis.db" -}}
@@ -245,11 +244,7 @@ Pod labels
 {{- end -}}
 
 {{- define "vulcan.redis.username" -}}
-  {{- if .Values.redis.enabled -}}
-    {{- .Values.redis.username -}}
-  {{- else -}}
-    {{- .Values.comp.redis.username -}}
-  {{- end -}}
+{{- ternary .Values.redis.username .Values.comp.redis.username .Values.redis.enabled -}}
 {{- end -}}
 
 {{- define "vulcan.redis.password" -}}
@@ -261,11 +256,7 @@ Pod labels
 {{- end -}}
 
 {{- define "vulcan.redis.port" -}}
-  {{- if .Values.redis.enabled -}}
-    {{- .Values.redis.master.service.port | default "6379" -}}
-  {{- else -}}
-    {{- .Values.comp.redis.port | default "6379" -}}
-  {{- end -}}
+{{- ternary .Values.redis.master.service.port .Values.comp.redis.port .Values.redis.enabled | default "6379" -}}
 {{- end -}}
 
 {{- define "vulcan.redis.encryptedPassword" -}}

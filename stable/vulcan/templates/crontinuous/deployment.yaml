@@ -43,8 +43,8 @@ spec:
           - name: VULCAN_TOKEN
             valueFrom:
               secretKeyRef:
-                name: {{ coalesce (tpl .Values.comp.conf.existingSecret .) (include "comp.fullname" .) }}
-                key: {{ .Values.comp.conf.existingSecretVulcanTokenKey | default "VULCAN_TOKEN" }}
+                name: {{ default (include "comp.fullname" .) .Values.comp.conf.existingSecret }}
+                key: {{ .Values.comp.conf.vulcanTokenKey }}
           - name: VULCAN_USER
             value: {{ .Values.comp.conf.vulcanUser }}
           - name: ENABLE_TEAMS_WHITELIST_SCAN

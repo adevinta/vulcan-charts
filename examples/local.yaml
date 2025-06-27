@@ -49,9 +49,6 @@ stream:
         paths: [/]
 
 persistence:
-  db:
-    existingSecret: "{{ .Release.Name }}-postgresql"
-    existingSecretPasswordKey: postgres-password
   ingress:
     enabled: true
     hosts:
@@ -93,9 +90,6 @@ crontinuous:
 scanengine:
   ingress:
     enabled: false
-  db:
-    existingSecret: "{{ .Release.Name }}-postgresql"
-    existingSecretPasswordKey: postgres-password
   conf:
     queues:
       other:
@@ -114,9 +108,6 @@ ui:
         paths: [/]
 
 reportsgenerator:
-  db:
-    existingSecret: "{{ .Release.Name }}-postgresql"
-    existingSecretPasswordKey: postgres-password
   ingress:
     enabled: false
 
@@ -128,9 +119,6 @@ vulndbapi:
         paths: [/]
   conf:
     readReplicaHost:
-  db:
-    existingSecret: "{{ .Release.Name }}-postgresql"
-    existingSecretPasswordKey: postgres-password
 
 tracker:
   ingress:
@@ -141,6 +129,3 @@ tracker:
   conf:
     logLevel: "error"
     awsServerCredentialKey: "/path/to/credentials/"
-  db:
-    existingSecret: "{{ .Release.Name }}-postgresql"
-    existingSecretPasswordKey: postgres-password
